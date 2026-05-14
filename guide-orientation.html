@@ -711,5 +711,70 @@ new ResizeObserver(() => {
 init();
 </script>
 
+  <script>
+(function () {
+  var CAL_URL = 'https://calendly.com/proxxie/entretien?hide_event_type_details=0&hide_gdpr_banner=1';
+  var modal = null;
+
+  function build() {
+    if (modal) return modal;
+    var style = document.createElement('style');
+    style.textContent =
+      '#__px_cal_modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;font-family:Mulish,system-ui,sans-serif}' +
+      '#__px_cal_modal.open{display:flex}' +
+      '#__px_cal_modal .px-cal-bd{position:absolute;inset:0;background:rgba(15,17,40,.72);backdrop-filter:blur(2px)}' +
+      '#__px_cal_modal .px-cal-pn{position:relative;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.35);width:min(1040px,100%);height:min(820px,90vh);display:flex;flex-direction:column;overflow:hidden}' +
+      '#__px_cal_modal .px-cal-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #EEE;font:600 13px/1.4 Mulish,sans-serif;color:#1F2244}' +
+      '#__px_cal_modal .px-cal-ti{display:flex;align-items:center;gap:8px}' +
+      '#__px_cal_modal .px-cal-ti::before{content:"";width:8px;height:8px;border-radius:50%;background:#FD6936;display:inline-block}' +
+      '#__px_cal_modal .px-cal-cl{background:none;border:0;font-size:16px;cursor:pointer;color:#5B5F7A;padding:6px 10px;border-radius:8px;line-height:1}' +
+      '#__px_cal_modal .px-cal-cl:hover{background:#F3F2EE}' +
+      '#__px_cal_modal .px-cal-if{flex:1;width:100%;border:0;background:#fff}';
+    document.head.appendChild(style);
+
+    modal = document.createElement('div');
+    modal.id = '__px_cal_modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.innerHTML =
+      '<div class="px-cal-bd"></div>' +
+      '<div class="px-cal-pn">' +
+        '<div class="px-cal-hd"><span class="px-cal-ti">Réservation · Réservez 30 min avec Charles</span>' +
+        '<button class="px-cal-cl" aria-label="Fermer">Fermer ✕</button></div>' +
+        '<iframe class="px-cal-if" title="Réserver avec Charles — Calendly" src="" loading="lazy"></iframe>' +
+      '</div>';
+    document.body.appendChild(modal);
+    modal.querySelector('.px-cal-bd').addEventListener('click', close);
+    modal.querySelector('.px-cal-cl').addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    return modal;
+  }
+
+  function open(source) {
+    var m = build();
+    var iframe = m.querySelector('.px-cal-if');
+    if (!iframe.src) iframe.src = CAL_URL;
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    try { if (window.trackEvent) window.trackEvent('calendly_opened', { source: source || 'inline_modal' }); } catch (e) {}
+  }
+
+  function close() {
+    if (modal) modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  window.openCalendlyModal = open;
+
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="calendly.com/proxxie/entretien"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var src = a.getAttribute('data-cal-source') || a.textContent.trim().slice(0, 40) || 'inline_modal';
+    open(src);
+  }, true);
+})();
+</script>
 </body>
 </html>
