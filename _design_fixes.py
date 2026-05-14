@@ -75,6 +75,30 @@ CSS_PATCHES = [
         "  .mobile-sticky-cta .btn { flex: 1; justify-content: center; padding: 14px; }",
         "  .mobile-sticky-cta .btn { flex: 1; justify-content: center; padding: 14px; min-height: 44px; }\n  /* F006: Charles button in the mobile sticky bar is a navy outline */\n  .mobile-sticky-cta .btn-charles {\n    background: white;\n    color: var(--c-ink);\n    border: 1.5px solid var(--c-ink);\n    text-decoration: none;\n  }",
     ),
+
+    # QA-001 — Product app pages (Dashboard, Documents, Rapport, Coach,
+    # Ressources) overflow on mobile (~700-790px content vs 375px viewport)
+    # for two reasons:
+    #   (a) ShellHeader nav with 5 inline links doesn't collapse
+    #   (b) Content grids (Dashboard hero card, Documents grids, Coach
+    #       expertise/sessions panels) use fixed grid-template-columns that
+    #       stay desktop-wide on mobile
+    # The Home page CSS already collapses generic grids on <= 760px, but
+    # the product-page CSS is a shorter variant that only adjusts section
+    # padding. We add the missing rules here.
+    # The CSS_PATCHES tuples use REAL newlines in both strings. The script
+    # passes them through _escape_for_js_string before searching, which
+    # converts real newlines to the on-disk literal "\n" escape form.
+    (
+        "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n}",
+        "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n  /* QA-001a: collapse generic 2/3/4-col grids to single column on phones */\n  [style*=\"grid-template-columns: 1fr 1fr\"],\n  [style*=\"repeat(2, 1fr)\"],\n  [style*=\"repeat(3, 1fr)\"],\n  [style*=\"repeat(4, 1fr)\"],\n  [style*=\"grid-template-columns: 1.7fr 1fr\"],\n  [style*=\"grid-template-columns: 1.6fr 1fr\"],\n  [style*=\"grid-template-columns: 1fr 1.6fr\"],\n  [style*=\"grid-template-columns: 1.1fr 1fr\"],\n  [style*=\"grid-template-columns: auto 1fr auto\"] { grid-template-columns: 1fr !important; }\n  /* QA-001b: stop big inline-fixed hero h1s from forcing horizontal scroll */\n  h1 { font-size: clamp(28px, 7vw, 40px) !important; }\n}",
+    ),
+    # QA-001c: collapse ShellHeader inner nav + user-pill name on mobile.
+    # Anchor on the .btn-ghost rule (stable CSS sentinel).
+    (
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }",
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* QA-001c — Hide the product-page nav links + parent-name text on mobile.\n   Logo + avatar stay visible. Prevents header-row overflow. */\n@media (max-width: 860px) {\n  header[style*=\"sticky\"] nav { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:first-child > span { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:last-child > div > div:last-child { display: none !important; }\n}\n@media (max-width: 520px) {\n  header[style*=\"sticky\"] .shell > div:last-child button { display: none !important; }\n}",
+    ),
 ]
 
 
