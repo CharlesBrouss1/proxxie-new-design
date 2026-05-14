@@ -78,6 +78,10 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .btn-orange:hover{transform:translateY(-1px);filter:brightness(1.05);text-decoration:none}
 .btn-ghost{background:transparent;color:var(--c-text);border:1.5px solid rgba(10,14,44,.16)}
 .btn-ghost:hover{background:rgba(10,14,44,.04);text-decoration:none}
+/* F002: stronger outline for the Charles secondary CTA on the marketing pages.
+   Reads as a real call-to-action next to the orange primary, not as a nav link. */
+.nav-cta-secondary.btn-ghost{background:#fff;color:var(--c-text);border:1.5px solid var(--c-text);box-shadow:0 4px 12px -4px rgba(10,14,44,.18)}
+.nav-cta-secondary.btn-ghost:hover{background:var(--c-text);color:#fff;transform:translateY(-1px)}
 /* Match Proxxie Home exactly: .btn defaults at desktop (16/24/16),
    only shrink inside media queries. */
 @media (max-width:1024px){
@@ -87,10 +91,17 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 }
 @media (max-width:860px){
   .nav__links > a:not(.btn),
-  .nav__dropdown,
-  .nav__ctas > a:not(.btn-orange):not(.nav-cta){display:none}
+  .nav__dropdown{display:none}
+  /* F006: Charles stays visible at all sizes on marketing pages. */
+  .nav__ctas > a.nav-cta-secondary{padding:8px 14px !important;font-size:13px !important}
   .nav-cta{padding:8px 12px !important;font-size:13px !important}
   .nav-cta__suffix{display:none}
+}
+@media (max-width:520px){
+  /* F001: hide the top-nav orange CTA on smallest screens — Charles stays visible. */
+  .nav__ctas > a.muted{display:none}
+  .nav__ctas{gap:8px}
+  .nav-cta-secondary{padding:8px 12px !important;font-size:12px !important}
 }
 @media (max-width:760px){
   .nav__shell{padding:0 20px}
@@ -343,7 +354,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
     </div>
     <div class="nav__ctas">
       <a href="./Proxxie Connexion.html" class="muted" style="font-size:14px;font-weight:500">Connexion</a>
-      <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px">Rdv avec Charles</a>
+      <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px;font-weight:600">30 min avec Charles</a>
       <a href="./Proxxie Test.html" class="btn btn-orange nav-cta"><span>Commencer le test<span class="nav-cta__suffix"> gratuit</span></span></a>
     </div>
   </div>
