@@ -377,7 +377,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
         <div class="hero__cal-deco"></div>
         <div class="hero__cal-head">
           <h3>Votre calendrier d'orientation</h3>
-          <span data-cal-week>Sem. 20 · mai 2026</span>
+          <span data-cal-week>Sem. 20  |  mai 2026</span>
         </div>
         <div class="cal-tabs" role="tablist" aria-label="Choisir la classe">
           <button class="cal-tab cal-tab--active" data-cal-cls="3e" type="button" role="tab" aria-selected="true">3ème</button>
@@ -640,7 +640,7 @@ function renderCalendar(cls) {
     renderWeek(pick(cls, wrap52(week + d)), label, d === 0, d < 0)
   ).join('');
   const lbl = document.querySelector('[data-cal-week]');
-  if (lbl) lbl.textContent = `Sem. ${week} · ${MONTHS_FR[today.getMonth()+1]} ${today.getFullYear()}`;
+  if (lbl) lbl.textContent = `Sem. ${week}  |  ${MONTHS_FR[today.getMonth()+1]} ${today.getFullYear()}`;
 }
 document.querySelectorAll('.cal-tab').forEach(tab => {
   tab.addEventListener('click', () => {
