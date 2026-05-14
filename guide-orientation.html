@@ -110,11 +110,16 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .hero h1 em{color:var(--c-primary);font-style:normal;position:relative;display:inline-block}
 .hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:10px;background:var(--c-yellow);z-index:-1;border-radius:2px;opacity:.6}
 .hero__sub{font-size:19px;color:var(--c-text-muted);max-width:540px;margin-bottom:32px}
-.hero__form{display:flex;gap:8px;margin-bottom:14px;max-width:560px;flex-wrap:wrap}
-.hero__input-wrap{flex:1 1 220px;position:relative}
-.hero__input,.hero__select{width:100%;padding:16px 18px;border:1.5px solid var(--c-border);border-radius:var(--r-input);font-family:inherit;font-size:15px;background:#fff;color:var(--c-text);transition:border-color .15s,box-shadow .15s}
+.hero__form{display:flex;gap:8px;margin-bottom:14px;max-width:640px;flex-wrap:wrap;align-items:stretch}
+.hero__input-wrap{flex:1 1 200px;position:relative;min-width:180px}
+.hero__input,.hero__select{width:100%;padding:14px 16px;border:1.5px solid var(--c-border);border-radius:var(--r-input);font-family:inherit;font-size:14px;background:#fff;color:var(--c-text);transition:border-color .15s,box-shadow .15s}
 .hero__input:focus,.hero__select:focus{outline:none;border-color:var(--c-primary);box-shadow:0 0 0 4px var(--c-primary-soft)}
-.hero__select{flex:0 0 180px;cursor:pointer}
+.hero__select{flex:0 1 150px;cursor:pointer;min-width:130px}
+.hero__form .btn--primary{flex:0 0 auto;padding:14px 22px;font-size:14px;white-space:nowrap}
+@media (max-width:540px){
+  .hero__input-wrap,.hero__select{flex:1 1 100%}
+  .hero__form .btn--primary{flex:1 1 100%}
+}
 .hero__reassure{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--c-text-soft)}
 .hero__reassure span{display:inline-flex;align-items:center;gap:6px}
 .hero__reassure svg{width:14px;height:14px;color:var(--c-green);flex-shrink:0}
@@ -366,9 +371,6 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
         </select>
         <button class="btn btn--primary btn--lg" type="submit">Je m'inscris</button>
       </form>
-      <div class="hero__reassure">
-        <span><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 13.5l-3-3L5.9 9.1 7.5 10.7l6.6-6.6 1.4 1.4z"/></svg> Premier email dès lundi matin</span>
-      </div>
     </div>
     <aside class="hero__visual">
       <div class="hero__cal">
@@ -397,7 +399,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
     <div class="section-head">
       <span class="section-eyebrow">Comment ça marche</span>
       <h2>Le bon conseil, au bon moment.</h2>
-      <p>Chaque email est calé sur le calendrier scolaire de votre ado. Pas de retard, pas de bourrage de crâne.</p>
+      <p>L'orientation se joue à des moments précis de l'année. Vous n'avez plus à anticiper ni à courir après l'info : nous vous l'envoyons exactement quand votre ado en a besoin.</p>
     </div>
     <div class="how__grid">
       <div class="step">
