@@ -8,14 +8,34 @@ contain the literal `inscription-newsletter` URL.
 import re, json, base64, gzip, sys, pathlib, shutil
 
 REPO = pathlib.Path(__file__).parent
-OLD_URL = "https://www.proxxie.co/inscription-newsletter"
-NEW_URL = "./guide-orientation.html"
+
+# Each patch: (search-needle, list-of-replacements-to-try)
+# A file's asset is rewritten if ANY of the needles is found.
+PATCHES = [
+    {
+        "needle": "https://www.proxxie.co/inscription-newsletter",
+        "replacements": [
+            ("https://www.proxxie.co/inscription-newsletter", "./guide-orientation.html"),
+        ],
+        # extra regex pass: flip external:true → false on the patched item
+        "regex": (
+            r'(n: "Le guide de l\'orientation",\s*d: "[^"]*",\s*href: "\./guide-orientation\.html",\s*external:\s*)true',
+            r'\1false',
+        ),
+    },
+    {
+        "needle": "Parler à Charles",
+        "replacements": [
+            ("Parler à Charles", "Rdv avec Charles"),
+        ],
+        "regex": None,
+    },
+]
 
 def patch_file(path: pathlib.Path) -> bool:
     """Returns True if file was modified."""
     html = path.read_text(encoding="utf-8")
 
-    # locate manifest <script> tag and split exactly to preserve bytes
     m = re.search(r'(<script type="__bundler/manifest"[^>]*>)(.*?)(</script>)', html, re.DOTALL)
     if not m:
         print(f"  no manifest in {path.name}")
@@ -31,25 +51,26 @@ def patch_file(path: pathlib.Path) -> bool:
                 data = gzip.decompress(data)
             except Exception:
                 continue
-        if OLD_URL.encode() not in data:
+
+        # Check if any patch applies
+        applicable = [p for p in PATCHES if p["needle"].encode() in data]
+        if not applicable:
             continue
-        # Patch: replace URL. Also flip `external: true` → `external: false`
-        # for the resource entry so the React UI doesn't render an "external" indicator.
+
         text = data.decode("utf-8")
-        new_text = text.replace(OLD_URL, NEW_URL)
-        # Find the RESOURCES entry that we just touched and flip its external flag.
-        # Pattern matches the n: "Le guide..." block specifically.
-        new_text = re.sub(
-            r'(n: "Le guide de l\'orientation",\s*d: "[^"]*",\s*href: "\./guide-orientation\.html",\s*external:\s*)true',
-            r'\1false',
-            new_text,
-        )
-        new_data = new_text.encode("utf-8")
+        for p in applicable:
+            for old, new in p["replacements"]:
+                text = text.replace(old, new)
+            if p["regex"]:
+                text = re.sub(p["regex"][0], p["regex"][1], text)
+
+        new_data = text.encode("utf-8")
         if compressed:
             new_data = gzip.compress(new_data)
         entry["data"] = base64.b64encode(new_data).decode("ascii")
         changed = True
-        print(f"  patched asset {uuid} in {path.name}")
+        names = ", ".join(p["needle"][:30] for p in applicable)
+        print(f"  patched asset {uuid} [{names}] in {path.name}")
 
     if not changed:
         return False
