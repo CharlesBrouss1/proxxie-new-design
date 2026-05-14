@@ -34,13 +34,14 @@ a{color:var(--c-primary);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
 :focus-visible{outline:3px solid var(--c-primary-light);outline-offset:3px;border-radius:6px}
-.shell{max-width:1200px;margin:0 auto;padding:0 32px}
-.container{max-width:1200px;margin:0 auto;padding:0 32px}
+:root{--max-w:1240px}
+.shell{max-width:var(--max-w);margin:0 auto;padding:0 32px}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 32px}
 .container--narrow{max-width:880px}
 
 /* ----- NAV (matched 1:1 with Proxxie Home.html) ----- */
 .nav{position:sticky;top:0;z-index:50;background:rgba(247,242,233,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(10,14,44,.06)}
-.nav__shell{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px;max-width:1200px;margin:0 auto;padding:0 32px}
+.nav__shell{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px;max-width:var(--max-w);margin:0 auto;padding:0 32px}
 .nav__brand{display:flex;align-items:center;gap:8px;text-decoration:none}
 .nav__brand-mark{display:inline-flex;align-items:center;gap:10.4px;line-height:1}
 .nav__logo{display:inline-flex;align-items:center;justify-content:center;width:35px;height:35px;border-radius:7.7px;background:var(--c-primary);flex-shrink:0}
@@ -77,21 +78,24 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .btn-orange:hover{transform:translateY(-1px);filter:brightness(1.05);text-decoration:none}
 .btn-ghost{background:transparent;color:var(--c-text);border:1.5px solid rgba(10,14,44,.16)}
 .btn-ghost:hover{background:rgba(10,14,44,.04);text-decoration:none}
-.nav-cta{padding:12px 18px;font-size:14px}
-.nav-cta-secondary{padding:11px 18px;font-size:14px}
+/* Match Proxxie Home exactly: .btn defaults at desktop (16/24/16),
+   only shrink inside media queries. */
 @media (max-width:1024px){
   .nav__links{gap:20px}
-  .nav-cta{padding:10px 16px;font-size:14px}
+  .nav-cta{padding:10px 16px !important;font-size:14px !important}
+  .nav-cta-secondary{padding:10px 16px !important;font-size:14px !important}
 }
 @media (max-width:860px){
   .nav__links > a:not(.btn),
   .nav__dropdown,
   .nav__ctas > a:not(.btn-orange):not(.nav-cta){display:none}
-  .nav-cta{padding:8px 12px;font-size:13px}
+  .nav-cta{padding:8px 12px !important;font-size:13px !important}
   .nav-cta__suffix{display:none}
 }
-@media (max-width:768px){
+@media (max-width:760px){
   .nav__shell{padding:0 20px}
+  .shell{padding:0 20px}
+  .container{padding:0 20px}
 }
 .btn--primary{background:var(--c-accent);color:#fff;box-shadow:0 4px 14px rgba(253,105,54,.32);padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .btn--primary:hover{background:var(--c-accent-deep);text-decoration:none;transform:translateY(-1px);box-shadow:0 6px 20px rgba(253,105,54,.4)}
