@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   function open(source) {
     var m = build();
     var iframe = m.querySelector('.px-cal-if');
-    if (!iframe.src) iframe.src = CAL_URL;
+    if (!iframe.getAttribute('src')) iframe.setAttribute('src', CAL_URL);
     m.classList.add('open');
     document.body.style.overflow = 'hidden';
     try { if (window.trackEvent) window.trackEvent('calendly_opened', { source: source || 'inline_modal' }); } catch (e) {}
