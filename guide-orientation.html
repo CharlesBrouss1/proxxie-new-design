@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La newsletter Proxxie — 5 ans d'orientation, un email par semaine</title>
+<meta name="description" content="De la 3ème au bac+1, un email chaque lundi, synchronisé avec l'année scolaire de votre ado. Le programme complet de la newsletter Proxxie : 251 articles pour accompagner les parents pas à pas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --c-primary:#1320CE; --c-primary-deep:#0E1690;
+  --c-primary-light:#487AFF; --c-primary-pale:#B0D0F7; --c-primary-soft:#E8F0FF;
+  --c-accent:#FD6936; --c-accent-deep:#E54E1A;
+  --c-cream:#EEE6D9; --c-yellow:#F5EB3F; --c-green:#22A06B;
+  --c-text:#0A0E2C; --c-text-muted:#6B6F8C; --c-text-soft:#9CA0B5;
+  --c-bg:#F7F2E9; --c-bg-card:#FFFFFF; --c-bg-cream:#EEE6D9;
+  --c-border:rgba(10,14,44,.10); --c-border-soft:rgba(10,14,44,.06);
+  --r-pill:999px; --r-card:20px; --r-input:14px;
+  --shadow-sm:0 1px 2px rgba(10,14,44,.04),0 1px 3px rgba(10,14,44,.06);
+  --shadow-md:0 4px 14px rgba(10,14,44,.06),0 2px 6px rgba(10,14,44,.04);
+  --shadow-lg:0 20px 48px rgba(10,14,44,.08),0 6px 16px rgba(10,14,44,.05);
+  --font-body:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-head:"Mulish","Goldplay","Montserrat",system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font-body);color:var(--c-text);background:var(--c-bg);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0;letter-spacing:-.02em;color:var(--c-text)}
+h1{font-weight:600} h2{font-weight:600} h3{font-weight:600} h4{font-weight:600}
+p{margin:0}
+a{color:var(--c-primary);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--c-primary-light);outline-offset:3px;border-radius:6px}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.container--narrow{max-width:880px}
+
+.nav{position:sticky;top:0;z-index:50;background:rgba(247,242,233,.85);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--c-border-soft)}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:24px}
+.nav__brand{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:22px;color:var(--c-text);letter-spacing:-.02em}
+.nav__logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--c-primary),var(--c-primary-light));display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px}
+.nav__links{display:flex;gap:28px;align-items:center}
+.nav__links a{font-size:14px;color:var(--c-text-muted);font-weight:500}
+.nav__links a:hover{color:var(--c-primary);text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:var(--r-pill);font-weight:600;font-size:15px;transition:transform .12s,box-shadow .12s,background-color .12s;white-space:nowrap}
+.btn--primary{background:var(--c-accent);color:#fff;box-shadow:0 4px 14px rgba(253,105,54,.32)}
+.btn--primary:hover{background:var(--c-accent-deep);text-decoration:none;transform:translateY(-1px);box-shadow:0 6px 20px rgba(253,105,54,.4)}
+.btn--lg{padding:16px 28px;font-size:16px}
+
+.hero{position:relative;overflow:hidden;padding:72px 0 96px;background:var(--c-bg)}
+.hero__inner{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.hero__eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--c-primary-soft);color:var(--c-primary);padding:6px 14px;border-radius:var(--r-pill);font-size:13px;font-weight:600;margin-bottom:20px}
+.hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c-accent);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(42px,6vw,68px);margin-bottom:24px;font-weight:600}
+.hero h1 em{color:var(--c-primary);font-style:normal;position:relative;display:inline-block}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:10px;background:var(--c-yellow);z-index:-1;border-radius:2px;opacity:.6}
+.hero__sub{font-size:19px;color:var(--c-text-muted);max-width:540px;margin-bottom:32px}
+.hero__form{display:flex;gap:8px;margin-bottom:14px;max-width:560px;flex-wrap:wrap}
+.hero__input-wrap{flex:1 1 220px;position:relative}
+.hero__input,.hero__select{width:100%;padding:16px 18px;border:1.5px solid var(--c-border);border-radius:var(--r-input);font-family:inherit;font-size:15px;background:#fff;color:var(--c-text);transition:border-color .15s,box-shadow .15s}
+.hero__input:focus,.hero__select:focus{outline:none;border-color:var(--c-primary);box-shadow:0 0 0 4px var(--c-primary-soft)}
+.hero__select{flex:0 0 180px;cursor:pointer}
+.hero__reassure{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--c-text-soft)}
+.hero__reassure span{display:inline-flex;align-items:center;gap:6px}
+.hero__reassure svg{width:14px;height:14px;color:var(--c-green);flex-shrink:0}
+.hero__visual{position:relative;aspect-ratio:1/1;max-width:520px;justify-self:end}
+.hero__cal{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:28px;padding:28px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.hero__cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--c-border-soft)}
+.hero__cal-head h3{font-size:15px;color:var(--c-text-muted);font-weight:600}
+.hero__cal-head span{font-size:13px;color:var(--c-text-soft)}
+.hero__week{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--c-border-soft)}
+.hero__week:last-child{border-bottom:0}
+.hero__week-day{flex:0 0 56px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--c-text-soft);text-transform:uppercase;padding-top:2px}
+.hero__week-content{flex:1;min-width:0}
+.hero__week-title{font-weight:600;font-size:14px;color:var(--c-text);line-height:1.4;margin-bottom:4px}
+.hero__week-tag{display:inline-block;font-size:11px;font-weight:600;color:var(--c-primary);background:var(--c-primary-soft);padding:2px 8px;border-radius:var(--r-pill)}
+.hero__week--active{background:linear-gradient(90deg,rgba(245,235,63,.18),transparent);margin:0 -10px;padding:14px 10px;border-radius:8px}
+.hero__week--active .hero__week-tag{background:var(--c-accent);color:#fff}
+.hero__cal-deco{position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,var(--c-yellow) 0%,transparent 70%);top:-40px;right:-40px;opacity:.4}
+
+.how{padding:96px 0;background:var(--c-bg-cream)}
+.section-head{text-align:center;max-width:680px;margin:0 auto 56px}
+.section-eyebrow{display:inline-block;color:var(--c-primary);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.section-head h2{font-size:clamp(28px,3.5vw,40px);margin-bottom:14px}
+.section-head p{color:var(--c-text-muted);font-size:17px;max-width:560px;margin:0 auto}
+.how__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.step{background:var(--c-bg-card);border-radius:var(--r-card);padding:36px 32px;position:relative;border:1px solid var(--c-border-soft)}
+.step__num{position:absolute;top:-20px;left:32px;width:48px;height:48px;border-radius:50%;background:var(--c-primary);color:#fff;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;font-size:20px;box-shadow:var(--shadow-md)}
+.step h3{font-size:20px;margin:8px 0 10px}
+.step p{color:var(--c-text-muted);font-size:15px}
+
+.stats{padding:64px 0;background:var(--c-primary);color:#fff;background-image:radial-gradient(circle at 15% 50%,rgba(255,255,255,.08) 0%,transparent 40%),radial-gradient(circle at 85% 50%,rgba(245,235,63,.08) 0%,transparent 40%)}
+.stats__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat__num{font-family:var(--font-head);font-weight:800;font-size:48px;line-height:1;letter-spacing:-.02em;margin-bottom:8px}
+.stat__label{font-size:14px;color:rgba(255,255,255,.78);font-weight:500}
+
+.programme{padding:96px 0;background:var(--c-bg)}
+.cls-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:56px;padding:8px;background:var(--c-bg-card);border-radius:24px;box-shadow:var(--shadow-md);max-width:fit-content;margin-left:auto;margin-right:auto;border:1px solid var(--c-border-soft)}
+.cls-tab{display:flex;flex-direction:column;align-items:flex-start;padding:12px 22px;border-radius:14px;transition:background-color .15s,color .15s;text-align:left;min-width:140px}
+.cls-tab__label{font-family:var(--font-head);font-weight:700;font-size:18px;color:var(--c-text)}
+.cls-tab__sub{font-size:12px;color:var(--c-text-muted);font-weight:500;margin-top:2px}
+.cls-tab:hover{background:var(--c-bg-cream)}
+.cls-tab[aria-selected="true"]{background:var(--c-primary);}
+.cls-tab[aria-selected="true"] .cls-tab__label{color:#fff}
+.cls-tab[aria-selected="true"] .cls-tab__sub{color:rgba(255,255,255,.78)}
+
+.cls-panel{display:block}
+.cls-panel--hidden{display:none}
+.cls-panel__head{background:var(--c-bg-card);border-radius:var(--r-card);padding:40px 40px 36px;margin-bottom:32px;position:relative;overflow:hidden;border-left:6px solid var(--cls-color,var(--c-primary));border:1px solid var(--c-border-soft);border-left:6px solid var(--cls-color,var(--c-primary))}
+.cls-panel__badge{display:inline-block;background:var(--cls-color,var(--c-primary));color:#fff;padding:5px 12px;border-radius:var(--r-pill);font-size:13px;font-weight:700;margin-bottom:14px;letter-spacing:.02em}
+.cls-panel__title{font-size:clamp(24px,3vw,32px);margin-bottom:10px}
+.cls-panel__blurb{color:var(--c-text-muted);font-size:17px;max-width:680px;margin-bottom:20px}
+.cls-panel__stats{font-size:14px;color:var(--c-text-muted)}
+.cls-panel__stats strong{color:var(--c-text);font-weight:700}
+
+.period{background:var(--c-bg-card);border-radius:var(--r-card);padding:32px;margin-bottom:24px;border:1px solid var(--c-border-soft)}
+.period__head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--c-border-soft)}
+.period__title{font-size:19px;font-weight:700;flex:1;min-width:240px}
+.period__months{font-size:13px;color:var(--c-text-muted);background:var(--c-bg-cream);padding:4px 10px;border-radius:var(--r-pill);font-weight:600}
+.period__count{font-size:13px;color:var(--c-text-soft);font-weight:600}
+.period__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+
+.card{padding:18px;border:1px solid var(--c-border-soft);border-radius:14px;background:var(--c-bg);transition:transform .15s,box-shadow .15s,border-color .15s;cursor:pointer;display:flex;flex-direction:column;min-height:110px}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--c-primary-pale);background:var(--c-bg-cream)}
+.card__num{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-primary);text-transform:uppercase;margin-bottom:8px}
+.card__title{font-size:14.5px;font-weight:600;line-height:1.4;color:var(--c-text);margin-bottom:auto;font-family:var(--font-body)}
+
+.sample{padding:96px 0;background:var(--c-bg-cream)}
+.sample__wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center}
+.sample__copy h2{font-size:clamp(28px,3.5vw,40px);margin-bottom:16px}
+.sample__copy p{font-size:17px;color:var(--c-text-muted);margin-bottom:14px}
+.sample__copy ul{list-style:none;padding:0;margin:24px 0 0}
+.sample__copy li{display:flex;gap:12px;padding:10px 0;font-size:15px}
+.sample__copy li::before{content:"→";color:var(--c-accent);font-weight:700;flex-shrink:0}
+.email-mock{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden}
+.email-mock__bar{padding:12px 16px;background:#F4F6FB;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--c-border-soft)}
+.email-mock__bar span{width:10px;height:10px;border-radius:50%;background:#CFD4DD}
+.email-mock__bar small{margin-left:auto;font-size:12px;color:var(--c-text-soft)}
+.email-mock__head{padding:24px 28px 18px;border-bottom:1px solid var(--c-border-soft)}
+.email-mock__from{font-size:13px;color:var(--c-text-muted);margin-bottom:8px}
+.email-mock__from strong{color:var(--c-text);font-weight:600}
+.email-mock__subject{font-family:var(--font-head);font-weight:700;font-size:20px;color:var(--c-text);line-height:1.3}
+.email-mock__body{padding:24px 28px 28px}
+.email-mock__tag{display:inline-block;background:var(--c-primary-soft);color:var(--c-primary);padding:4px 12px;border-radius:var(--r-pill);font-size:12px;font-weight:700;margin-bottom:14px}
+.email-mock__title{font-family:var(--font-head);font-weight:700;font-size:22px;margin-bottom:12px;line-height:1.25}
+.email-mock__lede{font-size:14.5px;color:var(--c-text-muted);line-height:1.6;margin-bottom:16px}
+.email-mock__cta{display:inline-flex;padding:10px 18px;background:var(--c-accent);color:#fff;border-radius:var(--r-pill);font-size:14px;font-weight:600;text-decoration:none;margin-top:6px}
+
+.faq{padding:96px 0;background:var(--c-bg)}
+.faq__grid{display:grid;gap:14px;max-width:780px;margin:0 auto}
+.faq__item{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:14px;overflow:hidden}
+.faq__item summary{padding:20px 24px;font-weight:600;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;list-style:none}
+.faq__item summary::-webkit-details-marker{display:none}
+.faq__item summary::after{content:"+";font-size:22px;color:var(--c-primary);font-weight:300;transition:transform .2s}
+.faq__item[open] summary::after{transform:rotate(45deg)}
+.faq__item summary:hover{background:var(--c-bg-cream)}
+.faq__body{padding:0 24px 22px;color:var(--c-text-muted);font-size:15px;line-height:1.65}
+
+.final-cta{padding:96px 0;background:linear-gradient(135deg,var(--c-primary) 0%,var(--c-primary-deep) 100%);color:#fff;text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(245,235,63,.12) 0%,transparent 60%);top:-200px;left:-100px}
+.final-cta::after{content:"";position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(253,105,54,.16) 0%,transparent 60%);bottom:-150px;right:-100px}
+.final-cta__inner{position:relative;z-index:1}
+.final-cta h2{color:#fff;font-size:clamp(28px,4vw,44px);margin-bottom:16px;max-width:740px;margin-left:auto;margin-right:auto}
+.final-cta p{font-size:18px;opacity:.88;max-width:600px;margin:0 auto 36px}
+.final-cta__form{display:flex;gap:8px;max-width:520px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.final-cta__form input,.final-cta__form select{flex:1 1 200px;padding:14px 18px;border-radius:var(--r-input);border:0;font-family:inherit;font-size:15px;background:#fff;color:var(--c-text)}
+.final-cta__form button{background:var(--c-accent);color:#fff;padding:14px 28px;border-radius:var(--r-pill);font-weight:700;font-size:15px;transition:background-color .15s}
+.final-cta__form button:hover{background:var(--c-accent-deep)}
+.final-cta__reassure{margin-top:18px;font-size:13px;opacity:.7}
+
+.footer{background:#0E1690;color:rgba(255,255,255,.7);padding:48px 0 32px;font-size:14px}
+.footer__top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1)}
+.footer__brand{max-width:300px}
+.footer__brand strong{color:#fff;font-family:var(--font-head);font-size:22px;display:block;margin-bottom:8px}
+.footer__links{display:flex;gap:48px;flex-wrap:wrap}
+.footer__col h4{color:#fff;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+.footer__col ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.footer__col a{color:rgba(255,255,255,.7);font-size:14px}
+.footer__col a:hover{color:#fff;text-decoration:underline}
+.footer__bot{font-size:12px;opacity:.6}
+
+@media (max-width:1024px){
+  .hero__inner{grid-template-columns:1fr;gap:48px}
+  .hero__visual{max-width:480px;justify-self:start}
+  .how__grid{grid-template-columns:1fr;gap:20px}
+  .sample__wrap{grid-template-columns:1fr;gap:40px}
+  .stats__grid{grid-template-columns:repeat(2,1fr);gap:28px}
+}
+@media (max-width:768px){
+  .container{padding:0 20px}
+  .nav__links{display:none}
+  .hero{padding:48px 0 64px}
+  .how,.programme,.sample,.faq,.final-cta{padding:64px 0}
+  .cls-tab{min-width:auto;padding:10px 16px}
+  .cls-tab__label{font-size:15px}
+  .cls-tab__sub{display:none}
+  .cls-panel__head{padding:28px 24px}
+  .period{padding:24px 20px}
+  .period__grid{grid-template-columns:1fr}
+  .stat__num{font-size:36px}
+  .footer__top{flex-direction:column;gap:24px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav__inner">
+    <a href="https://www.proxxie.co" class="nav__brand">
+      <span class="nav__logo">P</span>
+      <span>proxxie</span>
+    </a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="https://www.proxxie.co/methode">La méthode</a>
+      <a href="https://www.proxxie.co/avis">Avis</a>
+      <a href="https://www.proxxie.co/tarifs">Tarifs</a>
+      <a href="https://www.proxxie.co/blog">Blog</a>
+    </nav>
+    <a href="#signup" class="btn btn--primary">S'inscrire à la newsletter</a>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <div class="hero__eyebrow">Gratuit · 1 email/semaine · résiliable en 1 clic</div>
+      <h1>5 ans <em>d'orientation</em>,<br>un email par semaine.</h1>
+      <p class="hero__sub">De la 3ème au bac+1, chaque lundi un conseil pratique pour accompagner votre ado au moment précis où il en a besoin. 251 articles déjà écrits, synchronisés avec l'année scolaire de votre enfant.</p>
+      <form class="hero__form" id="signup" aria-label="Inscription à la newsletter Proxxie" onsubmit="event.preventDefault();this.querySelector('button').textContent='Inscription enregistrée';">
+        <div class="hero__input-wrap">
+          <input class="hero__input" type="email" placeholder="votre@email.fr" required aria-label="Adresse email">
+        </div>
+        <select class="hero__select" aria-label="Classe actuelle de votre ado" required>
+          <option value="">Classe de l'ado</option>
+          <option value="3e">3ème</option>
+          <option value="2nde">2nde</option>
+          <option value="1re">1ère</option>
+          <option value="terminale">Terminale</option>
+          <option value="postbac">Bac+1</option>
+        </select>
+        <button class="btn btn--primary btn--lg" type="submit">Je m'inscris</button>
+      </form>
+      <div class="hero__reassure">
+        <span><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 13.5l-3-3L5.9 9.1 7.5 10.7l6.6-6.6 1.4 1.4z"/></svg> Premier email lundi matin</span>
+        <span><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 13.5l-3-3L5.9 9.1 7.5 10.7l6.6-6.6 1.4 1.4z"/></svg> Aucune carte bancaire</span>
+        <span><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 13.5l-3-3L5.9 9.1 7.5 10.7l6.6-6.6 1.4 1.4z"/></svg> RGPD compliant</span>
+      </div>
+    </div>
+    <aside class="hero__visual" aria-hidden="true">
+      <div class="hero__cal">
+        <div class="hero__cal-deco"></div>
+        <div class="hero__cal-head">
+          <h3>Votre calendrier d'orientation</h3>
+          <span>Mai 2026</span>
+        </div>
+        <div class="hero__week">
+          <div class="hero__week-day">Lun 4</div>
+          <div class="hero__week-content">
+            <div class="hero__week-title">Choisir ses spécialités sans se fermer de portes</div>
+            <span class="hero__week-tag">2nde · N°090</span>
+          </div>
+        </div>
+        <div class="hero__week hero__week--active">
+          <div class="hero__week-day">Lun 11</div>
+          <div class="hero__week-content">
+            <div class="hero__week-title">Cap sur la 1ère techno : préparer la transition</div>
+            <span class="hero__week-tag">Cette semaine</span>
+          </div>
+        </div>
+        <div class="hero__week">
+          <div class="hero__week-day">Lun 18</div>
+          <div class="hero__week-content">
+            <div class="hero__week-title">Redoubler la 2nde : seconde chance ou perte de temps ?</div>
+            <span class="hero__week-tag">À venir</span>
+          </div>
+        </div>
+        <div class="hero__week">
+          <div class="hero__week-day">Lun 25</div>
+          <div class="hero__week-content">
+            <div class="hero__week-title">Bilan de l'année de 2nde : ce qu'il faut retenir</div>
+            <span class="hero__week-tag">À venir</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comment ça marche</span>
+      <h2>Le bon conseil, au bon moment.</h2>
+      <p>Chaque email est calé sur le calendrier scolaire de votre ado. Pas de retard, pas de bourrage de crâne.</p>
+    </div>
+    <div class="how__grid">
+      <div class="step">
+        <div class="step__num">1</div>
+        <h3>Vous inscrivez votre ado</h3>
+        <p>Email + classe actuelle. Si votre enfant est en 1ère, on saute les emails de 3ème et 2nde — vous démarrez là où vous en êtes.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <h3>Chaque lundi, un email</h3>
+        <p>Synchronisé avec son année scolaire : choix de spécialités en mars de 2nde, Parcoursup en janvier de Terminale, logement étudiant en août après le bac.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <h3>Un parcours sur 5 ans</h3>
+        <p>De la 3ème jusqu'au bac+1. 251 articles déjà écrits par notre équipe pour vous accompagner, semaine après semaine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container">
+    <div class="stats__grid">
+      <div><div class="stat__num">251</div><div class="stat__label">articles écrits</div></div>
+      <div><div class="stat__num">5 ans</div><div class="stat__label">d'accompagnement</div></div>
+      <div><div class="stat__num">98%</div><div class="stat__label">de parents satisfaits</div></div>
+      <div><div class="stat__num">300+</div><div class="stat__label">ados accompagnés</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="programme" id="programme">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Le programme complet</span>
+      <h2>Tout ce que vos enfants vont recevoir,<br>de la 3ème au bac+1.</h2>
+      <p>251 articles déjà rédigés, classés par année puis par trimestre. Cliquez sur une année pour explorer.</p>
+    </div>
+
+    <div class="cls-tabs" role="tablist" aria-label="Programme par classe">
+      <button class="cls-tab" data-cls="3e" type="button" role="tab" aria-controls="panel-3e" aria-selected="true" tabindex="0"><span class="cls-tab__label">3ème</span><span class="cls-tab__sub">Découverte et orientation</span></button>
+<button class="cls-tab" data-cls="2nde" type="button" role="tab" aria-controls="panel-2nde" aria-selected="false" tabindex="-1"><span class="cls-tab__label">2nde</span><span class="cls-tab__sub">Choix de spécialités</span></button>
+<button class="cls-tab" data-cls="1re" type="button" role="tab" aria-controls="panel-1re" aria-selected="false" tabindex="-1"><span class="cls-tab__label">1ère</span><span class="cls-tab__sub">Confirmation du projet</span></button>
+<button class="cls-tab" data-cls="terminale" type="button" role="tab" aria-controls="panel-terminale" aria-selected="false" tabindex="-1"><span class="cls-tab__label">Terminale</span><span class="cls-tab__sub">Parcoursup &amp; Post-Bac</span></button>
+<button class="cls-tab" data-cls="postbac" type="button" role="tab" aria-controls="panel-postbac" aria-selected="false" tabindex="-1"><span class="cls-tab__label">Bac +1</span><span class="cls-tab__sub">Première année post-bac</span></button>
+    </div>
+
+    <section class="cls-panel" id="panel-3e" data-cls-panel="3e" role="tabpanel"><header class="cls-panel__head" style="--cls-color: #487AFF"><div class="cls-panel__badge">3ème</div><h2 class="cls-panel__title">Découverte et orientation</h2><p class="cls-panel__blurb" data-pretext data-pretext-text>Première approche de l&#x27;orientation au collège : poser les bases, explorer les voies, préparer la Seconde.</p><div class="cls-panel__stats"><strong>52</strong> articles · <strong>4</strong> périodes</div></header><div class="cls-panel__body"><section class="period" id="period-3e-1"><header class="period__head"><h3 class="period__title">1er trimestre — Bases de l&#x27;orientation et exploration</h3><span class="period__months">sept – déc</span><span class="period__count">19 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°001</div><h4 class="card__title" data-pretext-text>Rentrée en 3ᵉ : poser les bases d&#x27;une bonne orientation</h4></article><article class="card" data-pretext><div class="card__num">N°002</div><h4 class="card__title" data-pretext-text>Parents-ado, parler d&#x27;orientation sans stress</h4></article><article class="card" data-pretext><div class="card__num">N°003</div><h4 class="card__title" data-pretext-text>Orientation scolaire : décodez le système pour mieux accompagner</h4></article><article class="card" data-pretext><div class="card__num">N°004</div><h4 class="card__title" data-pretext-text>L&#x27;entretien d&#x27;orientation en 3ᵉ : s&#x27;y préparer pour un échange constructif</h4></article><article class="card" data-pretext><div class="card__num">N°005</div><h4 class="card__title" data-pretext-text>Découvrir les talents de votre ado : intérêts, compétences et valeurs</h4></article><article class="card" data-pretext><div class="card__num">N°006</div><h4 class="card__title" data-pretext-text>L&#x27;intelligence émotionnelle comme boussole d&#x27;orientation</h4></article><article class="card" data-pretext><div class="card__num">N°007</div><h4 class="card__title" data-pretext-text>Activités extrascolaires : un + pour son projet d&#x27;orientation</h4></article><article class="card" data-pretext><div class="card__num">N°008</div><h4 class="card__title" data-pretext-text>Autonomie et organisation : des compétences clés à développer dès 14 ans</h4></article><article class="card" data-pretext><div class="card__num">N°009</div><h4 class="card__title" data-pretext-text>Dys, TDAH et orientation : trouver la voie adaptée</h4></article><article class="card" data-pretext><div class="card__num">N°010</div><h4 class="card__title" data-pretext-text>Orientation 2.0 : ces youtubeurs et applis qui inspirent les ados</h4></article><article class="card" data-pretext><div class="card__num">N°011</div><h4 class="card__title" data-pretext-text>Bac général, techno, pro : en finir avec les idées reçues avant de choisir</h4></article><article class="card" data-pretext><div class="card__num">N°012</div><h4 class="card__title" data-pretext-text>Parler d&#x27;argent et de salaires avec son ado : briser le tabou</h4></article><article class="card" data-pretext><div class="card__num">N°013</div><h4 class="card__title" data-pretext-text>Le bac général : un choix polyvalent pour garder toutes les portes ouvertes</h4></article><article class="card" data-pretext><div class="card__num">N°014</div><h4 class="card__title" data-pretext-text>Le bac technologique : innover et apprendre autrement au lycée</h4></article><article class="card" data-pretext><div class="card__num">N°015</div><h4 class="card__title" data-pretext-text>Le bac professionnel : un pied dans l&#x27;entreprise dès le lycée</h4></article><article class="card" data-pretext><div class="card__num">N°016</div><h4 class="card__title" data-pretext-text>Le Baccalauréat International (IB) : un passeport vers les études dans le monde</h4></article><article class="card" data-pretext><div class="card__num">N°017</div><h4 class="card__title" data-pretext-text>Alternance et CAP : et pourquoi pas un apprentissage dès 16 ans ?</h4></article><article class="card" data-pretext><div class="card__num">N°018</div><h4 class="card__title" data-pretext-text>Premier bulletin de 3ᵉ : que disent les notes sur l&#x27;orientation ?</h4></article><article class="card" data-pretext><div class="card__num">N°019</div><h4 class="card__title" data-pretext-text>Vacances de fin d&#x27;année : faire une pause… tout en réfléchissant un peu</h4></article></div></section><section class="period" id="period-3e-2"><header class="period__head"><h3 class="period__title">2ᵉ trimestre — Expériences et premiers choix</h3><span class="period__months">janv – mars</span><span class="period__count">14 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°020</div><h4 class="card__title" data-pretext-text>Votre ado ne sait pas quoi faire ? Bonne nouvelle.</h4></article><article class="card" data-pretext><div class="card__num">N°021</div><h4 class="card__title" data-pretext-text>Enquêtes métiers : une heure avec le bon professionnel peut tout changer</h4></article><article class="card" data-pretext><div class="card__num">N°022</div><h4 class="card__title" data-pretext-text>Le stage de 3ᵉ : en faire un vrai accélérateur d&#x27;orientation</h4></article><article class="card" data-pretext><div class="card__num">N°023</div><h4 class="card__title" data-pretext-text>Le cerveau adolescent et l&#x27;orientation : ce que les neurosciences changent</h4></article><article class="card" data-pretext><div class="card__num">N°024</div><h4 class="card__title" data-pretext-text>Débriefer le stage de 3ᵉ : transformer l&#x27;expérience en boussole</h4></article><article class="card" data-pretext><div class="card__num">N°025</div><h4 class="card__title" data-pretext-text>Vœux provisoires d&#x27;orientation : formuler ses premiers choix sans stress</h4></article><article class="card" data-pretext><div class="card__num">N°026</div><h4 class="card__title" data-pretext-text>Portes ouvertes et salons : visiter les lycées avec son ado</h4></article><article class="card" data-pretext><div class="card__num">N°027</div><h4 class="card__title" data-pretext-text>Lycée public, privé ou international : quel environnement pour la Seconde ?</h4></article><article class="card" data-pretext><div class="card__num">N°028</div><h4 class="card__title" data-pretext-text>Sections européennes, sport-études : les filières spéciales au lycée</h4></article><article class="card" data-pretext><div class="card__num">N°029</div><h4 class="card__title" data-pretext-text>Bac pro, CAP : anticiper les inscriptions et les sélections</h4></article><article class="card" data-pretext><div class="card__num">N°030</div><h4 class="card__title" data-pretext-text>Passion atypique : concilier rêve et études dès le lycée</h4></article><article class="card" data-pretext><div class="card__num">N°031</div><h4 class="card__title" data-pretext-text>Besoin d&#x27;un coup de pouce extérieur ?</h4></article><article class="card" data-pretext><div class="card__num">N°032</div><h4 class="card__title" data-pretext-text>Conflit parent-ado sur l&#x27;orientation : désamorcer les tensions</h4></article><article class="card" data-pretext><div class="card__num">N°033</div><h4 class="card__title" data-pretext-text>Motivation en berne en 3ᵉ : remobiliser autour du projet</h4></article></div></section><section class="period" id="period-3e-3"><header class="period__head"><h3 class="period__title">3ᵉ trimestre — Décisions finales et transition</h3><span class="period__months">avr – juin</span><span class="period__count">10 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°034</div><h4 class="card__title" data-pretext-text>Choix définitifs d&#x27;orientation : décider sereinement en famille</h4></article><article class="card" data-pretext><div class="card__num">N°035</div><h4 class="card__title" data-pretext-text>Remplir la fiche de vœux finale : nos conseils pour bien classer ses choix</h4></article><article class="card" data-pretext><div class="card__num">N°036</div><h4 class="card__title" data-pretext-text>Désaccord parent-enfant sur la filière : comment trouver un compromis ?</h4></article><article class="card" data-pretext><div class="card__num">N°037</div><h4 class="card__title" data-pretext-text>Orientation refusée par le conseil de classe : plan B et recours</h4></article><article class="card" data-pretext><div class="card__num">N°038</div><h4 class="card__title" data-pretext-text>Affectation en lycée : comprendre le verdict et les prochaines étapes</h4></article><article class="card" data-pretext><div class="card__num">N°039</div><h4 class="card__title" data-pretext-text>Brevet en vue : soutenir son enfant sans mettre la pression</h4></article><article class="card" data-pretext><div class="card__num">N°040</div><h4 class="card__title" data-pretext-text>Droit à l&#x27;erreur : et si le premier choix n&#x27;était pas le bon ?</h4></article><article class="card" data-pretext><div class="card__num">N°041</div><h4 class="card__title" data-pretext-text>Fin de collège : célébrer l&#x27;accomplissement et tourner la page</h4></article><article class="card" data-pretext><div class="card__num">N°042</div><h4 class="card__title" data-pretext-text>Procrastination chez l&#x27;ado : les vraies causes et les vraies solutions</h4></article><article class="card" data-pretext><div class="card__num">N°043</div><h4 class="card__title" data-pretext-text>Redoubler la 3ᵉ : solution ou faux-semblant ?</h4></article></div></section><section class="period" id="period-3e-4"><header class="period__head"><h3 class="period__title">Vacances d&#x27;été — Préparer l&#x27;entrée au lycée</h3><span class="period__months">juil – août</span><span class="period__count">9 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°044</div><h4 class="card__title" data-pretext-text>Décompression estivale : trouver le bon équilibre entre repos et réflexion</h4></article><article class="card" data-pretext><div class="card__num">N°045</div><h4 class="card__title" data-pretext-text>Entretenir la curiosité pendant l&#x27;été : lectures, podcasts et musées pour élargir ses horizons</h4></article><article class="card" data-pretext><div class="card__num">N°046</div><h4 class="card__title" data-pretext-text>Voyages et séjours linguistiques : investir dans l&#x27;ouverture au monde</h4></article><article class="card" data-pretext><div class="card__num">N°047</div><h4 class="card__title" data-pretext-text>Petites révisions sans stress : consolider les bases avant la Seconde</h4></article><article class="card" data-pretext><div class="card__num">N°048</div><h4 class="card__title" data-pretext-text>Gagner en maturité : premières responsabilités pendant les vacances</h4></article><article class="card" data-pretext><div class="card__num">N°049</div><h4 class="card__title" data-pretext-text>Construire une relation de confiance autour de l&#x27;orientation</h4></article><article class="card" data-pretext><div class="card__num">N°050</div><h4 class="card__title" data-pretext-text>Check-list de rentrée : préparer concrètement l&#x27;entrée en Seconde</h4></article><article class="card" data-pretext><div class="card__num">N°051</div><h4 class="card__title" data-pretext-text>Nouveau départ loin de la maison : anticiper l&#x27;adaptation en internat ou à l&#x27;étranger</h4></article><article class="card" data-pretext><div class="card__num">N°052</div><h4 class="card__title" data-pretext-text>Amitiés et repères : gérer le changement social en entrant au lycée</h4></article></div></section></div></section>
+<section class="cls-panel cls-panel--hidden" id="panel-2nde" data-cls-panel="2nde" role="tabpanel"><header class="cls-panel__head" style="--cls-color: #1320CE"><div class="cls-panel__badge">2nde</div><h2 class="cls-panel__title">Choix de spécialités</h2><p class="cls-panel__blurb" data-pretext data-pretext-text>Bien choisir ses spécialités pour la suite : explorer, comparer, projeter — sans se fermer de portes.</p><div class="cls-panel__stats"><strong>52</strong> articles · <strong>4</strong> périodes</div></header><div class="cls-panel__body"><section class="period" id="period-2nde-1"><header class="period__head"><h3 class="period__title">1er trimestre — Intégration au lycée et bases du cycle long</h3><span class="period__months">sept – déc</span><span class="period__count">18 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°053</div><h4 class="card__title" data-pretext-text>Rentrée en Seconde : nouvelle vie, nouvelles habitudes</h4></article><article class="card" data-pretext><div class="card__num">N°054</div><h4 class="card__title" data-pretext-text>De collégien à lycéen : ce qui change côté travail et rythme</h4></article><article class="card" data-pretext><div class="card__num">N°055</div><h4 class="card__title" data-pretext-text>Seconde générale et techno : le programme commun à la loupe</h4></article><article class="card" data-pretext><div class="card__num">N°056</div><h4 class="card__title" data-pretext-text>Bien débuter en 2de pro : accompagner son enfant en lycée professionnel</h4></article><article class="card" data-pretext><div class="card__num">N°057</div><h4 class="card__title" data-pretext-text>Premières notes au lycée : relativiser et s&#x27;adapter</h4></article><article class="card" data-pretext><div class="card__num">N°058</div><h4 class="card__title" data-pretext-text>Méthodes de travail : apprendre à apprendre au lycée</h4></article><article class="card" data-pretext><div class="card__num">N°059</div><h4 class="card__title" data-pretext-text>Accompagnement psychologique au lycée : quand consulter ?</h4></article><article class="card" data-pretext><div class="card__num">N°060</div><h4 class="card__title" data-pretext-text>Lycéen mais encore ado : trouver l&#x27;équilibre entre travail et activités</h4></article><article class="card" data-pretext><div class="card__num">N°061</div><h4 class="card__title" data-pretext-text>Identité numérique : préparer son image professionnelle dès 15 ans</h4></article><article class="card" data-pretext><div class="card__num">N°062</div><h4 class="card__title" data-pretext-text>Premier bulletin de 2nde : un indicateur pour l&#x27;orientation</h4></article><article class="card" data-pretext><div class="card__num">N°063</div><h4 class="card__title" data-pretext-text>Difficultés en 2nde : ne pas attendre pour réagir</h4></article><article class="card" data-pretext><div class="card__num">N°064</div><h4 class="card__title" data-pretext-text>Temps forts d&#x27;orientation en 2nde : à vos agendas !</h4></article><article class="card" data-pretext><div class="card__num">N°065</div><h4 class="card__title" data-pretext-text>Le sport dans le parcours : atout ou distraction ?</h4></article><article class="card" data-pretext><div class="card__num">N°066</div><h4 class="card__title" data-pretext-text>Explorer des métiers en 2nde : multiplier les rencontres</h4></article><article class="card" data-pretext><div class="card__num">N°067</div><h4 class="card__title" data-pretext-text>Bénévolat et engagement associatif : un atout pour le dossier</h4></article><article class="card" data-pretext><div class="card__num">N°068</div><h4 class="card__title" data-pretext-text>Réévaluer la filière en cours de route : premier check-point</h4></article><article class="card" data-pretext><div class="card__num">N°069</div><h4 class="card__title" data-pretext-text>Options au lycée : LV3, arts, sport-études, section euro…</h4></article><article class="card" data-pretext><div class="card__num">N°070</div><h4 class="card__title" data-pretext-text>Options et spécialités : comment aider votre enfant à choisir sans le surcharger</h4></article></div></section><section class="period" id="period-2nde-2"><header class="period__head"><h3 class="period__title">2ᵉ trimestre — Vers le choix des spécialités ou des séries</h3><span class="period__months">janv – mars</span><span class="period__count">16 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°071</div><h4 class="card__title" data-pretext-text>Mi-parcours en Seconde : quelles matières font vibrer votre ado ?</h4></article><article class="card" data-pretext><div class="card__num">N°072</div><h4 class="card__title" data-pretext-text>Spécialités en 1ère : suivre ses envies ou la raison ?</h4></article><article class="card" data-pretext><div class="card__num">N°073</div><h4 class="card__title" data-pretext-text>Mini-stage pendant l&#x27;année : comment en organiser un ?</h4></article><article class="card" data-pretext><div class="card__num">N°074</div><h4 class="card__title" data-pretext-text>Anticiper les études supérieures en choisissant ses spécialités</h4></article><article class="card" data-pretext><div class="card__num">N°075</div><h4 class="card__title" data-pretext-text>Éducation financière : ce que votre lycéen devrait déjà savoir</h4></article><article class="card" data-pretext><div class="card__num">N°076</div><h4 class="card__title" data-pretext-text>Panorama des spécialités du bac général : décrypter les options</h4></article><article class="card" data-pretext><div class="card__num">N°077</div><h4 class="card__title" data-pretext-text>Voie technologique : quel bac techno choisir ?</h4></article><article class="card" data-pretext><div class="card__num">N°078</div><h4 class="card__title" data-pretext-text>Général ou techno : comment trancher ?</h4></article><article class="card" data-pretext><div class="card__num">N°079</div><h4 class="card__title" data-pretext-text>Stéréotypes de genre dans l&#x27;orientation : en parler avant que ça influence</h4></article><article class="card" data-pretext><div class="card__num">N°080</div><h4 class="card__title" data-pretext-text>Réorientation en cours d&#x27;année : bifurquer vers la voie pro en Seconde</h4></article><article class="card" data-pretext><div class="card__num">N°081</div><h4 class="card__title" data-pretext-text>Avis du conseil de classe : décoder les recommandations</h4></article><article class="card" data-pretext><div class="card__num">N°082</div><h4 class="card__title" data-pretext-text>Salons d&#x27;orientation : y aller même en 2nde ?</h4></article><article class="card" data-pretext><div class="card__num">N°083</div><h4 class="card__title" data-pretext-text>Le bac pro en famille de métiers : choix de la spécialité en fin de 2de pro</h4></article><article class="card" data-pretext><div class="card__num">N°084</div><h4 class="card__title" data-pretext-text>Comment gérer les notes en baisse en 2nde</h4></article><article class="card" data-pretext><div class="card__num">N°085</div><h4 class="card__title" data-pretext-text>Les inégalités territoriales dans l&#x27;accès aux formations</h4></article><article class="card" data-pretext><div class="card__num">N°086</div><h4 class="card__title" data-pretext-text>Et si on visait l&#x27;International ?</h4></article></div></section><section class="period" id="period-2nde-3"><header class="period__head"><h3 class="period__title">3ᵉ trimestre — Décisions pour la Première</h3><span class="period__months">avr – juin</span><span class="period__count">8 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°087</div><h4 class="card__title" data-pretext-text>Vœux définitifs pour la Première : finaliser les spécialités ou la filière</h4></article><article class="card" data-pretext><div class="card__num">N°088</div><h4 class="card__title" data-pretext-text>Choix pour la 1ère : remplir la fiche de vœux sans se tromper</h4></article><article class="card" data-pretext><div class="card__num">N°089</div><h4 class="card__title" data-pretext-text>Avis défavorable ? Réagir en fin de 2nde</h4></article><article class="card" data-pretext><div class="card__num">N°090</div><h4 class="card__title" data-pretext-text>Choisir ses spécialités sans se fermer de portes : la stratégie gagnante</h4></article><article class="card" data-pretext><div class="card__num">N°091</div><h4 class="card__title" data-pretext-text>Cap sur la 1ère techno : préparer la transition</h4></article><article class="card" data-pretext><div class="card__num">N°092</div><h4 class="card__title" data-pretext-text>Redoubler la 2nde : seconde chance ou perte de temps ?</h4></article><article class="card" data-pretext><div class="card__num">N°093</div><h4 class="card__title" data-pretext-text>Préparer le projet d&#x27;avenir dès la 2nde : outil ou contrainte ?</h4></article><article class="card" data-pretext><div class="card__num">N°094</div><h4 class="card__title" data-pretext-text>Bilan de l&#x27;année de 2nde : ce qu&#x27;il faut retenir</h4></article></div></section><section class="period" id="period-2nde-4"><header class="period__head"><h3 class="period__title">Vacances d&#x27;été — Après la 2nde</h3><span class="period__months">après la 2nde</span><span class="period__count">10 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°095</div><h4 class="card__title" data-pretext-text>Accompagner les doutes et crises identitaires de l&#x27;adolescence</h4></article><article class="card" data-pretext><div class="card__num">N°096</div><h4 class="card__title" data-pretext-text>Seconde terminée : un été pour souffler… et s&#x27;enrichir</h4></article><article class="card" data-pretext><div class="card__num">N°097</div><h4 class="card__title" data-pretext-text>Premier job d&#x27;été à 16 ans : une expérience formatrice</h4></article><article class="card" data-pretext><div class="card__num">N°098</div><h4 class="card__title" data-pretext-text>Bénévolat d&#x27;été : une expérience qui peut changer une orientation</h4></article><article class="card" data-pretext><div class="card__num">N°099</div><h4 class="card__title" data-pretext-text>Stage d&#x27;observation facultatif : et si votre ado découvrait un métier pendant l&#x27;été ?</h4></article><article class="card" data-pretext><div class="card__num">N°100</div><h4 class="card__title" data-pretext-text>Consolider les bases avant la 1ère : petites révisions estivales</h4></article><article class="card" data-pretext><div class="card__num">N°101</div><h4 class="card__title" data-pretext-text>Dernières vacances &quot;tranquilles&quot; : profiter avant le rush du cycle terminal</h4></article><article class="card" data-pretext><div class="card__num">N°102</div><h4 class="card__title" data-pretext-text>Préparer son mindset avant le cycle terminal</h4></article><article class="card" data-pretext><div class="card__num">N°103</div><h4 class="card__title" data-pretext-text>Démarches administratives : transfert de dossier, changement d&#x27;établissement</h4></article><article class="card" data-pretext><div class="card__num">N°104</div><h4 class="card__title" data-pretext-text>Que faire si votre ado n&#x27;a toujours aucune idée en fin de 2nde ?</h4></article></div></section></div></section>
+<section class="cls-panel cls-panel--hidden" id="panel-1re" data-cls-panel="1re" role="tabpanel"><header class="cls-panel__head" style="--cls-color: #FD6936"><div class="cls-panel__badge">1ère</div><h2 class="cls-panel__title">Confirmation du projet</h2><p class="cls-panel__blurb" data-pretext data-pretext-text>Affiner son projet d&#x27;orientation : approfondir les spécialités, préparer le bac de français, viser le supérieur.</p><div class="cls-panel__stats"><strong>48</strong> articles · <strong>5</strong> périodes</div></header><div class="cls-panel__body"><section class="period" id="period-1re-1"><header class="period__head"><h3 class="period__title">Vacances d&#x27;été — Après la 2nde</h3><span class="period__months">après la 2nde</span><span class="period__count">2 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°105</div><h4 class="card__title" data-pretext-text>Cap sur la Première à l&#x27;étranger : préparer le grand saut</h4></article><article class="card" data-pretext><div class="card__num">N°106</div><h4 class="card__title" data-pretext-text>Vacances après la 2nde : décompresser vraiment ou préparer la 1ère ?</h4></article></div></section><section class="period" id="period-1re-2"><header class="period__head"><h3 class="period__title">1er trimestre — Spécialisation et premières ambitions</h3><span class="period__months">sept – déc</span><span class="period__count">18 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°107</div><h4 class="card__title" data-pretext-text>Rentrée en 1ère : l&#x27;heure de la spécialisation</h4></article><article class="card" data-pretext><div class="card__num">N°108</div><h4 class="card__title" data-pretext-text>Soutenir son 1ère dans ses spécialités</h4></article><article class="card" data-pretext><div class="card__num">N°109</div><h4 class="card__title" data-pretext-text>Maths complémentaires et expertes en 1ère : faut-il les prendre ?</h4></article><article class="card" data-pretext><div class="card__num">N°110</div><h4 class="card__title" data-pretext-text>Penser à l&#x27;après-bac… dès maintenant</h4></article><article class="card" data-pretext><div class="card__num">N°111</div><h4 class="card__title" data-pretext-text>Maturité émotionnelle et choix d&#x27;orientation : peut-on vraiment décider à 17 ans ?</h4></article><article class="card" data-pretext><div class="card__num">N°112</div><h4 class="card__title" data-pretext-text>Panorama des études supérieures : quelles voies après le bac ?</h4></article><article class="card" data-pretext><div class="card__num">N°113</div><h4 class="card__title" data-pretext-text>Comprendre le nouveau bac : contrôle continu, coefficients et Grand Oral</h4></article><article class="card" data-pretext><div class="card__num">N°114</div><h4 class="card__title" data-pretext-text>Université ou Grande École : deux philosophies d&#x27;études</h4></article><article class="card" data-pretext><div class="card__num">N°115</div><h4 class="card__title" data-pretext-text>Filières sélectives : pour qui, comment s&#x27;y préparer ?</h4></article><article class="card" data-pretext><div class="card__num">N°116</div><h4 class="card__title" data-pretext-text>Santé mentale au lycée : repérer l&#x27;anxiété de performance</h4></article><article class="card" data-pretext><div class="card__num">N°117</div><h4 class="card__title" data-pretext-text>Filières professionnalisantes : BTS, BUT et compagnie</h4></article><article class="card" data-pretext><div class="card__num">N°118</div><h4 class="card__title" data-pretext-text>Études en alternance : y penser dès maintenant</h4></article><article class="card" data-pretext><div class="card__num">N°119</div><h4 class="card__title" data-pretext-text>Les métiers liés à l&#x27;IA : aider son ado à se projeter dans le monde de demain</h4></article><article class="card" data-pretext><div class="card__num">N°120</div><h4 class="card__title" data-pretext-text>Envies d&#x27;ailleurs : construire un dossier pour les études à l&#x27;étranger</h4></article><article class="card" data-pretext><div class="card__num">N°121</div><h4 class="card__title" data-pretext-text>Un œil sur Parcoursup : l&#x27;importance des notes de 1ère</h4></article><article class="card" data-pretext><div class="card__num">N°122</div><h4 class="card__title" data-pretext-text>Valoriser son profil dès la 1ère : projets et engagements</h4></article><article class="card" data-pretext><div class="card__num">N°123</div><h4 class="card__title" data-pretext-text>Engagement lycéen et vie associative : un atout pour Parcoursup</h4></article><article class="card" data-pretext><div class="card__num">N°124</div><h4 class="card__title" data-pretext-text>Bac de français en vue : gérer l&#x27;équilibre entre épreuves et orientation</h4></article></div></section><section class="period" id="period-1re-3"><header class="period__head"><h3 class="period__title">2ᵉ trimestre — Exploration concrète des voies post-bac</h3><span class="period__months">janv – mars</span><span class="period__count">12 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°125</div><h4 class="card__title" data-pretext-text>Conseil de classe de 1ère : quel avis pour le supérieur ?</h4></article><article class="card" data-pretext><div class="card__num">N°126</div><h4 class="card__title" data-pretext-text>Deux spécialités à conserver, une à abandonner : comment choisir ?</h4></article><article class="card" data-pretext><div class="card__num">N°130</div><h4 class="card__title" data-pretext-text>JPO et salons post-bac : en profiter dès la 1ère</h4></article><article class="card" data-pretext><div class="card__num">N°131</div><h4 class="card__title" data-pretext-text>Études à l&#x27;étranger : tests de langue et dossiers, c&#x27;est maintenant !</h4></article><article class="card" data-pretext><div class="card__num">N°132</div><h4 class="card__title" data-pretext-text>Rédiger une lettre de motivation percutante : s&#x27;entraîner dès la 1ère</h4></article><article class="card" data-pretext><div class="card__num">N°133</div><h4 class="card__title" data-pretext-text>Parcoursup, mode d&#x27;emploi (version anticipée)</h4></article><article class="card" data-pretext><div class="card__num">N°134</div><h4 class="card__title" data-pretext-text>Les métiers du secteur public : une option souvent sous-estimée</h4></article><article class="card" data-pretext><div class="card__num">N°135</div><h4 class="card__title" data-pretext-text>Stage ou summer school : préparer un été utile</h4></article><article class="card" data-pretext><div class="card__num">N°136</div><h4 class="card__title" data-pretext-text>Dossiers spéciaux : art, architecture, etc., anticipez !</h4></article><article class="card" data-pretext><div class="card__num">N°137</div><h4 class="card__title" data-pretext-text>Les préjugés sur les filières courtes : BTS et BUT méritent mieux</h4></article><article class="card" data-pretext><div class="card__num">N°138</div><h4 class="card__title" data-pretext-text>Après un bac pro ou techno : y penser aussi en 1ère</h4></article><article class="card" data-pretext><div class="card__num">N°139</div><h4 class="card__title" data-pretext-text>Bourses et aides financières pour les études supérieures : anticiper dès la 1ère</h4></article></div></section><section class="period" id="period-1re-4"><header class="period__head"><h3 class="period__title">3ᵉ trimestre — Dernières étapes au lycée avant la Terminale</h3><span class="period__months">avr – juin</span><span class="period__count">8 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°140</div><h4 class="card__title" data-pretext-text>Épreuves anticipées : soutenir son enfant pendant le bac français</h4></article><article class="card" data-pretext><div class="card__num">N°142</div><h4 class="card__title" data-pretext-text>Les vacances de Pâques en 1ère : révision ou détente, comment trancher en famille</h4></article><article class="card" data-pretext><div class="card__num">N°143</div><h4 class="card__title" data-pretext-text>Bilan des spécialités : lesquelles garder, lesquelles arrêter ?</h4></article><article class="card" data-pretext><div class="card__num">N°144</div><h4 class="card__title" data-pretext-text>Le projet professionnel en bac pro et techno : un atout à valoriser</h4></article><article class="card" data-pretext><div class="card__num">N°145</div><h4 class="card__title" data-pretext-text>Comprendre les coefficients du nouveau bac : ce qui compte vraiment</h4></article><article class="card" data-pretext><div class="card__num">N°146</div><h4 class="card__title" data-pretext-text>1ère terminée : tirer le bilan pour préparer la Terminale</h4></article><article class="card" data-pretext><div class="card__num">N°147</div><h4 class="card__title" data-pretext-text>Orientation post-bac : finaliser le plan pendant l&#x27;été</h4></article><article class="card" data-pretext><div class="card__num">N°148</div><h4 class="card__title" data-pretext-text>Vacances studieuses : jusqu&#x27;où aller trop loin ?</h4></article></div></section><section class="period" id="period-1re-5"><header class="period__head"><h3 class="period__title">Vacances d&#x27;été — Après la 1ère</h3><span class="period__months">après la 1ère</span><span class="period__count">8 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°149</div><h4 class="card__title" data-pretext-text>Dernière ligne droite en vue : se ressourcer avant la Terminale</h4></article><article class="card" data-pretext><div class="card__num">N°150</div><h4 class="card__title" data-pretext-text>Stage d&#x27;été ou job étudiant : un plus sur le CV avant la Terminale</h4></article><article class="card" data-pretext><div class="card__num">N°151</div><h4 class="card__title" data-pretext-text>Trouver un mentor professionnel : comment et pourquoi dès 17 ans</h4></article><article class="card" data-pretext><div class="card__num">N°152</div><h4 class="card__title" data-pretext-text>Affiner le projet d&#x27;études pendant l&#x27;été</h4></article><article class="card" data-pretext><div class="card__num">N°153</div><h4 class="card__title" data-pretext-text>Préparer les candidatures internationales</h4></article><article class="card" data-pretext><div class="card__num">N°154</div><h4 class="card__title" data-pretext-text>Décoder les classements d&#x27;écoles et d&#x27;universités : ce qu&#x27;ils disent vraiment</h4></article><article class="card" data-pretext><div class="card__num">N°155</div><h4 class="card__title" data-pretext-text>Anticiper la rentrée : dossiers et matériel</h4></article><article class="card" data-pretext><div class="card__num">N°156</div><h4 class="card__title" data-pretext-text>Études au Royaume-Uni et aux USA après le bac : démarches concrètes</h4></article></div></section></div></section>
+<section class="cls-panel cls-panel--hidden" id="panel-terminale" data-cls-panel="terminale" role="tabpanel"><header class="cls-panel__head" style="--cls-color: #1320CE"><div class="cls-panel__badge">Terminale</div><h2 class="cls-panel__title">Parcoursup &amp; Post-Bac</h2><p class="cls-panel__blurb" data-pretext data-pretext-text>Stratégie Parcoursup, épreuves du bac, transition vers le supérieur — l&#x27;année charnière, semaine par semaine.</p><div class="cls-panel__stats"><strong>48</strong> articles · <strong>4</strong> périodes</div></header><div class="cls-panel__body"><section class="period" id="period-terminale-1"><header class="period__head"><h3 class="period__title">Vacances d&#x27;été — Après la 1ère</h3><span class="period__months">après la 1ère</span><span class="period__count">2 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°157</div><h4 class="card__title" data-pretext-text>Objectifs pour la Terminale : définir un plan de bataille</h4></article><article class="card" data-pretext><div class="card__num">N°158</div><h4 class="card__title" data-pretext-text>Objectifs pour la Terminale : planifier cet été pour ne pas démarrer à froid</h4></article></div></section><section class="period" id="period-terminale-2"><header class="period__head"><h3 class="period__title">1er trimestre — Applications et derniers apprentissages</h3><span class="period__months">sept – déc</span><span class="period__count">18 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°159</div><h4 class="card__title" data-pretext-text>Rentrée en Terminale : l&#x27;année charnière commence</h4></article><article class="card" data-pretext><div class="card__num">N°163</div><h4 class="card__title" data-pretext-text>Alternance vs formation initiale : le vrai comparatif</h4></article><article class="card" data-pretext><div class="card__num">N°165</div><h4 class="card__title" data-pretext-text>Dossiers de candidature : CV, lettres, portfolio… s&#x27;y mettre tôt</h4></article><article class="card" data-pretext><div class="card__num">N°166</div><h4 class="card__title" data-pretext-text>La santé mentale des lycéens : reconnaître les signaux et savoir réagir</h4></article><article class="card" data-pretext><div class="card__num">N°167</div><h4 class="card__title" data-pretext-text>Préparer la mobilité géographique : logement, budget, distance émotionnelle</h4></article><article class="card" data-pretext><div class="card__num">N°168</div><h4 class="card__title" data-pretext-text>Parcoursup côté pratique : créer son compte et formuler des vœux</h4></article><article class="card" data-pretext><div class="card__num">N°169</div><h4 class="card__title" data-pretext-text>Études à l&#x27;étranger : calendriers parallèles</h4></article><article class="card" data-pretext><div class="card__num">N°170</div><h4 class="card__title" data-pretext-text>Fac ou prépa ? Derniers conseils pour un choix crucial</h4></article><article class="card" data-pretext><div class="card__num">N°171</div><h4 class="card__title" data-pretext-text>Vacances de Toussaint en Terminale : souffler sans perdre le fil</h4></article><article class="card" data-pretext><div class="card__num">N°172</div><h4 class="card__title" data-pretext-text>Prévoir un plan B sans brider ses ambitions</h4></article><article class="card" data-pretext><div class="card__num">N°173</div><h4 class="card__title" data-pretext-text>Quand votre ado ne veut pas faire d&#x27;études supérieures : respecter et accompagner</h4></article><article class="card" data-pretext><div class="card__num">N°174</div><h4 class="card__title" data-pretext-text>Gérer le stress en Terminale : l&#x27;équilibre études/vie perso</h4></article><article class="card" data-pretext><div class="card__num">N°175</div><h4 class="card__title" data-pretext-text>Soutenir sans surveiller : trouver sa posture de parent en Terminale</h4></article><article class="card" data-pretext><div class="card__num">N°176</div><h4 class="card__title" data-pretext-text>Bacs blancs et épreuves communes : s&#x27;entraîner pour éviter les mauvaises surprises</h4></article><article class="card" data-pretext><div class="card__num">N°177</div><h4 class="card__title" data-pretext-text>Lettres de recommandation : mode d&#x27;emploi</h4></article><article class="card" data-pretext><div class="card__num">N°178</div><h4 class="card__title" data-pretext-text>Les premiers résultats de novembre : lire le bulletin sans amplifier l&#x27;anxiété</h4></article><article class="card" data-pretext><div class="card__num">N°179</div><h4 class="card__title" data-pretext-text>Soulager la charge quotidienne : petites astuces logistiques</h4></article><article class="card" data-pretext><div class="card__num">N°180</div><h4 class="card__title" data-pretext-text>Vacances de Noël en Terminale : structurer le repos sans jouer au chef de camp</h4></article></div></section><section class="period" id="period-terminale-3"><header class="period__head"><h3 class="period__title">2ᵉ trimestre — Candidatures et premières échéances</h3><span class="period__months">janv – mars</span><span class="period__count">15 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°181</div><h4 class="card__title" data-pretext-text>Top départ Parcoursup : formuler ses vœux avant mars</h4></article><article class="card" data-pretext><div class="card__num">N°182</div><h4 class="card__title" data-pretext-text>Rentrée de janvier en Terminale : sortir des fêtes et reprendre le rythme</h4></article><article class="card" data-pretext><div class="card__num">N°183</div><h4 class="card__title" data-pretext-text>Nombre de vœux Parcoursup : construire une stratégie équilibrée</h4></article><article class="card" data-pretext><div class="card__num">N°184</div><h4 class="card__title" data-pretext-text>Rédiger le projet motivé Parcoursup : 5 astuces pour une lettre qui fait mouche</h4></article><article class="card" data-pretext><div class="card__num">N°185</div><h4 class="card__title" data-pretext-text>Les formations hors Parcoursup : ne pas passer à côté</h4></article><article class="card" data-pretext><div class="card__num">N°186</div><h4 class="card__title" data-pretext-text>Dernière relecture : vérifier son dossier Parcoursup avant validation</h4></article><article class="card" data-pretext><div class="card__num">N°187</div><h4 class="card__title" data-pretext-text>Dossier bouclé, et maintenant ?</h4></article><article class="card" data-pretext><div class="card__num">N°188</div><h4 class="card__title" data-pretext-text>Décrypter une fiche de formation Parcoursup : au-delà du taux d&#x27;accès</h4></article><article class="card" data-pretext><div class="card__num">N°189</div><h4 class="card__title" data-pretext-text>Épreuves de spécialité en mars : cap sur le bac</h4></article><article class="card" data-pretext><div class="card__num">N°190</div><h4 class="card__title" data-pretext-text>Anticiper le Grand Oral (Tle générale)</h4></article><article class="card" data-pretext><div class="card__num">N°191</div><h4 class="card__title" data-pretext-text>Résultats du premier bac blanc : comment en parler sans catastrophiser</h4></article><article class="card" data-pretext><div class="card__num">N°192</div><h4 class="card__title" data-pretext-text>Dossiers alternance : c&#x27;est parti aussi</h4></article><article class="card" data-pretext><div class="card__num">N°193</div><h4 class="card__title" data-pretext-text>La simulation d&#x27;entretien en famille : pratiquer sans stresser</h4></article><article class="card" data-pretext><div class="card__num">N°194</div><h4 class="card__title" data-pretext-text>Orientation définitive vs résultats : garder le cap</h4></article><article class="card" data-pretext><div class="card__num">N°195</div><h4 class="card__title" data-pretext-text>Vacances de février en Terminale : révision et récupération, l&#x27;art du dosage</h4></article></div></section><section class="period" id="period-terminale-4"><header class="period__head"><h3 class="period__title">3ᵉ trimestre — Conclusions du lycée et admissions</h3><span class="period__months">avr – juin</span><span class="period__count">13 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°196</div><h4 class="card__title" data-pretext-text>Patience, les réponses arrivent…</h4></article><article class="card" data-pretext><div class="card__num">N°197</div><h4 class="card__title" data-pretext-text>Aider son ado à choisir entre plusieurs oui de Parcoursup</h4></article><article class="card" data-pretext><div class="card__num">N°198</div><h4 class="card__title" data-pretext-text>Après les épreuves de spécialité : souffler, puis maintenir l&#x27;élan</h4></article><article class="card" data-pretext><div class="card__num">N°199</div><h4 class="card__title" data-pretext-text>Phase complémentaire : rebondir en cas de refus partout</h4></article><article class="card" data-pretext><div class="card__num">N°200</div><h4 class="card__title" data-pretext-text>Entre les résultats Parcoursup et le bac : gérer deux fronts en même temps</h4></article><article class="card" data-pretext><div class="card__num">N°201</div><h4 class="card__title" data-pretext-text>Le Grand Oral : encourager l&#x27;aisance et la confiance</h4></article><article class="card" data-pretext><div class="card__num">N°202</div><h4 class="card__title" data-pretext-text>La dernière semaine avant le bac : les rituels rassurants que vous pouvez créer</h4></article><article class="card" data-pretext><div class="card__num">N°203</div><h4 class="card__title" data-pretext-text>Dernière épreuve, dernier effort : le bac version finale</h4></article><article class="card" data-pretext><div class="card__num">N°204</div><h4 class="card__title" data-pretext-text>Après les épreuves : accueillir l&#x27;épuisement avant de parler d&#x27;avenir</h4></article><article class="card" data-pretext><div class="card__num">N°205</div><h4 class="card__title" data-pretext-text>Résultats du bac : fierté et transitions</h4></article><article class="card" data-pretext><div class="card__num">N°206</div><h4 class="card__title" data-pretext-text>Et si le bac était raté ? Se préparer sereinement au scénario difficile</h4></article><article class="card" data-pretext><div class="card__num">N°207</div><h4 class="card__title" data-pretext-text>Gérer les résultats du bac et l&#x27;attente : les semaines les plus longues</h4></article><article class="card" data-pretext><div class="card__num">N°208</div><h4 class="card__title" data-pretext-text>Inscription dans le supérieur : mode d&#x27;emploi</h4></article></div></section></div></section>
+<section class="cls-panel cls-panel--hidden" id="panel-postbac" data-cls-panel="postbac" role="tabpanel"><header class="cls-panel__head" style="--cls-color: #FD6936"><div class="cls-panel__badge">Bac +1</div><h2 class="cls-panel__title">Première année post-bac</h2><p class="cls-panel__blurb" data-pretext data-pretext-text>Accompagner l&#x27;autonomie sans s&#x27;imposer : santé, logement, méthodes de la fac, premiers partiels, réorientation éventuelle.</p><div class="cls-panel__stats"><strong>51</strong> articles · <strong>4</strong> périodes</div></header><div class="cls-panel__body"><section class="period" id="period-postbac-1"><header class="period__head"><h3 class="period__title">Été après le bac — Le grand saut vers l&#x27;autonomie</h3><span class="period__months">juil – août</span><span class="period__count">13 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°209</div><h4 class="card__title" data-pretext-text>Les rites de passage vers l&#x27;âge adulte : comment les familles peuvent les marquer</h4></article><article class="card" data-pretext><div class="card__num">N°210</div><h4 class="card__title" data-pretext-text>Vacances méritées : profiter de l&#x27;été avant la vie d&#x27;étudiant</h4></article><article class="card" data-pretext><div class="card__num">N°211</div><h4 class="card__title" data-pretext-text>Décrypter son contrat de location étudiant : pièges et droits à connaître</h4></article><article class="card" data-pretext><div class="card__num">N°212</div><h4 class="card__title" data-pretext-text>Ouvrir un compte bancaire étudiant : bien choisir avant le départ</h4></article><article class="card" data-pretext><div class="card__num">N°213</div><h4 class="card__title" data-pretext-text>Les APL et aides au logement étudiant : comment s&#x27;y retrouver</h4></article><article class="card" data-pretext><div class="card__num">N°214</div><h4 class="card__title" data-pretext-text>Trouver un logement étudiant : mission commune parent-enfant</h4></article><article class="card" data-pretext><div class="card__num">N°215</div><h4 class="card__title" data-pretext-text>Passer le permis avant la rentrée : une liberté qui change tout</h4></article><article class="card" data-pretext><div class="card__num">N°216</div><h4 class="card__title" data-pretext-text>Les essentiels numériques avant la rentrée étudiante : outils et réflexes</h4></article><article class="card" data-pretext><div class="card__num">N°217</div><h4 class="card__title" data-pretext-text>Premières démarches d&#x27;étudiant : inscriptions et paperasse</h4></article><article class="card" data-pretext><div class="card__num">N°218</div><h4 class="card__title" data-pretext-text>Apprendre à cuisiner avant de partir : les bases que tout étudiant devrait maîtriser</h4></article><article class="card" data-pretext><div class="card__num">N°219</div><h4 class="card__title" data-pretext-text>Entre deux mondes : faire ses adieux au lycée</h4></article><article class="card" data-pretext><div class="card__num">N°220</div><h4 class="card__title" data-pretext-text>Un été de transition identitaire</h4></article><article class="card" data-pretext><div class="card__num">N°221</div><h4 class="card__title" data-pretext-text>Profiter ensemble avant le départ</h4></article></div></section><section class="period" id="period-postbac-2"><header class="period__head"><h3 class="period__title">Rentrée dans le supérieur — Nouveau départ</h3><span class="period__months">sept – oct</span><span class="period__count">12 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°222</div><h4 class="card__title" data-pretext-text>Premiers jours à la fac/école : être présent sans être oppressant</h4></article><article class="card" data-pretext><div class="card__num">N°223</div><h4 class="card__title" data-pretext-text>Prendre son envol : trouver le bon équilibre de contact</h4></article><article class="card" data-pretext><div class="card__num">N°224</div><h4 class="card__title" data-pretext-text>Budget étudiant : l&#x27;apprentissage de la gestion</h4></article><article class="card" data-pretext><div class="card__num">N°225</div><h4 class="card__title" data-pretext-text>Nouveau cadre de vie : aider à apprivoiser son logement</h4></article><article class="card" data-pretext><div class="card__num">N°226</div><h4 class="card__title" data-pretext-text>Les troubles dys et le supérieur : faire valoir ses droits à l&#x27;université</h4></article><article class="card" data-pretext><div class="card__num">N°227</div><h4 class="card__title" data-pretext-text>Travailler autrement : s&#x27;adapter aux méthodes de la fac</h4></article><article class="card" data-pretext><div class="card__num">N°228</div><h4 class="card__title" data-pretext-text>Le mentorat étudiant : trouver un guide dans son domaine dès la L1</h4></article><article class="card" data-pretext><div class="card__num">N°229</div><h4 class="card__title" data-pretext-text>Repérer les signaux faibles : prévenir le décrochage</h4></article><article class="card" data-pretext><div class="card__num">N°231</div><h4 class="card__title" data-pretext-text>Parent d&#x27;étudiant : redéfinir son rôle</h4></article><article class="card" data-pretext><div class="card__num">N°232</div><h4 class="card__title" data-pretext-text>Toussaint étudiante : le premier retour à la maison après deux mois d&#x27;absence</h4></article><article class="card" data-pretext><div class="card__num">N°233</div><h4 class="card__title" data-pretext-text>La mutuelle étudiante et la santé en autonomie : ce que le parent doit vérifier</h4></article><article class="card" data-pretext><div class="card__num">N°234</div><h4 class="card__title" data-pretext-text>Novembre à l&#x27;université : le mois où certains étudiants commencent à décrocher</h4></article></div></section><section class="period" id="period-postbac-3"><header class="period__head"><h3 class="period__title">Mi-parcours de 1ère année — Ajuster le tir</h3><span class="period__months">janv – fév</span><span class="period__count">13 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°235</div><h4 class="card__title" data-pretext-text>Les premiers partiels approchent : comment préparer son étudiant sans être là</h4></article><article class="card" data-pretext><div class="card__num">N°236</div><h4 class="card__title" data-pretext-text>Le blues de décembre : solitude, pression, distance — comment rester présent</h4></article><article class="card" data-pretext><div class="card__num">N°237</div><h4 class="card__title" data-pretext-text>Vacances de Noël : retrouvailles après un semestre d&#x27;autonomie</h4></article><article class="card" data-pretext><div class="card__num">N°238</div><h4 class="card__title" data-pretext-text>Fin de 1er semestre : comprendre les ECTS, les coefficients, le système de notes</h4></article><article class="card" data-pretext><div class="card__num">N°239</div><h4 class="card__title" data-pretext-text>Résultats du 1er semestre : dédramatiser et analyser</h4></article><article class="card" data-pretext><div class="card__num">N°240</div><h4 class="card__title" data-pretext-text>Rentrées décalées et réorientation express</h4></article><article class="card" data-pretext><div class="card__num">N°241</div><h4 class="card__title" data-pretext-text>Parcoursup, saison 2 ?</h4></article><article class="card" data-pretext><div class="card__num">N°242</div><h4 class="card__title" data-pretext-text>S&#x27;accrocher ou changer : le dilemme du premier hiver</h4></article><article class="card" data-pretext><div class="card__num">N°243</div><h4 class="card__title" data-pretext-text>Chercher un stage de 1ère année : s&#x27;y prendre tôt</h4></article><article class="card" data-pretext><div class="card__num">N°244</div><h4 class="card__title" data-pretext-text>Job étudiant et études : trouver l&#x27;équilibre</h4></article><article class="card" data-pretext><div class="card__num">N°245</div><h4 class="card__title" data-pretext-text>À distance mais présent : soutenir la santé mentale de votre étudiant</h4></article><article class="card" data-pretext><div class="card__num">N°246</div><h4 class="card__title" data-pretext-text>Les retours à la maison : ajuster les rôles</h4></article><article class="card" data-pretext><div class="card__num">N°247</div><h4 class="card__title" data-pretext-text>Le troisième trimestre universitaire : encourager le sprint sans s&#x27;épuiser</h4></article></div></section><section class="period" id="period-postbac-4"><header class="period__head"><h3 class="period__title">Fin de 1ère année — Bilan et nouvelles orientations</h3><span class="period__months">mars – juin</span><span class="period__count">13 articles</span></header><div class="period__grid"><article class="card" data-pretext><div class="card__num">N°248</div><h4 class="card__title" data-pretext-text>Choix de spécialisation en 2ᵉ année : accompagner sans décider</h4></article><article class="card" data-pretext><div class="card__num">N°249</div><h4 class="card__title" data-pretext-text>L&#x27;alternance en cours d&#x27;études supérieures : une option méconnue</h4></article><article class="card" data-pretext><div class="card__num">N°250</div><h4 class="card__title" data-pretext-text>L&#x27;Erasmus et la mobilité internationale dès la 2ème année : anticiper ensemble</h4></article><article class="card" data-pretext><div class="card__num">N°251</div><h4 class="card__title" data-pretext-text>Candidater ailleurs pour la L2 : mode d&#x27;emploi</h4></article><article class="card" data-pretext><div class="card__num">N°252</div><h4 class="card__title" data-pretext-text>Certifications, MOOC, engagements : valoriser les marges de la première année</h4></article><article class="card" data-pretext><div class="card__num">N°253</div><h4 class="card__title" data-pretext-text>Examens de fin d&#x27;année : garder vos réflexes de parent-supporter</h4></article><article class="card" data-pretext><div class="card__num">N°254</div><h4 class="card__title" data-pretext-text>Avant les examens de fin d&#x27;année : traverser l&#x27;attente à distance</h4></article><article class="card" data-pretext><div class="card__num">N°255</div><h4 class="card__title" data-pretext-text>Session de rattrapage : ne pas dramatiser, transformer en tremplin</h4></article><article class="card" data-pretext><div class="card__num">N°256</div><h4 class="card__title" data-pretext-text>Résultats de 1ère année : réussite, rattrapages ou échec… et après ?</h4></article><article class="card" data-pretext><div class="card__num">N°257</div><h4 class="card__title" data-pretext-text>Bilan de 1ère année avec votre étudiant : les vraies questions à poser</h4></article><article class="card" data-pretext><div class="card__num">N°258</div><h4 class="card__title" data-pretext-text>Valoriser l&#x27;expérience acquise</h4></article><article class="card" data-pretext><div class="card__num">N°259</div><h4 class="card__title" data-pretext-text>Retour à la maison : réapprendre à vivre ensemble après un an d&#x27;études</h4></article><article class="card" data-pretext><div class="card__num">N°260</div><h4 class="card__title" data-pretext-text>Bilan pour les parents : vous l&#x27;avez fait !</h4></article></div></section></div></section>
+
+  </div>
+</section>
+
+<section class="sample">
+  <div class="container sample__wrap">
+    <div class="sample__copy">
+      <span class="section-eyebrow">Un aperçu</span>
+      <h2>Voici à quoi ressemble un email Proxxie.</h2>
+      <p>Court, concret, actionnable. Pas de jargon. Pas de listes interminables. Une situation à laquelle votre ado fait face cette semaine — et ce que vous pouvez faire pour l'aider.</p>
+      <ul>
+        <li>Une question clé que se posent vos pairs cette semaine</li>
+        <li>Une perspective d'expert (psy, conseiller d'orientation, ancien parent)</li>
+        <li>Un outil concret à utiliser dans la conversation du dimanche soir</li>
+        <li>Un lien pour aller plus loin sur proxxie.co</li>
+      </ul>
+    </div>
+    <div class="email-mock">
+      <div class="email-mock__bar">
+        <span></span><span></span><span></span>
+        <small>De Proxxie · lundi 9h</small>
+      </div>
+      <div class="email-mock__head">
+        <div class="email-mock__from"><strong>L'équipe Proxxie</strong> · pour les parents d'ados en 2nde</div>
+        <div class="email-mock__subject">Choisir ses spécialités sans se fermer de portes</div>
+      </div>
+      <div class="email-mock__body">
+        <span class="email-mock__tag">Article N°090 · 2nde · 3ᵉ trimestre</span>
+        <h3 class="email-mock__title">3 spécialités, des milliers de combinaisons : la stratégie qui marche</h3>
+        <p class="email-mock__lede" data-pretext data-pretext-text>Maths ou pas maths ? SES ou HGGSP ? Cette semaine, votre ado va devoir hiérarchiser ses choix de spécialités. Voici la grille de lecture que nous donnons aux familles : commencer par les portes qu'on veut garder ouvertes, pas par les goûts du moment. On vous explique pourquoi.</p>
+        <a href="#" class="email-mock__cta">Lire l'article →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="container container--narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Questions fréquentes</span>
+      <h2>On vous dit tout.</h2>
+    </div>
+    <div class="faq__grid">
+      <details class="faq__item">
+        <summary>C'est vraiment gratuit ?</summary>
+        <div class="faq__body">Oui. La newsletter est 100% gratuite. Notre modèle économique repose sur notre accompagnement premium (essai gratuit 30 jours, puis abonnement). La newsletter est notre manière d'aider les familles qui ne sont pas prêtes à franchir le pas.</div>
+      </details>
+      <details class="faq__item">
+        <summary>Combien d'emails je vais recevoir ?</summary>
+        <div class="faq__body">Un par semaine, le lundi matin. Pas de spam, pas d'offres commerciales agressives. Si vous vous inscrivez avec un ado en 2nde, vous recevrez environ 200 emails sur 5 ans. Désinscription en un clic à tout moment.</div>
+      </details>
+      <details class="faq__item">
+        <summary>Mon enfant est déjà en 1ère, je rate tous les articles de 3ème et 2nde ?</summary>
+        <div class="faq__body">Pas vraiment. Vous démarrez à la semaine qui correspond à sa classe actuelle. Pour les articles passés, ils sont (ou seront bientôt) tous archivés sur cette page : vous pouvez les lire à votre rythme.</div>
+      </details>
+      <details class="faq__item">
+        <summary>Et si l'orientation change en cours de route (réorientation, redoublement) ?</summary>
+        <div class="faq__body">Vous pouvez nous écrire à tout moment et nous décalons votre planning d'envoi. La newsletter suit votre ado, pas l'inverse.</div>
+      </details>
+      <details class="faq__item">
+        <summary>Qui rédige les articles ?</summary>
+        <div class="faq__body">L'équipe Proxxie, en collaboration avec nos conseillers d'orientation, psychologues partenaires, et parents témoins. Chaque article est relu par au moins deux personnes avant publication.</div>
+      </details>
+      <details class="faq__item">
+        <summary>Est-ce que mes données sont en sécurité ?</summary>
+        <div class="faq__body">Oui. Nous sommes RGPD compliant, nous ne revendons jamais vos données, et l'envoi est géré par Brevo (anciennement Sendinblue), hébergé en Europe.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container final-cta__inner">
+    <h2>Prêt à recevoir le bon email, au bon moment, pendant 5 ans ?</h2>
+    <p>Rejoignez les milliers de parents qui ont déjà arrêté de chercher seuls.</p>
+    <form class="final-cta__form" aria-label="Inscription à la newsletter" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Inscrit';">
+      <input type="email" placeholder="votre@email.fr" required aria-label="Adresse email">
+      <select required aria-label="Classe actuelle de votre ado">
+        <option value="">Classe de l'ado</option>
+        <option>3ème</option>
+        <option>2nde</option>
+        <option>1ère</option>
+        <option>Terminale</option>
+        <option>Bac+1</option>
+      </select>
+      <button type="submit">Recevoir le 1er email lundi</button>
+    </form>
+    <p class="final-cta__reassure">Gratuit · 1 clic pour se désinscrire · pas de carte bancaire</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <strong>proxxie</strong>
+        Le meilleur allié pour l'avenir de vos ados. Accompagnement à l'orientation scolaire, de la 3ème au bac+1.
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Solution par classe</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/3eme">3ème</a></li>
+            <li><a href="https://www.proxxie.co/seconde">2nde</a></li>
+            <li><a href="https://www.proxxie.co/premiere">1ère</a></li>
+            <li><a href="https://www.proxxie.co/terminale">Terminale</a></li>
+            <li><a href="https://www.proxxie.co/post-bac">Post-Bac</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Ressources</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/blog">Blog</a></li>
+            <li><a href="https://www.proxxie.co/cas-clients">Cas clients</a></li>
+            <li><a href="#programme">Newsletter</a></li>
+            <li><a href="https://www.proxxie.co/test">Test Proxxie</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Proxxie</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/methode">La méthode</a></li>
+            <li><a href="https://www.proxxie.co/tarifs">Tarifs</a></li>
+            <li><a href="https://www.proxxie.co/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bot">© 2026 Proxxie · Politique de confidentialité · CGV</div>
+  </div>
+</footer>
+
+<script type="module">
+import { prepare, layout } from './pretext.js';
+
+const tabs = document.querySelectorAll('.cls-tab');
+const panels = document.querySelectorAll('[data-cls-panel]');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => activateTab(tab));
+  tab.addEventListener('keydown', e => {
+    const arr = [...tabs];
+    const i = arr.indexOf(tab);
+    if (e.key === 'ArrowRight') { e.preventDefault(); arr[(i+1) % arr.length].focus(); arr[(i+1) % arr.length].click(); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); arr[(i-1+arr.length) % arr.length].focus(); arr[(i-1+arr.length) % arr.length].click(); }
+  });
+});
+function activateTab(tab) {
+  const cls = tab.dataset.cls;
+  tabs.forEach(t => {
+    const active = t === tab;
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
+    t.tabIndex = active ? 0 : -1;
+  });
+  panels.forEach(p => p.classList.toggle('cls-panel--hidden', p.dataset.clsPanel !== cls));
+  relayoutVisible();
+}
+
+const prepared = new Map();
+
+async function init() {
+  await document.fonts.ready;
+  const targets = document.querySelectorAll('[data-pretext-text]');
+  for (const el of targets) {
+    const font = getComputedStyle(el).font;
+    prepared.set(el, prepare(el.textContent.trim(), font));
+  }
+  relayoutVisible();
+}
+
+function relayoutVisible() {
+  for (const [el, handle] of prepared) {
+    const panel = el.closest('.cls-panel');
+    if (panel && panel.classList.contains('cls-panel--hidden')) continue;
+    const cs = getComputedStyle(el);
+    const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.4;
+    const w = el.clientWidth;
+    if (w === 0) continue;
+    const { height } = layout(handle, w, lh);
+    el.style.minHeight = `${height}px`;
+  }
+}
+
+let resizeTimer = null;
+new ResizeObserver(() => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(relayoutVisible, 60);
+}).observe(document.body);
+
+init();
+</script>
+
+</body>
+</html>
