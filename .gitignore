@@ -2,3 +2,5 @@
 .DS_Store
 node_modules/
 .design-work/
+__pycache__/
+.pytest_cache/

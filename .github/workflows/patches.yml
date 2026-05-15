@@ -1,0 +1,41 @@
+name: Patcher health
+
+# Runs on every push to ensure that:
+#   1. _design_fixes.py applies cleanly against the current HTML files
+#      (no team-side JSX refactor has silently invalidated our needles)
+#   2. The patcher's idempotency and round-trip invariants still hold
+#
+# If this job fails on a PR, the patcher needs to be updated to match
+# the new code shape before the PR can merge. The failure message points
+# at the specific patch that drifted.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  patcher-tests:
+    name: Patcher tests + --strict
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pytest
+        run: python3 -m pip install --quiet pytest
+
+      - name: Run patcher tests
+        run: python3 -m pytest tests/test_patcher.py -v
+
+      - name: Run --strict against current HTML files
+        # This is the load-bearing check: if any of our patch needles no
+        # longer matches the team's JSX, this fails with a clear message
+        # naming the drifted patch. Catches the failure mode that bit us
+        # during the design-fixes-20260514 rebase.
+        run: python3 _design_fixes.py --strict
