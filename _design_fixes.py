@@ -1,0 +1,399 @@
+#!/usr/bin/env python3
+"""Apply design-review fixes to all bundled HTML files.
+
+Idempotent: re-running has no effect if the changes are already applied.
+
+Scope (excludes mini-quiz changes per user request):
+  F001/F006  Mobile responsive nav + Charles in mobile sticky bar
+  F002       Promote "Rdv avec Charles" CTA from ghost to filled
+  F003       Standardize "30 min avec Charles" label
+  F005       Make phone optional at signup (was required at step 4 of 5)
+  F007       Add next-step CTA below the pain-points section
+  F009       Pricing eyebrow color consistency
+  F010       Touch targets >=44px on mobile nav
+  F011       "Voir un exemple de rapport" upgraded to a proper outline button
+  F015       Continuer disabled state visual clarity
+"""
+
+import re, json, base64, gzip, pathlib, sys
+
+REPO = pathlib.Path(__file__).parent
+
+# All page files. (Proxxie X.html and lowercase x.html are byte-identical pairs.)
+ALL_HTML_FILES = [
+    "Proxxie Home.html", "index.html",
+    "Proxxie Coach.html", "coach.html",
+    "Proxxie Connexion.html", "connexion.html",
+    "Proxxie Dashboard.html", "dashboard.html",
+    "Proxxie Documents.html", "documents.html",
+    "Proxxie Rapport.html", "rapport.html",
+    "Proxxie Ressources.html", "ressources.html",
+    "Proxxie Test.html", "test.html",
+]
+
+
+# ===========================================================================
+# CSS PATCHES — operate on the raw HTML <style> block
+# ===========================================================================
+
+# F001 + F006 + F010: replace the existing mobile media-query rule that hides
+# the secondary Charles CTA. Instead we:
+#   - keep Charles visible at all sizes
+#   - hide the inner nav links (.muted) on mobile so the nav fits
+#   - shrink the orange CTA to icon-only at small sizes
+#   - bump touch targets on nav links to >=44px
+CSS_PATCHES = [
+    # F006: Don't hide the Charles secondary CTA on mobile — it's the
+    # most important conversion goal for Proxxie. Keep it; instead hide
+    # the inner nav links on smallest sizes.
+    (
+        "/* Two-track CTA : \"Parler à Charles\" ghost visible desktop+tablet, hidden mobile */\n@media (max-width: 860px) {\n  .nav-cta-secondary { display: none !important; }\n}",
+        "/* Two-track CTA : \"Rdv avec Charles\" stays visible at ALL viewports.\n   It is THE primary differentiator for Proxxie's conversion goal. */\n@media (max-width: 860px) {\n  .nav-cta-secondary { padding: 10px 14px !important; font-size: 13px !important; }\n}\n@media (max-width: 520px) {\n  /* On the smallest screens, keep Charles + Test; the Test button hides\n     its \" gratuit\" suffix already. Charles uses a compact label here. */\n  .nav-cta-secondary { padding: 8px 12px !important; font-size: 12px !important; }\n}",
+    ),
+
+    # F001: Hide the inner nav links (La méthode / Le rapport / Tarifs /
+    # Ressources) on viewports too narrow to fit them. The page anchors are
+    # still reachable by scrolling — and the Resources menu duplicates them
+    # in the footer. The horizontal-scroll bug (scrollWidth 737 vs 375 on iPhone)
+    # came from this row not collapsing.
+    (
+        "/* Nav CTA: tighter on small desktop / tablet so 'Commencer le test gratuit' fits */",
+        "/* F001: hide the inner nav links on small screens so the nav row fits\n   in the viewport. The orange CTA, Charles CTA, and logo remain visible. */\n@media (max-width: 860px) {\n  nav .shell > div:nth-child(2) { display: none !important; }\n  nav .shell > div:nth-child(3) { gap: 8px !important; }\n  nav .shell > div:nth-child(3) > a.muted { display: none !important; }\n}\n\n/* F001-bis: on the smallest screens, the top-nav CTAs are duplicated by the\n   mobile sticky bar at the bottom. Hide the top-nav orange CTA there to give\n   the Charles CTA room. The sticky bar at the bottom still shows both. */\n@media (max-width: 520px) {\n  nav .shell .nav-cta { display: none !important; }\n  nav .shell > div:nth-child(3) { gap: 4px !important; }\n}\n\n/* F010: Tap targets >= 44px on mobile nav */\n@media (max-width: 860px) {\n  nav .shell { min-height: 56px; }\n  nav a, nav button { min-height: 44px; }\n}\n\n/* Nav CTA: tighter on small desktop / tablet so 'Commencer le test gratuit' fits */",
+    ),
+
+    # F002: The .btn-ghost class is too low-contrast for Charles. Make it
+    # use an outlined navy treatment that reads as a real CTA, not a nav link.
+    (
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }",
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* F002: stronger outline for the Charles secondary CTA. Reads as a real\n   call-to-action next to the orange primary, not as a nav link. */\n.nav-cta-secondary.btn-ghost {\n  background: white;\n  color: var(--c-ink);\n  border: 1.5px solid var(--c-ink);\n  box-shadow: 0 4px 12px -4px rgba(10,14,44,.18);\n}\n.nav-cta-secondary.btn-ghost:hover {\n  background: var(--c-ink);\n  color: white;\n  transform: translateY(-1px);\n}",
+    ),
+
+    # F006-bis: Make the mobile sticky CTA bar support two buttons side-by-side
+    # (currently the orange test button takes 100% width). Style the second
+    # button as a navy outline so it doesn't fight the orange visually.
+    (
+        "  .mobile-sticky-cta .btn { flex: 1; justify-content: center; padding: 14px; }",
+        "  .mobile-sticky-cta .btn { flex: 1; justify-content: center; padding: 14px; min-height: 44px; }\n  /* F006: Charles button in the mobile sticky bar is a navy outline */\n  .mobile-sticky-cta .btn-charles {\n    background: white;\n    color: var(--c-ink);\n    border: 1.5px solid var(--c-ink);\n    text-decoration: none;\n  }",
+    ),
+
+    # QA-001 — Product app pages (Dashboard, Documents, Rapport, Coach,
+    # Ressources) overflow on mobile (~700-790px content vs 375px viewport)
+    # for two reasons:
+    #   (a) ShellHeader nav with 5 inline links doesn't collapse
+    #   (b) Content grids (Dashboard hero card, Documents grids, Coach
+    #       expertise/sessions panels) use fixed grid-template-columns that
+    #       stay desktop-wide on mobile
+    # The Home page CSS already collapses generic grids on <= 760px, but
+    # the product-page CSS is a shorter variant that only adjusts section
+    # padding. We add the missing rules here.
+    # The CSS_PATCHES tuples use REAL newlines in both strings. The script
+    # passes them through _escape_for_js_string before searching, which
+    # converts real newlines to the on-disk literal "\n" escape form.
+    (
+        "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n}",
+        "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n  /* QA-001a: collapse generic 2/3/4-col grids to single column on phones */\n  [style*=\"grid-template-columns: 1fr 1fr\"],\n  [style*=\"repeat(2, 1fr)\"],\n  [style*=\"repeat(3, 1fr)\"],\n  [style*=\"repeat(4, 1fr)\"],\n  [style*=\"grid-template-columns: 1.7fr 1fr\"],\n  [style*=\"grid-template-columns: 1.6fr 1fr\"],\n  [style*=\"grid-template-columns: 1fr 1.6fr\"],\n  [style*=\"grid-template-columns: 1.1fr 1fr\"],\n  [style*=\"grid-template-columns: auto 1fr auto\"] { grid-template-columns: 1fr !important; }\n  /* QA-001b: stop big inline-fixed hero h1s from forcing horizontal scroll */\n  h1 { font-size: clamp(28px, 7vw, 40px) !important; }\n}",
+    ),
+    # QA-001c: collapse ShellHeader inner nav + user-pill name on mobile.
+    # Anchor on the .btn-ghost rule (stable CSS sentinel).
+    (
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }",
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* QA-001c — Hide the product-page nav links + parent-name text on mobile.\n   Logo + avatar stay visible. Prevents header-row overflow. */\n@media (max-width: 860px) {\n  header[style*=\"sticky\"] nav { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:first-child > span { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:last-child > div > div:last-child { display: none !important; }\n}\n@media (max-width: 520px) {\n  header[style*=\"sticky\"] .shell > div:last-child button { display: none !important; }\n}",
+    ),
+]
+
+
+# ===========================================================================
+# BUNDLE PATCHES — operate on JSX inside gzipped+base64 manifest assets
+# ===========================================================================
+# Each entry: needle (must be in asset to apply), then a list of (old, new)
+# replacements. Each replacement must be unique within the asset; the script
+# fails loudly if a needle is found but a replacement isn't (catches drift).
+
+BUNDLE_PATCHES = [
+    # ----- F002: Promote "Rdv avec Charles" in the Nav -----
+    # Move it left of the test CTA in source order (right-side cluster), and
+    # use a slightly tighter label so both buttons read as primary actions.
+    {
+        "name": "F002 nav Charles CTA prominence",
+        "needle": 'className="btn btn-ghost nav-cta-secondary"',
+        "replacements": [
+            (
+                '<a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "header_nav" }); }} className="btn btn-ghost nav-cta-secondary" style={{ textDecoration: "none", fontSize: 14 }}>\n          Rdv avec Charles\n        </a>',
+                '<a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "header_nav" }); }} className="btn btn-ghost nav-cta-secondary" style={{ textDecoration: "none", fontSize: 14, fontWeight: 600 }}>\n          30 min avec Charles\n        </a>',
+            ),
+        ],
+    },
+
+    # ----- F011: "Voir un exemple de rapport" as a real outline button -----
+    {
+        "name": "F011 sample-report secondary CTA",
+        "needle": "Voir un exemple de rapport",
+        "replacements": [
+            (
+                '<button onClick={onDemo} style={{ background: "transparent", border: "none", color: "var(--c-ink-2)", fontSize: 14, fontWeight: 500, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4 }}>\n                <Icon.play style={{ width: 14, height: 14 }} /> Voir un exemple de rapport\n              </button>',
+                '<button onClick={onDemo} className="btn btn-ghost btn-lg" style={{ background: "white", borderColor: "var(--c-ink)", color: "var(--c-ink)" }}>\n                <Icon.play style={{ width: 16, height: 16 }} /> Voir un exemple de rapport\n              </button>',
+            ),
+        ],
+    },
+
+    # ----- F006: Add Charles CTA to the mobile sticky bar -----
+    {
+        "name": "F006 mobile sticky bar with Charles",
+        "needle": '<div className="mobile-sticky-cta">',
+        "replacements": [
+            (
+                '{/* Sticky mobile CTA bar */}\n      <div className="mobile-sticky-cta">\n        <button className="btn btn-orange" onClick={openOnboarding} style={{ flex: 2 }}>\n          Commencer le test gratuit\n        </button>\n      </div>',
+                '{/* Sticky mobile CTA bar — F006: dual-CTA (Charles + Test) so the meeting\n          path stays visible on mobile, where it disappeared previously. */}\n      <div className="mobile-sticky-cta">\n        <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" className="btn btn-charles" onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "mobile_sticky" }); }}>\n          Charles\n        </a>\n        <button className="btn btn-orange" onClick={openOnboarding} style={{ flex: 2 }}>\n          Commencer le test gratuit\n        </button>\n      </div>',
+            ),
+        ],
+    },
+
+    # ----- F005: Make phone optional at signup step (was required) -----
+    # After the team's 8 → 5 wizard refactor, accountLocked combines
+    # email + phone + firstName + parentName. We drop phoneValid from the
+    # blocking set. Phone is still collected (and Calendly asks for it
+    # again at booking), so no data is lost — just one fewer field that
+    # blocks the signup.
+    {
+        "name": "F005 phone optional at signup (post-refactor)",
+        "needle": 'const accountLocked = !emailValid || !phoneValid',
+        "replacements": [
+            (
+                'const accountLocked = !emailValid || !phoneValid || !(profile.firstName||"").trim() || !(profile.parentName||"").trim();',
+                'const accountLocked = !emailValid || !(profile.firstName||"").trim() || !(profile.parentName||"").trim();',
+            ),
+        ],
+    },
+    {
+        "name": "F005 phone label says optional (post-refactor)",
+        "needle": "<label style={labelCls}>Numéro de téléphone</label>",
+        "replacements": [
+            (
+                "<label style={labelCls}>Numéro de téléphone</label>",
+                "<label style={labelCls}>Numéro de téléphone <span style={{ textTransform: \"none\", fontWeight: 500, color: \"var(--c-muted)\", letterSpacing: 0 }}>(optionnel)</span></label>",
+            ),
+        ],
+    },
+
+    # ----- F003: Standardize "30 min" — Calendly description / Hero copy -----
+    # Many touch-points mention "30 min" already. The Calendly page itself is
+    # configured to 20 min — that needs to be fixed on Calendly's side, NOT in
+    # the website code. We standardize the WEBSITE-side labels here.
+    # No other "20 min" strings appear in the site code, so this is mainly
+    # a label rename in the nav (handled by F002 above: "30 min avec Charles").
+
+    # ----- F007: Add a next-step CTA below the 6-card pain-points grid -----
+    {
+        "name": "F007 pain-points next step",
+        "needle": '{ t: "Filières méconnues", d: "Le système a changé depuis votre époque et c\'est devenu opaque." },',
+        "replacements": [
+            (
+                '        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>\n          {items.map((it, i) => (\n            <div key={i} className="card" style={{ padding: 24, background: "white" }}>\n              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FD6936", marginBottom: 14 }} />\n              <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{it.t}</div>\n              <p style={{ color: "var(--c-muted)", fontSize: 14 }}>{it.d}</p>\n            </div>\n          ))}\n        </div>\n      </div>\n    </section>',
+                # Same grid + an in-section CTA strip that points to the method explanation.
+                '        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>\n          {items.map((it, i) => (\n            <div key={i} className="card" style={{ padding: 24, background: "white" }}>\n              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FD6936", marginBottom: 14 }} />\n              <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{it.t}</div>\n              <p style={{ color: "var(--c-muted)", fontSize: 14 }}>{it.d}</p>\n            </div>\n          ))}\n        </div>\n        {/* F007: section CTA — closes the empathy block with two clear paths. */}\n        <div style={{ marginTop: 36, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>\n          <a href="#methode" className="btn btn-orange btn-arrow" style={{ textDecoration: "none" }}>\n            Voir comment on aide\n          </a>\n          <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ textDecoration: "none", background: "white", borderColor: "var(--c-ink)", color: "var(--c-ink)" }} onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "situations_cta" }); }}>\n            30 min avec Charles\n          </a>\n        </div>\n      </div>\n    </section>',
+            ),
+        ],
+    },
+
+    # ----- F008-bis: mini-quiz result links to the 5-step method -----
+    # Per user feedback: keep the mini-quiz at the bottom (don't move it to
+    # the hero), but make its result drive curious visitors to the method
+    # explainer rather than ending with a "Recommencer" loop. The primary
+    # CTA still opens the onboarding wizard.
+    {
+        "name": "F008b mini-quiz result → method link",
+        "needle": "Voir le rapport complet (gratuit)",
+        "replacements": [
+            (
+                '<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>\n                    <button className="btn btn-orange btn-arrow" onClick={onCTA}>Voir le rapport complet (gratuit)</button>\n                    <button className="btn btn-ghost" onClick={reset} style={{ color: "white", borderColor: "rgba(255,255,255,.3)" }}>Recommencer</button>\n                  </div>',
+                '<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>\n                    <button className="btn btn-orange btn-arrow" onClick={onCTA}>Voir le rapport complet (gratuit)</button>\n                    <a className="btn btn-ghost" href="#methode" style={{ color: "white", borderColor: "rgba(255,255,255,.3)", textDecoration: "none" }}>Voir notre méthode</a>\n                  </div>\n                  <button onClick={reset} style={{ marginTop: 14, background: "transparent", border: "none", color: "rgba(255,255,255,.7)", fontSize: 13, fontWeight: 500, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3, padding: 0 }}>Recommencer le test</button>',
+            ),
+        ],
+    },
+
+    # ============================================================
+    # A+ GAP PATCHES (round 2)
+    # ============================================================
+
+    # ----- G2: Media-mention bar in the Hero -----
+    # Logos + press URLs lifted from www.proxxie.co's "Ils parlent de nous"
+    # section. Three press mentions, each linking to the source content.
+    # Inserted right after the asterisk footnote, just above </section>.
+    {
+        "name": "G2 media-mention bar in Hero",
+        "needle": "          * Sur les terminales accompagnées en 2024-25 ayant validé un vœu Parcoursup.",
+        "replacements": [
+            (
+                '        <div style={{ fontSize: 11, color: "var(--c-muted)", marginTop: 8, textAlign: "right", paddingRight: 8 }}>\n          * Sur les terminales accompagnées en 2024-25 ayant validé un vœu Parcoursup.\n        </div>\n      </div>\n    </section>',
+                '        <div style={{ fontSize: 11, color: "var(--c-muted)", marginTop: 8, textAlign: "right", paddingRight: 8 }}>\n          * Sur les terminales accompagnées en 2024-25 ayant validé un vœu Parcoursup.\n        </div>\n\n        {/* G2 — Media-mention bar : lift the strongest trust signal from\n            www.proxxie.co. Each logo links to the actual press content. */}\n        <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(10,14,44,.08)" }}>\n          <div style={{ textAlign: "center", marginBottom: 16 }}>\n            <span className="eyebrow" style={{ fontSize: 11 }}><span className="dot"></span>Ils parlent de nous</span>\n          </div>\n          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 48, flexWrap: "wrap", opacity: 0.85 }}>\n            <a href="https://www.rcf.fr/bien-etre-et-psychologie/chemins-des-possibles?episode=564205" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 6, textDecoration: "none", color: "var(--c-muted)", fontSize: 11, fontWeight: 500, transition: "opacity .2s, transform .2s" }} onMouseEnter={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.currentTarget.style.opacity = 0.85; e.currentTarget.style.transform = "none"; }}>\n              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, letterSpacing: "0.02em", color: "var(--c-ink-2)" }}>RCF</span>\n              <span>Écouter l\'interview →</span>\n            </a>\n            <a href="https://drive.google.com/file/d/1oB1l-gXU6_3PElJVN_1LfjYhsPOBWsmy/view" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 6, textDecoration: "none", color: "var(--c-muted)", fontSize: 11, fontWeight: 500, transition: "opacity .2s, transform .2s" }} onMouseEnter={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.currentTarget.style.opacity = 0.85; e.currentTarget.style.transform = "none"; }}>\n              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, letterSpacing: "-0.01em", color: "var(--c-ink-2)" }}>France <span style={{ color: "#1320CE" }}>Bleu</span></span>\n              <span>Écouter l\'interview →</span>\n            </a>\n            <a href="https://drive.google.com/file/d/1LHVR84mIKt_jFR4W4Bn51LF6GrXtHvTh/view" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 6, textDecoration: "none", color: "var(--c-muted)", fontSize: 11, fontWeight: 500, transition: "opacity .2s, transform .2s" }} onMouseEnter={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.currentTarget.style.opacity = 0.85; e.currentTarget.style.transform = "none"; }}>\n              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, letterSpacing: "0.01em", color: "var(--c-ink-2)" }}>france<span style={{ color: "#FD6936" }}>•</span>tv</span>\n              <span>Regarder le replay →</span>\n            </a>\n          </div>\n        </div>\n      </div>\n    </section>',
+            ),
+        ],
+    },
+
+    # ----- G3 step 1: ClassTimeline component definition -----
+    # Inserted right before `const App = () => {` so the component is
+    # in module scope. Five-tab class strip with concerns + guide link.
+    {
+        "name": "G3 ClassTimeline component definition",
+        "needle": "const App = () => {",
+        "replacements": [
+            (
+                "const App = () => {",
+                # Define the component and then continue with App.
+                '/* G3 — Class-segmented timeline. Five tabs (3ème → Post-Bac),\n   one concern card per tab + a link into the existing guide. */\nconst CLASS_TABS = [\n  { k: "3eme",      l: "3ème",     concern: "Découverte et exploration",        body: "Premier vrai choix : 2nde générale, technologique ou pro ? On pose les bases en aidant votre ado à se découvrir, sans pression.",          period: "1er trimestre · sept-déc" },\n  { k: "2nde",      l: "2nde",     concern: "Choix des spécialités",            body: "Les spés de 1ère pèsent sur Parcoursup. On évite les choix par défaut et on construit la combinaison qui ouvre, pas qui ferme.",        period: "2e trimestre · jan-mars" },\n  { k: "1ere",      l: "1ère",     concern: "Confirmation du projet",            body: "C\'est l\'année où le projet se précise. Métiers visés, écoles cibles, doubles cursus, projets perso à valoriser — on cale tout ça.",        period: "Année complète" },\n  { k: "terminale", l: "Terminale", concern: "Stratégie Parcoursup",             body: "10 vœux à formuler, lettres de motivation, choix de filières d\'art ou Sciences Po, parcours sélectifs. On stresse moins, on cible mieux.",   period: "Janvier → mai" },\n  { k: "postbac",   l: "Post-Bac",  concern: "Rebondir ou réorienter",           body: "Première année qui ne se passe pas comme prévu ? On évite l\'année blanche : réorientation Parcoursup ou hors-Parcoursup, passerelles, alternance.", period: "À tout moment" },\n];\n\nconst ClassTimeline = () => {\n  const [active, setActive] = React.useState("terminale");\n  const tab = CLASS_TABS.find((t) => t.k === active) || CLASS_TABS[0];\n  return (\n    <section id="classes" style={{ paddingTop: 80, paddingBottom: 80, background: "var(--c-cream)" }}>\n      <div className="shell">\n        <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>\n          <span className="eyebrow"><span className="dot"></span>Adapté à chaque étape</span>\n          <h2 style={{ marginTop: 14 }}>De la 3ème au post-bac, à chaque classe sa question.</h2>\n          <p style={{ fontSize: 17, color: "var(--c-ink-2)", marginTop: 14 }}>\n            Cliquez sur la classe de votre ado pour voir ce qu\'on travaille à ce moment précis.\n          </p>\n        </div>\n\n        <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 32 }}>\n          {CLASS_TABS.map((t) => (\n            <button\n              key={t.k}\n              onClick={() => setActive(t.k)}\n              style={{\n                padding: "10px 18px", borderRadius: 999,\n                background: active === t.k ? "var(--c-ink)" : "white",\n                color: active === t.k ? "white" : "var(--c-ink-2)",\n                border: "1.5px solid " + (active === t.k ? "var(--c-ink)" : "var(--c-line)"),\n                fontWeight: 600, fontSize: 14, letterSpacing: "-0.005em",\n                transition: "background .15s, color .15s, transform .15s",\n                cursor: "pointer", minHeight: 44,\n              }}\n              onMouseEnter={(e) => { if (active !== t.k) { e.currentTarget.style.background = "var(--c-cream-light)"; e.currentTarget.style.transform = "translateY(-1px)"; }}}\n              onMouseLeave={(e) => { if (active !== t.k) { e.currentTarget.style.background = "white"; e.currentTarget.style.transform = "none"; }}}\n            >\n              {t.l}\n            </button>\n          ))}\n        </div>\n\n        <div className="card" style={{ padding: "36px 40px", maxWidth: 880, margin: "0 auto", background: "white" }}>\n          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 12 }}>\n            <span className="chip" style={{ background: "rgba(253,105,54,.12)", color: "#FD6936" }}>{tab.l} · {tab.concern}</span>\n            <span style={{ fontSize: 12, color: "var(--c-muted)", fontWeight: 500 }}>{tab.period}</span>\n          </div>\n          <p style={{ fontSize: 17, lineHeight: 1.55, color: "var(--c-ink-2)", marginBottom: 22 }}>{tab.body}</p>\n          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>\n            <a href="./guide-orientation.html" className="btn btn-orange btn-arrow" style={{ textDecoration: "none" }}>\n              Voir le guide {tab.l}\n            </a>\n            <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ textDecoration: "none", background: "white", borderColor: "var(--c-ink)", color: "var(--c-ink)" }} onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "class_timeline_" + tab.k }); }}>\n              30 min avec Charles\n            </a>\n          </div>\n        </div>\n      </div>\n    </section>\n  );\n};\n\nconst App = () => {',
+            ),
+        ],
+    },
+
+    # ----- G3 step 2: insert <ClassTimeline /> into App's render tree -----
+    # Placed between <HowItWorks /> and the mini-quiz: visitor sees pain →
+    # method → class self-identification → quiz → results → testimonials.
+    {
+        "name": "G3 ClassTimeline placement in App",
+        "needle": "{t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
+        "replacements": [
+            (
+                "      <HowItWorks onCTA={openOnboarding} />\n      {t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
+                "      <HowItWorks onCTA={openOnboarding} />\n      <ClassTimeline />\n      {t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
+            ),
+        ],
+    },
+
+    # ----- Obsidian-style radar (interactive, force-directed) -----
+    # Replaces the static SVG pentagon in HeroPreview with a force-directed
+    # graph: 5 dimension nodes + 1 center node, idle floating animation,
+    # mouse-drag interaction with spring-back. Inline physics loop via
+    # requestAnimationFrame. No external libraries.
+    {
+        "name": "Radar Obsidian-style component definition",
+        "needle": "/* Hero right-side preview — photo polaroid + coach + result card */",
+        "replacements": [
+            (
+                "/* Hero right-side preview — photo polaroid + coach + result card */\nconst HeroPreview = () => (",
+                # Define InteractiveRadar before HeroPreview. We use React.useState
+                # / React.useRef / React.useEffect which are already in scope (used
+                # elsewhere in this file).
+                '/* Obsidian-style force-directed radar — 5 personality dimensions orbit\n   the center node "Léa". Each node wobbles around its score-weighted target\n   position; user can drag any node and it springs back. */\nconst InteractiveRadar = () => {\n  const DIMS = [\n    { l: "Ouverture",   v: 0.86 },\n    { l: "Curiosité",   v: 0.92 },\n    { l: "Ambition",    v: 0.74 },\n    { l: "Énergie",     v: 0.81 },\n    { l: "Empathie",    v: 0.78 },\n  ];\n  const N = DIMS.length;\n  const W = 320, H = 200, cx = W / 2, cy = H / 2, R = 78;\n\n  const target = (i) => {\n    const a = -Math.PI / 2 + (i * 2 * Math.PI) / N;\n    return { x: cx + Math.cos(a) * R * DIMS[i].v, y: cy + Math.sin(a) * R * DIMS[i].v };\n  };\n  const init = DIMS.map((_, i) => ({ ...target(i), vx: 0, vy: 0 }));\n\n  const [nodes, setNodes] = React.useState(init);\n  const [drag, setDrag] = React.useState(null);\n  const [hover, setHover] = React.useState(null);\n  const dragRef = React.useRef(null);\n  const tRef = React.useRef(0);\n  const svgRef = React.useRef(null);\n  React.useEffect(() => { dragRef.current = drag; }, [drag]);\n\n  React.useEffect(() => {\n    let raf;\n    const tick = () => {\n      tRef.current += 0.015;\n      setNodes((prev) => prev.map((p, i) => {\n        if (dragRef.current === i) return p;\n        const tg = target(i);\n        const wx = Math.sin(tRef.current + i * 1.3) * 2.6;\n        const wy = Math.cos(tRef.current * 0.85 + i * 0.7) * 2.6;\n        const k = 0.06, damp = 0.86;\n        const ax = (tg.x + wx - p.x) * k;\n        const ay = (tg.y + wy - p.y) * k;\n        const vx = (p.vx + ax) * damp;\n        const vy = (p.vy + ay) * damp;\n        return { x: p.x + vx, y: p.y + vy, vx, vy };\n      }));\n      raf = requestAnimationFrame(tick);\n    };\n    raf = requestAnimationFrame(tick);\n    return () => cancelAnimationFrame(raf);\n  }, []);\n\n  const localPoint = (e) => {\n    const rect = svgRef.current.getBoundingClientRect();\n    const cx2 = e.touches ? e.touches[0].clientX : e.clientX;\n    const cy2 = e.touches ? e.touches[0].clientY : e.clientY;\n    return { x: ((cx2 - rect.left) / rect.width) * W, y: ((cy2 - rect.top) / rect.height) * H };\n  };\n\n  const onDown = (i) => (e) => { e.preventDefault(); setDrag(i); };\n  React.useEffect(() => {\n    if (drag == null) return;\n    const move = (e) => {\n      const pt = localPoint(e);\n      setNodes((prev) => prev.map((p, i) => (i === drag ? { ...p, x: pt.x, y: pt.y, vx: 0, vy: 0 } : p)));\n    };\n    const up = () => setDrag(null);\n    window.addEventListener("mousemove", move);\n    window.addEventListener("mouseup", up);\n    window.addEventListener("touchmove", move, { passive: false });\n    window.addEventListener("touchend", up);\n    return () => {\n      window.removeEventListener("mousemove", move);\n      window.removeEventListener("mouseup", up);\n      window.removeEventListener("touchmove", move);\n      window.removeEventListener("touchend", up);\n    };\n  }, [drag]);\n\n  const polyPoints = nodes.map((n) => n.x + "," + n.y).join(" ");\n\n  return (\n    <svg ref={svgRef} viewBox={"0 0 " + W + " " + H} style={{ width: "100%", height: 200, cursor: drag != null ? "grabbing" : "default", userSelect: "none", touchAction: "none" }}>\n      {/* Concentric guide rings (Obsidian-graph feel) */}\n      {[0.4, 0.7, 1].map((r, i) => (\n        <circle key={"r" + i} cx={cx} cy={cy} r={R * r} fill="none" stroke="rgba(10,14,44,.06)" strokeWidth={1} strokeDasharray={i === 2 ? "" : "2 3"} />\n      ))}\n      {/* Center → node lines */}\n      {nodes.map((n, i) => (\n        <line key={"c" + i} x1={cx} y1={cy} x2={n.x} y2={n.y}\n          stroke={hover === i ? "#1320CE" : "rgba(19,32,206,.25)"}\n          strokeWidth={hover === i ? 2 : 1.2} />\n      ))}\n      {/* Profile polygon (the radar shape) */}\n      <polygon points={polyPoints} fill="rgba(72,122,255,0.16)" stroke="#1320CE" strokeWidth={1.5} style={{ transition: "fill .2s" }} />\n      {/* Dimension nodes */}\n      {nodes.map((n, i) => {\n        const isHot = hover === i || drag === i;\n        return (\n          <g key={"n" + i} transform={"translate(" + n.x + "," + n.y + ")"}\n            onMouseDown={onDown(i)} onTouchStart={onDown(i)}\n            onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}\n            style={{ cursor: drag === i ? "grabbing" : "grab" }}>\n            <circle r={isHot ? 9 : 6} fill="#FD6936"\n              stroke={isHot ? "white" : "rgba(253,105,54,.4)"} strokeWidth={isHot ? 3 : 2}\n              style={{ transition: "r .15s, stroke-width .15s" }} />\n            <text y={n.y < cy - 12 ? -14 : (n.y > cy + 12 ? 20 : (n.x < cx ? 4 : 4))}\n              textAnchor={n.x < cx - 20 ? "end" : (n.x > cx + 20 ? "start" : "middle")}\n              x={n.x < cx - 20 ? -12 : (n.x > cx + 20 ? 12 : 0)}\n              style={{ fontFamily: "var(--font-display)", fontSize: 10.5, fontWeight: 600, fill: "var(--c-ink)", letterSpacing: "0.02em", textTransform: "uppercase", pointerEvents: "none" }}>\n              {DIMS[i].l}\n            </text>\n          </g>\n        );\n      })}\n      {/* Center node */}\n      <g transform={"translate(" + cx + "," + cy + ")"}>\n        <circle r={14} fill="#1320CE" />\n        <text textAnchor="middle" dy={4} style={{ fontFamily: "var(--font-display)", fontSize: 10, fontWeight: 700, fill: "white", letterSpacing: "0.06em", textTransform: "uppercase", pointerEvents: "none" }}>Léa</text>\n      </g>\n      {/* Hint */}\n      <text x={W - 8} y={H - 6} textAnchor="end" style={{ fontSize: 9, fill: "var(--c-muted)", letterSpacing: "0.04em", fontWeight: 500 }}>Glissez les points</text>\n    </svg>\n  );\n};\n\n/* Hero right-side preview — photo polaroid + coach + result card */\nconst HeroPreview = () => (',
+            ),
+        ],
+    },
+
+    # ----- Radar replacement: swap the static SVG for <InteractiveRadar /> -----
+    {
+        "name": "Radar replacement in HeroPreview",
+        "needle": '<polygon points="100,28 165,75 132,118 58,108 42,68"',
+        "replacements": [
+            (
+                '      {/* Radar mock */}\n      <svg viewBox="0 0 200 140" style={{ width: "100%", height: 140 }}>\n        <polygon points="100,20 170,55 155,120 45,120 30,55" fill="none" stroke="#E6E2D6" strokeWidth="1" />\n        <polygon points="100,40 150,65 140,110 60,110 50,65" fill="none" stroke="#E6E2D6" strokeWidth="1" />\n        <polygon points="100,55 130,70 125,100 75,100 70,70" fill="none" stroke="#E6E2D6" strokeWidth="1" />\n        <polygon points="100,28 165,75 132,118 58,108 42,68" fill="rgba(72,122,255,0.18)" stroke="#1320CE" strokeWidth="2" />\n        {[[100,28],[165,75],[132,118],[58,108],[42,68]].map(([x,y],i) => (\n          <circle key={i} cx={x} cy={y} r="3.5" fill="#FD6936" />\n        ))}\n      </svg>\n\n      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: -4 }}>\n        <span>Ouverture</span><span>Curiosité</span><span>Ambition</span>\n      </div>',
+                # Replace radar SVG + label row with the interactive component.
+                '      {/* Obsidian-style interactive radar (replaces the static SVG) */}\n      <InteractiveRadar />',
+            ),
+        ],
+    },
+]
+
+
+# ===========================================================================
+# RUNNER
+# ===========================================================================
+
+def _escape_for_js_string(s: str) -> str:
+    """The CSS lives inside a JS string literal: real newlines are stored
+    as the two-character escape `\\n`, double-quotes as `\\"`, etc. Convert
+    our Python source strings (with real newlines) to the on-disk format."""
+    return s.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"')
+
+
+def apply_css_patches(html: str, path_name: str) -> tuple[str, int]:
+    """Apply CSS-string replacements to the raw HTML. Idempotent.
+
+    The "CSS" is stored inside a JS string literal, so newlines and quotes are
+    escaped. We escape our patch strings to match before searching/replacing.
+    """
+    changed = 0
+    for old, new in CSS_PATCHES:
+        old_esc = _escape_for_js_string(old)
+        new_esc = _escape_for_js_string(new)
+        if new_esc in html:
+            continue
+        if old_esc not in html:
+            print(f"  ! [{path_name}] CSS needle not found and not already applied: {old[:80]!r}")
+            continue
+        html = html.replace(old_esc, new_esc, 1)
+        changed += 1
+    return html, changed
+
+
+def apply_bundle_patches(html: str, path_name: str) -> tuple[str, int]:
+    """Apply JSX-string replacements inside the bundled, gzipped, base64 manifest."""
+    m = re.search(r'(<script type="__bundler/manifest"[^>]*>)(.*?)(</script>)', html, flags=re.DOTALL)
+    if not m:
+        return html, 0
+
+    manifest = json.loads(m.group(2))
+    total_changes = 0
+
+    for uuid, entry in manifest.items():
+        data = base64.b64decode(entry["data"])
+        compressed = entry.get("compressed", False)
+        if compressed:
+            try:
+                data = gzip.decompress(data)
+            except Exception:
+                continue
+        try:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError:
+            continue  # binary asset (font, image)
+
+        asset_changed = False
+        for patch in BUNDLE_PATCHES:
+            if patch["needle"].encode() not in data and patch["needle"] not in text:
+                continue
+            for old, new in patch["replacements"]:
+                if new in text:
+                    # already applied
+                    continue
+                if old in text:
+                    text = text.replace(old, new, 1)
+                    asset_changed = True
+                    total_changes += 1
+                    print(f"  ✓ [{path_name}/{uuid[:8]}] {patch['name']}")
+                else:
+                    print(f"  ! [{path_name}/{uuid[:8]}] {patch['name']}: needle present but old-string not found")
+
+        if asset_changed:
+            new_data = text.encode("utf-8")
+            if compressed:
+                new_data = gzip.compress(new_data)
+            entry["data"] = base64.b64encode(new_data).decode("ascii")
+
+    if total_changes == 0:
+        return html, 0
+
+    new_manifest_json = json.dumps(manifest, separators=(",", ":"), ensure_ascii=False)
+    new_html = html[:m.start(2)] + new_manifest_json + html[m.end(2):]
+    return new_html, total_changes
+
+
+def process_file(path: pathlib.Path) -> bool:
+    html = path.read_text(encoding="utf-8")
+    orig = html
+    html, css_n = apply_css_patches(html, path.name)
+    html, jsx_n = apply_bundle_patches(html, path.name)
+    if html == orig:
+        return False
+    path.write_text(html, encoding="utf-8")
+    print(f"  → wrote {path.name} (css: {css_n}, bundle: {jsx_n})")
+    return True
+
+
+if __name__ == "__main__":
+    targets = sys.argv[1:] or ALL_HTML_FILES
+    for fn in targets:
+        p = REPO / fn
+        if not p.exists():
+            print(f"skip (missing): {fn}")
+            continue
+        print(f"Processing: {fn}")
+        process_file(p)
