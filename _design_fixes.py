@@ -486,6 +486,55 @@ BUNDLE_PATCHES = [
             ),
         ],
     },
+
+    # ----- HOMEFIX-1 (2026-05-15): replace stock-photo woman with Charles -----
+    # The "Charles, votre coach" floating badge in the hero used an Unsplash
+    # stock photo of a woman, which contradicts the name. Swap for the actual
+    # founder photo lifted from www.proxxie.co/equipe (coach1.webp, saved
+    # locally as charles-coach.webp).
+    {
+        "name": "HOMEFIX-1 Charles avatar — real photo",
+        "needle": "https://images.unsplash.com/photo-1573496359142",
+        "replacements": [
+            (
+                'src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces"',
+                'src="charles-coach.webp"',
+            ),
+        ],
+    },
+
+    # ----- HOMEFIX-2 (2026-05-15): replace "Léa, 16 ans" hero card photo -----
+    # The hero card claimed to show "Léa, 16 ans" in session with her coach
+    # but used a generic stock photo. Replace with a real photo of Charles
+    # (founder) accompanying families at French Tech Bordeaux (equipe2.webp,
+    # saved locally as charles-accompagne.webp) and update the caption to
+    # reflect the real content.
+    {
+        "name": "HOMEFIX-2 Léa card → Charles accompagne",
+        "needle": 'src="hero-coach-square.jpg"',
+        "replacements": [
+            (
+                '<img\n        src="hero-coach-square.jpg"\n        alt="Léa en session avec son coach Proxxie"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "20% 30%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Léa, 16 ans</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>1ère · en session avec son coach</div>',
+                '<img\n        src="charles-accompagne.webp"\n        alt="Charles, fondateur Proxxie, accompagne les familles"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "center 25%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Charles, fondateur Proxxie</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>Coach d\'orientation · French Tech Bordeaux</div>',
+            ),
+        ],
+    },
+
+    # ----- HOMEFIX-3 (2026-05-15): tighten gap between press bar and -----
+    # "Vous êtes ici" section. The hero ends with the "Ils parlent de nous"
+    # press-mention strip; the following "Vous êtes ici" section opened with
+    # paddingTop: 100, creating an awkward gap. Trim to 40 and tighten the
+    # internal title block from margin 50px to 32px.
+    {
+        "name": "HOMEFIX-3 tighten 'Vous êtes ici' section top padding",
+        "needle": "Vous êtes ici, vous n'êtes pas seuls",
+        "replacements": [
+            (
+                '<section style={{ paddingTop: 100, paddingBottom: 60 }}>\n      <div className="shell">\n        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 50px" }}>\n          <span className="eyebrow"><span className="dot"></span>Vous êtes ici, vous n\'êtes pas seuls</span>',
+                '<section style={{ paddingTop: 40, paddingBottom: 60 }}>\n      <div className="shell">\n        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 32px" }}>\n          <span className="eyebrow"><span className="dot"></span>Vous êtes ici, vous n\'êtes pas seuls</span>',
+            ),
+        ],
+    },
 ]
 
 # ===========================================================================
