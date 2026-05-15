@@ -61,11 +61,15 @@ CSS_PATCHES = [
         "/* F001: hide the inner nav links on small screens so the nav row fits\n   in the viewport. The orange CTA, Charles CTA, and logo remain visible. */\n@media (max-width: 860px) {\n  nav .shell > div:nth-child(2) { display: none !important; }\n  nav .shell > div:nth-child(3) { gap: 8px !important; }\n  nav .shell > div:nth-child(3) > a.muted { display: none !important; }\n}\n\n/* F001-bis: on the smallest screens, the top-nav CTAs are duplicated by the\n   mobile sticky bar at the bottom. Hide the top-nav orange CTA there to give\n   the Charles CTA room. The sticky bar at the bottom still shows both. */\n@media (max-width: 520px) {\n  nav .shell .nav-cta { display: none !important; }\n  nav .shell > div:nth-child(3) { gap: 4px !important; }\n}\n\n/* F010: Tap targets >= 44px on mobile nav */\n@media (max-width: 860px) {\n  nav .shell { min-height: 56px; }\n  nav a, nav button { min-height: 44px; }\n}\n\n/* Nav CTA: tighter on small desktop / tablet so 'Commencer le test gratuit' fits */",
     ),
 
-    # F002: The .btn-ghost class is too low-contrast for Charles. Make it
-    # use an outlined navy treatment that reads as a real CTA, not a nav link.
+    # F002 + QA-001c — Both extend the .btn-ghost block. Merged into a
+    # SINGLE patch so the patcher stays idempotent. Two separate patches
+    # anchored on the same `.btn-ghost {` sentinel would chain-apply
+    # forever: patch 2 inserts before patch 5's anchor, then on the next
+    # run patch 5 inserts before patch 2's now-displaced anchor, etc.
+    # Lesson: never anchor two patches on the same line.
     (
         ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }",
-        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* F002: stronger outline for the Charles secondary CTA. Reads as a real\n   call-to-action next to the orange primary, not as a nav link. */\n.nav-cta-secondary.btn-ghost {\n  background: white;\n  color: var(--c-ink);\n  border: 1.5px solid var(--c-ink);\n  box-shadow: 0 4px 12px -4px rgba(10,14,44,.18);\n}\n.nav-cta-secondary.btn-ghost:hover {\n  background: var(--c-ink);\n  color: white;\n  transform: translateY(-1px);\n}",
+        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* F002: stronger outline for the Charles secondary CTA. Reads as a real\n   call-to-action next to the orange primary, not as a nav link. */\n.nav-cta-secondary.btn-ghost {\n  background: white;\n  color: var(--c-ink);\n  border: 1.5px solid var(--c-ink);\n  box-shadow: 0 4px 12px -4px rgba(10,14,44,.18);\n}\n.nav-cta-secondary.btn-ghost:hover {\n  background: var(--c-ink);\n  color: white;\n  transform: translateY(-1px);\n}\n/* QA-001c — Hide the product-page nav links + parent-name text on mobile.\n   Logo + avatar stay visible. Prevents header-row overflow. */\n@media (max-width: 860px) {\n  header[style*=\"sticky\"] nav { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:first-child > span { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:last-child > div > div:last-child { display: none !important; }\n}\n@media (max-width: 520px) {\n  header[style*=\"sticky\"] .shell > div:last-child button { display: none !important; }\n}",
     ),
 
     # F006-bis: Make the mobile sticky CTA bar support two buttons side-by-side
@@ -93,12 +97,8 @@ CSS_PATCHES = [
         "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n}",
         "@media (max-width: 760px) {\n  section { padding: 64px 0; }\n  .shell { padding: 0 20px; }\n  /* QA-001a: collapse generic 2/3/4-col grids to single column on phones */\n  [style*=\"grid-template-columns: 1fr 1fr\"],\n  [style*=\"repeat(2, 1fr)\"],\n  [style*=\"repeat(3, 1fr)\"],\n  [style*=\"repeat(4, 1fr)\"],\n  [style*=\"grid-template-columns: 1.7fr 1fr\"],\n  [style*=\"grid-template-columns: 1.6fr 1fr\"],\n  [style*=\"grid-template-columns: 1fr 1.6fr\"],\n  [style*=\"grid-template-columns: 1.1fr 1fr\"],\n  [style*=\"grid-template-columns: auto 1fr auto\"] { grid-template-columns: 1fr !important; }\n  /* QA-001b: stop big inline-fixed hero h1s from forcing horizontal scroll */\n  h1 { font-size: clamp(28px, 7vw, 40px) !important; }\n}",
     ),
-    # QA-001c: collapse ShellHeader inner nav + user-pill name on mobile.
-    # Anchor on the .btn-ghost rule (stable CSS sentinel).
-    (
-        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }",
-        ".btn-ghost {\n  background: transparent;\n  color: var(--c-ink);\n  border: 1.5px solid rgba(10,14,44,.16);\n}\n.btn-ghost:hover { background: rgba(10,14,44,.04); }\n/* QA-001c — Hide the product-page nav links + parent-name text on mobile.\n   Logo + avatar stay visible. Prevents header-row overflow. */\n@media (max-width: 860px) {\n  header[style*=\"sticky\"] nav { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:first-child > span { display: none !important; }\n  header[style*=\"sticky\"] .shell > div:last-child > div > div:last-child { display: none !important; }\n}\n@media (max-width: 520px) {\n  header[style*=\"sticky\"] .shell > div:last-child button { display: none !important; }\n}",
-    ),
+    # (QA-001c was merged into the F002 patch above to avoid the
+    # overlapping-patch idempotency bug — see comment there.)
 ]
 
 
@@ -125,9 +125,13 @@ BUNDLE_PATCHES = [
     },
 
     # ----- F011: "Voir un exemple de rapport" as a real outline button -----
+    # Skips Test.html because that page has its own marketing-style hero
+    # with a "Voir un exemple de rapport" CTA in a different JSX shape.
+    # The patch targets the Home page's Hero component only.
     {
         "name": "F011 sample-report secondary CTA",
         "needle": "Voir un exemple de rapport",
+        "pages_skip": ["Proxxie Test.html", "test.html"],
         "replacements": [
             (
                 '<button onClick={onDemo} style={{ background: "transparent", border: "none", color: "var(--c-ink-2)", fontSize: 14, fontWeight: 500, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4 }}>\n                <Icon.play style={{ width: 14, height: 14 }} /> Voir un exemple de rapport\n              </button>',
@@ -304,20 +308,49 @@ def _escape_for_js_string(s: str) -> str:
     return s.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"')
 
 
-def apply_css_patches(html: str, path_name: str) -> tuple[str, int]:
-    """Apply CSS-string replacements to the raw HTML. Idempotent.
+def _sentinel_for(new: str) -> str:
+    """Extract a unique identifying substring from the patch's `new` content.
+    Used as the idempotency check: if the sentinel appears in the file (in
+    its escaped on-disk form), the patch is considered already applied.
 
-    The "CSS" is stored inside a JS string literal, so newlines and quotes are
-    escaped. We escape our patch strings to match before searching/replacing.
+    Heuristic: take the first `/* TAG:` or `/* TAG —` comment marker, since
+    these are the explicit fix-id labels we put at the top of each patch
+    block. If no such marker exists, fall back to the first ~80 chars of new.
+    """
+    # Look for a fix-tag comment: matches `/* F001:`, `/* QA-001a:`, `/* G2 —`, etc.
+    m = re.search(r'/\*\s+([A-Z][A-Z0-9\-]*)[\s:—-]', new)
+    if m:
+        # Use the comment opening + the tag + ~20 chars after as the sentinel.
+        # That's unique enough to identify the patch and resists minor edits.
+        idx = m.start()
+        return new[idx:idx + 60]
+    # Fallback: first 80 chars after any leading whitespace
+    return new.lstrip()[:80]
+
+
+def apply_css_patches(html: str, path_name: str) -> tuple[str, int]:
+    """Apply CSS-string replacements to the raw HTML. Idempotent via per-patch
+    sentinels (a unique marker substring of `new` that's stable across
+    surrounding edits).
+
+    The "CSS" lives inside a JS string literal, so newlines and quotes are
+    escaped on disk. We pass patch strings through _escape_for_js_string
+    before searching/replacing.
     """
     changed = 0
     for old, new in CSS_PATCHES:
         old_esc = _escape_for_js_string(old)
         new_esc = _escape_for_js_string(new)
-        if new_esc in html:
+        sentinel_esc = _escape_for_js_string(_sentinel_for(new))
+        if sentinel_esc in html:
+            # Already applied (or partially applied during a prior run);
+            # do not re-insert. Without this check, overlapping patches
+            # anchored on the same line chain-append on every run.
             continue
         if old_esc not in html:
-            print(f"  ! [{path_name}] CSS needle not found and not already applied: {old[:80]!r}")
+            # Patch doesn't apply on this page (e.g. marketing-page rule on a
+            # product page). Quiet — only --strict mode would care, and it
+            # only cares about bundle drift.
             continue
         html = html.replace(old_esc, new_esc, 1)
         changed += 1
@@ -376,6 +409,13 @@ def apply_bundle_patches(html: str, path_name: str) -> tuple[str, int]:
     return new_html, total_changes
 
 
+# Drift counter (incremented when a bundle patch's needle matches but the
+# precise old-string can no longer be found — i.e. team-side code drifted
+# under our feet). Tracked across all process_file() calls so --strict can
+# fail at the end.
+_BUNDLE_DRIFT = []
+
+
 def process_file(path: pathlib.Path) -> bool:
     html = path.read_text(encoding="utf-8")
     orig = html
@@ -389,7 +429,76 @@ def process_file(path: pathlib.Path) -> bool:
 
 
 if __name__ == "__main__":
-    targets = sys.argv[1:] or ALL_HTML_FILES
+    # Simple arg parsing — keep dependency-free (script runs in CI sandbox).
+    argv = list(sys.argv[1:])
+    strict = "--strict" in argv
+    if strict:
+        argv.remove("--strict")
+    targets = argv or ALL_HTML_FILES
+
+    # Wrap apply_bundle_patches to capture drift events. We re-bind the symbol
+    # in this module so the existing call site inside process_file picks up
+    # the instrumented version without a refactor.
+    _orig_apply_bundle = apply_bundle_patches
+
+    def _instrumented_apply_bundle(html: str, path_name: str):
+        # Re-implement the inner loop with drift tracking. We mirror the
+        # original logic precisely; if either implementation evolves, update
+        # both. The simpler alternative — patching print — was rejected as
+        # too magic.
+        import re as _re, json as _json, base64 as _b64, gzip as _gz
+        m = _re.search(r'(<script type="__bundler/manifest"[^>]*>)(.*?)(</script>)', html, flags=_re.DOTALL)
+        if not m:
+            return html, 0
+        manifest = _json.loads(m.group(2))
+        total_changes = 0
+        for uuid, entry in manifest.items():
+            data = _b64.b64decode(entry["data"])
+            compressed = entry.get("compressed", False)
+            if compressed:
+                try:
+                    data = _gz.decompress(data)
+                except Exception:
+                    continue
+            try:
+                text = data.decode("utf-8")
+            except UnicodeDecodeError:
+                continue
+            asset_changed = False
+            for patch in BUNDLE_PATCHES:
+                # Honor per-patch skip list — some patches target a specific
+                # page's JSX shape and their needle happens to also appear on
+                # other pages with different surrounding code.
+                if path_name in patch.get("pages_skip", []):
+                    continue
+                needle_in_text = (patch["needle"].encode() in data) or (patch["needle"] in text)
+                if not needle_in_text:
+                    continue
+                for old, new in patch["replacements"]:
+                    if new in text:
+                        continue
+                    if old in text:
+                        text = text.replace(old, new, 1)
+                        asset_changed = True
+                        total_changes += 1
+                        print(f"  ✓ [{path_name}/{uuid[:8]}] {patch['name']}")
+                    else:
+                        msg = f"{path_name}/{uuid[:8]} :: {patch['name']}"
+                        _BUNDLE_DRIFT.append(msg)
+                        print(f"  ! DRIFT [{path_name}/{uuid[:8]}] {patch['name']}: needle matches the asset but the precise old-string is gone — team code drifted")
+            if asset_changed:
+                new_data = text.encode("utf-8")
+                if compressed:
+                    new_data = _gz.compress(new_data)
+                entry["data"] = _b64.b64encode(new_data).decode("ascii")
+        if total_changes == 0:
+            return html, 0
+        new_manifest_json = _json.dumps(manifest, separators=(",", ":"), ensure_ascii=False)
+        new_html = html[:m.start(2)] + new_manifest_json + html[m.end(2):]
+        return new_html, total_changes
+
+    apply_bundle_patches = _instrumented_apply_bundle  # type: ignore
+
     for fn in targets:
         p = REPO / fn
         if not p.exists():
@@ -397,3 +506,19 @@ if __name__ == "__main__":
             continue
         print(f"Processing: {fn}")
         process_file(p)
+
+    # Strict-mode exit gate
+    if _BUNDLE_DRIFT:
+        print()
+        print(f"❌ {len(_BUNDLE_DRIFT)} bundle patch(es) drifted — team code changed under our needles:")
+        for d in _BUNDLE_DRIFT:
+            print(f"   - {d}")
+        print()
+        if strict:
+            print("--strict was passed, exiting non-zero. Update _design_fixes.py to match the new code shape, or remove the obsolete patch.")
+            sys.exit(2)
+        else:
+            print("(running without --strict; deploy may be missing fixes. Run with --strict in CI to catch this earlier.)")
+    elif strict:
+        print()
+        print("✅ --strict passed: every bundle patch needle either applied cleanly, was already applied, or didn't match this asset (skipped).")
