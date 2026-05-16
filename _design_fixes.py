@@ -503,19 +503,33 @@ BUNDLE_PATCHES = [
         ],
     },
 
-    # ----- HOMEFIX-2 (2026-05-15): replace "Léa, 16 ans" hero card photo -----
+    # ----- HOMEFIX-2 (2026-05-15, revised 2026-05-16): hero card photo -----
     # The hero card claimed to show "Léa, 16 ans" in session with her coach
-    # but used a generic stock photo. Replace with a real photo of Charles
-    # (founder) accompanying families at French Tech Bordeaux (equipe2.webp,
-    # saved locally as charles-accompagne.webp) and update the caption to
-    # reflect the real content.
+    # but used a generic stock photo. Replace with Elisa — a real young
+    # person Proxxie accompanies (elisa-proxxie.jpg, provided by the
+    # founder) and update the caption accordingly.
     {
-        "name": "HOMEFIX-2 Léa card → Charles accompagne",
+        "name": "HOMEFIX-2 hero card → Elisa accompagnée par Proxxie",
         "needle": 'src="hero-coach-square.jpg"',
         "replacements": [
             (
                 '<img\n        src="hero-coach-square.jpg"\n        alt="Léa en session avec son coach Proxxie"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "20% 30%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Léa, 16 ans</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>1ère · en session avec son coach</div>',
+                '<img\n        src="elisa-proxxie.jpg"\n        alt="Elisa, accompagnée par Proxxie"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "center 22%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Elisa</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>Accompagnée par Proxxie</div>',
+            ),
+        ],
+    },
+
+    # ----- HOMEFIX-2B (2026-05-16): in-place upgrade from the previous -----
+    # 2026-05-15 state (charles-accompagne.webp / "Charles, fondateur Proxxie")
+    # to the Elisa photo. Without this, files that already ran HOMEFIX-2's v1
+    # would not pick up the v2 swap because their needle is now gone.
+    {
+        "name": "HOMEFIX-2B upgrade Charles-accompagne → Elisa",
+        "needle": 'src="charles-accompagne.webp"',
+        "replacements": [
+            (
                 '<img\n        src="charles-accompagne.webp"\n        alt="Charles, fondateur Proxxie, accompagne les familles"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "center 25%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Charles, fondateur Proxxie</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>Coach d\'orientation · French Tech Bordeaux</div>',
+                '<img\n        src="elisa-proxxie.jpg"\n        alt="Elisa, accompagnée par Proxxie"\n        style={{ width: "100%", height: 195, display: "block", marginBottom: 10, objectFit: "cover", objectPosition: "center 22%", background: "linear-gradient(135deg, #FFF4EE, #FFDFCC)" }}\n      />\n      <div style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--c-ink)", textAlign: "center", letterSpacing: "-0.01em" }}>Elisa</div>\n      <div style={{ fontSize: 10, color: "var(--c-muted)", textAlign: "center", marginTop: 1 }}>Accompagnée par Proxxie</div>',
             ),
         ],
     },
