@@ -534,6 +534,44 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- DRAWERFIX-1 (2026-05-16): tighten side-panel section spacing -----
+    # Founder feedback: the gap between sections 01/02/03/04 inside the
+    # InfoDrawer (Coach / Dashboard / Documents / Rapport side panels) was
+    # too large. Shave inter-section margin from 14px → 6px, header→body
+    # gap from 12px → 6px, and hero→first-section marginBottom from 24 → 12.
+    # The component lives in bundler asset 51ff7b1d (Proxxie Coach.html and
+    # the four product pages share it).
+    {
+        "name": "DRAWERFIX-1 drawer section margin 14→6",
+        "needle": ".drawer-section + .drawer-section { margin-top: 14px; }",
+        "replacements": [
+            (
+                ".drawer-section + .drawer-section { margin-top: 14px; }",
+                ".drawer-section + .drawer-section { margin-top: 6px; }",
+            ),
+        ],
+    },
+    {
+        "name": "DRAWERFIX-1b drawer section head margin-bottom 12→6",
+        "needle": "drawer-section-head {\n      display: flex; align-items: center; gap: 10px;\n      margin-bottom: 12px;",
+        "replacements": [
+            (
+                "drawer-section-head {\n      display: flex; align-items: center; gap: 10px;\n      margin-bottom: 12px;\n    }",
+                "drawer-section-head {\n      display: flex; align-items: center; gap: 10px;\n      margin-bottom: 6px;\n    }",
+            ),
+        ],
+    },
+    {
+        "name": "DRAWERFIX-1c drawer hero marginBottom 24→12",
+        "needle": '{data.hero && <div style={{ marginBottom: 24 }}>{data.hero}</div>}',
+        "replacements": [
+            (
+                '{data.hero && <div style={{ marginBottom: 24 }}>{data.hero}</div>}',
+                '{data.hero && <div style={{ marginBottom: 12 }}>{data.hero}</div>}',
+            ),
+        ],
+    },
+
     # ----- HOMEFIX-3 (2026-05-15): tighten gap between press bar and -----
     # "Vous êtes ici" section. The hero ends with the "Ils parlent de nous"
     # press-mention strip; the following "Vous êtes ici" section opened with
