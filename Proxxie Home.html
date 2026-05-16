@@ -244,5 +244,29 @@ document.addEventListener('DOMContentLoaded', async function() {
   }, true);
 })();
 </script>
+<script>
+/* Ressources tab — route to local pages (cohérence DA avec guide-orientation.html) */
+(function () {
+  var REMAP = {
+    "https://www.proxxie.co/orientation-notes": "./carnet-orientation.html",
+    "https://www.proxxie.co/ressources":        "./blog.html",
+    "https://www.proxxie.co/cas-clients":       "./cas-clients.html"
+  };
+  function patch() {
+    var links = document.querySelectorAll('a[href]');
+    var changed = 0;
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i], h = a.getAttribute('href');
+      if (h && REMAP[h]) { a.setAttribute('href', REMAP[h]); a.removeAttribute('target'); a.removeAttribute('rel'); changed++; }
+    }
+    return changed;
+  }
+  /* React mounts asynchronously — keep retrying for ~6 s, then stop. */
+  var tries = 0;
+  var iv = setInterval(function () { tries++; if (patch() >= 3 || tries > 60) clearInterval(iv); }, 100);
+  document.addEventListener('DOMContentLoaded', patch);
+  window.addEventListener('load', patch);
+})();
+</script>
 </body>
 </html>
