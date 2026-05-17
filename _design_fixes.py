@@ -114,6 +114,25 @@ BUNDLE_PATCHES = [
     {
         "name": "F002 nav Charles CTA prominence",
         "needle": 'className="btn btn-ghost nav-cta-secondary"',
+        # Test pages now use a shared ProxxieNav (shared-nav.jsx) where the
+        # Charles button is already in its post-fix form but without the
+        # exact onClick tracking handler this patch tries to inject. Skip
+        # them so the patcher doesn't report DRIFT on every push.
+        "pages_skip": [
+            "Proxxie Test.html", "test.html",
+            "Proxxie Test RIASEC.html", "test-riasec.html",
+            "Proxxie Test PCM.html", "test-pcm.html",
+            "Proxxie Test MBTI.html", "test-mbti.html",
+            "Proxxie Test Drivers.html", "test-drivers.html",
+            "Proxxie Test Valeurs.html", "test-valeurs.html",
+            "Proxxie Test Besoins.html", "test-besoins.html",
+            "Proxxie Test TDAH.html", "test-tdah.html",
+            "Proxxie Test Autisme.html", "test-autisme.html",
+            "Proxxie Test HPI.html", "test-hpi.html",
+            "Proxxie Test Anxiete.html", "test-anxiete.html",
+            "Proxxie Test DYS.html", "test-dys.html",
+            "Proxxie Tests.html", "tests.html",
+        ],
         "replacements": [
             (
                 '<a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "header_nav" }); }} className="btn btn-ghost nav-cta-secondary" style={{ textDecoration: "none", fontSize: 14 }}>\n          Rdv avec Charles\n        </a>',
