@@ -323,16 +323,19 @@ BUNDLE_PATCHES = [
     },
 
     # ----- Dashboard radar v2 — drill-down with OCEAN-X tree -----
-    # The dashboard's ProfileCard has its own static SVG radar showing the 5
-    # canonical OCEAN traits (Ouverture / Conscienciosité / Extraversion /
-    # Agréabilité / Stabilité). We replace it with a copy of the Home
-    # InteractiveRadar component, but with a distinct DASHBOARD_RADAR_TREE
-    # so the drill-down semantics are OCEAN-aligned (matches the test
-    # the dashboard says was passed). The component is duplicated rather
-    # than shared because each page has its own React bundle.
+    # RETIRED 2026-05-18: the team's source now includes its own
+    # DashboardProfileRadar + DASHBOARD_RADAR_TREE definition in the
+    # bundle (asset 5a278f70). Running this patch on top of that creates
+    # a DUPLICATE `const DASHBOARD_RADAR_TREE` / `const DashboardProfileRadar`
+    # declaration → SyntaxError → Dashboard page fails to load.
+    # The patch is kept here for reference but neutralized via an
+    # impossible-to-match needle so the patcher never applies it.
+    # If you ever need to re-enable, restore the original needle
+    # ("const ProfileCard = ({ onOpen, audit }) => {") AND verify the
+    # team's bundle no longer has its own definition.
     {
-        "name": "Dashboard radar v2 — DashboardProfileRadar definition",
-        "needle": "const ProfileCard = ({ onOpen, audit }) => {",
+        "name": "Dashboard radar v2 — DashboardProfileRadar definition (RETIRED)",
+        "needle": "__RETIRED_2026_05_18__never_matches__",
         "pages_skip": [
             "Proxxie Home.html", "index.html",
             "Proxxie Coach.html", "coach.html",
@@ -351,9 +354,13 @@ BUNDLE_PATCHES = [
     },
 
     # ----- Dashboard radar v2 — swap the static SVG for <DashboardProfileRadar /> -----
+    # RETIRED 2026-05-18: paired with the definition patch above. Team's
+    # bundle no longer ships the static SVG; their source uses
+    # <DashboardProfileRadar /> directly.
     {
-        "name": "Dashboard radar v2 — SVG replacement in ProfileCard",
-        "needle": '<svg viewBox="0 0 220 200" style={{ width: "100%" }}>',
+        "name": "Dashboard radar v2 — SVG replacement in ProfileCard (RETIRED)",
+        "needle": "__RETIRED_2026_05_18__never_matches__",
+        "_disabled_needle": '<svg viewBox="0 0 220 200" style={{ width: "100%" }}>',
         "pages_skip": [
             "Proxxie Home.html", "index.html",
             "Proxxie Coach.html", "coach.html",
