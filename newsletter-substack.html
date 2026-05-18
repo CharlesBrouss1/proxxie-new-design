@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newsletter Substack de Charles Broussin — Proxxie</title>
+<meta name="description" content="Abonnez-vous au Substack de Charles Broussin : chaque semaine, un article sur l'orientation scolaire, la pédagogie, et le quotidien des parents d'ados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --c-primary:#1320CE; --c-primary-deep:#0E1690;
+  --c-primary-light:#487AFF; --c-primary-pale:#B0D0F7; --c-primary-soft:#E8F0FF;
+  --c-accent:#FD6936; --c-accent-deep:#E54E1A;
+  --c-cream:#EEE6D9; --c-yellow:#F5EB3F; --c-green:#22A06B;
+  --c-text:#0A0E2C; --c-text-muted:#6B6F8C; --c-text-soft:#9CA0B5;
+  --c-bg:#F7F2E9; --c-bg-card:#FFFFFF; --c-bg-cream:#EEE6D9;
+  --c-border:rgba(10,14,44,.10); --c-border-soft:rgba(10,14,44,.06);
+  --r-pill:999px; --r-card:20px; --r-input:14px;
+  --shadow-sm:0 1px 2px rgba(10,14,44,.04),0 1px 3px rgba(10,14,44,.06);
+  --shadow-md:0 4px 14px rgba(10,14,44,.06),0 2px 6px rgba(10,14,44,.04);
+  --shadow-lg:0 20px 48px rgba(10,14,44,.08),0 6px 16px rgba(10,14,44,.05);
+  --font-body:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-head:"Mulish","Goldplay","Montserrat",system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font-body);color:var(--c-text);background:var(--c-bg);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0;letter-spacing:-.02em;color:var(--c-text)}
+h1{font-weight:600} h2{font-weight:600} h3{font-weight:600} h4{font-weight:600}
+p{margin:0}
+a{color:var(--c-primary);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--c-primary-light);outline-offset:3px;border-radius:6px}
+:root{--max-w:1240px}
+.shell{max-width:var(--max-w);margin:0 auto;padding:0 32px}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 32px}
+.container--narrow{max-width:880px}
+
+/* ----- NAV (matched 1:1 with Proxxie Home.html) ----- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(247,242,233,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(10,14,44,.06)}
+.nav__shell{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px;max-width:var(--max-w);margin:0 auto;padding:0 32px}
+.nav__brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.nav__brand-mark{display:inline-flex;align-items:center;gap:10.4px;line-height:1}
+.nav__logo{display:inline-flex;align-items:center;justify-content:center;width:35px;height:35px;border-radius:7.7px;background:var(--c-primary);flex-shrink:0}
+.nav__brand-name{font-family:var(--font-head);font-weight:600;font-size:26px;letter-spacing:-.025em;color:var(--c-text)}
+.nav__links{display:flex;gap:32px;font-size:14px;font-weight:500;align-items:center}
+.muted{color:var(--c-text-muted)}
+.muted:hover{color:var(--c-text);text-decoration:none}
+.nav__dropdown{position:relative}
+.nav__dropdown-trigger{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:500;padding:0;color:var(--c-text-muted)}
+.nav__dropdown-trigger:hover{color:var(--c-text)}
+.nav__dropdown-trigger svg{transition:transform .2s}
+.nav__dropdown:hover .nav__dropdown-trigger svg,
+.nav__dropdown:focus-within .nav__dropdown-trigger svg{transform:rotate(180deg)}
+.nav__panel{position:absolute;top:calc(100% + 14px);left:50%;width:460px;background:#fff;border:1px solid var(--c-border);border-radius:18px;box-shadow:0 30px 60px -20px rgba(10,14,44,.25),0 8px 20px -8px rgba(10,14,44,.10);padding:10px;opacity:0;pointer-events:none;transform:translateX(-50%) translateY(-6px);transition:opacity .18s,transform .18s;z-index:60}
+.nav__dropdown:hover .nav__panel,
+.nav__dropdown:focus-within .nav__panel{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.nav__panel::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%) rotate(45deg);width:14px;height:14px;background:#fff;border-top:1px solid var(--c-border);border-left:1px solid var(--c-border);border-radius:3px}
+.nav__panel-list{display:grid;gap:4px}
+.nav__panel-item{display:flex;align-items:flex-start;gap:14px;padding:12px 14px;border-radius:12px;transition:background .15s;text-decoration:none}
+.nav__panel-item:hover{background:var(--c-bg-cream);text-decoration:none}
+.nav__panel-icon{width:38px;height:38px;border-radius:10px;background:var(--c-cream);color:var(--c-primary);display:grid;place-items:center;flex-shrink:0}
+.nav__panel-body{flex:1;min-width:0}
+.nav__panel-head{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.nav__panel-title{font-weight:600;font-size:14px;color:var(--c-text)}
+.nav__panel-badge{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(72,122,255,.1);color:var(--c-primary)}
+.nav__panel-desc{font-size:13px;color:var(--c-text-muted);line-height:1.4}
+.nav__panel-footer{margin-top:8px;padding:12px 14px;background:var(--c-cream);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.nav__panel-footer-text{font-size:12px;color:var(--c-text-muted)}
+.nav__panel-footer-text strong{color:var(--c-text)}
+.nav__panel-footer a{font-size:12px;font-weight:600;color:var(--c-primary);white-space:nowrap}
+.nav__ctas{display:flex;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 24px;border-radius:999px;font-weight:600;font-size:16px;letter-spacing:-.005em;transition:transform .18s,box-shadow .18s,background .18s,filter .18s;white-space:nowrap;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn-orange{background:var(--c-accent);color:#fff;box-shadow:0 8px 22px -6px rgba(253,105,54,.55)}
+.btn-orange:hover{transform:translateY(-1px);filter:brightness(1.05);text-decoration:none}
+.btn-ghost{background:transparent;color:var(--c-text);border:1.5px solid rgba(10,14,44,.16)}
+.btn-ghost:hover{background:rgba(10,14,44,.04);text-decoration:none}
+/* F002: stronger outline for the Charles secondary CTA on the marketing pages.
+   Reads as a real call-to-action next to the orange primary, not as a nav link. */
+.nav-cta-secondary.btn-ghost{background:#fff;color:var(--c-text);border:1.5px solid var(--c-text);box-shadow:0 4px 12px -4px rgba(10,14,44,.18)}
+.nav-cta-secondary.btn-ghost:hover{background:var(--c-text);color:#fff;transform:translateY(-1px)}
+/* Match Proxxie Home exactly: .btn defaults at desktop (16/24/16),
+   only shrink inside media queries. */
+@media (max-width:1024px){
+  .nav__links{gap:20px}
+  .nav-cta{padding:10px 16px !important;font-size:14px !important}
+  .nav-cta-secondary{padding:10px 16px !important;font-size:14px !important}
+}
+@media (max-width:860px){
+  .nav__links > a:not(.btn),
+  .nav__dropdown{display:none}
+  /* F006: Charles stays visible at all sizes on marketing pages. */
+  .nav__ctas > a.nav-cta-secondary{padding:8px 14px !important;font-size:13px !important}
+  .nav-cta{padding:8px 12px !important;font-size:13px !important}
+  .nav-cta__suffix{display:none}
+}
+@media (max-width:520px){
+  /* F001: hide the top-nav orange CTA on smallest screens — Charles stays visible. */
+  .nav__ctas > a.muted{display:none}
+  .nav__ctas{gap:8px}
+  .nav-cta-secondary{padding:8px 12px !important;font-size:12px !important}
+}
+@media (max-width:760px){
+  .nav__shell{padding:0 20px}
+  .shell{padding:0 20px}
+  .container{padding:0 20px}
+}
+.btn--primary{background:var(--c-accent);color:#fff;box-shadow:0 4px 14px rgba(253,105,54,.32);padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn--primary:hover{background:var(--c-accent-deep);text-decoration:none;transform:translateY(-1px);box-shadow:0 6px 20px rgba(253,105,54,.4)}
+.btn--lg{padding:16px 28px;font-size:16px}
+
+.hero{position:relative;overflow:hidden;padding:72px 0 96px;background:var(--c-bg)}
+.hero__inner{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.hero__eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--c-primary-soft);color:var(--c-primary);padding:6px 14px;border-radius:var(--r-pill);font-size:13px;font-weight:600;margin-bottom:20px}
+.hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c-accent);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(42px,6vw,68px);margin-bottom:24px;font-weight:600}
+.hero h1 em{color:var(--c-primary);font-style:normal;position:relative;display:inline-block}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:10px;background:var(--c-yellow);z-index:-1;border-radius:2px;opacity:.6}
+.hero__sub{font-size:19px;color:var(--c-text-muted);max-width:540px;margin-bottom:32px}
+.hero__form{display:flex;gap:8px;margin-bottom:14px;max-width:640px;flex-wrap:wrap;align-items:stretch}
+.hero__input-wrap{flex:1 1 200px;position:relative;min-width:180px}
+.hero__input,.hero__select{width:100%;padding:14px 16px;border:1.5px solid var(--c-border);border-radius:var(--r-input);font-family:inherit;font-size:14px;background:#fff;color:var(--c-text);transition:border-color .15s,box-shadow .15s}
+.hero__input:focus,.hero__select:focus{outline:none;border-color:var(--c-primary);box-shadow:0 0 0 4px var(--c-primary-soft)}
+.hero__select{flex:0 1 150px;cursor:pointer;min-width:130px}
+.hero__form .btn--primary{flex:0 0 auto;padding:14px 22px;font-size:14px;white-space:nowrap}
+@media (max-width:540px){
+  .hero__input-wrap,.hero__select{flex:1 1 100%}
+  .hero__form .btn--primary{flex:1 1 100%}
+}
+.hero__reassure{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--c-text-soft)}
+.hero__reassure span{display:inline-flex;align-items:center;gap:6px}
+.hero__reassure svg{width:14px;height:14px;color:var(--c-green);flex-shrink:0}
+.hero__visual{position:relative;aspect-ratio:1/1;max-width:520px;justify-self:end}
+.hero__cal{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:28px;padding:24px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.hero__cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.hero__cal-head h3{font-size:14px;color:var(--c-text-muted);font-weight:600}
+.hero__cal-head span{font-size:12px;color:var(--c-text-soft);font-weight:600}
+.cal-tabs{display:flex;gap:4px;margin-bottom:16px;padding:4px;background:var(--c-bg-cream);border-radius:12px;overflow-x:auto;scrollbar-width:none}
+.cal-tabs::-webkit-scrollbar{display:none}
+.cal-tab{flex:1;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:600;color:var(--c-text-muted);transition:background .15s,color .15s;white-space:nowrap;font-family:inherit}
+.cal-tab:hover{color:var(--c-text)}
+.cal-tab--active{background:var(--c-bg-card);color:var(--c-text);box-shadow:0 1px 3px rgba(10,14,44,.08)}
+.hero__week{display:flex;align-items:flex-start;gap:14px;padding:13px 0;border-bottom:1px solid var(--c-border-soft)}
+.hero__week:last-child{border-bottom:0}
+.hero__week-day{flex:0 0 56px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--c-text-soft);text-transform:uppercase;padding-top:2px}
+.hero__week-content{flex:1;min-width:0}
+.hero__week-title{font-weight:600;font-size:13.5px;color:var(--c-text);line-height:1.4;margin-bottom:4px}
+.hero__week-title--muted{color:var(--c-text-soft);font-weight:500;font-style:italic}
+.hero__week-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--c-primary);background:var(--c-primary-soft);padding:2px 8px;border-radius:var(--r-pill);letter-spacing:.02em}
+.hero__week--past{opacity:.55}
+.hero__week--active{background:linear-gradient(90deg,rgba(245,235,63,.18),transparent);margin:0 -12px;padding:13px 12px;border-radius:8px}
+.hero__week--active .hero__week-tag{background:var(--c-accent);color:#fff}
+.hero__cal-deco{position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,var(--c-yellow) 0%,transparent 70%);top:-40px;right:-40px;opacity:.4;pointer-events:none}
+
+.how{padding:96px 0;background:var(--c-bg-cream)}
+.section-head{text-align:center;max-width:680px;margin:0 auto 56px}
+.section-eyebrow{display:inline-block;color:var(--c-primary);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.section-head h2{font-size:clamp(28px,3.5vw,40px);margin-bottom:14px}
+.section-head p{color:var(--c-text-muted);font-size:17px;max-width:560px;margin:0 auto}
+.how__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.step{background:var(--c-bg-card);border-radius:var(--r-card);padding:36px 32px;position:relative;border:1px solid var(--c-border-soft)}
+.step__num{position:absolute;top:-20px;left:32px;width:48px;height:48px;border-radius:50%;background:var(--c-primary);color:#fff;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;font-size:20px;box-shadow:var(--shadow-md)}
+.step h3{font-size:20px;margin:8px 0 10px}
+.step p{color:var(--c-text-muted);font-size:15px}
+
+.stats{padding:64px 0;background:var(--c-primary);color:#fff;background-image:radial-gradient(circle at 15% 50%,rgba(255,255,255,.08) 0%,transparent 40%),radial-gradient(circle at 85% 50%,rgba(245,235,63,.08) 0%,transparent 40%)}
+.stats__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat__num{font-family:var(--font-head);font-weight:800;font-size:48px;line-height:1;letter-spacing:-.02em;margin-bottom:8px}
+.stat__label{font-size:14px;color:rgba(255,255,255,.78);font-weight:500}
+
+.programme{padding:96px 0;background:var(--c-bg)}
+.cls-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:56px;padding:8px;background:var(--c-bg-card);border-radius:24px;box-shadow:var(--shadow-md);max-width:fit-content;margin-left:auto;margin-right:auto;border:1px solid var(--c-border-soft)}
+.cls-tab{display:flex;flex-direction:column;align-items:flex-start;padding:12px 22px;border-radius:14px;transition:background-color .15s,color .15s;text-align:left;min-width:140px}
+.cls-tab__label{font-family:var(--font-head);font-weight:700;font-size:18px;color:var(--c-text)}
+.cls-tab__sub{font-size:12px;color:var(--c-text-muted);font-weight:500;margin-top:2px}
+.cls-tab:hover{background:var(--c-bg-cream)}
+.cls-tab[aria-selected="true"]{background:var(--c-primary);}
+.cls-tab[aria-selected="true"] .cls-tab__label{color:#fff}
+.cls-tab[aria-selected="true"] .cls-tab__sub{color:rgba(255,255,255,.78)}
+
+.cls-panel{display:block}
+.cls-panel--hidden{display:none}
+.cls-panel__head{background:var(--c-bg-card);border-radius:var(--r-card);padding:40px 40px 36px;margin-bottom:32px;position:relative;overflow:hidden;border-left:6px solid var(--cls-color,var(--c-primary));border:1px solid var(--c-border-soft);border-left:6px solid var(--cls-color,var(--c-primary))}
+.cls-panel__badge{display:inline-block;background:var(--cls-color,var(--c-primary));color:#fff;padding:5px 12px;border-radius:var(--r-pill);font-size:13px;font-weight:700;margin-bottom:14px;letter-spacing:.02em}
+.cls-panel__title{font-size:clamp(24px,3vw,32px);margin-bottom:10px}
+.cls-panel__blurb{color:var(--c-text-muted);font-size:17px;max-width:680px;margin-bottom:20px}
+.cls-panel__stats{font-size:14px;color:var(--c-text-muted)}
+.cls-panel__stats strong{color:var(--c-text);font-weight:700}
+
+.period{background:var(--c-bg-card);border-radius:var(--r-card);padding:32px;margin-bottom:24px;border:1px solid var(--c-border-soft)}
+.period__head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--c-border-soft)}
+.period__title{font-size:19px;font-weight:700;flex:1;min-width:240px}
+.period__months{font-size:13px;color:var(--c-text-muted);background:var(--c-bg-cream);padding:4px 10px;border-radius:var(--r-pill);font-weight:600}
+.period__count{font-size:13px;color:var(--c-text-soft);font-weight:600}
+.period__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+
+.card{padding:18px;border:1px solid var(--c-border-soft);border-radius:14px;background:var(--c-bg);transition:transform .15s,box-shadow .15s,border-color .15s;cursor:pointer;display:flex;flex-direction:column;min-height:110px}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--c-primary-pale);background:var(--c-bg-cream)}
+.card__num{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-primary);text-transform:uppercase;margin-bottom:8px}
+.card__title{font-size:14.5px;font-weight:600;line-height:1.4;color:var(--c-text);margin-bottom:auto;font-family:var(--font-body)}
+
+.sample{padding:96px 0;background:var(--c-bg-cream)}
+.sample__wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center}
+.sample__copy h2{font-size:clamp(28px,3.5vw,40px);margin-bottom:16px}
+.sample__copy p{font-size:17px;color:var(--c-text-muted);margin-bottom:14px}
+.sample__copy ul{list-style:none;padding:0;margin:24px 0 0}
+.sample__copy li{display:flex;gap:12px;padding:10px 0;font-size:15px}
+.sample__copy li::before{content:"→";color:var(--c-accent);font-weight:700;flex-shrink:0}
+.email-mock{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden}
+.email-mock__bar{padding:12px 16px;background:#F4F6FB;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--c-border-soft)}
+.email-mock__bar span{width:10px;height:10px;border-radius:50%;background:#CFD4DD}
+.email-mock__bar small{margin-left:auto;font-size:12px;color:var(--c-text-soft)}
+.email-mock__head{padding:24px 28px 18px;border-bottom:1px solid var(--c-border-soft)}
+.email-mock__from{font-size:13px;color:var(--c-text-muted);margin-bottom:8px}
+.email-mock__from strong{color:var(--c-text);font-weight:600}
+.email-mock__subject{font-family:var(--font-head);font-weight:700;font-size:20px;color:var(--c-text);line-height:1.3}
+.email-mock__body{padding:24px 28px 28px}
+.email-mock__tag{display:inline-block;background:var(--c-primary-soft);color:var(--c-primary);padding:4px 12px;border-radius:var(--r-pill);font-size:12px;font-weight:700;margin-bottom:14px}
+.email-mock__title{font-family:var(--font-head);font-weight:700;font-size:22px;margin-bottom:12px;line-height:1.25}
+.email-mock__lede{font-size:14.5px;color:var(--c-text-muted);line-height:1.6;margin-bottom:16px}
+.email-mock__cta{display:inline-flex;padding:10px 18px;background:var(--c-accent);color:#fff;border-radius:var(--r-pill);font-size:14px;font-weight:600;text-decoration:none;margin-top:6px}
+
+.faq{padding:96px 0;background:var(--c-bg)}
+.faq__grid{display:grid;gap:14px;max-width:780px;margin:0 auto}
+.faq__item{background:var(--c-bg-card);border:1px solid var(--c-border-soft);border-radius:14px;overflow:hidden}
+.faq__item summary{padding:20px 24px;font-weight:600;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;list-style:none}
+.faq__item summary::-webkit-details-marker{display:none}
+.faq__item summary::after{content:"+";font-size:22px;color:var(--c-primary);font-weight:300;transition:transform .2s}
+.faq__item[open] summary::after{transform:rotate(45deg)}
+.faq__item summary:hover{background:var(--c-bg-cream)}
+.faq__body{padding:0 24px 22px;color:var(--c-text-muted);font-size:15px;line-height:1.65}
+
+.final-cta{padding:96px 0;background:linear-gradient(135deg,var(--c-primary) 0%,var(--c-primary-deep) 100%);color:#fff;text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(245,235,63,.12) 0%,transparent 60%);top:-200px;left:-100px}
+.final-cta::after{content:"";position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(253,105,54,.16) 0%,transparent 60%);bottom:-150px;right:-100px}
+.final-cta__inner{position:relative;z-index:1}
+.final-cta h2{color:#fff;font-size:clamp(28px,4vw,44px);margin-bottom:16px;max-width:740px;margin-left:auto;margin-right:auto}
+.final-cta p{font-size:18px;opacity:.88;max-width:600px;margin:0 auto 36px}
+.final-cta__form{display:flex;gap:8px;max-width:520px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.final-cta__form input,.final-cta__form select{flex:1 1 200px;padding:14px 18px;border-radius:var(--r-input);border:0;font-family:inherit;font-size:15px;background:#fff;color:var(--c-text)}
+.final-cta__form button{background:var(--c-accent);color:#fff;padding:14px 28px;border-radius:var(--r-pill);font-weight:700;font-size:15px;transition:background-color .15s}
+.final-cta__form button:hover{background:var(--c-accent-deep)}
+.final-cta__reassure{margin-top:18px;font-size:13px;opacity:.7}
+
+.footer{background:#0E1690;color:rgba(255,255,255,.7);padding:48px 0 32px;font-size:14px}
+.footer__top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1)}
+.footer__brand{max-width:300px}
+.footer__brand strong{color:#fff;font-family:var(--font-head);font-size:22px;display:block;margin-bottom:8px}
+.footer__links{display:flex;gap:48px;flex-wrap:wrap}
+.footer__col h4{color:#fff;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+.footer__col ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.footer__col a{color:rgba(255,255,255,.7);font-size:14px}
+.footer__col a:hover{color:#fff;text-decoration:underline}
+.footer__bot{font-size:12px;opacity:.6}
+
+@media (max-width:1024px){
+  .hero__inner{grid-template-columns:1fr;gap:48px}
+  .hero__visual{max-width:480px;justify-self:start}
+  .how__grid{grid-template-columns:1fr;gap:20px}
+  .sample__wrap{grid-template-columns:1fr;gap:40px}
+  .stats__grid{grid-template-columns:repeat(2,1fr);gap:28px}
+}
+@media (max-width:768px){
+  .container{padding:0 20px}
+  .nav__links{display:none}
+  .hero{padding:48px 0 64px}
+  .how,.programme,.sample,.faq,.final-cta{padding:64px 0}
+  .cls-tab{min-width:auto;padding:10px 16px}
+  .cls-tab__label{font-size:15px}
+  .cls-tab__sub{display:none}
+  .cls-panel__head{padding:28px 24px}
+  .period{padding:24px 20px}
+  .period__grid{grid-template-columns:1fr}
+  .stat__num{font-size:36px}
+  .footer__top{flex-direction:column;gap:24px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Navigation principale">
+  <div class="nav__shell">
+    <a href="./Proxxie Home.html" class="nav__brand" aria-label="Retour à l'accueil Proxxie">
+      <span class="nav__brand-mark">
+        <span class="nav__logo">
+          <svg width="21.7" height="21.7" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <path d="M22 22 L50 70 L78 22" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 78 L50 30 L78 78" stroke="#487AFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="nav__brand-name">proxxie</span>
+      </span>
+    </a>
+    <div class="nav__links">
+      <a href="./Proxxie Home.html#methode" class="muted">La méthode</a>
+      <a href="./Proxxie Home.html#resultats" class="muted">Le rapport</a>
+      <a href="./Proxxie Home.html#tarifs" class="muted">Tarifs</a>
+      <div class="nav__dropdown">
+        <button class="nav__dropdown-trigger" type="button" aria-haspopup="true">
+          Ressources
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="nav__panel" role="menu">
+          <div class="nav__panel-list">
+            <a href="./guide-orientation.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Le guide de l'orientation</span><span class="nav__panel-badge">PDF · gratuit</span></div>
+                <div class="nav__panel-desc">100+ pages pour comprendre Parcoursup, les filières, les métiers.</div>
+              </div>
+            </a>
+            <a href="./newsletter-substack.html" class="nav__panel-item" aria-current="page">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">La newsletter Substack</span><span class="nav__panel-badge">Hebdo</span></div>
+                <div class="nav__panel-desc">Abonnez-vous au Substack de Charles Broussin.</div>
+              </div>
+            </a>
+            <a href="./carnet-orientation.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h12a3 3 0 0 1 3 3v13"/><path d="M3 5v13a3 3 0 0 0 3 3h12"/><path d="M7 9h7M7 13h7"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Carnet du salon de l'orientation</span><span class="nav__panel-badge">Édition 2026</span></div>
+                <div class="nav__panel-desc">Notre debrief des salons, écoles &amp; formations visités.</div>
+              </div>
+            </a>
+            <a href="./blog.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Le blog</span><span class="nav__panel-badge">Articles</span></div>
+                <div class="nav__panel-desc">Conseils pratiques, témoignages, décryptage des réformes.</div>
+              </div>
+            </a>
+            <a href="./cas-clients.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Cas clients</span><span class="nav__panel-badge">Témoignages</span></div>
+                <div class="nav__panel-desc">Histoires de familles accompagnées, du début à l'inscription.</div>
+              </div>
+            </a>
+          </div>
+          <div class="nav__panel-footer">
+            <div class="nav__panel-footer-text"><strong>Toutes les ressources</strong> · classées par classe &amp; moment de l'année</div>
+            <a href="#programme">Tout voir →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav__ctas">
+      <a href="./Proxxie Connexion.html" class="muted" style="font-size:14px;font-weight:500">Connexion</a>
+      <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px;font-weight:600">30 min avec Charles</a>
+      <a href="./Proxxie Test.html" class="btn btn-orange nav-cta"><span>Commencer le test<span class="nav-cta__suffix"> gratuit</span></span></a>
+    </div>
+  </div>
+</nav>
+<main>
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <div class="hero__eyebrow">Newsletter Substack · Charles Broussin</div>
+      <h1>L'orientation,<br><em>vue de l'intérieur</em>.</h1>
+      <p class="hero__sub">Chaque semaine, Charles Broussin partage ce qu'il apprend en accompagnant les familles : pédagogie, choix d'orientation, vie scolaire, relations parents-ados. Un point de vue franc, pratique, sans filtre.</p>
+      <div class="hero__form" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <a href="https://charlesbroussin.substack.com/subscribe" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--lg" style="text-decoration:none">
+          ✉️ S'abonner gratuitement
+        </a>
+        <a href="https://charlesbroussin.substack.com/" target="_blank" rel="noopener noreferrer" class="btn btn--lg" style="background:white;color:#0A0E2C;border:1.5px solid #0A0E2C;text-decoration:none;display:inline-flex;align-items:center;gap:8px">
+          📖 Lire les derniers articles
+        </a>
+      </div>
+      <p style="margin-top:18px;font-size:13px;color:#6B6F8C">Gratuit · Désabonnement en 1 clic · Pas de spam</p>
+    </div>
+    <aside class="hero__visual">
+      <div class="hero__cal" style="padding:0;overflow:hidden">
+        <div style="background:linear-gradient(160deg, #FD6936, #F5EB3F);color:white;padding:28px 24px">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+            <div style="width:48px;height:48px;border-radius:12px;background:white;display:grid;place-items:center;color:#FD6936;font-weight:800;font-size:22px;font-family:'Mulish',sans-serif">S</div>
+            <div>
+              <div style="font-size:13px;opacity:0.9;font-weight:600">Substack</div>
+              <div style="font-size:18px;font-weight:700">Charles Broussin</div>
+            </div>
+          </div>
+          <p style="font-size:14px;opacity:0.95;line-height:1.55;margin:0">Fondateur de Proxxie · Coach d'orientation depuis 2019 · 200+ familles accompagnées chaque année</p>
+        </div>
+        <div style="padding:20px 24px;background:white">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px;font-size:13px;color:#6B6F8C">
+            <strong style="color:#0A0E2C;font-size:15px">Dernier article</strong>
+            <span>· Cette semaine</span>
+          </div>
+          <div style="font-weight:600;font-size:16px;color:#0A0E2C;margin-bottom:10px;line-height:1.4">
+            « Pourquoi les bulletins de votre ado mentent (et comment lire entre les lignes) »
+          </div>
+          <div style="font-size:13px;color:#6B6F8C;line-height:1.55;margin-bottom:14px">
+            Les appréciations sont codées. Voici la grille pour les décoder, et la conversation à avoir avec votre ado.
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;background:#EEE6D9;color:#0A0E2C">Bulletins</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;background:#EEE6D9;color:#0A0E2C">Communication</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;background:#EEE6D9;color:#0A0E2C">Lecture &lt; 5 min</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="how" style="padding-top:80px;padding-bottom:80px;background:white">
+  <div class="container">
+    <div style="text-align:center;max-width:720px;margin:0 auto 50px">
+      <div class="hero__eyebrow">Ce qui vous attend</div>
+      <h2 style="margin-top:14px;font-size:36px">Un point de vue d'expert, chaque semaine.</h2>
+      <p style="font-size:17px;color:#2A2F4F;margin-top:16px;line-height:1.55">
+        Le Substack de Charles n'est pas une newsletter « tips & tricks ». C'est l'occasion d'entrer dans la tête d'un coach qui voit défiler 200+ familles par an et qui partage ses observations honnêtes.
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div style="background:#F7F2E9;border:1px solid #E6E2D6;border-radius:18px;padding:24px">
+        <div style="width:40px;height:40px;border-radius:10px;background:#FD6936;color:white;display:grid;place-items:center;font-size:20px;margin-bottom:14px">📚</div>
+        <h3 style="font-size:18px;margin-bottom:8px">Pédagogie & système</h3>
+        <p style="font-size:14px;color:#6B6F8C;line-height:1.55">Décryptage de Parcoursup, des réformes, des filières émergentes. Pas de jargon — du concret.</p>
+      </div>
+      <div style="background:#F7F2E9;border:1px solid #E6E2D6;border-radius:18px;padding:24px">
+        <div style="width:40px;height:40px;border-radius:10px;background:#487AFF;color:white;display:grid;place-items:center;font-size:20px;margin-bottom:14px">💬</div>
+        <h3 style="font-size:18px;margin-bottom:8px">Parents-ados</h3>
+        <p style="font-size:14px;color:#6B6F8C;line-height:1.55">Comment parler d'orientation sans dispute. Comment gérer le désaccord. Comment laisser de l'autonomie.</p>
+      </div>
+      <div style="background:#F7F2E9;border:1px solid #E6E2D6;border-radius:18px;padding:24px">
+        <div style="width:40px;height:40px;border-radius:10px;background:#22A06B;color:white;display:grid;place-items:center;font-size:20px;margin-bottom:14px">🎯</div>
+        <h3 style="font-size:18px;margin-bottom:8px">Cas réels</h3>
+        <p style="font-size:14px;color:#6B6F8C;line-height:1.55">Des histoires anonymisées de familles que Charles a accompagnées, et ce qu'on en retient.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats" style="padding-top:80px;padding-bottom:80px">
+  <div class="container">
+    <div style="background:linear-gradient(160deg, #1320CE, #487AFF);color:white;border-radius:28px;padding:50px 40px;text-align:center;position:relative;overflow:hidden">
+      <h2 style="color:white;font-size:36px;margin-bottom:14px">Lisez avant de vous abonner.</h2>
+      <p style="font-size:17px;opacity:0.92;max-width:580px;margin:0 auto 30px;line-height:1.55">
+        Tous les articles sont en libre accès sur Substack. Aucune carte bancaire demandée pour s'abonner — c'est gratuit, et ça le reste.
+      </p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="https://charlesbroussin.substack.com/subscribe" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--lg" style="background:#FD6936;color:white;text-decoration:none;border:none">
+          ✉️ S'abonner gratuitement
+        </a>
+        <a href="https://charlesbroussin.substack.com/" target="_blank" rel="noopener noreferrer" class="btn btn--lg" style="background:rgba(255,255,255,0.18);color:white;border:1px solid rgba(255,255,255,0.3);text-decoration:none">
+          📖 Voir tous les articles
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" style="padding-top:80px;padding-bottom:100px;background:white">
+  <div class="container">
+    <div style="text-align:center;max-width:560px;margin:0 auto 30px">
+      <div class="hero__eyebrow">Abonnement direct</div>
+      <h2 style="margin-top:14px;font-size:30px">Ou abonnez-vous ici, sans quitter la page.</h2>
+      <p style="font-size:15px;color:#6B6F8C;margin-top:12px;line-height:1.55">Formulaire officiel Substack. Votre email part directement chez eux — Proxxie ne le stocke pas.</p>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <iframe src="https://charlesbroussin.substack.com/embed" width="480" height="320" style="border:1px solid #E6E2D6;background:white;border-radius:14px;max-width:100%" frameborder="0" scrolling="no" loading="lazy" title="Abonnement Substack Charles Broussin"></iframe>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <strong>proxxie</strong>
+        Le meilleur allié pour l'avenir de vos ados. Accompagnement à l'orientation scolaire, de la 3ème au bac+1.
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Solution par classe</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/3eme">3ème</a></li>
+            <li><a href="https://www.proxxie.co/seconde">2nde</a></li>
+            <li><a href="https://www.proxxie.co/premiere">1ère</a></li>
+            <li><a href="https://www.proxxie.co/terminale">Terminale</a></li>
+            <li><a href="https://www.proxxie.co/post-bac">Post-Bac</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Ressources</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/blog">Blog</a></li>
+            <li><a href="./cas-clients.html">Cas clients</a></li>
+            <li><a href="#programme">Newsletter</a></li>
+            <li><a href="https://www.proxxie.co/test">Test Proxxie</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Proxxie</h4>
+          <ul>
+            <li><a href="https://www.proxxie.co/methode">La méthode</a></li>
+            <li><a href="https://www.proxxie.co/tarifs">Tarifs</a></li>
+            <li><a href="https://www.proxxie.co/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bot">© 2026 Proxxie · Politique de confidentialité · CGV</div>
+  </div>
+</footer>
+</body>
+</html>
