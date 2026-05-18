@@ -309,6 +309,55 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   .hero__cta-row{flex-direction:column;align-items:stretch}
   .hero__cta-row .btn{justify-content:center;width:100%}
 }
+
+/*__PROXXIE_PAGE_CSS_START__*/
+/* ===== Carnet d'orientation, page-specific ===== */
+.carnet__intro{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:14px}
+.carnet__intro li{display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.55;color:var(--c-text)}
+.carnet__intro li strong{color:var(--c-text);font-weight:700}
+.carnet__intro-emoji{flex:0 0 28px;font-size:22px;line-height:1}
+.carnet__goal{background:#fff;border:1.5px solid var(--c-border);border-radius:18px;padding:20px 22px;margin:0 0 18px;box-shadow:var(--shadow-sm);position:relative}
+.carnet__goal-label{display:inline-block;font-family:var(--font-head);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:4px 10px;border-radius:var(--r-pill);margin-bottom:10px}
+.carnet__goal p{font-size:16px;color:var(--c-text);line-height:1.6;margin:0}
+.carnet__tagline{font-size:15px;color:var(--c-text-muted);margin:0 0 22px}
+.carnet__tagline em{font-style:italic;color:var(--c-text)}
+
+.stand-card{background:#fff;border:1px solid var(--c-border);border-radius:24px;padding:24px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.stand-card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.stand-card__badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:4px 10px;border-radius:var(--r-pill);margin-bottom:8px}
+.stand-card__badge--alt{color:var(--c-accent);background:rgba(253,105,54,.10)}
+.stand-card__title{font-family:var(--font-head);font-weight:700;font-size:20px;line-height:1.2;color:var(--c-text);margin:0 0 4px}
+.stand-card__sub{font-size:12.5px;color:var(--c-text-soft);font-weight:500}
+.stand-card__menu{width:32px;height:32px;border-radius:10px;background:var(--c-bg-cream);color:var(--c-text-muted);font-size:18px;line-height:1;display:grid;place-items:center}
+.stand-card__progress{margin-bottom:18px}
+.stand-card__progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--c-text-muted);margin-bottom:6px;font-weight:600;letter-spacing:.02em}
+.stand-card__progress-label strong{color:var(--c-primary);font-weight:700}
+.stand-card__bar{height:8px;background:var(--c-bg-cream);border-radius:99px;overflow:hidden}
+.stand-card__bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--c-primary),var(--c-primary-light));border-radius:99px}
+.stand-card__tabs{display:flex;gap:6px;padding:5px;background:var(--c-bg-cream);border-radius:14px;margin-bottom:18px}
+.stand-card__tab{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 14px;border-radius:10px;background:transparent;text-align:left;cursor:pointer}
+.stand-card__tab-label{font-family:var(--font-head);font-weight:700;font-size:14px;color:var(--c-text-muted)}
+.stand-card__tab-meta{font-size:11px;color:var(--c-text-soft);font-weight:600}
+.stand-card__tab--active{background:#fff;box-shadow:0 1px 3px rgba(10,14,44,.08)}
+.stand-card__tab--active .stand-card__tab-label{color:var(--c-text)}
+.stand-card__tab--active .stand-card__tab-meta{color:var(--c-primary)}
+.stand-card__questions{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.stand-card__questions li{display:flex;gap:12px;padding:12px 14px;background:var(--c-bg);border:1px solid var(--c-border-soft);border-radius:12px;font-size:13.5px;color:var(--c-text);line-height:1.45;align-items:flex-start}
+.stand-card__q-num{flex:0 0 28px;font-family:var(--font-head);font-weight:700;font-size:11px;letter-spacing:.06em;color:var(--c-primary);padding-top:1px}
+.stand-card__q-done{opacity:.55}
+.stand-card__q-done .stand-card__q-num{color:var(--c-green)}
+.stand-card__questions-more{display:flex;justify-content:center;font-size:12.5px;font-weight:600;color:var(--c-text-muted);background:transparent !important;border:1px dashed var(--c-border) !important;padding:10px 14px !important}
+
+.stand-card--demo{box-shadow:var(--shadow-md)}
+
+.sample__visual{display:flex;justify-content:center}
+
+@media (max-width:1024px){
+  .sample__wrap{grid-template-columns:1fr}
+  .stand-card{max-width:480px;margin:0 auto}
+}
+
+/*__PROXXIE_PAGE_CSS_END__*/
 </style>
 </head>
 <body>
@@ -337,6 +386,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
         </button>
         <div class="nav__panel" role="menu">
           <div class="nav__panel-list">
+            <a href="./Proxxie Tests.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Tests psychométriques</span><span class="nav__panel-badge">12 tests · gratuit</span></div>
+                <div class="nav__panel-desc">12 tests : OCEAN, RIASEC, PCM, MBTI, Drivers, Valeurs, Besoins, TDAH, Autisme, HPI, Anxiété, DYS.</div>
+              </div>
+            </a>
             <a href="./guide-orientation.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
               <div class="nav__panel-body">
@@ -344,7 +400,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
                 <div class="nav__panel-desc">100+ pages pour comprendre Parcoursup, les filières, les métiers.</div>
               </div>
             </a>
-            <a href="./guide-orientation.html#signup" class="nav__panel-item">
+            <a href="./newsletter-substack.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
               <div class="nav__panel-body">
                 <div class="nav__panel-head"><span class="nav__panel-title">La newsletter Substack</span><span class="nav__panel-badge">Hebdo</span></div>
@@ -383,7 +439,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
     <div class="nav__ctas">
       <a href="./Proxxie Connexion.html" class="muted" style="font-size:14px;font-weight:500">Connexion</a>
       <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px;font-weight:600">30 min avec Charles</a>
-      <a href="./Proxxie Test.html" class="btn btn-orange nav-cta"><span>Commencer le test<span class="nav-cta__suffix"> gratuit</span></span></a>
+      <a href="./Proxxie Home.html#signup" class="btn btn-orange nav-cta"><span>Commencer le parcours<span class="nav-cta__suffix"> gratuit</span></span></a>
     </div>
   </div>
 </nav>
@@ -394,52 +450,89 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 <section class="hero">
   <div class="container hero__inner">
     <div class="hero__copy">
-      <div class="hero__eyebrow">Carnet du salon · Édition 2026</div>
-      <h1>Le terrain, <em>pas la brochure</em>.<br>Notre carnet de salons.</h1>
-      <p class="hero__sub">Salons étudiants, JPO, écoles, formations : on s'y rend, on prend des notes, on les partage. 47 événements visités cette saison. Pour aider votre ado à ne pas choisir une école sur sa plaquette.</p>
+      <div class="hero__eyebrow">Préparation salon · Édition 2026</div>
+      <h1>Vous allez bientôt visiter <em>un salon de l'orientation</em> ?</h1>
+      <p class="hero__sub">Notre outil pour préparer la visite : un questionnaire en deux volets (parents et jeunes) pour poser les bonnes questions, sans stress, et repérer ce qui compte vraiment dans une école ou une formation.</p>
+      <ul class="carnet__intro">
+        <li><span class="carnet__intro-emoji" aria-hidden="true">👉</span><div><strong>Pour les parents</strong>, il vous guide pour obtenir des réponses claires, concrètes et transparentes, au-delà du marketing.</div></li>
+        <li><span class="carnet__intro-emoji" aria-hidden="true">👉</span><div><strong>Pour les jeunes</strong>, il vous aide à identifier si vous vous projetez réellement dans l'école, en parlant directement aux étudiants et aux pros sur place.</div></li>
+      </ul>
+      <div class="carnet__goal">
+        <div class="carnet__goal-label">L'objectif</div>
+        <p>Repartir du salon avec de la clarté, pas avec des doutes. Moins de brochures, plus de certitudes. Moins de promesses, plus de réalité.</p>
+      </div>
+      <p class="carnet__tagline"><em>Parce qu'une bonne orientation, c'est un choix éclairé, et surtout un choix qui vous ressemble.</em></p>
       <div class="hero__cta-row">
-        <a class="btn btn--primary btn--lg" href="#carnet">Voir les notes du carnet</a>
-        <a class="btn btn-ghost btn--lg" href="https://calendly.com/proxxie/entretien">30 min avec Charles</a>
+        <a class="btn btn--primary btn--lg" href="https://www.proxxie.co/orientation-notes" target="_blank" rel="noopener">+ Ajouter mon premier stand</a>
+        <a class="btn btn-ghost btn--lg" href="#comment">Comment ça marche</a>
       </div>
     </div>
     <aside class="hero__visual">
-      <div class="hero__cal">
-        <div class="hero__cal-deco"></div>
-        <div class="hero__cal-head">
-          <h3>Saison 2025 – 2026</h3>
-          <span>47 événements visités</span>
+      <div class="stand-card">
+        <div class="stand-card__head">
+          <div>
+            <div class="stand-card__badge">Université</div>
+            <h3 class="stand-card__title">Université de Bayonne</h3>
+            <div class="stand-card__sub">Stand ajouté · à compléter sur place</div>
+          </div>
+          <button class="stand-card__menu" type="button" aria-label="Options" tabindex="-1">⋯</button>
         </div>
-        <div class="hero__week hero__week--active"><div class="hero__week-day">Mai</div><div class="hero__week-content"><div class="hero__week-title">Salon Studyrama de Paris, débrief des 6 écoles d'ingénieurs vues.</div><span class="hero__week-tag">Cette semaine · N°042</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">Mars</div><div class="hero__week-content"><div class="hero__week-title">JPO Sciences Po Bordeaux, entretien avec 3 étudiants en L1.</div><span class="hero__week-tag">N°038</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">Janv.</div><div class="hero__week-content"><div class="hero__week-title">Salon de l'Étudiant, repérage des nouvelles BUT.</div><span class="hero__week-tag">N°031</span></div></div>
-        <div class="hero__week hero__week--past"><div class="hero__week-day">Oct.</div><div class="hero__week-content"><div class="hero__week-title">Forum Avenir Étudiant, focus alternance &amp; CFA.</div><span class="hero__week-tag">N°024</span></div></div>
+        <div class="stand-card__progress">
+          <div class="stand-card__progress-label">
+            <span>Progression du questionnaire</span>
+            <strong>0 / 28</strong>
+          </div>
+          <div class="stand-card__bar"><div class="stand-card__bar-fill"></div></div>
+        </div>
+        <div class="stand-card__tabs" role="tablist" aria-label="Public du questionnaire">
+          <button class="stand-card__tab stand-card__tab--active" type="button" role="tab" aria-selected="true" data-stand-tab="parents">
+            <span class="stand-card__tab-label">Parents</span>
+            <span class="stand-card__tab-meta">14 questions</span>
+          </button>
+          <button class="stand-card__tab" type="button" role="tab" aria-selected="false" data-stand-tab="jeunes">
+            <span class="stand-card__tab-label">Jeunes</span>
+            <span class="stand-card__tab-meta">14 questions</span>
+          </button>
+        </div>
+        <ul class="stand-card__questions" data-stand-questions="parents">
+          <li><span class="stand-card__q-num">01</span><span>Quel est le taux de réussite réel en fin de 1ère année ?</span></li>
+          <li><span class="stand-card__q-num">02</span><span>Combien d'étudiants trouvent un stage dès la L1 ?</span></li>
+          <li><span class="stand-card__q-num">03</span><span>Quel est le profil type des admis (bac, spécialités, mentions) ?</span></li>
+          <li class="stand-card__questions-more">+ 11 autres questions pour les parents</li>
+        </ul>
+        <ul class="stand-card__questions" data-stand-questions="jeunes" hidden>
+          <li><span class="stand-card__q-num">01</span><span>Une semaine type en 1ère année, ça ressemble à quoi ?</span></li>
+          <li><span class="stand-card__q-num">02</span><span>Qu'est-ce que vous avez préféré dans cette école ?</span></li>
+          <li><span class="stand-card__q-num">03</span><span>Quel profil s'épanouit le mieux ici, selon vous ?</span></li>
+          <li class="stand-card__questions-more">+ 11 autres questions pour les jeunes</li>
+        </ul>
       </div>
     </aside>
   </div>
 </section>
 
-<section class="how">
+<section class="how" id="comment">
   <div class="container">
     <div class="section-head">
-      <span class="section-eyebrow">Comment on travaille</span>
-      <h2>On y va, on écoute, on filtre.</h2>
-      <p>Trois quarts du marketing étudiant est interchangeable. Notre travail : extraire ce qui n'apparaît pas sur la plaquette, l'ambiance réelle, le taux d'abandon, ce que disent les anciens.</p>
+      <span class="section-eyebrow">Comment ça fonctionne</span>
+      <h2>Un questionnaire pensé en deux volets.</h2>
+      <p>Pour chaque école ou formation rencontrée, vous ajoutez un stand. À l'intérieur, deux onglets, parents et jeunes, environ 14 questions chacun, soit 28 questions par stand pour ne rien oublier.</p>
     </div>
     <div class="how__grid">
       <div class="step">
         <div class="step__num">1</div>
-        <h3>On s'inscrit comme parent</h3>
-        <p>On visite incognito, sans badge presse. Mêmes files, mêmes interlocuteurs, mêmes réponses qu'un parent lambda. Pas de traitement de faveur, pas d'angle PR.</p>
+        <h3>Ajoutez un stand</h3>
+        <p>Avant le salon, listez les écoles ou formations à visiter. Chaque stand crée son propre questionnaire en deux volets, prêt à remplir sur place.</p>
       </div>
       <div class="step">
         <div class="step__num">2</div>
-        <h3>On pose les vraies questions</h3>
-        <p>Taux de réussite réel, devenir des diplômés à 3 ans, profils acceptés, ambiance étudiante, alternance disponible. Les questions que vous voudriez poser sans risquer de coincer votre ado.</p>
+        <h3>Posez les bonnes questions</h3>
+        <p>L'onglet parents cible la transparence et le concret. L'onglet jeunes cible la projection réelle, en parlant aux étudiants et aux pros présents sur le stand.</p>
       </div>
       <div class="step">
         <div class="step__num">3</div>
-        <h3>On publie un carnet honnête</h3>
-        <p>Une fiche par école ou formation. Ce qu'on a aimé, ce qui nous a alerté, à qui ça correspond. Aucun arrangement, aucun sponsoring.</p>
+        <h3>Comparez après le salon</h3>
+        <p>De retour à la maison, comparez vos notes stand par stand. Vous repartez avec de la clarté, pas avec des doutes.</p>
       </div>
     </div>
   </div>
@@ -448,87 +541,75 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 <section class="stats">
   <div class="container">
     <div class="stats__grid">
-      <div><div class="stat__num">47</div><div class="stat__label">événements 2025-26</div></div>
-      <div><div class="stat__num">218</div><div class="stat__label">écoles &amp; formations</div></div>
-      <div><div class="stat__num">9</div><div class="stat__label">régions couvertes</div></div>
+      <div><div class="stat__num">2</div><div class="stat__label">volets, parents &amp; jeunes</div></div>
+      <div><div class="stat__num">28</div><div class="stat__label">questions par stand</div></div>
+      <div><div class="stat__num">100%</div><div class="stat__label">gratuit, sans inscription</div></div>
       <div><div class="stat__num">0</div><div class="stat__label">école sponsorisée</div></div>
     </div>
   </div>
 </section>
 
-<section class="programme" id="carnet">
+<section class="sample">
   <div class="container">
-    <div class="section-head">
-      <span class="section-eyebrow">Carnet 2025-26</span>
-      <h2>Les notes de la saison.</h2>
-      <p>Filtrez par type d'événement ou par moment de l'année. Chaque fiche est rédigée par un membre de l'équipe Proxxie présent sur place.</p>
-    </div>
-    <div class="programme__filters" role="tablist" aria-label="Filtrer les notes">
-      <button class="programme__filter programme__filter--active" type="button">Tous</button>
-      <button class="programme__filter" type="button">Salons</button>
-      <button class="programme__filter" type="button">JPO</button>
-      <button class="programme__filter" type="button">Écoles d'ingé</button>
-      <button class="programme__filter" type="button">Universités</button>
-      <button class="programme__filter" type="button">Alternance</button>
-    </div>
-    <div class="programme__list">
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°042</span><span class="programme__item-tag">Salon</span></div>
-        <h3>Salon Studyrama Grandes Écoles, Paris</h3>
-        <p>Six écoles d'ingénieurs post-bac visitées. Différences réelles d'ambiance, de pédagogie, de profils acceptés. Verdict sur les "doublons" du marché.</p>
-        <span class="programme__item-meta">Mai 2026 · Paris</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°041</span><span class="programme__item-tag">JPO</span></div>
-        <h3>Sciences Po Bordeaux, Journée portes ouvertes</h3>
-        <p>Entretiens avec 3 étudiants de L1, présentation du concours commun IEP, taux de réussite réels par bac d'origine.</p>
-        <span class="programme__item-meta">Mars 2026 · Bordeaux</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°040</span><span class="programme__item-tag">Université</span></div>
-        <h3>Licences MIASHS, la filière qui monte</h3>
-        <p>Trois universités comparées (Bordeaux, Lyon 2, Toulouse Jean-Jaurès). Débouchés, profils, taux d'insertion en data &amp; sciences humaines.</p>
-        <span class="programme__item-meta">Février 2026 · 3 villes</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°039</span><span class="programme__item-tag">Salon</span></div>
-        <h3>Salon de l'Étudiant, Édition de Bordeaux</h3>
-        <p>Focus sur les nouveaux BUT (ex-DUT). Ce qui change pour Parcoursup, et le piège des "BUT vitrine" qui n'accueillent que 12 alternants par an.</p>
-        <span class="programme__item-meta">Janvier 2026 · Bordeaux</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°038</span><span class="programme__item-tag">École d'ingé</span></div>
-        <h3>ECAM Lyon, JPO de novembre</h3>
-        <p>Cycle préparatoire intégré + 3 ans d'ingénierie. Témoignages de 2 alumni, ambiance &amp; logement, places réellement disponibles.</p>
-        <span class="programme__item-meta">Novembre 2025 · Lyon</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°037</span><span class="programme__item-tag">Alternance</span></div>
-        <h3>Forum Avenir Étudiant, Spécial alternance &amp; CFA</h3>
-        <p>Cartographie des CFA Île-de-France, secteurs qui recrutent encore, et les "fausses alternances" à éviter (école qui te facture, et pas l'entreprise).</p>
-        <span class="programme__item-meta">Octobre 2025 · Paris</span>
-      </article>
+    <div class="sample__wrap">
+      <div class="sample__copy">
+        <span class="section-eyebrow">Aperçu de l'interface</span>
+        <h2>Un stand, deux volets, vos notes.</h2>
+        <p>Voici à quoi ressemble un stand une fois ajouté. Le volet parents et le volet jeunes vivent côte à côte. La progression se met à jour à chaque réponse, pour que personne ne perde le fil sur place.</p>
+        <ul>
+          <li>Onglet parents, pour creuser le concret et la transparence.</li>
+          <li>Onglet jeunes, pour parler directement aux étudiants et aux pros.</li>
+          <li>Progression visible, vos réponses se sauvegardent en continu.</li>
+          <li>Un stand par école, comparez tout après la visite.</li>
+        </ul>
+      </div>
+      <div class="sample__visual">
+        <div class="stand-card stand-card--demo">
+          <div class="stand-card__head">
+            <div>
+              <div class="stand-card__badge stand-card__badge--alt">École de commerce</div>
+              <h3 class="stand-card__title">Kedge Business School</h3>
+              <div class="stand-card__sub">Stand visité · 18 / 28 questions</div>
+            </div>
+            <button class="stand-card__menu" type="button" aria-label="Options" tabindex="-1">⋯</button>
+          </div>
+          <div class="stand-card__progress">
+            <div class="stand-card__progress-label">
+              <span>Progression du questionnaire</span>
+              <strong>18 / 28</strong>
+            </div>
+            <div class="stand-card__bar"><div class="stand-card__bar-fill" style="width:64%"></div></div>
+          </div>
+          <div class="stand-card__tabs" role="tablist" aria-label="Public du questionnaire">
+            <button class="stand-card__tab" type="button" role="tab" aria-selected="false" tabindex="-1">
+              <span class="stand-card__tab-label">Parents</span>
+              <span class="stand-card__tab-meta">10 / 14</span>
+            </button>
+            <button class="stand-card__tab stand-card__tab--active" type="button" role="tab" aria-selected="true" tabindex="-1">
+              <span class="stand-card__tab-label">Jeunes</span>
+              <span class="stand-card__tab-meta">8 / 14</span>
+            </button>
+          </div>
+          <ul class="stand-card__questions">
+            <li class="stand-card__q-done"><span class="stand-card__q-num">01</span><span>Est-ce que je me vois passer 3 ans ici ?</span></li>
+            <li class="stand-card__q-done"><span class="stand-card__q-num">02</span><span>Les étudiants rencontrés me ressemblent ?</span></li>
+            <li><span class="stand-card__q-num">03</span><span>Quel est le rythme réel (cours, projets, stage) ?</span></li>
+            <li class="stand-card__questions-more">+ 11 autres questions pour les jeunes</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="final-cta">
   <div class="container final-cta__inner">
-    <h2>Vous voulez recevoir les prochaines notes du carnet ?</h2>
-    <p>Une fiche par événement, livrée par email dans la semaine qui suit notre passage. Aucun sponsoring, aucune école payée.</p>
-    <form class="final-cta__form" aria-label="Inscription au carnet" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Inscrit';">
-      <input type="email" placeholder="votre@email.fr" required aria-label="Adresse email">
-      <select required aria-label="Classe actuelle de votre ado">
-        <option value="">Classe de l'ado</option>
-        <option>3ème</option>
-        <option>2nde</option>
-        <option>1ère</option>
-        <option>Terminale</option>
-        <option>Bac+1</option>
-      </select>
-      <button type="submit">Recevoir les prochaines notes</button>
-    </form>
-    <p class="final-cta__reassure">Aucune école sponsorisée. Aucun message commercial.</p>
+    <h2>Utiliser l'outil sur proxxie.co</h2>
+    <p>Le carnet d'orientation est gratuit. Pas d'inscription, pas de promo, juste un compagnon de salon pour repartir avec de la clarté.</p>
+    <div class="final-cta__buttons">
+      <a class="btn btn--primary btn--lg" href="https://www.proxxie.co/orientation-notes" target="_blank" rel="noopener">Utiliser l'outil sur proxxie.co</a>
+    </div>
+    <p class="final-cta__reassure">100% gratuit · Sans création de compte · Sans école sponsorisée.</p>
   </div>
 </section>
 
@@ -765,6 +846,38 @@ init();
     var src = a.getAttribute('data-cal-source') || a.textContent.trim().slice(0, 40) || 'inline_modal';
     open(src);
   }, true);
+})();
+</script>
+<script>
+(function () {
+  var tabs = document.querySelectorAll('[data-stand-tab]');
+  var lists = document.querySelectorAll('[data-stand-questions]');
+  if (!tabs.length || !lists.length) return;
+  function activate(target) {
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-stand-tab') === target;
+      t.classList.toggle('stand-card__tab--active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    lists.forEach(function (l) {
+      var on = l.getAttribute('data-stand-questions') === target;
+      l.hidden = !on;
+    });
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      activate(t.getAttribute('data-stand-tab'));
+    });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      var current = document.querySelector('.stand-card__tab--active');
+      var idx = Array.prototype.indexOf.call(tabs, current);
+      var next = tabs[(idx + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      activate(next.getAttribute('data-stand-tab'));
+      next.focus();
+    });
+  });
 })();
 </script>
 </body>

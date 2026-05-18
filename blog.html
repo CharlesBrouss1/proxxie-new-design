@@ -309,6 +309,56 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   .hero__cta-row{flex-direction:column;align-items:stretch}
   .hero__cta-row .btn{justify-content:center;width:100%}
 }
+
+/*__PROXXIE_PAGE_CSS_START__*/
+/* ===== Blog / Ressources, page-specific ===== */
+.hero__visual:has(.blog-stack){width:100%;max-width:520px;aspect-ratio:auto}
+.blog-stack{position:relative;width:100%;height:480px;display:block}
+.blog-stack__card{position:absolute;background:#fff;border:1px solid var(--c-border-soft);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow-lg);width:360px;max-width:90%;top:50%;left:50%}
+.blog-stack__card h4{font-family:var(--font-head);font-weight:700;font-size:18px;line-height:1.3;color:var(--c-text);margin:0}
+.blog-stack__tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:4px 10px;border-radius:var(--r-pill);margin-bottom:12px}
+.blog-stack__card--1{transform:translate(-50%,-30%) rotate(-3deg);z-index:3}
+.blog-stack__card--2{transform:translate(-58%,-65%) rotate(2deg);z-index:2;opacity:.96}
+.blog-stack__card--3{transform:translate(-44%,-100%) rotate(-5deg);z-index:1;opacity:.88}
+
+.categories{padding:96px 0;background:var(--c-bg-cream)}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.cat-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--c-border-soft);border-radius:var(--r-card);padding:26px 26px 22px;box-shadow:var(--shadow-sm);transition:transform .18s,box-shadow .18s,border-color .18s;text-decoration:none;color:var(--c-text)}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--c-primary-pale);text-decoration:none}
+.cat-card__pill{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:5px 11px;border-radius:var(--r-pill);margin-bottom:14px}
+.cat-card__pill--feature{color:#fff;background:var(--c-accent)}
+.cat-card h3{font-family:var(--font-head);font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.01em;color:var(--c-text);margin:0 0 12px}
+.cat-card p{font-size:14.5px;color:var(--c-text-muted);line-height:1.55;flex:1;margin:0 0 18px}
+.cat-card__foot{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px dashed var(--c-border-soft);font-size:13px}
+.cat-card__foot > span:first-child{color:var(--c-text-soft);font-weight:600}
+.cat-card__arrow{color:var(--c-primary);font-weight:700}
+.cat-card--feature{background:linear-gradient(135deg,#fff 0%,var(--c-cream) 100%);border-color:var(--c-accent)}
+
+.recent{padding:96px 0;background:var(--c-bg)}
+.recent__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.recent__item{display:flex;flex-direction:column;background:#fff;border:1px solid var(--c-border-soft);border-radius:var(--r-card);padding:24px 24px 20px;text-decoration:none;color:var(--c-text);transition:transform .18s,box-shadow .18s,border-color .18s;box-shadow:var(--shadow-sm)}
+.recent__item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--c-primary-pale);text-decoration:none}
+.recent__tag{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-accent);background:rgba(253,105,54,.10);padding:4px 10px;border-radius:var(--r-pill);margin-bottom:12px}
+.recent__item h3{font-family:var(--font-head);font-weight:700;font-size:18px;line-height:1.3;color:var(--c-text);margin:0 0 10px}
+.recent__item p{font-size:14px;color:var(--c-text-muted);line-height:1.55;flex:1;margin:0 0 14px}
+.recent__meta{display:flex;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--c-text-soft);font-weight:600}
+
+.final-cta__buttons{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:0 auto;max-width:720px}
+.final-cta__buttons .btn{justify-content:center}
+.final-cta__buttons .btn-ghost{background:rgba(255,255,255,.10);color:#fff;border-color:rgba(255,255,255,.30)}
+.final-cta__buttons .btn-ghost:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+
+@media (max-width:1024px){
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .recent__grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .cat-grid{grid-template-columns:1fr}
+  .recent__grid{grid-template-columns:1fr}
+  .blog-stack{min-height:340px}
+}
+
+/*__PROXXIE_PAGE_CSS_END__*/
 </style>
 </head>
 <body>
@@ -337,6 +387,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
         </button>
         <div class="nav__panel" role="menu">
           <div class="nav__panel-list">
+            <a href="./Proxxie Tests.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Tests psychométriques</span><span class="nav__panel-badge">12 tests · gratuit</span></div>
+                <div class="nav__panel-desc">12 tests : OCEAN, RIASEC, PCM, MBTI, Drivers, Valeurs, Besoins, TDAH, Autisme, HPI, Anxiété, DYS.</div>
+              </div>
+            </a>
             <a href="./guide-orientation.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
               <div class="nav__panel-body">
@@ -344,7 +401,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
                 <div class="nav__panel-desc">100+ pages pour comprendre Parcoursup, les filières, les métiers.</div>
               </div>
             </a>
-            <a href="./guide-orientation.html#signup" class="nav__panel-item">
+            <a href="./newsletter-substack.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
               <div class="nav__panel-body">
                 <div class="nav__panel-head"><span class="nav__panel-title">La newsletter Substack</span><span class="nav__panel-badge">Hebdo</span></div>
@@ -383,7 +440,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
     <div class="nav__ctas">
       <a href="./Proxxie Connexion.html" class="muted" style="font-size:14px;font-weight:500">Connexion</a>
       <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px;font-weight:600">30 min avec Charles</a>
-      <a href="./Proxxie Test.html" class="btn btn-orange nav-cta"><span>Commencer le test<span class="nav-cta__suffix"> gratuit</span></span></a>
+      <a href="./Proxxie Home.html#signup" class="btn btn-orange nav-cta"><span>Commencer le parcours<span class="nav-cta__suffix"> gratuit</span></span></a>
     </div>
   </div>
 </nav>
@@ -394,141 +451,198 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 <section class="hero">
   <div class="container hero__inner">
     <div class="hero__copy">
-      <div class="hero__eyebrow">Le blog · Articles &amp; décryptages</div>
-      <h1>Comprendre <em>l'orientation</em><br>sans s'épuiser.</h1>
-      <p class="hero__sub">Conseils pratiques, témoignages de parents, décryptage des réformes Parcoursup et bac. 184 articles rédigés par des praticiens, coachs, ex-directeurs d'admission, parents passés par là.</p>
+      <div class="hero__eyebrow">Ressources Proxxie</div>
+      <h1>Tout ce qu'il faut savoir.<br><em>Pour bien accompagner.</em></h1>
+      <p class="hero__sub">Parcoursup, spécialités, vie étudiante, bien-être, relation parent-ado. Tous les guides Proxxie, regroupés par thématique.</p>
       <div class="hero__cta-row">
-        <a class="btn btn--primary btn--lg" href="#articles">Lire les derniers articles</a>
-        <a class="btn btn-ghost btn--lg" href="./guide-orientation.html#signup">Recevoir le résumé hebdo</a>
+        <a class="btn btn--primary btn--lg" href="#categories">Explorer par catégorie</a>
+        <a class="btn btn-ghost btn--lg" href="#derniers">Les derniers articles</a>
+      </div>
+      <div class="hero__reassure" style="margin-top:18px">
+        <span><strong style="color:var(--c-text)">11</strong>&nbsp;thématiques couvertes</span>
+        <span><strong style="color:var(--c-text)">186</strong>&nbsp;guides détaillés</span>
+        <span><strong style="color:var(--c-text)">8</strong>&nbsp;cas clients réels</span>
       </div>
     </div>
     <aside class="hero__visual">
-      <div class="hero__cal">
-        <div class="hero__cal-deco"></div>
-        <div class="hero__cal-head">
-          <h3>Plus lus ce mois</h3>
-          <span>Mai 2026</span>
+      <div class="blog-stack">
+        <div class="blog-stack__card blog-stack__card--3">
+          <span class="blog-stack__tag">Parcoursup</span>
+          <h4>Rédiger le projet motivé Parcoursup, 5 astuces qui font mouche.</h4>
         </div>
-        <div class="hero__week hero__week--active"><div class="hero__week-day">#1</div><div class="hero__week-content"><div class="hero__week-title">Parcoursup 2026 : les 7 vrais changements (et 12 qui n'en sont pas).</div><span class="hero__week-tag">8 min · Réforme</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">#2</div><div class="hero__week-content"><div class="hero__week-title">Notre ado veut faire "communication", par où commencer ?</div><span class="hero__week-tag">12 min · Filières</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">#3</div><div class="hero__week-content"><div class="hero__week-title">Refusé partout sur Parcoursup : 5 plans B qui fonctionnent.</div><span class="hero__week-tag">9 min · Pratique</span></div></div>
-        <div class="hero__week hero__week--past"><div class="hero__week-day">#4</div><div class="hero__week-content"><div class="hero__week-title">"Notre fils a abandonné sa prépa au bout de 6 semaines", récit.</div><span class="hero__week-tag">14 min · Témoignage</span></div></div>
+        <div class="blog-stack__card blog-stack__card--2">
+          <span class="blog-stack__tag">Spécialités</span>
+          <h4>Choisir ses spécialités sans se fermer de portes, la stratégie gagnante.</h4>
+        </div>
+        <div class="blog-stack__card blog-stack__card--1">
+          <span class="blog-stack__tag">Bien-être</span>
+          <h4>Santé mentale au lycée, repérer l'anxiété de performance.</h4>
+        </div>
       </div>
     </aside>
   </div>
 </section>
 
-<section class="how">
+<section class="categories" id="categories">
   <div class="container">
     <div class="section-head">
-      <span class="section-eyebrow">Ce qu'on publie</span>
-      <h2>Trois choses, et seulement trois.</h2>
-      <p>L'orientation a déjà bien assez de bruit. On évite la pensée magique, les "10 métiers d'avenir" et les rankings sponsorisés. Ce blog publie trois types d'articles, point.</p>
+      <span class="section-eyebrow">Explorer par catégorie</span>
+      <h2>11 thématiques, pour avancer pas à pas.</h2>
+      <p>Chaque catégorie regroupe des guides concrets, écrits par l'équipe Proxxie. Cliquez pour explorer une thématique sur proxxie.co.</p>
     </div>
-    <div class="how__grid">
-      <div class="step">
-        <div class="step__num">1</div>
-        <h3>Conseils pratiques</h3>
-        <p>Quoi faire en seconde quand votre ado n'a aucune idée de ses spécialités. Comment lire une fiche Parcoursup. Quand demander une dérogation. Du concret, pas de la philosophie.</p>
-      </div>
-      <div class="step">
-        <div class="step__num">2</div>
-        <h3>Témoignages de parents</h3>
-        <p>Familles qu'on a accompagnées, de la 3ème à l'inscription. Ce qui a marché, ce qui a explosé, ce qu'ils referaient. Aucun pseudo, aucun script, on les laisse parler.</p>
-      </div>
-      <div class="step">
-        <div class="step__num">3</div>
-        <h3>Décryptage des réformes</h3>
-        <p>Parcoursup, baccalauréat, bourses, logement étudiant. À chaque évolution officielle, un article qui explique ce qui change vraiment pour votre ado, sans le jargon ministériel.</p>
-      </div>
+    <div class="cat-grid">
+
+      <a class="cat-card" href="https://www.proxxie.co/bac" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Baccalauréat</div>
+        <h3>Le BAC, sans le stress.<br>Pour vous, pour eux.</h3>
+        <p>Entre révisions, épreuves, bulletins et Parcoursup, le BAC est une étape charnière. Voici nos guides concrets pour soutenir votre ado, sans surdose de pression.</p>
+        <div class="cat-card__foot"><span>12 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/bien-etre" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Bien-être</div>
+        <h3>Avant de choisir,<br>il faut aller bien.</h3>
+        <p>L'orientation, ce n'est pas qu'une question de notes. C'est aussi, et surtout, une question d'équilibre émotionnel, de confiance en soi et de santé mentale.</p>
+        <div class="cat-card__foot"><span>10 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/brevet" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Brevet</div>
+        <h3>Le Brevet,<br>comme tremplin.</h3>
+        <p>Première grande échéance scolaire, le Brevet ouvre aussi les premiers vrais choix d'orientation. On vous donne les repères pour bien le vivre en famille.</p>
+        <div class="cat-card__foot"><span>1 guide</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/etudes" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Études</div>
+        <h3>Le post-bac,<br>sans tout deviner.</h3>
+        <p>Licences, BUT, prépas, écoles, alternance. On vous aide à y voir clair pour accompagner votre ado sans tension.</p>
+        <div class="cat-card__foot"><span>40 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/orientation" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Orientation scolaire</div>
+        <h3>Trouver sa voie.<br>Sans pression.</h3>
+        <p>De la 3ème à la Terminale, l'orientation se construit étape par étape. Nos guides pour transformer une décision floue en projet clair.</p>
+        <div class="cat-card__foot"><span>28 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/proxxie" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Proxxie</div>
+        <h3>Notre méthode,<br>nos coulisses.</h3>
+        <p>OCEAN-X, Proxxie Calendar, Proxxie Analytics. Découvrez les fondements et les outils qui rendent l'accompagnement Proxxie singulier.</p>
+        <div class="cat-card__foot"><span>8 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/relation-parent-ado" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Relation parent-ado</div>
+        <h3>Mieux communiquer.<br>Sans tout reprendre.</h3>
+        <p>L'adolescence, ce moment où votre enfant peut passer de « j'ai besoin de toi » à « laisse-moi tranquille » en 4 secondes. Voici comment garder le lien sans pression.</p>
+        <div class="cat-card__foot"><span>11 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/ressources-parcoursup" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Parcoursup</div>
+        <h3>Parcoursup, décrypté.<br>Étape par étape.</h3>
+        <p>Vœux, sous-vœux, attendus, lettre de motivation. On transforme l'angoisse Parcoursup en stratégie claire pour votre ado.</p>
+        <div class="cat-card__foot"><span>29 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/test-orientation" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Test d'orientation</div>
+        <h3>Mieux se connaître,<br>pour mieux choisir.</h3>
+        <p>RIASEC, Big Five, OCEAN-X. On décrypte les tests d'orientation et ce qu'ils révèlent vraiment sur votre ado.</p>
+        <div class="cat-card__foot"><span>7 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/specialites" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Spécialités</div>
+        <h3>Les spécialités,<br>le bon trio.</h3>
+        <p>Comment choisir ses spécialités sans se fermer de portes ? Nos guides pour comprendre les enjeux derrière chaque combinaison.</p>
+        <div class="cat-card__foot"><span>34 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card" href="https://www.proxxie.co/vie-etudiante" target="_blank" rel="noopener">
+        <div class="cat-card__pill">Vie étudiante</div>
+        <h3>Changement de niveau,<br>changement de vie.</h3>
+        <p>Nouvelle ville, nouveaux repères, nouvelle organisation. On prépare la transition sans être intrusif, mais toujours présent.</p>
+        <div class="cat-card__foot"><span>6 guides</span><span class="cat-card__arrow">Explorer &rarr;</span></div>
+      </a>
+
+      <a class="cat-card cat-card--feature" href="./cas-clients.html">
+        <div class="cat-card__pill cat-card__pill--feature">Nouveau · Parcours réels</div>
+        <h3>Découvrez nos cas clients.</h3>
+        <p>8 familles témoignent, du doute à la clarté, du stress Parcoursup à la sérénité. Des histoires qui pourraient ressembler à la vôtre.</p>
+        <div class="cat-card__foot"><span>8 histoires</span><span class="cat-card__arrow">Lire les histoires &rarr;</span></div>
+      </a>
+
     </div>
   </div>
 </section>
 
-<section class="stats">
-  <div class="container">
-    <div class="stats__grid">
-      <div><div class="stat__num">184</div><div class="stat__label">articles publiés</div></div>
-      <div><div class="stat__num">12 min</div><div class="stat__label">de lecture moyenne</div></div>
-      <div><div class="stat__num">42K</div><div class="stat__label">parents lecteurs/mois</div></div>
-      <div><div class="stat__num">0</div><div class="stat__label">article sponsorisé</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="programme" id="articles">
+<section class="recent" id="derniers">
   <div class="container">
     <div class="section-head">
-      <span class="section-eyebrow">Derniers articles</span>
-      <h2>Articles récents.</h2>
-      <p>Filtrez par sujet, par classe, ou par moment de l'année scolaire. Chaque article est signé et daté ; on n'efface pas, on met à jour quand la réforme bouge.</p>
+      <span class="section-eyebrow">Les derniers articles</span>
+      <h2>Ce qu'on vient de publier.</h2>
+      <p>Les guides les plus récents, sortis cette semaine sur proxxie.co.</p>
     </div>
-    <div class="programme__filters" role="tablist" aria-label="Filtrer les articles">
-      <button class="programme__filter programme__filter--active" type="button">Tous</button>
-      <button class="programme__filter" type="button">Parcoursup</button>
-      <button class="programme__filter" type="button">Spécialités</button>
-      <button class="programme__filter" type="button">Témoignages</button>
-      <button class="programme__filter" type="button">Réformes</button>
-      <button class="programme__filter" type="button">Pratique</button>
-    </div>
-    <div class="programme__list">
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">8 min</span><span class="programme__item-tag">Réforme</span></div>
-        <h3>Parcoursup 2026 : les 7 vrais changements (et 12 qui n'en sont pas)</h3>
-        <p>Le ministère a publié 19 "nouveautés" pour 2026. La moitié sont de la com'. On garde les 7 qui changent concrètement la stratégie de votre ado.</p>
-        <span class="programme__item-meta">Mai 2026 · Camille R.</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">12 min</span><span class="programme__item-tag">Filières</span></div>
-        <h3>"Notre ado veut faire communication", par où commencer ?</h3>
-        <p>Cartographie honnête : écoles privées coûteuses, BUT info-com solides, masters universitaires, alternance. Avec les pièges classiques à éviter.</p>
-        <span class="programme__item-meta">Mai 2026 · Charles B.</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">9 min</span><span class="programme__item-tag">Pratique</span></div>
-        <h3>Refusé partout sur Parcoursup : 5 plans B qui fonctionnent</h3>
-        <p>Phase complémentaire, réorientation interne, année de césure, alternance, formations privées sérieuses. Avec les délais et les démarches.</p>
-        <span class="programme__item-meta">Avril 2026 · Léa M.</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">14 min</span><span class="programme__item-tag">Témoignage</span></div>
-        <h3>"Notre fils a abandonné sa prépa au bout de 6 semaines"</h3>
-        <p>Sandrine et Frédéric racontent le redoublement caché d'octobre, la honte, la décision finale et la voie qu'ils ont trouvée. À lire avant l'inscription.</p>
-        <span class="programme__item-meta">Avril 2026 · Recueilli par Camille R.</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">7 min</span><span class="programme__item-tag">Spécialités</span></div>
-        <h3>Choix des spécialités en seconde : la matrice 2x2 qu'on utilise en coaching</h3>
-        <p>Un outil simple pour aider votre ado à choisir sans bloquer ses options. Avec les 6 combinaisons les plus rentables sur Parcoursup.</p>
-        <span class="programme__item-meta">Mars 2026 · Charles B.</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">10 min</span><span class="programme__item-tag">Pratique</span></div>
-        <h3>La lettre de motivation Parcoursup : ce qui marche en 2026</h3>
-        <p>500 fiches lues côté admissions. Les 3 structures gagnantes, les 5 phrases interdites, et le piège du chat-GPT-isme qui se voit à 10 m.</p>
-        <span class="programme__item-meta">Mars 2026 · Léa M.</span>
-      </article>
+    <div class="recent__grid">
+
+      <a class="recent__item" href="https://www.proxxie.co/specialites/les-specialites-a-choisir-pour-faire-ifsi" target="_blank" rel="noopener">
+        <span class="recent__tag">Spécialités</span>
+        <h3>Les spécialités à choisir pour faire IFSI.</h3>
+        <p>Le bon trio pour viser les Instituts de formation en soins infirmiers, et ce qui fait vraiment la différence sur dossier.</p>
+        <div class="recent__meta"><span>10 avril 2026</span><span>· 6 min de lecture</span></div>
+      </a>
+
+      <a class="recent__item" href="https://www.proxxie.co/orientation/refus-d-affectation-en-seconde-generale-comment-rebondir" target="_blank" rel="noopener">
+        <span class="recent__tag">Orientation</span>
+        <h3>Refus d'affectation en seconde générale, comment rebondir.</h3>
+        <p>Les recours possibles, les filières à considérer, et comment garder son ado motivé après un refus du conseil de classe.</p>
+        <div class="recent__meta"><span>10 avril 2026</span><span>· 7 min de lecture</span></div>
+      </a>
+
+      <a class="recent__item" href="https://www.proxxie.co/bac/30-idees-de-sujets-pour-le-grand-oral-avec-plan-pour-spes-ses-x-llcer" target="_blank" rel="noopener">
+        <span class="recent__tag">Baccalauréat</span>
+        <h3>30 idées de sujets pour le Grand Oral, spés SES x LLCER.</h3>
+        <p>Trente sujets avec plan détaillé pour le combo SES + Langues, Littératures et Cultures Étrangères. Prêts à adapter.</p>
+        <div class="recent__meta"><span>10 avril 2026</span><span>· 9 min de lecture</span></div>
+      </a>
+
+      <a class="recent__item" href="https://www.proxxie.co/bac/30-idees-de-grand-oral-svt-and-physique-chimie-avec-les-plans-inclus" target="_blank" rel="noopener">
+        <span class="recent__tag">Baccalauréat</span>
+        <h3>30 idées de Grand Oral, SVT &amp; Physique-Chimie, plans inclus.</h3>
+        <p>Trente sujets pour la combinaison scientifique reine. Plans, problématiques, pistes de transition pour briller à l'oral.</p>
+        <div class="recent__meta"><span>10 avril 2026</span><span>· 9 min de lecture</span></div>
+      </a>
+
+      <a class="recent__item" href="https://www.proxxie.co/bac" target="_blank" rel="noopener">
+        <span class="recent__tag">Baccalauréat</span>
+        <h3>30 idées de sujets pour le Grand Oral, spés Maths x SVT.</h3>
+        <p>Le combo Maths + SVT décortiqué, avec trente sujets transversaux et leurs plans, calibrés pour le Grand Oral.</p>
+        <div class="recent__meta"><span>9 avril 2026</span><span>· 9 min de lecture</span></div>
+      </a>
+
+      <a class="recent__item" href="https://www.proxxie.co/bac" target="_blank" rel="noopener">
+        <span class="recent__tag">Baccalauréat</span>
+        <h3>Grand Oral Maths-SES, 30 sujets et plans pour briller en Terminale.</h3>
+        <p>Pour les profils Maths + SES, trente sujets qui croisent la rigueur et la lecture du monde, avec plans clés en main.</p>
+        <div class="recent__meta"><span>8 avril 2026</span><span>· 9 min de lecture</span></div>
+      </a>
+
     </div>
   </div>
 </section>
 
 <section class="final-cta">
   <div class="container final-cta__inner">
-    <h2>Recevez les nouveaux articles chaque lundi.</h2>
-    <p>Un email synthétique : les 2-3 articles à lire cette semaine, choisis selon la classe de votre ado.</p>
-    <form class="final-cta__form" aria-label="Inscription à la newsletter" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Inscrit';">
-      <input type="email" placeholder="votre@email.fr" required aria-label="Adresse email">
-      <select required aria-label="Classe actuelle de votre ado">
-        <option value="">Classe de l'ado</option>
-        <option>3ème</option>
-        <option>2nde</option>
-        <option>1ère</option>
-        <option>Terminale</option>
-        <option>Bac+1</option>
-      </select>
-      <button type="submit">Recevoir les articles du lundi</button>
-    </form>
-    <p class="final-cta__reassure">Aucun spam. Aucune revente. Désinscription en un clic.</p>
+    <h2>Voir toutes les catégories sur proxxie.co</h2>
+    <p>Plus de 180 guides à explorer, mis à jour chaque semaine. Le contenu reste libre d'accès, sans publicité, sans école sponsorisée.</p>
+    <div class="final-cta__buttons">
+      <a class="btn btn--primary btn--lg" href="https://www.proxxie.co/ressources" target="_blank" rel="noopener">Voir toutes les catégories sur proxxie.co</a>
+    </div>
+    <p class="final-cta__reassure">Aucune école sponsorisée · Aucune publicité · Mis à jour chaque semaine.</p>
   </div>
 </section>
 

@@ -309,6 +309,64 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   .hero__cta-row{flex-direction:column;align-items:stretch}
   .hero__cta-row .btn{justify-content:center;width:100%}
 }
+
+/*__PROXXIE_PAGE_CSS_START__*/
+/* ===== Cas-clients, page-specific ===== */
+.cas-hero-quote{background:#fff;border-left:4px solid var(--c-accent);border-radius:0 22px 22px 0;padding:28px 32px;box-shadow:var(--shadow-lg);margin:0;max-width:520px}
+.cas-hero-quote p{font-family:var(--font-head);font-weight:600;font-size:20px;line-height:1.35;color:var(--c-text);margin:0 0 16px;font-style:italic}
+.cas-hero-quote footer{font-size:13px;color:var(--c-text-muted);font-weight:600}
+
+.cas-grid-section{padding:96px 0;background:var(--c-bg-cream)}
+.cas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.cas-card{display:flex;flex-direction:column;text-align:left;background:#fff;border:1px solid var(--c-border-soft);border-radius:var(--r-card);padding:28px 28px 24px;cursor:pointer;font-family:inherit;color:var(--c-text);box-shadow:var(--shadow-sm);transition:transform .18s,box-shadow .18s,border-color .18s}
+.cas-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--c-primary-pale)}
+.cas-card__pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.cas-card__pills span{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:4px 10px;border-radius:var(--r-pill)}
+.cas-card__name{font-family:var(--font-head);font-weight:700;font-size:24px;letter-spacing:-.01em;color:var(--c-text);line-height:1.15;margin-bottom:10px}
+.cas-card__age{font-weight:500;color:var(--c-text-muted);font-size:18px}
+.cas-card__lede{font-size:14.5px;color:var(--c-text-muted);line-height:1.55;margin:0 0 18px}
+.cas-card__ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px;background:var(--c-bg);border:1px dashed var(--c-border);border-radius:14px;margin-bottom:16px}
+.cas-card__ba > div span{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-text-soft);margin-bottom:6px}
+.cas-card__ba > div p{font-size:13px;color:var(--c-text);line-height:1.45;margin:0;font-weight:500}
+.cas-card__ba > div:first-child p{color:#7A4B4B}
+.cas-card__ba > div:last-child p{color:#1B6A4B}
+.cas-card__cta{display:inline-block;align-self:flex-start;color:var(--c-primary);font-weight:700;font-size:14px}
+
+/* ===== Modal ===== */
+.cas-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px}
+.cas-modal--open{display:flex}
+.cas-modal__backdrop{position:absolute;inset:0;background:rgba(10,14,44,.55);backdrop-filter:blur(4px);cursor:pointer}
+.cas-modal__panel{position:relative;background:var(--c-bg);border-radius:24px;box-shadow:0 40px 80px -20px rgba(10,14,44,.40);width:min(760px,100%);max-height:calc(100vh - 80px);overflow:hidden;display:flex;flex-direction:column;animation:casModalIn .25s ease-out}
+@keyframes casModalIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
+.cas-modal__close{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--c-text);font-size:28px;font-weight:300;line-height:1;display:grid;place-items:center;box-shadow:var(--shadow-sm);z-index:2;cursor:pointer}
+.cas-modal__close:hover{background:var(--c-bg-cream)}
+.cas-modal__content{overflow-y:auto;padding:44px 48px 40px;flex:1}
+
+.cas-detail__pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.cas-detail__pills span{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c-primary);background:var(--c-primary-soft);padding:4px 10px;border-radius:var(--r-pill)}
+.cas-detail__title{font-family:var(--font-head);font-weight:700;font-size:32px;letter-spacing:-.015em;color:var(--c-text);margin:0 0 14px;line-height:1.1}
+.cas-detail__quote{font-family:var(--font-head);font-weight:600;font-size:20px;line-height:1.35;color:var(--c-primary-deep);background:#fff;border-left:4px solid var(--c-primary);border-radius:0 14px 14px 0;padding:18px 22px;margin:0 0 28px;font-style:italic}
+.cas-detail__section{margin-bottom:24px}
+.cas-detail__section h3{font-family:var(--font-head);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-primary);margin:0 0 10px}
+.cas-detail__section p{font-size:15.5px;color:var(--c-text);line-height:1.65;margin:0}
+.cas-detail__pull{background:linear-gradient(135deg,var(--c-cream) 0%,#fff 100%);border:1px solid var(--c-border-soft);border-radius:14px;padding:18px 22px;font-size:15px;color:var(--c-text);font-style:italic;line-height:1.5;margin:0 0 24px}
+.cas-detail__foot{padding-top:18px;border-top:1px dashed var(--c-border);display:flex;justify-content:center}
+
+.final-cta__buttons{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:0 auto;max-width:720px}
+.final-cta__buttons .btn{justify-content:center}
+
+@media (max-width:1024px){
+  .cas-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .cas-card__ba{grid-template-columns:1fr}
+  .cas-modal{padding:20px 12px}
+  .cas-modal__content{padding:32px 24px 28px}
+  .cas-detail__title{font-size:24px}
+  .cas-detail__quote{font-size:17px}
+}
+
+/*__PROXXIE_PAGE_CSS_END__*/
 </style>
 </head>
 <body>
@@ -337,6 +395,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
         </button>
         <div class="nav__panel" role="menu">
           <div class="nav__panel-list">
+            <a href="./Proxxie Tests.html" class="nav__panel-item">
+              <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <div class="nav__panel-body">
+                <div class="nav__panel-head"><span class="nav__panel-title">Tests psychométriques</span><span class="nav__panel-badge">12 tests · gratuit</span></div>
+                <div class="nav__panel-desc">12 tests : OCEAN, RIASEC, PCM, MBTI, Drivers, Valeurs, Besoins, TDAH, Autisme, HPI, Anxiété, DYS.</div>
+              </div>
+            </a>
             <a href="./guide-orientation.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
               <div class="nav__panel-body">
@@ -344,7 +409,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
                 <div class="nav__panel-desc">100+ pages pour comprendre Parcoursup, les filières, les métiers.</div>
               </div>
             </a>
-            <a href="./guide-orientation.html#signup" class="nav__panel-item">
+            <a href="./newsletter-substack.html" class="nav__panel-item">
               <div class="nav__panel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
               <div class="nav__panel-body">
                 <div class="nav__panel-head"><span class="nav__panel-title">La newsletter Substack</span><span class="nav__panel-badge">Hebdo</span></div>
@@ -383,7 +448,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
     <div class="nav__ctas">
       <a href="./Proxxie Connexion.html" class="muted" style="font-size:14px;font-weight:500">Connexion</a>
       <a href="https://calendly.com/proxxie/entretien" class="btn btn-ghost nav-cta-secondary" style="text-decoration:none;font-size:14px;font-weight:600">30 min avec Charles</a>
-      <a href="./Proxxie Test.html" class="btn btn-orange nav-cta"><span>Commencer le test<span class="nav-cta__suffix"> gratuit</span></span></a>
+      <a href="./Proxxie Home.html#signup" class="btn btn-orange nav-cta"><span>Commencer le parcours<span class="nav-cta__suffix"> gratuit</span></span></a>
     </div>
   </div>
 </nav>
@@ -394,143 +459,147 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 <section class="hero">
   <div class="container hero__inner">
     <div class="hero__copy">
-      <div class="hero__eyebrow">Cas clients · Histoires de familles</div>
-      <h1>Avant Proxxie,<br>après Proxxie, <em>les histoires</em>.</h1>
-      <p class="hero__sub">317 familles accompagnées depuis 2021, de la 3ème à l'inscription. On en a retenu une vingtaine, celles qui montrent vraiment ce qu'un coach d'orientation change. Avec leur prénom, leur ville, leur voie.</p>
+      <div class="hero__eyebrow">Cas clients · Parcours réels</div>
+      <h1>Des parcours réels.<br><em>Des familles transformées.</em></h1>
+      <p class="hero__sub">Du doute à la clarté, du stress Parcoursup à la sérénité. Découvrez comment Proxxie accompagne vos ados, de la 3ème au post-bac.</p>
       <div class="hero__cta-row">
-        <a class="btn btn--primary btn--lg" href="#cas">Lire les cas clients</a>
+        <a class="btn btn--primary btn--lg" href="#histoires">Lire les 8 histoires</a>
         <a class="btn btn-ghost btn--lg" href="https://calendly.com/proxxie/entretien">30 min avec Charles</a>
+      </div>
+      <div class="hero__reassure" style="margin-top:18px">
+        <span><strong style="color:var(--c-text)">+300</strong>&nbsp;familles accompagnées</span>
+        <span><strong style="color:var(--c-text)">98%</strong>&nbsp;parents satisfaits</span>
+        <span><strong style="color:var(--c-text)">100%</strong>&nbsp;admissions réussies</span>
       </div>
     </div>
     <aside class="hero__visual">
-      <div class="hero__cal">
-        <div class="hero__cal-deco"></div>
-        <div class="hero__cal-head">
-          <h3>Dernières histoires</h3>
-          <span>Promo 2025-26</span>
-        </div>
-        <div class="hero__week hero__week--active"><div class="hero__week-day">Mai</div><div class="hero__week-content"><div class="hero__week-title">Léa, 17 ans, refusée en prépa, finalement admise en LLCE Anglais à Paris.</div><span class="hero__week-tag">Terminale L · Bordeaux</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">Avr.</div><div class="hero__week-content"><div class="hero__week-title">Marius, 16 ans, réorientation après une seconde subie en lycée général.</div><span class="hero__week-tag">2nde → 1ère Pro · Lyon</span></div></div>
-        <div class="hero__week"><div class="hero__week-day">Mars</div><div class="hero__week-content"><div class="hero__week-title">Camille, 18 ans, double admission Sciences Po Lille &amp; IEP Bordeaux.</div><span class="hero__week-tag">Terminale ES · Toulouse</span></div></div>
-        <div class="hero__week hero__week--past"><div class="hero__week-day">Févr.</div><div class="hero__week-content"><div class="hero__week-title">Théo, 15 ans, sortie du brouillard à la fin de la 3ème, voie pro choisie.</div><span class="hero__week-tag">3ème · Nantes</span></div></div>
-      </div>
+      <blockquote class="cas-hero-quote">
+        <p>« Derrière chaque choix de spécialité, chaque vœu Parcoursup, il y a une trajectoire de vie, une identité en construction, et des parents qui veulent bien faire. »</p>
+        <footer>L'équipe Proxxie</footer>
+      </blockquote>
     </aside>
   </div>
 </section>
 
-<section class="how">
+<section class="cas-grid-section" id="histoires">
   <div class="container">
     <div class="section-head">
-      <span class="section-eyebrow">Notre méthode, vue par les familles</span>
-      <h2>Ce que ça change concrètement.</h2>
-      <p>Pas un produit miracle, pas une promesse de Polytechnique pour tous. Un changement de regard, de cadre, de méthode, et un résultat mesurable, raconté par les familles elles-mêmes.</p>
+      <span class="section-eyebrow">Nos 8 histoires</span>
+      <h2>Parcours d'orientation.</h2>
+      <p>Cliquez sur un profil pour découvrir le problème de départ, la méthode et les résultats.</p>
     </div>
-    <div class="how__grid">
-      <div class="step">
-        <div class="step__num">1</div>
-        <h3>On clarifie le terrain</h3>
-        <p>Test OCEAN-X, entretien parent &amp; ado, lecture des bulletins. En 10 jours, vous savez où votre ado en est vraiment, pas où l'école dit qu'il est.</p>
-      </div>
-      <div class="step">
-        <div class="step__num">2</div>
-        <h3>On ouvre les options</h3>
-        <p>Liste de filières alignées avec son profil, écoles à viser, alternatives en cas de refus. Chaque option est argumentée et chiffrée (taux d'admission réels, débouchés à 3 ans).</p>
-      </div>
-      <div class="step">
-        <div class="step__num">3</div>
-        <h3>On suit jusqu'à l'inscription</h3>
-        <p>Stratégie Parcoursup, lettre de motivation, simulations d'entretien, plan B en cas de refus. Le coach reste mobilisable jusqu'à la confirmation d'inscription en juillet.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="cas-grid">
 
-<section class="stats">
-  <div class="container">
-    <div class="stats__grid">
-      <div><div class="stat__num">317</div><div class="stat__label">familles accompagnées</div></div>
-      <div><div class="stat__num">98%</div><div class="stat__label">de parents satisfaits</div></div>
-      <div><div class="stat__num">94%</div><div class="stat__label">admis dans leur top 3</div></div>
-      <div><div class="stat__num">5 ans</div><div class="stat__label">d'expérience terrain</div></div>
-    </div>
-  </div>
-</section>
+      <button class="cas-card" type="button" data-cas="benjamin">
+        <div class="cas-card__pills"><span>Terminale</span><span>Générale</span></div>
+        <div class="cas-card__name">Benjamin<span class="cas-card__age">, 17 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a aidé un jeune sans aucune projection à retrouver un cap, sans forcer une réponse trop tôt.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Complètement perdu, aucun métier en tête.</p></div>
+          <div><span>Après</span><p>Rassuré d'avoir une direction, Data Analyst, école d'ingénieur post-bac.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
 
-<section class="programme" id="cas">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-eyebrow">Études de cas</span>
-      <h2>Quelques histoires en détail.</h2>
-      <p>Filtrez par classe ou par situation. Chaque cas est validé par la famille concernée, on ne publie rien sans leur accord écrit.</p>
-    </div>
-    <div class="programme__filters" role="tablist" aria-label="Filtrer les cas">
-      <button class="programme__filter programme__filter--active" type="button">Tous</button>
-      <button class="programme__filter" type="button">3ème</button>
-      <button class="programme__filter" type="button">Seconde</button>
-      <button class="programme__filter" type="button">Terminale</button>
-      <button class="programme__filter" type="button">Réorientation</button>
-      <button class="programme__filter" type="button">Post-bac</button>
-    </div>
-    <div class="programme__list">
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°017</span><span class="programme__item-tag">Terminale</span></div>
-        <h3>Léa, 17 ans, refusée en prépa, admise en LLCE Anglais</h3>
-        <p>« On a passé janvier à viser des prépas BL. En février, le coach a vu que ça ne lui correspondait pas. On a basculé sur LLCE Anglais à Sorbonne Nouvelle. Admise en juin, en paix avec son choix. »</p>
-        <span class="programme__item-meta">Bordeaux · Sa mère, Sandrine</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°016</span><span class="programme__item-tag">Réorientation</span></div>
-        <h3>Marius, 16 ans, de la seconde GT subie à la 1ère Pro choisie</h3>
-        <p>« Marius dormait en cours. On a fait OCEAN-X, on s'est rendu compte qu'il était fait pour du concret. Réorientation en 1ère Bac Pro Maintenance. Six mois plus tard, il est major de sa classe. »</p>
-        <span class="programme__item-meta">Lyon · Son père, Karim</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°015</span><span class="programme__item-tag">Post-bac</span></div>
-        <h3>Camille, 18 ans, double admission Sciences Po Lille &amp; IEP Bordeaux</h3>
-        <p>« Le coach a aidé Camille à construire son projet politique cohérent, pas du copier-coller. Préparation à l'oral pendant 3 semaines. Deux admissions, choix éclairé entre les deux. »</p>
-        <span class="programme__item-meta">Toulouse · Sa mère, Anne-Sophie</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°014</span><span class="programme__item-tag">3ème</span></div>
-        <h3>Théo, 15 ans, voie pro choisie sereinement</h3>
-        <p>« Théo voulait juste "sortir du collège". Le coach a posé les bonnes questions pendant 4 séances. Il a choisi un CAP Cuisine sans pression. Aujourd'hui il fait la salle pendant son apprentissage, ça lui va. »</p>
-        <span class="programme__item-meta">Nantes · Ses parents, Hélène &amp; David</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°013</span><span class="programme__item-tag">Seconde</span></div>
-        <h3>Inès, 16 ans, choix des spécialités sans bloquer la médecine</h3>
-        <p>« Inès hésitait entre médecine et journalisme. Le coach a choisi un trio spé qui laissait les deux portes ouvertes en première. Elle a tranché en milieu de 1ère, sans renoncement.»</p>
-        <span class="programme__item-meta">Rennes · Sa mère, Stéphanie</span>
-      </article>
-      <article class="programme__item">
-        <div class="programme__item-head"><span class="programme__item-num">N°012</span><span class="programme__item-tag">Réorientation</span></div>
-        <h3>Hugo, 19 ans, décrochage en L1 droit, réorientation en BUT Carrières juridiques</h3>
-        <p>« Hugo a explosé en vol en mars de L1. Phase complémentaire serrée, dossier reconstruit avec le coach, admis en BUT à Bordeaux. Il termine maintenant sa 2e année, en stage en cabinet. »</p>
-        <span class="programme__item-meta">Bordeaux · Ses parents, Élise &amp; Pierre</span>
-      </article>
+      <button class="cas-card" type="button" data-cas="elodie">
+        <div class="cas-card__pills"><span>Terminale</span><span>Générale</span></div>
+        <div class="cas-card__name">Elodie<span class="cas-card__age">, 17 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a sorti une famille de la confusion, sans imposer de réponses.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Passionnée de géopolitique, mais perdue face à un système opaque.</p></div>
+          <div><span>Après</span><p>Admise à son vœu Parcoursup n°1, Bachelor Assas-ISIT Relations Internationales.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="emma">
+        <div class="cas-card__pills"><span>Première puis Terminale</span><span>Générale</span></div>
+        <div class="cas-card__name">Emma</div>
+        <p class="cas-card__lede">Emma a commencé Proxxie en Première, puis a repris en Terminale pour être accompagnée jusqu'à Parcoursup.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Élève brillante mais sous pression, peur de se tromper.</p></div>
+          <div><span>Après</span><p>Élève rassurée, structurée et stratégique jusqu'à Parcoursup.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="ines">
+        <div class="cas-card__pills"><span>Première</span><span>Techno · STMG</span></div>
+        <div class="cas-card__name">Inès<span class="cas-card__age">, 16 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a transformé une orientation subie en projet ambitieux.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Envoyée en STMG par défaut, démotivée, résultats en baisse.</p></div>
+          <div><span>Après</span><p>Projet entrepreneurial clair, BTS Commerce International, remotivée et ambitieuse.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="lucas">
+        <div class="cas-card__pills"><span>Terminale</span><span>Générale</span></div>
+        <div class="cas-card__name">Lucas</div>
+        <p class="cas-card__lede">Comment Proxxie a aidé Lucas à passer de vœux « pour remplir » à un dossier Parcoursup cohérent et aligné avec sa personnalité.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Démotivé, 7 vœux Parcoursup au hasard, sentiment de décalage.</p></div>
+          <div><span>Après</span><p>Dossier cohérent, aligné avec sa personnalité, chaque vœu choisi et argumenté.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="margaux">
+        <div class="cas-card__pills"><span>Terminale</span><span>Techno · STI2S</span></div>
+        <div class="cas-card__name">Margaux<span class="cas-card__age">, 17 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a aidé Margaux, élève de Terminale STI2S, à transformer un parcours « par défaut » en projet de vie assumé.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Déboussolée par la complexité du système, filière vécue comme « par défaut ».</p></div>
+          <div><span>Après</span><p>Heureuse d'avoir pu saisir son potentiel, projet clair en BTS Diététique.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="maxime">
+        <div class="cas-card__pills"><span>Seconde</span><span>Générale</span></div>
+        <div class="cas-card__name">Maxime<span class="cas-card__age">, 15 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a transformé le choix des spécialités d'un élève de Seconde en tremplin stratégique.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Ambitieux mais zéro vision, spécialités envisagées au hasard.</p></div>
+          <div><span>Après</span><p>Plan clair, spécialités stratégiques, félicitations du conseil de classe.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
+      <button class="cas-card" type="button" data-cas="theo">
+        <div class="cas-card__pills"><span>Première</span><span>Générale</span></div>
+        <div class="cas-card__name">Théo<span class="cas-card__age">, 16 ans</span></div>
+        <p class="cas-card__lede">Comment Proxxie a révélé une fibre entrepreneuriale cachée et transformé l'instabilité en direction claire.</p>
+        <div class="cas-card__ba">
+          <div><span>Avant</span><p>Change d'idée de métier chaque semaine (kiné, chef, influenceur).</p></div>
+          <div><span>Après</span><p>Objectif clair, kiné du sport indépendant, plan de formation concret.</p></div>
+        </div>
+        <span class="cas-card__cta">Lire l'histoire &rarr;</span>
+      </button>
+
     </div>
   </div>
 </section>
 
 <section class="final-cta">
   <div class="container final-cta__inner">
-    <h2>La prochaine histoire pourrait être celle de votre ado.</h2>
-    <p>30 minutes avec Charles, fondateur. On regarde votre situation, on vous dit honnêtement si Proxxie peut vous aider, ou pas.</p>
-    <form class="final-cta__form" aria-label="Réserver un rendez-vous" onsubmit="event.preventDefault();window.open('https://calendly.com/proxxie/entretien','_blank');">
-      <input type="email" placeholder="votre@email.fr" required aria-label="Adresse email">
-      <select required aria-label="Classe actuelle de votre ado">
-        <option value="">Classe de l'ado</option>
-        <option>3ème</option>
-        <option>2nde</option>
-        <option>1ère</option>
-        <option>Terminale</option>
-        <option>Bac+1</option>
-      </select>
-      <button type="submit">Prendre rendez-vous</button>
-    </form>
-    <p class="final-cta__reassure">Aucun engagement. Conversation honnête avec Charles, fondateur.</p>
+    <h2>Voir toutes les histoires sur proxxie.co</h2>
+    <p>Chaque famille est unique. Voici d'autres histoires qui pourraient ressembler à la vôtre, lues dans leur version complète sur proxxie.co.</p>
+    <div class="final-cta__buttons">
+      <a class="btn btn--primary btn--lg" href="https://www.proxxie.co/cas-clients" target="_blank" rel="noopener">Voir toutes les histoires sur proxxie.co</a>
+    </div>
+    <p class="final-cta__reassure">Témoignages réels · Familles accompagnées par Proxxie · 100% admissions réussies.</p>
   </div>
 </section>
+
+<div class="cas-modal" id="casModal" role="dialog" aria-modal="true" aria-labelledby="casModalTitle" aria-hidden="true">
+  <div class="cas-modal__backdrop" data-cas-close></div>
+  <div class="cas-modal__panel" role="document">
+    <button class="cas-modal__close" type="button" aria-label="Fermer" data-cas-close>&times;</button>
+    <div class="cas-modal__content" id="casModalContent"></div>
+  </div>
+</div>
 
 </main>
 
@@ -767,5 +836,154 @@ init();
   }, true);
 })();
 </script>
+
+<!--__PROXXIE_CAS_JS_START__-->
+<script>
+// Cas-clients modal, data + interactions.
+(function(){
+  var CASES = {
+    benjamin: {
+      pills: ["Terminale","Générale"],
+      title: "Benjamin, 17 ans",
+      quote: "« Il ne savait pas du tout quoi faire plus tard. »",
+      profile: "Benjamin est en Terminale, sérieux et réfléchi. Il aime résoudre des problèmes, débattre, comprendre le pourquoi des choses. Mais quand il s'agit de son avenir, c'est le vide total. Aucun métier en tête, aucune formation qui le fait vibrer. Beaucoup d'inquiétude face à Parcoursup et au sentiment que tout se joue maintenant.",
+      probleme: "Ses parents se retrouvent seuls face à cette impasse, peur de mal orienter, discussions qui tournent en rond, pression involontaire qui s'installe dans la famille. « On voulait bien faire, mais on n'avait ni les outils, ni le recul pour l'aider sans l'influencer. »",
+      methode: "Décharger les parents du poids décisionnel. Offrir à Benjamin un cadre neutre et sécurisant. L'aider à mieux se comprendre avant de lui demander de choisir. Accueillir le doute comme une étape, pas comme un échec.",
+      resultats: "Le déclic arrive avec l'activité Investigation Métiers. Un métier ressort naturellement, Data Analyst, un profil qui combine logique, résolution de problèmes et envie de comprendre le pourquoi. Benjamin vise désormais une école d'ingénieur post-bac, avec un objectif clair. Les parents soutiennent sans diriger.",
+      pull: "« On est passés de « il ne sait pas quoi faire » à « on comprend où il va et pourquoi ». » · Parent de Benjamin",
+      slug: "benjamin"
+    },
+    elodie: {
+      pills: ["Terminale","Générale"],
+      title: "Elodie, 17 ans",
+      quote: "« On n'a ni les outils, ni le recul. »",
+      profile: "Élodie est en Terminale, passionnée de géopolitique. Sérieuse, motivée, mais perdue face à un système opaque et un monde en mutation rapide.",
+      probleme: "Ses parents veulent bien faire, mais se sentent dépassés. Trop d'informations, pas les bons outils. Trop d'émotionnel dans les discussions. Une peur de mal faire qui finit par mettre une pression involontaire sur Élodie.",
+      methode: "Décharger les parents de la pression décisionnelle. Accompagner Élodie dans une réflexion personnelle et structurée. Clarifier ses envies, ses forces, ses moteurs, et construire un projet cohérent dans un monde incertain.",
+      resultats: "Une stratégie d'orientation claire, des choix de formations ambitieux et sécurisants. Admise à son vœu Parcoursup n°1, Bachelor Assas-ISIT en Relations Internationales. Les parents comprennent les choix, ils soutiennent sans pression, Élodie se sent libre et confiante.",
+      pull: "« On avait besoin de quelqu'un de neutre, qui comprenne à la fois l'éducation, le monde du travail, et notre fille. » · La maman d'Élodie",
+      slug: "elodie"
+    },
+    emma: {
+      pills: ["Première puis Terminale","Générale"],
+      title: "Emma",
+      quote: "« Je veux être professeure des écoles, mais je ne veux pas me tromper. »",
+      profile: "Emma est une élève investie, traversée par le stress. Hypersensible, profondément empathique, très tournée vers les autres. Test Proxxie, anxiété haute, vulnérabilité haute, conscience de soi haute. Big Five Proxxie, convivialité très haute, conscience élevée.",
+      probleme: "Emma peut tout réussir, mais au prix d'une charge mentale énorme si personne ne l'aide à structurer, prioriser, et décoller émotionnellement. Une orientation qui bascule, entre rêve (danse, comédie musicale) et besoin de sécurité (cadre, stabilité, routine).",
+      methode: "Phase 1, en Première, clarifier, apaiser, faire émerger un cap, professeure des écoles arrive en top 1, la comédie musicale reste un bonus structuré. Phase 2, en Terminale, sécuriser, choisir, rédiger, optimiser, construire une stratégie Parcoursup avec vœux sécurisés, probables, ambitieux.",
+      resultats: "Une orientation cohérente ET respirable, un cap clair (enseignement), des portes ouvertes (sciences sociales, psycho, sciences de l'éducation), un rêve préservé. Stratégie Parcoursup anti-panique, vœu coup de cœur Paris Cité Sciences Sociales, plusieurs vœux sécurisants et probables, un vœu challenge assumé (Henri IV PSL professorat des écoles).",
+      pull: "« En Terminale, quand Parcoursup est arrivé, elle n'était pas en panique, ses vœux étaient cohérents, sécurisés, et elle savait exactement pourquoi elle les choisissait. » · Maman d'Emma",
+      slug: "emma"
+    },
+    ines: {
+      pills: ["Première","Techno · STMG"],
+      title: "Inès, 16 ans",
+      quote: "« Elle a été orientée en STMG, et depuis elle a décroché. »",
+      profile: "Inès est en Première STMG. Elle n'a pas choisi cette filière, elle y a été orientée par le conseil de classe après une Seconde difficile.",
+      probleme: "Démotivation profonde, sentiment d'avoir été mise de côté. Résultats en baisse, désinvestissement progressif. Discours récurrent, « De toute façon, STMG ça mène nulle part ». Le vrai problème n'est pas la filière, c'est le sentiment d'avoir été choisie à sa place.",
+      methode: "Montrer à Inès que STMG n'est pas une impasse mais un terrain de possibilités. L'aider à découvrir ses forces au-delà des notes. Construire un projet post-bac qui lui donne envie de se battre. Transformer une orientation subie en choix assumé.",
+      resultats: "Le bilan de personnalité révèle un sens du contact naturel, un goût pour l'organisation et la gestion de projets, un intérêt profond pour l'international. Projet clair, viser un BTS Commerce International, avec stage à l'étranger dès la première année. Les notes ont remonté en un trimestre. Inès parle à nouveau de l'avenir, et avec enthousiasme.",
+      pull: "« On est passés de « elle a été mise là par défaut » à « c'est exactement là qu'elle devait être ». » · Parent d'Inès",
+      slug: "ines"
+    },
+    lucas: {
+      pills: ["Terminale","Générale"],
+      title: "Lucas",
+      quote: "« Mon fils est en Terminale. Parcoursup approche, et il n'a aucune idée de ce qu'il veut faire. »",
+      profile: "Lucas est en Terminale, nous sommes fin janvier. Il a 7 vœux sur Parcoursup, aucun ne l'enthousiasme. Il a choisi des formations « pour mettre des vœux », sans comprendre ce qui l'attendait dedans.",
+      probleme: "Démotivation face à un processus qu'il ne comprend pas. Stress chez les parents qui voient la deadline approcher. Sentiment de décalage, « tout le monde sait, sauf moi ». Lucas ne manque pas de potentiel, il manque de direction.",
+      methode: "Comprendre le fonctionnement de Lucas au-delà des notes. Identifier des secteurs et métiers qui correspondent à sa personnalité. Reprendre chaque vœu Parcoursup et le rendre cohérent. Redonner de la confiance et de l'élan avant la deadline.",
+      resultats: "Le profil OCEAN-X révèle un Lucas extraverti, orienté terrain, avec une fibre commerciale naturelle. Chaque vœu Parcoursup a été analysé en profondeur. Les vœux « pour remplir » ont été remplacés par des choix éclairés (BTS Commerce, BTS Bâtiment, licences pro) avec la garantie d'une admission.",
+      pull: "« On est passés de « il ne veut rien faire » à « il nous explique ses choix ». C'est le jour et la nuit. » · Parent de Lucas",
+      slug: "lucas"
+    },
+    margaux: {
+      pills: ["Terminale","Techno · STI2S"],
+      title: "Margaux, 17 ans",
+      quote: "« On nous a dit que la voie techno, c'était pour ceux qui n'y arrivent pas. »",
+      profile: "Margaux est en Terminale STI2S. Sensible, engagée, passionnée par les questions de santé et de bien-être. Mais elle a intériorisé l'idée que la voie technologique serait une voie par défaut.",
+      probleme: "Son entourage valorise la voie générale, elle se sent dévalorisée. Elle ne comprend pas comment ses études STI2S peuvent mener à un métier concret. Elle hésite entre trop de pistes (infirmière, diététicienne, éducatrice, psychologue). Ses parents ne connaissent pas les débouchés de la filière techno.",
+      methode: "Déconstruire les préjugés sur la voie technologique. Révéler les forces spécifiques de Margaux, au-delà des notes. Identifier des formations post-bac réalistes et motivantes. Redonner confiance, à Margaux, mais aussi à ses parents.",
+      resultats: "Le bilan révèle une empathie naturelle, une intelligence pratique, un rapport fort au concret. Projet clair, s'orienter vers un BTS Diététique, avec une passerelle possible vers des études de santé. La voie technologique n'est plus un handicap mais un tremplin. Margaux assume sa filière, la pression de comparaison a disparu.",
+      pull: "« J'ai compris que je n'étais pas dans une voie par défaut. J'étais dans la bonne voie depuis le début. » · Margaux",
+      slug: "margaux"
+    },
+    maxime: {
+      pills: ["Seconde","Générale"],
+      title: "Maxime, 15 ans",
+      quote: "« Il doit choisir ses spécialités dans quelques mois, et il n'a aucune idée de ce qu'il veut faire plus tard. »",
+      profile: "Maxime a 15 ans. Il est en Seconde. Ambitieux, bilingue anglais, fasciné par le business et l'immobilier. Mais notes inégales, auto-discipline fragile, zéro vision post-bac.",
+      probleme: "Le choix des spécialités approche et les parents ne savent pas comment l'aider à décider. Le risque, choisir ses spécialités au feeling et se retrouver avec des portes fermées deux ans plus tard.",
+      methode: "Donner un cadre de réflexion avant le choix des spécialités. Comprendre le profil de Maxime au-delà de ses résultats scolaires. Identifier des secteurs et formations alignés avec sa personnalité. Transformer une ambition vague en stratégie concrète.",
+      resultats: "Profil OCEAN-X Entrepreneur, extraverti, orienté action, fibre commerciale naturelle. Combinaison de spécialités idéale, Maths + SES + LLCE Anglais, pour garder toutes les portes ouvertes vers le commerce, l'économie et l'international. Une motivation renouvelée, Maxime sait pourquoi il travaille.",
+      pull: "« On ne pensait pas qu'un accompagnement en Seconde pouvait changer autant de choses. Ça a remotivé notre fils. » · Parent de Maxime",
+      slug: "maxime"
+    },
+    theo: {
+      pills: ["Première","Générale"],
+      title: "Théo, 16 ans",
+      quote: "« Lundi kiné, mercredi chef cuisinier, vendredi influenceur. »",
+      profile: "Théo a 16 ans, il est en Première. Sportif, sociable, plein d'énergie. Mais côté orientation, aucune stabilité. Lundi il veut être kiné, mercredi chef cuisinier, vendredi influenceur.",
+      probleme: "Ses parents oscillent entre patience et inquiétude. Est-ce normal à cet âge ? Faut-il le laisser faire ou intervenir ? Le problème n'est pas que Théo manque d'idées, c'est qu'il en a trop, sans savoir lesquelles lui ressemblent vraiment.",
+      methode: "Comprendre ce qui se cache derrière cette instabilité apparente. Identifier un fil rouge dans ses centres d'intérêt. Construire un premier cap réaliste pour la suite du lycée. Rassurer les parents et transformer l'inquiétude en soutien.",
+      resultats: "Profil OCEAN-X entrepreneurial marqué, fibre commerciale et relationnelle forte, besoin d'autonomie. Le fil rouge apparaît, Théo veut créer quelque chose à lui, dans un domaine qui combine sport, relation humaine et indépendance. Objectif clair, kiné du sport indépendant, pas juste kiné, mais son propre cabinet, sa marque, son identité.",
+      pull: "« Ce qui a changé, c'est qu'il ne parle plus de métiers au hasard. Il a une vision. Et ça, en tant que parent, ça change tout. » · Parent de Théo",
+      slug: "theo"
+    }
+  };
+
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];}); }
+
+  function render(c){
+    var pills = c.pills.map(function(p){ return '<span>'+esc(p)+'</span>'; }).join('');
+    return '<div class="cas-detail">' +
+      '<div class="cas-detail__pills">'+pills+'</div>' +
+      '<h2 class="cas-detail__title" id="casModalTitle">'+esc(c.title)+'</h2>' +
+      '<blockquote class="cas-detail__quote">'+esc(c.quote)+'</blockquote>' +
+      '<div class="cas-detail__section"><h3>Profil</h3><p>'+esc(c.profile)+'</p></div>' +
+      '<div class="cas-detail__section"><h3>Problème de départ</h3><p>'+esc(c.probleme)+'</p></div>' +
+      '<div class="cas-detail__section"><h3>Méthode Proxxie</h3><p>'+esc(c.methode)+'</p></div>' +
+      '<div class="cas-detail__section"><h3>Résultats</h3><p>'+esc(c.resultats)+'</p></div>' +
+      '<blockquote class="cas-detail__pull">'+esc(c.pull)+'</blockquote>' +
+      '<div class="cas-detail__foot">' +
+        '<a class="btn btn--primary btn--lg" href="https://www.proxxie.co/cas-clients/'+esc(c.slug)+'" target="_blank" rel="noopener">Lire l\'histoire complète sur proxxie.co</a>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var modal = document.getElementById('casModal');
+  var content = document.getElementById('casModalContent');
+  if (!modal || !content) return;
+
+  function open(slug){
+    var c = CASES[slug];
+    if (!c) return;
+    content.innerHTML = render(c);
+    modal.classList.add('cas-modal--open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    modal.classList.remove('cas-modal--open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    content.innerHTML = '';
+  }
+
+  document.querySelectorAll('.cas-card').forEach(function(btn){
+    btn.addEventListener('click', function(){ open(btn.dataset.cas); });
+  });
+  modal.querySelectorAll('[data-cas-close]').forEach(function(el){
+    el.addEventListener('click', close);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal.classList.contains('cas-modal--open')) close();
+  });
+
+  window.openCasModal = open;
+})();
+</script>
+
+<!--__PROXXIE_CAS_JS_END__-->
 </body>
 </html>
