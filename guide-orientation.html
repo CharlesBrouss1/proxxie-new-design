@@ -282,17 +282,25 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
 </style>
-<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->
+<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot WIRED via ANALYTICS-2) -->
+<!-- ANALYTICS-2: Cookiebot — MUST load before any other tracking script -->
+<script id="Cookiebot"
+        src="https://consent.cookiebot.com/uc.js"
+        data-cbid="00200400-fef6-4032-a746-f80a83be8751"
+        data-blockingmode="auto"
+        type="text/javascript"></script>
+
 <!-- Google Analytics 4 (property shared with www.proxxie.co) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('consent', 'default', {
-    'ad_storage': 'granted',
-    'analytics_storage': 'granted',
-    'ad_user_data': 'granted',
-    'ad_personalization': 'granted'
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'wait_for_update': 500
   });
   gtag('set', 'ads_data_redaction', true);
   gtag('js', new Date());

@@ -120,6 +120,24 @@ CSS_PATCHES = [
     # (QA-001c was merged into the F002 patch above to avoid the
     # overlapping-patch idempotency bug — see comment there.)
 
+    # ----- ANALYTICS-2 (2026-05-19): wire Cookiebot consent banner -----
+    # CBID 00200400-fef6-4032-a746-f80a83be8751.
+    # Two coordinated changes in a single replace:
+    #   1. Insert the Cookiebot script tag BEFORE the GA4 tag. The script
+    #      uses data-blockingmode="auto" so Cookiebot auto-scans the page
+    #      and rewrites any tracker script (googletagmanager.com,
+    #      clarity.ms, etc.) to type="text/plain" until consent is given.
+    #      No need to tag every individual script manually.
+    #   2. Flip Consent Mode v2 defaults from `granted` to `denied`,
+    #      add wait_for_update: 500 so gtag holds initial events for
+    #      half a second waiting for Cookiebot's first consent decision.
+    #      Cookiebot calls gtag('consent', 'update', {...}) automatically
+    #      with the user's choice — no glue code needed.
+    (
+        '<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->\n<!-- Google Analytics 4 (property shared with www.proxxie.co) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  // Consent Mode v2 — defaults to granted until Cookiebot ships (ANALYTICS-2).\n  // When the bandeau is added, flip these defaults to \'denied\' and let\n  // Cookiebot call gtag(\'consent\',\'update\',{...}) on user choice.\n  gtag(\'consent\', \'default\', {\n    \'ad_storage\': \'granted\',\n    \'analytics_storage\': \'granted\',\n    \'ad_user_data\': \'granted\',\n    \'ad_personalization\': \'granted\'\n  });',
+        '<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot WIRED via ANALYTICS-2) -->\n<!-- ANALYTICS-2: Cookiebot — MUST load before any other tracking script -->\n<script id="Cookiebot"\n        src="https://consent.cookiebot.com/uc.js"\n        data-cbid="00200400-fef6-4032-a746-f80a83be8751"\n        data-blockingmode="auto"\n        type="text/javascript"></script>\n\n<!-- Google Analytics 4 (property shared with www.proxxie.co) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  // Consent Mode v2 — defaults DENIED. Cookiebot will fire\n  // gtag(\'consent\',\'update\',{...}) with the user\'s choice. The\n  // wait_for_update flag holds initial events for 500 ms so we don\'t\n  // send anonymous cookieless pings before consent is actually decided.\n  gtag(\'consent\', \'default\', {\n    \'ad_storage\': \'denied\',\n    \'analytics_storage\': \'denied\',\n    \'ad_user_data\': \'denied\',\n    \'ad_personalization\': \'denied\',\n    \'wait_for_update\': 500\n  });',
+    ),
+
     # ----- ANALYTICS-3a (2026-05-19): site-wide engagement tracking -----
     # Adds a vanilla-JS engagement layer right after the ANALYTICS-1
     # wrapper. Auto-tracks: scroll depth (25/50/75/90/100), time on page
@@ -1273,6 +1291,15 @@ STATIC_HTML_PATCHES = [
         "sentinel": "<!-- ANALYTICS-3a: site-wide engagement layer",
         "old": "<!-- Unified event wrapper -->",
         "new": _ANALYTICS_3A_BLOCK_RAW + "<!-- Unified event wrapper -->",
+    },
+
+    # ANALYTICS-2 mirror for static pages — same Cookiebot insertion +
+    # Consent Mode flip as the CSS_PATCHES version above, but as raw HTML.
+    {
+        "name": "ANALYTICS-2-STATIC wire Cookiebot consent banner into static landing pages",
+        "sentinel": '<!-- ANALYTICS-2: Cookiebot',
+        "old": '<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->\n<!-- Google Analytics 4 (property shared with www.proxxie.co) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag(\'consent\', \'default\', {\n    \'ad_storage\': \'granted\',\n    \'analytics_storage\': \'granted\',\n    \'ad_user_data\': \'granted\',\n    \'ad_personalization\': \'granted\'\n  });',
+        "new": '<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot WIRED via ANALYTICS-2) -->\n<!-- ANALYTICS-2: Cookiebot — MUST load before any other tracking script -->\n<script id="Cookiebot"\n        src="https://consent.cookiebot.com/uc.js"\n        data-cbid="00200400-fef6-4032-a746-f80a83be8751"\n        data-blockingmode="auto"\n        type="text/javascript"></script>\n\n<!-- Google Analytics 4 (property shared with www.proxxie.co) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag(\'consent\', \'default\', {\n    \'ad_storage\': \'denied\',\n    \'analytics_storage\': \'denied\',\n    \'ad_user_data\': \'denied\',\n    \'ad_personalization\': \'denied\',\n    \'wait_for_update\': 500\n  });',
     },
 ]
 
