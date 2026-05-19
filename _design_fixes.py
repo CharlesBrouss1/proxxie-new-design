@@ -813,6 +813,37 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- ANALYTICS-4 (2026-05-19): onboarding wizard step funnel -----
+    # The home page's 5-step onboarding wizard (Qui êtes-vous → Niveau &
+    # profil → Aperçu rapport final → Inscription → Coach offert) is
+    # currently invisible to GA4 — we only see `funnel_opened` /
+    # `funnel_step` once. This patch adds two useEffect hooks at the top
+    # of the wizard component:
+    #
+    #   1. fires `wizard_step_view` on every step change with step_index,
+    #      step_name (who_are_you / level_profile / preview / signup / coach),
+    #      persona, and the running max_step
+    #   2. fires `wizard_opened` on first open, `wizard_dropoff` if the
+    #      wizard closes before the user reaches the final step,
+    #      `wizard_completed` once they hit the last step
+    #
+    # Updates window.__proxxie_wizard_in_progress so the beforeunload
+    # handler (added in this patch via a third useEffect) can fire
+    # `wizard_dropoff` even if the user just closes the tab.
+    #
+    # Anchor: `if (!open) return null;` — unique to the wizard component
+    # at this position in 12cdb3c9.
+    {
+        "name": "ANALYTICS-4 wizard step funnel tracking",
+        "needle": "const stepDefs = isMentor",
+        "replacements": [
+            (
+                "if (!open) return null;",
+                "/* ANALYTICS-4: wizard step funnel tracking */\n  React.useEffect(() => {\n    if (!open) return;\n    var stepNames = ['who_are_you', 'level_profile', 'preview', 'signup', 'coach', 'thanks', 'mentor_signup', 'mentor_book'];\n    if (window.trackEvent) {\n      window.trackEvent('wizard_step_view', {\n        step_index: step,\n        step_name: stepNames[step] || ('step_' + step),\n        persona: persona || null,\n        max_step: maxStep\n      });\n    }\n    if (window.__proxxie_wizard_in_progress) {\n      window.__proxxie_wizard_in_progress.maxStep = Math.max(window.__proxxie_wizard_in_progress.maxStep || 0, step);\n      window.__proxxie_wizard_in_progress.currentStep = step;\n      /* Final step reached → completion */\n      var finalStep = isMentor ? 7 : 4;\n      if (step >= finalStep && !window.__proxxie_wizard_in_progress.completed) {\n        window.__proxxie_wizard_in_progress.completed = true;\n        if (window.trackEvent) window.trackEvent('wizard_completed', {\n          persona: persona || null,\n          time_total_ms: Date.now() - window.__proxxie_wizard_in_progress.startedAt,\n          is_mentor: !!isMentor\n        });\n      }\n    }\n  }, [step, open]);\n\n  React.useEffect(() => {\n    if (open && !window.__proxxie_wizard_in_progress) {\n      window.__proxxie_wizard_in_progress = { startedAt: Date.now(), maxStep: 0, currentStep: 0, completed: false };\n      if (window.trackEvent) window.trackEvent('wizard_opened', { persona: persona || null, is_mentor: !!isMentor });\n    } else if (!open && window.__proxxie_wizard_in_progress) {\n      var wp = window.__proxxie_wizard_in_progress;\n      if (!wp.completed && window.trackEvent) {\n        window.trackEvent('wizard_dropoff', {\n          last_step: wp.currentStep || 0,\n          max_step: wp.maxStep || 0,\n          time_total_ms: Date.now() - wp.startedAt,\n          via: 'close'\n        });\n      }\n      window.__proxxie_wizard_in_progress = null;\n    }\n  }, [open]);\n\n  React.useEffect(() => {\n    function onBeforeUnload() {\n      var wp = window.__proxxie_wizard_in_progress;\n      if (wp && !wp.completed && window.trackEvent) {\n        window.trackEvent('wizard_dropoff', {\n          last_step: wp.currentStep || 0,\n          max_step: wp.maxStep || 0,\n          time_total_ms: Date.now() - wp.startedAt,\n          via: 'beforeunload'\n        });\n      }\n    }\n    window.addEventListener('beforeunload', onBeforeUnload);\n    return function() { window.removeEventListener('beforeunload', onBeforeUnload); };\n  }, []);\n\n  if (!open) return null;",
+            ),
+        ],
+    },
+
     # ----- ANALYTICS-3b (2026-05-19): test consent + test_started -----
     # Patches the shared TestApp.pickPersona handler (every psychometric
     # test page has this signature). On click:
