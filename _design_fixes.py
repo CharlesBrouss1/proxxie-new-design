@@ -598,6 +598,35 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- RESULTSFIX-1 (2026-05-19): refocus "Aperçu du rapport" hero -----
+    # Founder feedback: drop the "Sans payer." flourish from the title,
+    # and broaden the bullet list to surface ALL the deliverables the
+    # parent gets at the end of an accompaniment (not just rapport
+    # contents). The current 3 bullets stop at the rapport itself;
+    # we add a 4th item highlighting the offered coach session — the
+    # biggest differentiator — and elevate the descriptor copy to make
+    # each deliverable feel like a concrete outcome.
+    {
+        "name": "RESULTSFIX-1a drop 'Sans payer' from title",
+        "needle": "Voici ce que vous obtenez. <span style={{ color:",
+        "replacements": [
+            (
+                '<h2 style={{ marginTop: 14, marginBottom: 18 }}>\n              Voici ce que vous obtenez. <span style={{ color: "var(--c-blue-deep)" }}>Sans payer.</span>\n            </h2>',
+                '<h2 style={{ marginTop: 14, marginBottom: 18 }}>\n              Voici ce que vous obtenez <span style={{ color: "var(--c-blue-deep)" }}>à la fin de l\'accompagnement.</span>\n            </h2>',
+            ),
+        ],
+    },
+    {
+        "name": "RESULTSFIX-1b expand deliverables list (add coach RDV + suivi)",
+        "needle": '{ i: <Icon.briefcase />, t: "10 à 15 métiers compatibles"',
+        "replacements": [
+            (
+                '            <div style={{ display: "grid", gap: 14, marginBottom: 30 }}>\n              {[\n                { i: <Icon.briefcase />, t: "10 à 15 métiers compatibles", d: "Avec score de compatibilité, missions concrètes, salaire et débouchés" },\n                { i: <Icon.spark />, t: "5 secteurs porteurs analysés", d: "Croisement profil × tendances du marché du travail" },\n                { i: <Icon.graduation />, t: "Vœux Parcoursup ciblés", d: "Formations, écoles, attendus, et stratégie de candidature" },\n              ].map((b, i) => (\n                <div key={i} style={{ display: "flex", gap: 14 }}>\n                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--c-blue-tint)", color: "var(--c-blue-deep)", display: "grid", placeItems: "center", flexShrink: 0 }}>{b.i}</div>\n                  <div>\n                    <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 2 }}>{b.t}</div>\n                    <div style={{ color: "var(--c-muted)", fontSize: 14 }}>{b.d}</div>\n                  </div>\n                </div>\n              ))}\n            </div>',
+                '            <div style={{ display: "grid", gap: 12, marginBottom: 26 }}>\n              {[\n                { i: <Icon.briefcase />, t: "10 à 15 métiers compatibles", d: "Score de compatibilité, missions, salaire et débouchés concrets", c: "var(--c-blue-tint)", cc: "var(--c-blue-deep)" },\n                { i: <Icon.spark />, t: "5 secteurs porteurs analysés", d: "Profil de votre ado croisé aux tendances du marché du travail", c: "var(--c-blue-tint)", cc: "var(--c-blue-deep)" },\n                { i: <Icon.graduation />, t: "Vœux Parcoursup ciblés + stratégie", d: "Formations, écoles, attendus, ordre des vœux et lettres", c: "var(--c-blue-tint)", cc: "var(--c-blue-deep)" },\n                { i: <Icon.calendar />, t: "RDV coach offert (30 min)", d: "Lecture personnalisée du rapport et plan d\'action avec Charles", c: "rgba(253,105,54,.14)", cc: "#FD6936" },\n                { i: <Icon.check />, t: "Tableau de bord parent à vie", d: "Suivi continu, documents centralisés, RDV bonus de parrainage", c: "rgba(34,160,107,.12)", cc: "#1F8C5E" },\n              ].map((b, i) => (\n                <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>\n                  <div style={{ width: 38, height: 38, borderRadius: 10, background: b.c, color: b.cc, display: "grid", placeItems: "center", flexShrink: 0 }}>{b.i}</div>\n                  <div>\n                    <div style={{ fontWeight: 600, fontSize: 15.5, marginBottom: 2, letterSpacing: "-0.005em" }}>{b.t}</div>\n                    <div style={{ color: "var(--c-muted)", fontSize: 13.5, lineHeight: 1.45 }}>{b.d}</div>\n                  </div>\n                </div>\n              ))}\n            </div>',
+            ),
+        ],
+    },
+
     # ----- LOGOFIX-1 (2026-05-19): stop the sidebar Proxxie wordmark -----
     # from stretching. The <img> renders inside a flex-column container
     # (`display: flex; flexDirection: column`) whose default
