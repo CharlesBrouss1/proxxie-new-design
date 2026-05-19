@@ -700,6 +700,34 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- DRAWERFIX-2 (2026-05-19): cancel the global `section` padding -----
+    # Each DrawerSection renders as a `<section className="drawer-section">`.
+    # The site's design system has a global `section { padding: 96px 0 }`
+    # rule (meant for page-level marketing sections: Hero, Pricing, FAQ).
+    # That global rule cascaded onto the drawer's <section> elements,
+    # adding 192 px of vertical padding PER SECTION inside the side panel
+    # — which is what produced the huge gaps the founder reported
+    # ("trou énorme entre les différents paragraphes de tous panels").
+    #
+    # Fix: pin `.drawer-section { padding: 0 }` so the class-selector
+    # specificity beats the bare `section` element selector. DRAWERFIX-1
+    # margins (6 px between sections, 6 px below head) take over.
+    #
+    # Verified via browse: before fix, sections measured 356px / 297px /
+    # 356px despite content of only 122-150px each (200+px of phantom
+    # padding per section). After this patch, sections collapse to their
+    # natural content height.
+    {
+        "name": "DRAWERFIX-2 cancel global section padding inside drawer",
+        "needle": ".drawer-section + .drawer-section { margin-top: 6px; }",
+        "replacements": [
+            (
+                ".drawer-section + .drawer-section { margin-top: 6px; }",
+                ".drawer-section { padding: 0; }\n    .drawer-section + .drawer-section { margin-top: 6px; }",
+            ),
+        ],
+    },
+
     # ----- RESULTSFIX-1 (2026-05-19): refocus "Aperçu du rapport" hero -----
     # Founder feedback: drop the "Sans payer." flourish from the title,
     # and broaden the bullet list to surface ALL the deliverables the
