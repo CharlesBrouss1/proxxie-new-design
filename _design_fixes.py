@@ -598,6 +598,39 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- LOGOFIX-1 (2026-05-19): stop the sidebar Proxxie wordmark -----
+    # from stretching. The <img> renders inside a flex-column container
+    # (`display: flex; flexDirection: column`) whose default
+    # `align-items: stretch` was stretching the cross-axis (= width)
+    # of the image to match the sidebar width while keeping the
+    # explicit `height: 40px` — i.e. squashing the wordmark wider
+    # than its native 2.1:1 ratio. Fix: pin `alignSelf: "flex-start"`
+    # and add `flexShrink: 0` + a computed `width` based on the source
+    # webp's known dimensions (3502 × 1665) so the browser cannot
+    # second-guess the aspect ratio.
+    {
+        "name": "LOGOFIX-1 ProxxieLogo respect aspect ratio (no stretch)",
+        "needle": 'const ProxxieLogo = ({ variant = "default", size = 22 }) => {',
+        "pages_skip": [
+            # Product pages ship a different ProxxieLogo (ProxxieMark +
+            # <span>proxxie</span>) that doesn't use an <img>, so the
+            # flex-stretch bug doesn't apply. Skip to avoid spurious DRIFT.
+            "Proxxie Coach.html", "coach.html",
+            "Proxxie Connexion.html", "connexion.html",
+            "Proxxie Dashboard.html", "dashboard.html",
+            "Proxxie Documents.html", "documents.html",
+            "Proxxie Rapport.html", "rapport.html",
+            "Proxxie Ressources.html", "ressources.html",
+            "Proxxie Test.html", "test.html",
+        ],
+        "replacements": [
+            (
+                'const ProxxieLogo = ({ variant = "default", size = 22 }) => {\n  const isWhite = variant === "white";\n  const height = Math.round(size * 1.8);\n  return (\n    <img\n      src="proxxie-logo-full.webp"\n      alt="Proxxie"\n      style={{\n        height,\n        width: "auto",\n        display: "inline-block",\n        filter: isWhite ? "brightness(0) invert(1)" : "none",\n      }}\n    />\n  );\n};',
+                'const ProxxieLogo = ({ variant = "default", size = 22 }) => {\n  /* LOGOFIX-1 — explicit aspect ratio so flex parents can\'t stretch the wordmark. */\n  const isWhite = variant === "white";\n  const height = Math.round(size * 1.8);\n  /* Native webp is 3502 × 1665, ratio ≈ 2.103. Pin width to keep it. */\n  const width = Math.round(height * 2.103);\n  return (\n    <img\n      src="proxxie-logo-full.webp"\n      alt="Proxxie"\n      width={width}\n      height={height}\n      style={{\n        height,\n        width,\n        display: "inline-block",\n        alignSelf: "flex-start",\n        flexShrink: 0,\n        objectFit: "contain",\n        filter: isWhite ? "brightness(0) invert(1)" : "none",\n      }}\n    />\n  );\n};',
+            ),
+        ],
+    },
+
     # ----- STEPFIX-1 (2026-05-19): make Étape 3/5 "Voici ce qui vous -----
     # attend" fit a single viewport (no scroll). Founder feedback: the
     # preview cards forced scroll on standard laptop screens. We:
