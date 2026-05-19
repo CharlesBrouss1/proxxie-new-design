@@ -266,11 +266,19 @@ BUNDLE_PATCHES = [
     },
 
     # ----- G3 step 1: ClassTimeline component definition -----
-    # Inserted right before `const App = () => {` so the component is
-    # in module scope. Five-tab class strip with concerns + guide link.
+    # RETIRED 2026-05-19: the team's source now ships its own
+    # CLASS_TABS + ClassTimeline definition in asset 3cf76be5. Running
+    # this patch on top created a DUPLICATE `const CLASS_TABS` and
+    # `const ClassTimeline` declaration → SyntaxError → Home page
+    # rendered blank. Same failure mode as the Dashboard radar v2
+    # patch retired earlier. Needle swapped to an impossible-to-match
+    # sentinel so the patcher never applies it again. The placement
+    # patch below (G3 step 2) is similarly retired — the team renders
+    # <ClassTimeline /> in App on its own.
     {
-        "name": "G3 ClassTimeline component definition",
-        "needle": "const App = () => {",
+        "name": "G3 ClassTimeline component definition (RETIRED)",
+        "needle": "__RETIRED_2026_05_19__never_matches__",
+        "_disabled_needle": "const App = () => {",
         "replacements": [
             (
                 "const App = () => {",
@@ -281,11 +289,14 @@ BUNDLE_PATCHES = [
     },
 
     # ----- G3 step 2: insert <ClassTimeline /> into App's render tree -----
-    # Placed between <HowItWorks /> and the mini-quiz: visitor sees pain →
-    # method → class self-identification → quiz → results → testimonials.
+    # RETIRED 2026-05-19: paired with G3 step 1 (see comment above).
+    # Team's source already renders <ClassTimeline /> in the correct
+    # position (HowItWorks → ClassTimeline → MiniQuiz). Running this
+    # patch would either no-op (idempotent) or insert a second copy.
     {
-        "name": "G3 ClassTimeline placement in App",
-        "needle": "{t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
+        "name": "G3 ClassTimeline placement in App (RETIRED)",
+        "needle": "__RETIRED_2026_05_19__never_matches__",
+        "_disabled_needle": "{t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
         "replacements": [
             (
                 "      <HowItWorks onCTA={openOnboarding} />\n      {t.showMiniQuiz && <MiniQuiz onCTA={openOnboarding} />}",
