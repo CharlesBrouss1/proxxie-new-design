@@ -29,6 +29,27 @@ ALL_HTML_FILES = [
     "Proxxie Rapport.html", "rapport.html",
     "Proxxie Ressources.html", "ressources.html",
     "Proxxie Test.html", "test.html",
+    # Tests landing + individual test pages (added 2026-05-19 for the
+    # ANALYTICS-1 GA4/Clarity rollout — every page must report).
+    "Proxxie Tests.html", "tests.html",
+    "Proxxie Test Anxiete.html", "test-anxiete.html",
+    "Proxxie Test Autisme.html", "test-autisme.html",
+    "Proxxie Test Besoins.html", "test-besoins.html",
+    "Proxxie Test DYS.html", "test-dys.html",
+    "Proxxie Test Drivers.html", "test-drivers.html",
+    "Proxxie Test HPI.html", "test-hpi.html",
+    "Proxxie Test MBTI.html", "test-mbti.html",
+    "Proxxie Test PCM.html", "test-pcm.html",
+    "Proxxie Test RIASEC.html", "test-riasec.html",
+    "Proxxie Test TDAH.html", "test-tdah.html",
+    "Proxxie Test Valeurs.html", "test-valeurs.html",
+    # Static landing pages (no app bundle, but should still report
+    # page_view to GA4 once they ship the analytics block).
+    "blog.html",
+    "carnet-orientation.html",
+    "cas-clients.html",
+    "guide-orientation.html",
+    "newsletter-substack.html",
 ]
 
 # ===========================================================================
@@ -98,6 +119,35 @@ CSS_PATCHES = [
     ),
     # (QA-001c was merged into the F002 patch above to avoid the
     # overlapping-patch idempotency bug — see comment there.)
+
+    # ----- ANALYTICS-1 (2026-05-19): wire GA4 + Microsoft Clarity -----
+    # Replaces the existing provider-agnostic analytics stub (which had
+    # an unconfigured PLAUSIBLE_DOMAIN and no actual GA4/Clarity tag) with:
+    #  - Google Analytics 4 (G-Q93HTZY2TB, same property as www.proxxie.co)
+    #    + Enhanced Measurement (auto: scroll, outbound, file downloads,
+    #      video, site search). IP anonymisation + ads_data_redaction on.
+    #  - Microsoft Clarity (project wtjyxri1oa) for session recordings,
+    #    heatmaps, rage/dead clicks.
+    #  - Updated `window.trackEvent(name, props)` wrapper forwards to BOTH
+    #    gtag and clarity (and still falls back to plausible/console for
+    #    dev visibility on localhost/github.io).
+    #
+    # Cookiebot is NOT wired up in this patch — the CBID isn't available
+    # yet. Added as a follow-up patch (ANALYTICS-2) once we have it.
+    # This site is the github.io staging preview (not the production
+    # commercial domain www.proxxie.co), so the temporary lack of a
+    # consent banner is low-risk pending the Cookiebot CBID.
+    (
+        # OLD: the legacy provider-agnostic stub (no real analytics fires
+        # because PLAUSIBLE_DOMAIN is empty and window.gtag is never set).
+        "<!-- Analytics — provider-agnostic. Configure Plausible by setting window.PLAUSIBLE_DOMAIN. GA4 picked up automatically if window.gtag exists. -->\n<script>\n  // Set to your domain on plausible.io when ready, e.g. \"proxxie.co\"\n  window.PLAUSIBLE_DOMAIN = \"\";\n  if (window.PLAUSIBLE_DOMAIN) {\n    var _ps = document.createElement('script');\n    _ps.defer = true;\n    _ps.setAttribute('data-domain', window.PLAUSIBLE_DOMAIN);\n    _ps.src = 'https://plausible.io/js/script.tagged-events.js';\n    document.head.appendChild(_ps);\n  }\n  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };\n  window.trackEvent = function(name, props) {\n    try {\n      if (window.plausible) window.plausible(name, { props: props || {} });\n      if (window.gtag) window.gtag('event', name, props || {});\n      var host = window.location.hostname;\n      if (host === 'localhost' || host.indexOf('github.io') !== -1 || host === '127.0.0.1') {\n        console.log('[analytics]', name, props || {});\n      }\n    } catch(e) { /* swallow */ }\n  };\n</script>",
+        # NEW: GA4 + Clarity actually wired up. Consent Mode v2 set to
+        # `granted` for now (no Cookiebot yet). When ANALYTICS-2 ships,
+        # the consent defaults flip to `denied` and Cookiebot manages
+        # the update. Keeping all event-tagging logic in one wrapper
+        # means every existing `trackEvent()` call site keeps working.
+        "<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->\n<!-- Google Analytics 4 (property shared with www.proxxie.co) -->\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB\"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  // Consent Mode v2 — defaults to granted until Cookiebot ships (ANALYTICS-2).\n  // When the bandeau is added, flip these defaults to 'denied' and let\n  // Cookiebot call gtag('consent','update',{...}) on user choice.\n  gtag('consent', 'default', {\n    'ad_storage': 'granted',\n    'analytics_storage': 'granted',\n    'ad_user_data': 'granted',\n    'ad_personalization': 'granted'\n  });\n  gtag('set', 'ads_data_redaction', true);\n  gtag('js', new Date());\n  gtag('config', 'G-Q93HTZY2TB', {\n    anonymize_ip: true,\n    cookie_flags: 'SameSite=None;Secure;Partitioned',\n    // Page paths on the staging preview include the repo prefix\n    // (/proxxie-new-design/...). Strip it so the GA4 dashboards\n    // match production URLs when we eventually consolidate.\n    page_path: location.pathname.replace(/^\\/proxxie-new-design\\//, '/')\n  });\n</script>\n\n<!-- Microsoft Clarity — session recordings, heatmaps, rage/dead clicks -->\n<script>\n  (function(c,l,a,r,i,t,y){\n    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\n    t=l.createElement(r);t.async=1;t.src=\"https://www.clarity.ms/tag/\"+i;\n    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n  })(window, document, \"clarity\", \"script\", \"wtjyxri1oa\");\n</script>\n\n<!-- Unified event wrapper (kept for backwards compatibility — every -->\n<!-- existing trackEvent() call site continues to work, now also -->\n<!-- forwarding to Clarity custom events for cross-tool correlation). -->\n<script>\n  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };\n  window.trackEvent = function(name, props) {\n    try {\n      if (window.gtag) window.gtag('event', name, props || {});\n      if (window.clarity) window.clarity('event', name);\n      if (window.plausible) window.plausible(name, { props: props || {} });\n      var host = window.location.hostname;\n      if (host === 'localhost' || host === '127.0.0.1') {\n        console.log('[analytics]', name, props || {});\n      }\n    } catch(e) { /* swallow */ }\n  };\n  // Set common user_properties: persona, grade level, and a sticky\n  // first-touch UTM record kept in localStorage. Hydrated by the\n  // wizard the first time the user picks a persona / class.\n  try {\n    var p = window.localStorage.getItem('proxxie_persona');\n    var g = window.localStorage.getItem('proxxie_grade');\n    var firstUtm = window.localStorage.getItem('proxxie_first_utm');\n    var url = new URL(window.location.href);\n    var utm = {};\n    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function(k){\n      var v = url.searchParams.get(k);\n      if (v) utm[k] = v;\n    });\n    if (Object.keys(utm).length && !firstUtm) {\n      window.localStorage.setItem('proxxie_first_utm', JSON.stringify({ ts: Date.now(), utm: utm }));\n      firstUtm = window.localStorage.getItem('proxxie_first_utm');\n    }\n    if (window.gtag) {\n      var up = {};\n      if (p) up.persona = p;\n      if (g) up.grade = g;\n      if (firstUtm) {\n        try { var fu = JSON.parse(firstUtm).utm || {}; for (var k in fu) up['first_'+k] = fu[k]; } catch(e) {}\n      }\n      if (Object.keys(up).length) window.gtag('set', 'user_properties', up);\n    }\n  } catch(e) { /* swallow */ }\n</script>",
+    ),
 ]
 
 # ===========================================================================
@@ -678,6 +728,19 @@ BUNDLE_PATCHES = [
             "Proxxie Rapport.html", "rapport.html",
             "Proxxie Ressources.html", "ressources.html",
             "Proxxie Test.html", "test.html",
+            # Same shape — Tests landing + individual test pages added 2026-05-19.
+            "Proxxie Tests.html", "tests.html",
+            "Proxxie Test Anxiete.html", "test-anxiete.html",
+            "Proxxie Test Autisme.html", "test-autisme.html",
+            "Proxxie Test Besoins.html", "test-besoins.html",
+            "Proxxie Test DYS.html", "test-dys.html",
+            "Proxxie Test Drivers.html", "test-drivers.html",
+            "Proxxie Test HPI.html", "test-hpi.html",
+            "Proxxie Test MBTI.html", "test-mbti.html",
+            "Proxxie Test PCM.html", "test-pcm.html",
+            "Proxxie Test RIASEC.html", "test-riasec.html",
+            "Proxxie Test TDAH.html", "test-tdah.html",
+            "Proxxie Test Valeurs.html", "test-valeurs.html",
         ],
         "replacements": [
             (
@@ -751,8 +814,20 @@ BUNDLE_PATCHES = [
 def _escape_for_js_string(s: str) -> str:
     """The CSS lives inside a JS string literal: real newlines are stored
     as the two-character escape `\\n`, double-quotes as `\\"`, etc. Convert
-    our Python source strings (with real newlines) to the on-disk format."""
-    return s.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"')
+    our Python source strings (with real newlines) to the on-disk format.
+
+    Also escapes the `</` pattern to `<\\/`. JavaScript's JSON.stringify
+    (which generated the on-disk template) does this for security — it
+    prevents an HTML parser from terminating the wrapping `<script>` tag
+    early if the template content contains a closing tag like `</script>`.
+    Without this, a CSS_PATCH whose old/new contains `</script>` would
+    silently fail to match (it would 'partially match' up to but excluding
+    the closing tag). Added 2026-05-19 with ANALYTICS-1."""
+    return (s
+            .replace("\\", "\\\\")
+            .replace("\n", "\\n")
+            .replace('"', '\\"')
+            .replace("</", "<\\/"))
 
 def _sentinel_for(new: str) -> str:
     """Extract a unique identifying substring from the patch's `new` content.
@@ -858,15 +933,126 @@ def apply_bundle_patches(html: str, path_name: str) -> tuple[str, int]:
 # fail at the end.
 _BUNDLE_DRIFT = []
 
+def apply_static_html_patches(html: str, path_name: str) -> tuple[str, int]:
+    """Plain-HTML patches for the 5 static landing pages that DON'T ship
+    a bundler/template script (blog.html, carnet-orientation.html,
+    cas-clients.html, guide-orientation.html, newsletter-substack.html).
+    These pages serve HTML directly to the browser, so there is no JSON
+    encoding to worry about — old/new are matched verbatim.
+
+    Idempotency: each patch declares a `sentinel` substring; if the
+    sentinel is already in the file, we skip. The patch list itself is
+    declared as STATIC_HTML_PATCHES below."""
+    changed = 0
+    for patch in STATIC_HTML_PATCHES:
+        sentinel = patch.get("sentinel") or patch["new"][:80]
+        if sentinel in html:
+            continue
+        if patch["old"] not in html:
+            continue
+        html = html.replace(patch["old"], patch["new"], 1)
+        changed += 1
+    return html, changed
+
+
+# ===========================================================================
+# STATIC HTML PATCHES — for the 5 landing pages without a bundler template
+# ===========================================================================
+
+# Same analytics block as ANALYTICS-1 in CSS_PATCHES, but as plain HTML
+# (no `</` → `<\/` escaping, no `\n` → \\n escaping) because these files
+# are served raw. Injected right before `</head>`.
+_ANALYTICS_BLOCK_RAW = """<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->
+<!-- Google Analytics 4 (property shared with www.proxxie.co) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'analytics_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted'
+  });
+  gtag('set', 'ads_data_redaction', true);
+  gtag('js', new Date());
+  gtag('config', 'G-Q93HTZY2TB', {
+    anonymize_ip: true,
+    cookie_flags: 'SameSite=None;Secure;Partitioned',
+    page_path: location.pathname.replace(/^\\/proxxie-new-design\\//, '/')
+  });
+</script>
+
+<!-- Microsoft Clarity — session recordings, heatmaps, rage/dead clicks -->
+<script>
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "wtjyxri1oa");
+</script>
+
+<!-- Unified event wrapper -->
+<script>
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+  window.trackEvent = function(name, props) {
+    try {
+      if (window.gtag) window.gtag('event', name, props || {});
+      if (window.clarity) window.clarity('event', name);
+      if (window.plausible) window.plausible(name, { props: props || {} });
+      var host = window.location.hostname;
+      if (host === 'localhost' || host === '127.0.0.1') {
+        console.log('[analytics]', name, props || {});
+      }
+    } catch(e) { /* swallow */ }
+  };
+  try {
+    var p = window.localStorage.getItem('proxxie_persona');
+    var g = window.localStorage.getItem('proxxie_grade');
+    var firstUtm = window.localStorage.getItem('proxxie_first_utm');
+    var url = new URL(window.location.href);
+    var utm = {};
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function(k){
+      var v = url.searchParams.get(k);
+      if (v) utm[k] = v;
+    });
+    if (Object.keys(utm).length && !firstUtm) {
+      window.localStorage.setItem('proxxie_first_utm', JSON.stringify({ ts: Date.now(), utm: utm }));
+      firstUtm = window.localStorage.getItem('proxxie_first_utm');
+    }
+    if (window.gtag) {
+      var up = {};
+      if (p) up.persona = p;
+      if (g) up.grade = g;
+      if (firstUtm) {
+        try { var fu = JSON.parse(firstUtm).utm || {}; for (var k in fu) up['first_'+k] = fu[k]; } catch(e) {}
+      }
+      if (Object.keys(up).length) window.gtag('set', 'user_properties', up);
+    }
+  } catch(e) { /* swallow */ }
+</script>
+"""
+
+STATIC_HTML_PATCHES = [
+    {
+        "name": "ANALYTICS-1-STATIC inject GA4 + Clarity into static landing pages",
+        "sentinel": "<!-- ANALYTICS-1: GA4 + Microsoft Clarity",
+        "old": "</head>",
+        "new": _ANALYTICS_BLOCK_RAW + "</head>",
+    },
+]
+
+
 def process_file(path: pathlib.Path) -> bool:
     html = path.read_text(encoding="utf-8")
     orig = html
     html, css_n = apply_css_patches(html, path.name)
     html, jsx_n = apply_bundle_patches(html, path.name)
+    html, static_n = apply_static_html_patches(html, path.name)
     if html == orig:
         return False
     path.write_text(html, encoding="utf-8")
-    print(f"  → wrote {path.name} (css: {css_n}, bundle: {jsx_n})")
+    print(f"  → wrote {path.name} (css: {css_n}, bundle: {jsx_n}, static: {static_n})")
     return True
 
 if __name__ == "__main__":

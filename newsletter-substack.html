@@ -282,6 +282,75 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
 </style>
+<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot pending) -->
+<!-- Google Analytics 4 (property shared with www.proxxie.co) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93HTZY2TB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'analytics_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted'
+  });
+  gtag('set', 'ads_data_redaction', true);
+  gtag('js', new Date());
+  gtag('config', 'G-Q93HTZY2TB', {
+    anonymize_ip: true,
+    cookie_flags: 'SameSite=None;Secure;Partitioned',
+    page_path: location.pathname.replace(/^\/proxxie-new-design\//, '/')
+  });
+</script>
+
+<!-- Microsoft Clarity — session recordings, heatmaps, rage/dead clicks -->
+<script>
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "wtjyxri1oa");
+</script>
+
+<!-- Unified event wrapper -->
+<script>
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+  window.trackEvent = function(name, props) {
+    try {
+      if (window.gtag) window.gtag('event', name, props || {});
+      if (window.clarity) window.clarity('event', name);
+      if (window.plausible) window.plausible(name, { props: props || {} });
+      var host = window.location.hostname;
+      if (host === 'localhost' || host === '127.0.0.1') {
+        console.log('[analytics]', name, props || {});
+      }
+    } catch(e) { /* swallow */ }
+  };
+  try {
+    var p = window.localStorage.getItem('proxxie_persona');
+    var g = window.localStorage.getItem('proxxie_grade');
+    var firstUtm = window.localStorage.getItem('proxxie_first_utm');
+    var url = new URL(window.location.href);
+    var utm = {};
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function(k){
+      var v = url.searchParams.get(k);
+      if (v) utm[k] = v;
+    });
+    if (Object.keys(utm).length && !firstUtm) {
+      window.localStorage.setItem('proxxie_first_utm', JSON.stringify({ ts: Date.now(), utm: utm }));
+      firstUtm = window.localStorage.getItem('proxxie_first_utm');
+    }
+    if (window.gtag) {
+      var up = {};
+      if (p) up.persona = p;
+      if (g) up.grade = g;
+      if (firstUtm) {
+        try { var fu = JSON.parse(firstUtm).utm || {}; for (var k in fu) up['first_'+k] = fu[k]; } catch(e) {}
+      }
+      if (Object.keys(up).length) window.gtag('set', 'user_properties', up);
+    }
+  } catch(e) { /* swallow */ }
+</script>
 </head>
 <body>
 <nav class="nav" aria-label="Navigation principale">
