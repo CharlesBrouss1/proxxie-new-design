@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Pre-commit hook: catch _design_fixes.py drift before it reaches CI.
+#
+# Enable on this machine (one-time, per checkout):
+#   git config core.hooksPath .githooks
+#
+# Or run the helper:
+#   ./.githooks/install.sh
+#
+# Bypass in an emergency (NOT recommended; CI will still fail):
+#   git commit --no-verify
+
+set -e
+
+# Skip if Python or the test suite isn't available (fresh clone, partial checkout, etc.)
+if ! command -v python3 >/dev/null 2>&1; then
+  exit 0
+fi
+if [ ! -f tests/test_patcher.py ]; then
+  exit 0
+fi
+
+# Only run when something likely-relevant is staged. The patcher tests mutate
+# bundle files temporarily then restore via git checkout, so the cost is small
+# (~2 s) — but we still skip when staged changes are doc/asset only.
+relevant=$(git diff --cached --name-only | grep -Eq '\.html$|^_design_fixes\.py$|^tests/' && echo yes || echo no)
+if [ "$relevant" = "no" ]; then
+  exit 0
+fi
+
+echo "→ Patcher health check (pre-commit, ~2 s)…"
+
+# Run the test suite in quiet mode; capture full output for the failure message.
+output=$(python3 -m pytest tests/test_patcher.py -q --tb=short --no-header 2>&1) && status=0 || status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo
+  echo "$output"
+  echo
+  echo "❌ Patcher tests failed before commit."
+  echo
+  echo "   This usually means one of two things:"
+  echo "     1. Drift: a patch in _design_fixes.py references a string"
+  echo "        that no longer exists in the bundle (e.g. you renamed a"
+  echo "        CTA, scrubbed a comment, or refactored a block)."
+  echo "     2. The pages went out of sync (e.g. index.html no longer"
+  echo "        matches \"Proxxie Home.html\")."
+  echo
+  echo "   Investigate:"
+  echo "     python3 _design_fixes.py --strict     # see which patches drifted"
+  echo "     git checkout -- 'Proxxie Home.html' index.html  # restore mutated files"
+  echo
+  echo "   Common fixes:"
+  echo "     - Update the patch's \"new\" string in _design_fixes.py so"
+  echo "       \"if new in text\" matches the current bundle (idempotency"
+  echo "       check passes → drift disappears)."
+  echo "     - cp \"Proxxie Home.html\" index.html  # if they drifted apart"
+  echo
+  echo "   Bypass (NOT recommended, CI will still fail):"
+  echo "     git commit --no-verify ..."
+  echo
+  exit 1
+fi
+
+echo "✓ Patcher OK"
