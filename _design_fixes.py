@@ -616,6 +616,22 @@ BUNDLE_PATCHES = [
             ),
         ],
     },
+
+    # ----- RESULTSFIX-1c (2026-05-19, follow-up) : reframe the eyebrow -----
+    # Founder follow-up: "ce n'est pas le rapport qu'ils obtiennent sans
+    # payer mais le rapport final qu'ils peuvent avoir à la fin que l'on
+    # doit mettre en avant." → Rename the eyebrow so it reads as the
+    # FINAL deliverable, not a free preview/teaser.
+    {
+        "name": "RESULTSFIX-1c eyebrow → 'Aperçu du rapport final'",
+        "needle": '<span className="eyebrow"><span className="dot"></span>Aperçu du rapport</span>',
+        "replacements": [
+            (
+                '<span className="eyebrow"><span className="dot"></span>Aperçu du rapport</span>',
+                '<span className="eyebrow"><span className="dot"></span>Aperçu du rapport final</span>',
+            ),
+        ],
+    },
     {
         "name": "RESULTSFIX-1b expand deliverables list (add coach RDV + suivi)",
         "needle": '{ i: <Icon.briefcase />, t: "10 à 15 métiers compatibles"',
