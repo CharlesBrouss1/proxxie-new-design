@@ -398,6 +398,123 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   })(window, document, "clarity", "script", "wtjyxri1oa");
 </script>
 
+<!-- ANALYTICS-3a: site-wide engagement layer (scroll/time/exit/clicks) -->
+<script>
+(function() {
+  if (window.__proxxieEngagementLoaded) return;
+  window.__proxxieEngagementLoaded = true;
+
+  var path = location.pathname.toLowerCase();
+  var pageType = 'other';
+  if (path === '/' || path.indexOf('/index') >= 0 || path.indexOf('/home') >= 0) pageType = 'home';
+  else if (path.indexOf('test') >= 0) pageType = 'test';
+  else if (path.indexOf('dashboard') >= 0) pageType = 'dashboard';
+  else if (path.indexOf('rapport') >= 0) pageType = 'rapport';
+  else if (path.indexOf('coach') >= 0) pageType = 'coach';
+  else if (path.indexOf('documents') >= 0) pageType = 'documents';
+  else if (path.indexOf('ressources') >= 0) pageType = 'ressources';
+  else if (path.indexOf('connexion') >= 0 || path.indexOf('login') >= 0) pageType = 'connexion';
+  else if (path.indexOf('blog') >= 0) pageType = 'blog';
+  else if (path.indexOf('guide-orientation') >= 0) pageType = 'guide';
+  else if (path.indexOf('newsletter') >= 0) pageType = 'newsletter';
+  else if (path.indexOf('cas-clients') >= 0) pageType = 'cas-clients';
+  else if (path.indexOf('carnet') >= 0) pageType = 'carnet';
+
+  var testType = null;
+  if (pageType === 'test') {
+    var pn = location.pathname.replace(/^.*\//, '').toLowerCase();
+    var m = pn.match(/^(?:proxxie%20)?test[ %-]?(\w+)/) || pn.match(/^test-?(\w+)/);
+    if (m && m[1] && m[1] !== 'html') testType = m[1].replace(/\.html$/, '');
+    if (!testType && (pn === 'test.html' || pn === 'proxxie test.html' || pn === 'proxxie%20test.html')) testType = 'ocean-x';
+    if (!testType && (pn === 'tests.html' || pn === 'proxxie tests.html' || pn === 'proxxie%20tests.html')) testType = 'landing';
+  }
+  window.__proxxie_page_type = pageType;
+  window.__proxxie_test_type = testType;
+
+  function send(name, props) {
+    if (window.trackEvent) {
+      var p = props || {};
+      p.page_type = pageType;
+      if (testType) p.test_type = testType;
+      window.trackEvent(name, p);
+    }
+  }
+
+  var startTime = Date.now();
+  var maxScroll = 0;
+  var scrollHit = {};
+  var timeHit = {};
+  var exitFired = false;
+
+  function onScroll() {
+    var sh = document.documentElement.scrollHeight - window.innerHeight;
+    if (sh <= 0) return;
+    var pct = (window.scrollY / sh) * 100;
+    if (pct > maxScroll) maxScroll = pct;
+    [25, 50, 75, 90, 100].forEach(function(t) {
+      if (!scrollHit[t] && pct >= t) {
+        scrollHit[t] = true;
+        send('scroll_depth', { depth: t });
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  function checkTime() {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    [15, 30, 60, 120, 300].forEach(function(t) {
+      if (!timeHit[t] && elapsed >= t) {
+        timeHit[t] = true;
+        send('time_on_page', { seconds: t });
+      }
+    });
+  }
+  setInterval(checkTime, 5000);
+
+  function onMouseLeave(e) {
+    if (exitFired) return;
+    if (e.clientY < 5) {
+      exitFired = true;
+      var elapsed = Math.floor((Date.now() - startTime) / 1000);
+      send('exit_intent', { max_scroll: Math.round(maxScroll), seconds_on_page: elapsed });
+    }
+  }
+  document.addEventListener('mouseleave', onMouseLeave);
+
+  document.addEventListener('visibilitychange', function() {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    if (document.hidden) send('page_hidden', { seconds_on_page: elapsed });
+    else send('page_visible', {});
+  });
+
+  window.addEventListener('beforeunload', function() {
+    var inProgress = window.__proxxie_test_in_progress;
+    if (inProgress) {
+      send('test_abandoned', {
+        question_index: inProgress.questionIndex || 0,
+        total_questions: inProgress.totalQuestions || 0,
+        completion_pct: inProgress.completionPct || 0,
+        time_total_ms: Date.now() - (inProgress.startedAt || Date.now())
+      });
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    var target = e.target.closest('button, a.btn, [data-track]');
+    if (!target) return;
+    var label = (target.getAttribute('data-track') || target.textContent || '').trim().slice(0, 80);
+    if (!label) return;
+    var href = target.getAttribute('href') || null;
+    var isOutbound = false;
+    if (href && href.indexOf('http') === 0 && href.indexOf(location.hostname) === -1) isOutbound = true;
+    send('cta_click', { cta_text: label, cta_href: href, cta_outbound: isOutbound });
+  }, { capture: true });
+
+  setTimeout(function() {
+    if (window.gtag) window.gtag('event', 'page_view_enriched', { page_type: pageType, test_type: testType });
+  }, 200);
+})();
+</script>
 <!-- Unified event wrapper -->
 <script>
   window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };

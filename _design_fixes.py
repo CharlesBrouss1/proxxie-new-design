@@ -120,6 +120,29 @@ CSS_PATCHES = [
     # (QA-001c was merged into the F002 patch above to avoid the
     # overlapping-patch idempotency bug — see comment there.)
 
+    # ----- ANALYTICS-3a (2026-05-19): site-wide engagement tracking -----
+    # Adds a vanilla-JS engagement layer right after the ANALYTICS-1
+    # wrapper. Auto-tracks: scroll depth (25/50/75/90/100), time on page
+    # (15/30/60/120/300 s), exit intent, page visibility, generic CTA
+    # clicks (button + a.btn + [data-track]), and exposes a uniform
+    # `window.__proxxie_page_type` / `window.__proxxie_test_type` for
+    # downstream events to consume.
+    #
+    # Also wires beforeunload: if a test is in progress (set by ANALYTICS-3b
+    # below via `window.__proxxie_test_in_progress`), fires a
+    # `test_abandoned` event with the current question index and elapsed
+    # time. This is the founder's primary ask — "tracker si les gens vont
+    # au bout" — so we get both completion AND abandonment signals.
+    (
+        # Anchor: the end of the ANALYTICS-1 wrapper script. The line
+        # immediately before this is the closing `</script>` of the
+        # wrapper (escaped as `<\/script>` in the JSON-encoded template).
+        # Using the unique HTML comment that follows the unified wrapper
+        # is more stable than tag-based anchors.
+        "<!-- Unified event wrapper (kept for backwards compatibility — every -->",
+        "<!-- ANALYTICS-3a: site-wide engagement layer (scroll/time/exit/clicks) -->\n<script>\n(function() {\n  if (window.__proxxieEngagementLoaded) return;\n  window.__proxxieEngagementLoaded = true;\n\n  // Derive page_type + test_type from URL so every event is segmentable.\n  var path = location.pathname.toLowerCase();\n  var pageType = 'other';\n  if (path === '/' || path.indexOf('/index') >= 0 || path.indexOf('/home') >= 0 || path.indexOf('proxxie-new-design/') >= 0 && (path.endsWith('/') || path.endsWith('index.html') || path.endsWith('proxxie%20home.html') || path.endsWith('proxxie home.html'))) pageType = 'home';\n  else if (path.indexOf('test') >= 0) pageType = 'test';\n  else if (path.indexOf('dashboard') >= 0) pageType = 'dashboard';\n  else if (path.indexOf('rapport') >= 0) pageType = 'rapport';\n  else if (path.indexOf('coach') >= 0) pageType = 'coach';\n  else if (path.indexOf('documents') >= 0) pageType = 'documents';\n  else if (path.indexOf('ressources') >= 0) pageType = 'ressources';\n  else if (path.indexOf('connexion') >= 0 || path.indexOf('login') >= 0) pageType = 'connexion';\n  else if (path.indexOf('blog') >= 0) pageType = 'blog';\n  else if (path.indexOf('guide-orientation') >= 0) pageType = 'guide';\n  else if (path.indexOf('newsletter') >= 0) pageType = 'newsletter';\n\n  var testType = null;\n  if (pageType === 'test') {\n    // Strip the proxxie-new-design/ staging prefix and \"Proxxie %20\" filename casing.\n    var pn = location.pathname.replace(/^.*\\//, '').toLowerCase();\n    var m = pn.match(/^(?:proxxie%20)?test[ %-]?(\\w+)/) || pn.match(/^test-?(\\w+)/);\n    if (m && m[1] && m[1] !== 'html') testType = m[1].replace(/\\.html$/, '');\n    if (!testType && (pn === 'test.html' || pn === 'proxxie test.html' || pn === 'proxxie%20test.html')) testType = 'ocean-x';\n    if (!testType && (pn === 'tests.html' || pn === 'proxxie tests.html' || pn === 'proxxie%20tests.html')) testType = 'landing';\n  }\n  window.__proxxie_page_type = pageType;\n  window.__proxxie_test_type = testType;\n\n  function send(name, props) {\n    if (window.trackEvent) {\n      var p = props || {};\n      p.page_type = pageType;\n      if (testType) p.test_type = testType;\n      window.trackEvent(name, p);\n    }\n  }\n\n  var startTime = Date.now();\n  var maxScroll = 0;\n  var scrollHit = {};\n  var timeHit = {};\n  var exitFired = false;\n\n  function onScroll() {\n    var sh = document.documentElement.scrollHeight - window.innerHeight;\n    if (sh <= 0) return;\n    var pct = (window.scrollY / sh) * 100;\n    if (pct > maxScroll) maxScroll = pct;\n    [25, 50, 75, 90, 100].forEach(function(t) {\n      if (!scrollHit[t] && pct >= t) {\n        scrollHit[t] = true;\n        send('scroll_depth', { depth: t });\n      }\n    });\n  }\n  window.addEventListener('scroll', onScroll, { passive: true });\n\n  function checkTime() {\n    var elapsed = Math.floor((Date.now() - startTime) / 1000);\n    [15, 30, 60, 120, 300].forEach(function(t) {\n      if (!timeHit[t] && elapsed >= t) {\n        timeHit[t] = true;\n        send('time_on_page', { seconds: t });\n      }\n    });\n  }\n  setInterval(checkTime, 5000);\n\n  function onMouseLeave(e) {\n    if (exitFired) return;\n    if (e.clientY < 5) {\n      exitFired = true;\n      var elapsed = Math.floor((Date.now() - startTime) / 1000);\n      send('exit_intent', { max_scroll: Math.round(maxScroll), seconds_on_page: elapsed });\n    }\n  }\n  document.addEventListener('mouseleave', onMouseLeave);\n\n  document.addEventListener('visibilitychange', function() {\n    var elapsed = Math.floor((Date.now() - startTime) / 1000);\n    if (document.hidden) send('page_hidden', { seconds_on_page: elapsed });\n    else send('page_visible', {});\n  });\n\n  window.addEventListener('beforeunload', function() {\n    var inProgress = window.__proxxie_test_in_progress;\n    if (inProgress) {\n      send('test_abandoned', {\n        question_index: inProgress.questionIndex || 0,\n        total_questions: inProgress.totalQuestions || 0,\n        completion_pct: inProgress.completionPct || 0,\n        time_total_ms: Date.now() - (inProgress.startedAt || Date.now())\n      });\n    }\n  });\n\n  // Generic CTA click tracker — captures button + a.btn + anything with data-track.\n  document.addEventListener('click', function(e) {\n    var target = e.target.closest('button, a.btn, [data-track]');\n    if (!target) return;\n    var label = (target.getAttribute('data-track') || target.textContent || '').trim().slice(0, 80);\n    if (!label) return;\n    var href = target.getAttribute('href') || null;\n    var isOutbound = false;\n    if (href && href.indexOf('http') === 0 && href.indexOf(location.hostname) === -1) isOutbound = true;\n    send('cta_click', {\n      cta_text: label,\n      cta_href: href,\n      cta_outbound: isOutbound\n    });\n  }, { capture: true });\n\n  // Page view enriched — fires once gtag has finished initial config.\n  setTimeout(function() {\n    if (window.gtag) window.gtag('event', 'page_view_enriched', { page_type: pageType, test_type: testType });\n  }, 200);\n})();\n</script>\n\n<!-- Unified event wrapper (kept for backwards compatibility — every -->",
+    ),
+
     # ----- ANALYTICS-1 (2026-05-19): wire GA4 + Microsoft Clarity -----
     # Replaces the existing provider-agnostic analytics stub (which had
     # an unconfigured PLAUSIBLE_DOMAIN and no actual GA4/Clarity tag) with:
@@ -790,6 +813,61 @@ BUNDLE_PATCHES = [
         ],
     },
 
+    # ----- ANALYTICS-3b (2026-05-19): test consent + test_started -----
+    # Patches the shared TestApp.pickPersona handler (every psychometric
+    # test page has this signature). On click:
+    #   1. Fire test_initiated (user intent)
+    #   2. Check localStorage for prior consent on this test_type
+    #   3. If no consent: show a custom modal (RGPD-compliant text + Accept/Decline)
+    #      → test_consent_shown / _granted / _declined
+    #   4. After consent: fire test_started + populate __proxxie_test_in_progress
+    #      so the engagement layer's beforeunload handler (ANALYTICS-3a) can
+    #      fire test_abandoned with accurate progress.
+    {
+        "name": "ANALYTICS-3b TestApp.pickPersona consent + tracking",
+        "needle": 'const pickPersona = (p) => { setPersona(p); setMode("test"); window.scrollTo({ top: 0, behavior: "smooth" }); };',
+        "replacements": [
+            (
+                'const pickPersona = (p) => { setPersona(p); setMode("test"); window.scrollTo({ top: 0, behavior: "smooth" }); };',
+                'const pickPersona = (p) => {\n    /* ANALYTICS-3b: test_initiated → consent gate → test_started */\n    var testType = window.__proxxie_test_type || \'unknown\';\n    var consentKey = \'proxxie_test_consent_\' + testType;\n    var hasConsent = false;\n    try { hasConsent = !!window.localStorage.getItem(consentKey); } catch(e) {}\n    if (window.trackEvent) window.trackEvent(\'test_initiated\', { test_type: testType, persona: p });\n    function startNow() {\n      setPersona(p);\n      setMode("test");\n      window.scrollTo({ top: 0, behavior: "smooth" });\n      if (window.trackEvent) window.trackEvent(\'test_started\', { test_type: testType, persona: p });\n      window.__proxxie_test_in_progress = { startedAt: Date.now(), questionIndex: 0, totalQuestions: 0, completionPct: 0, testType: testType, persona: p };\n    }\n    if (hasConsent) { startNow(); return; }\n    if (window.trackEvent) window.trackEvent(\'test_consent_shown\', { test_type: testType });\n    var overlay = document.createElement(\'div\');\n    overlay.id = \'__proxxie_test_consent\';\n    overlay.setAttribute(\'role\', \'dialog\');\n    overlay.setAttribute(\'aria-modal\', \'true\');\n    overlay.style.cssText = \'position:fixed;inset:0;z-index:99999;background:rgba(10,14,44,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px\';\n    overlay.innerHTML = \'<div style="background:#fff;border-radius:18px;padding:28px 32px;max-width:520px;font-family:Montserrat,system-ui,sans-serif;box-shadow:0 24px 60px -16px rgba(19,32,206,.28);animation:proxxieFadeIn .25s ease"><div style="font-family:Mulish,Goldplay,system-ui,sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#0A0E2C;margin-bottom:10px">Avant de commencer ce test</div><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 14px">Vos réponses sont confidentielles et stockées <strong>uniquement sur votre appareil</strong> (RGPD). Elles ne sortent jamais de votre navigateur sans votre action.</p><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 18px">En continuant, vous acceptez que vos réponses soient analysées par notre algorithme propriétaire pour générer un rapport personnalisé d\\\'orientation. <strong>Elles ne sont jamais utilisées pour entraîner un modèle d\\\'IA.</strong></p><p style="font-size:12px;color:#6B6F8C;margin:0 0 20px">Vous pourrez supprimer vos réponses à tout moment depuis votre tableau de bord.</p><div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button id="__proxxie_decline" style="background:transparent;border:1.5px solid rgba(10,14,44,.16);border-radius:99px;padding:10px 18px;font-size:13px;font-weight:600;color:#0A0E2C;cursor:pointer;font-family:inherit">Refuser</button><button id="__proxxie_accept" style="background:#FD6936;color:#fff;border:none;border-radius:99px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px -6px rgba(253,105,54,.55)">Commencer le test →</button></div></div>\';\n    document.body.appendChild(overlay);\n    document.getElementById(\'__proxxie_accept\').onclick = function() {\n      try { window.localStorage.setItem(consentKey, \'granted_\' + Date.now()); } catch(e) {}\n      if (window.trackEvent) window.trackEvent(\'test_consent_granted\', { test_type: testType });\n      overlay.remove();\n      startNow();\n    };\n    document.getElementById(\'__proxxie_decline\').onclick = function() {\n      if (window.trackEvent) window.trackEvent(\'test_consent_declined\', { test_type: testType });\n      overlay.remove();\n    };\n  };',
+            ),
+        ],
+    },
+
+    # ----- ANALYTICS-3c (2026-05-19): test_completed when reaching results -----
+    # Patches TestApp.onComplete to fire `test_completed` with total time
+    # and clear the in-progress marker so beforeunload no longer fires
+    # `test_abandoned`. Answers the founder's primary ask: which users
+    # actually go all the way through each test.
+    {
+        "name": "ANALYTICS-3c TestApp.onComplete fires test_completed",
+        "needle": 'const onComplete = (ans) => { setAnswers(ans); setResults(computeResults(ans)); setMode("results"); window.scrollTo({ top: 0, behavior: "smooth" }); };',
+        "replacements": [
+            (
+                'const onComplete = (ans) => { setAnswers(ans); setResults(computeResults(ans)); setMode("results"); window.scrollTo({ top: 0, behavior: "smooth" }); };',
+                'const onComplete = (ans) => {\n    setAnswers(ans);\n    setResults(computeResults(ans));\n    setMode("results");\n    window.scrollTo({ top: 0, behavior: "smooth" });\n    /* ANALYTICS-3c: test_completed (founder ask: who goes the distance) */\n    if (window.trackEvent) {\n      var inProgress = window.__proxxie_test_in_progress;\n      var elapsed = inProgress && inProgress.startedAt ? (Date.now() - inProgress.startedAt) : null;\n      window.trackEvent(\'test_completed\', {\n        test_type: window.__proxxie_test_type || \'unknown\',\n        total_questions: (ans || []).length,\n        time_total_ms: elapsed,\n        persona: inProgress ? inProgress.persona : null\n      });\n    }\n    window.__proxxie_test_in_progress = null;\n  };',
+            ),
+        ],
+    },
+
+    # ----- ANALYTICS-3d (2026-05-19): per-question progress tracking -----
+    # Patches TestFlowEngine.setAnswer to update __proxxie_test_in_progress
+    # on every question answered. This means the beforeunload handler (in
+    # ANALYTICS-3a) fires test_abandoned with the EXACT question index and
+    # completion percentage when the user leaves mid-test. Also fires a
+    # lightweight `test_question_answered` event (useful for finding
+    # drop-off questions).
+    {
+        "name": "ANALYTICS-3d TestFlowEngine.setAnswer progress + question_answered",
+        "needle": "const setAnswer = (val) => {\n    const next = answers.slice();\n    next[i] = val;\n    setAnswers(next);",
+        "replacements": [
+            (
+                "const setAnswer = (val) => {\n    const next = answers.slice();\n    next[i] = val;\n    setAnswers(next);",
+                "const setAnswer = (val) => {\n    const next = answers.slice();\n    next[i] = val;\n    setAnswers(next);\n    /* ANALYTICS-3d: update in-progress + fire test_question_answered */\n    try {\n      var answered = next.filter(function(a){ return a !== null; }).length;\n      if (window.__proxxie_test_in_progress) {\n        window.__proxxie_test_in_progress.questionIndex = i;\n        window.__proxxie_test_in_progress.totalQuestions = next.length;\n        window.__proxxie_test_in_progress.completionPct = Math.round((answered / next.length) * 100);\n      }\n      if (window.trackEvent) window.trackEvent('test_question_answered', {\n        test_type: window.__proxxie_test_type || 'unknown',\n        question_index: i,\n        total_questions: next.length,\n        completion_pct: Math.round((answered / next.length) * 100),\n        answer_value: val\n      });\n    } catch(e) {}",
+            ),
+        ],
+    },
+
     # ----- HOMEFIX-3 (2026-05-15): tighten gap between press bar and -----
     # "Vous êtes ici" section. The hero ends with the "Ils parlent de nous"
     # press-mention strip; the following "Vous êtes ici" section opened with
@@ -1033,12 +1111,137 @@ _ANALYTICS_BLOCK_RAW = """<!-- ANALYTICS-1: GA4 + Microsoft Clarity (Cookiebot p
 </script>
 """
 
+_ANALYTICS_3A_BLOCK_RAW = """<!-- ANALYTICS-3a: site-wide engagement layer (scroll/time/exit/clicks) -->
+<script>
+(function() {
+  if (window.__proxxieEngagementLoaded) return;
+  window.__proxxieEngagementLoaded = true;
+
+  var path = location.pathname.toLowerCase();
+  var pageType = 'other';
+  if (path === '/' || path.indexOf('/index') >= 0 || path.indexOf('/home') >= 0) pageType = 'home';
+  else if (path.indexOf('test') >= 0) pageType = 'test';
+  else if (path.indexOf('dashboard') >= 0) pageType = 'dashboard';
+  else if (path.indexOf('rapport') >= 0) pageType = 'rapport';
+  else if (path.indexOf('coach') >= 0) pageType = 'coach';
+  else if (path.indexOf('documents') >= 0) pageType = 'documents';
+  else if (path.indexOf('ressources') >= 0) pageType = 'ressources';
+  else if (path.indexOf('connexion') >= 0 || path.indexOf('login') >= 0) pageType = 'connexion';
+  else if (path.indexOf('blog') >= 0) pageType = 'blog';
+  else if (path.indexOf('guide-orientation') >= 0) pageType = 'guide';
+  else if (path.indexOf('newsletter') >= 0) pageType = 'newsletter';
+  else if (path.indexOf('cas-clients') >= 0) pageType = 'cas-clients';
+  else if (path.indexOf('carnet') >= 0) pageType = 'carnet';
+
+  var testType = null;
+  if (pageType === 'test') {
+    var pn = location.pathname.replace(/^.*\\//, '').toLowerCase();
+    var m = pn.match(/^(?:proxxie%20)?test[ %-]?(\\w+)/) || pn.match(/^test-?(\\w+)/);
+    if (m && m[1] && m[1] !== 'html') testType = m[1].replace(/\\.html$/, '');
+    if (!testType && (pn === 'test.html' || pn === 'proxxie test.html' || pn === 'proxxie%20test.html')) testType = 'ocean-x';
+    if (!testType && (pn === 'tests.html' || pn === 'proxxie tests.html' || pn === 'proxxie%20tests.html')) testType = 'landing';
+  }
+  window.__proxxie_page_type = pageType;
+  window.__proxxie_test_type = testType;
+
+  function send(name, props) {
+    if (window.trackEvent) {
+      var p = props || {};
+      p.page_type = pageType;
+      if (testType) p.test_type = testType;
+      window.trackEvent(name, p);
+    }
+  }
+
+  var startTime = Date.now();
+  var maxScroll = 0;
+  var scrollHit = {};
+  var timeHit = {};
+  var exitFired = false;
+
+  function onScroll() {
+    var sh = document.documentElement.scrollHeight - window.innerHeight;
+    if (sh <= 0) return;
+    var pct = (window.scrollY / sh) * 100;
+    if (pct > maxScroll) maxScroll = pct;
+    [25, 50, 75, 90, 100].forEach(function(t) {
+      if (!scrollHit[t] && pct >= t) {
+        scrollHit[t] = true;
+        send('scroll_depth', { depth: t });
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  function checkTime() {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    [15, 30, 60, 120, 300].forEach(function(t) {
+      if (!timeHit[t] && elapsed >= t) {
+        timeHit[t] = true;
+        send('time_on_page', { seconds: t });
+      }
+    });
+  }
+  setInterval(checkTime, 5000);
+
+  function onMouseLeave(e) {
+    if (exitFired) return;
+    if (e.clientY < 5) {
+      exitFired = true;
+      var elapsed = Math.floor((Date.now() - startTime) / 1000);
+      send('exit_intent', { max_scroll: Math.round(maxScroll), seconds_on_page: elapsed });
+    }
+  }
+  document.addEventListener('mouseleave', onMouseLeave);
+
+  document.addEventListener('visibilitychange', function() {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    if (document.hidden) send('page_hidden', { seconds_on_page: elapsed });
+    else send('page_visible', {});
+  });
+
+  window.addEventListener('beforeunload', function() {
+    var inProgress = window.__proxxie_test_in_progress;
+    if (inProgress) {
+      send('test_abandoned', {
+        question_index: inProgress.questionIndex || 0,
+        total_questions: inProgress.totalQuestions || 0,
+        completion_pct: inProgress.completionPct || 0,
+        time_total_ms: Date.now() - (inProgress.startedAt || Date.now())
+      });
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    var target = e.target.closest('button, a.btn, [data-track]');
+    if (!target) return;
+    var label = (target.getAttribute('data-track') || target.textContent || '').trim().slice(0, 80);
+    if (!label) return;
+    var href = target.getAttribute('href') || null;
+    var isOutbound = false;
+    if (href && href.indexOf('http') === 0 && href.indexOf(location.hostname) === -1) isOutbound = true;
+    send('cta_click', { cta_text: label, cta_href: href, cta_outbound: isOutbound });
+  }, { capture: true });
+
+  setTimeout(function() {
+    if (window.gtag) window.gtag('event', 'page_view_enriched', { page_type: pageType, test_type: testType });
+  }, 200);
+})();
+</script>
+"""
+
 STATIC_HTML_PATCHES = [
     {
         "name": "ANALYTICS-1-STATIC inject GA4 + Clarity into static landing pages",
         "sentinel": "<!-- ANALYTICS-1: GA4 + Microsoft Clarity",
         "old": "</head>",
         "new": _ANALYTICS_BLOCK_RAW + "</head>",
+    },
+    {
+        "name": "ANALYTICS-3a-STATIC inject engagement layer into static landing pages",
+        "sentinel": "<!-- ANALYTICS-3a: site-wide engagement layer",
+        "old": "<!-- Unified event wrapper -->",
+        "new": _ANALYTICS_3A_BLOCK_RAW + "<!-- Unified event wrapper -->",
     },
 ]
 
