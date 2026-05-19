@@ -31,6 +31,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Error sink persists across replaceWith since it's on window, not the DOM.
   window.addEventListener('error', function(e) {
+    /* Filter benign Cookiebot 4xx — per-domain configuration.js 404s
+       when a banner isn't fully published yet. Banner still works via
+       group defaults; surfacing the error in the bundle sink is noise. */
+    try {
+      var src = (e.target && e.target.src) ? e.target.src : '';
+      if (src.indexOf('cookiebot.com') >= 0 || src.indexOf('cookiebot.eu') >= 0) return;
+    } catch(_) {}
     var p = document.body || document.documentElement;
     var d = document.getElementById('__bundler_err') || p.appendChild(document.createElement('div'));
     d.id = '__bundler_err';

@@ -1295,6 +1295,25 @@ STATIC_HTML_PATCHES = [
 
     # ANALYTICS-2 mirror for static pages — same Cookiebot insertion +
     # Consent Mode flip as the CSS_PATCHES version above, but as raw HTML.
+    # ----- ANALYTICS-2-FIX (2026-05-19): silence the bundler error sink -----
+    # Cookiebot fetches a per-domain `configuration.js` that doesn't exist
+    # yet on charlesbrouss1.github.io (just-added domain) — the banner
+    # falls back to group-level defaults and still works fine, but the
+    # 404 fires a script-load error event that the outer bundler's error
+    # sink catches indiscriminately and surfaces as "[bundle] error" at
+    # the bottom of the page.
+    #
+    # Patch the sink to skip errors originating from cookiebot.com /
+    # cookiebot.eu domains. The banner keeps working; the cosmetic error
+    # toast goes away. Once the per-domain config is published in the
+    # Cookiebot dashboard, the 404 also disappears — this patch is
+    # belt-and-braces protection against any future cookiebot 4xx.
+    {
+        "name": "ANALYTICS-2-FIX skip Cookiebot 4xx in bundler error sink",
+        "sentinel": "/* Filter benign Cookiebot 4xx",
+        "old": "window.addEventListener('error', function(e) {\n    var p = document.body || document.documentElement;",
+        "new": "window.addEventListener('error', function(e) {\n    /* Filter benign Cookiebot 4xx — per-domain configuration.js 404s\n       when a banner isn't fully published yet. Banner still works via\n       group defaults; surfacing the error in the bundle sink is noise. */\n    try {\n      var src = (e.target && e.target.src) ? e.target.src : '';\n      if (src.indexOf('cookiebot.com') >= 0 || src.indexOf('cookiebot.eu') >= 0) return;\n    } catch(_) {}\n    var p = document.body || document.documentElement;",
+    },
     {
         "name": "ANALYTICS-2-STATIC wire Cookiebot consent banner into static landing pages",
         "sentinel": '<!-- ANALYTICS-2: Cookiebot',
