@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comparaison parent ↔ ado — Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9;
+      --c-ink: #0A0E2C;
+      --c-ink-2: #2B2E45;
+      --c-muted: rgba(10, 14, 44, 0.55);
+      --c-line: rgba(10, 14, 44, 0.10);
+      --c-blue: #1320CE;
+      --c-blue-2: #487AFF;
+      --c-orange: #FD6936;
+      --c-yellow: #F5EB3F;
+      --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--c-cream-light);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--c-ink);
+      line-height: 1.5;
+    }
+    .shell { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    /* Header (mimics dashboard) */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247, 242, 233, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(10, 14, 44, 0.06);
+    }
+    .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; text-decoration: none; color: var(--c-ink); display: flex; align-items: center; gap: 8px; }
+    .logo-mark { width: 26px; height: 26px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 14px; }
+    nav.topnav { display: flex; gap: 24px; align-items: center; font-size: 14px; }
+    nav.topnav a { text-decoration: none; color: var(--c-muted); font-weight: 500; }
+    nav.topnav a.active { color: var(--c-ink); font-weight: 600; }
+    .role-pill { padding: 6px 12px; border-radius: 999px; background: rgba(72,122,255,.10); color: var(--c-blue-2); font-size: 12px; font-weight: 600; }
+
+    /* Hero */
+    .hero { padding: 48px 0 24px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow .dot { width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    h1.title { font-family: var(--font-display); font-size: 44px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 760px; line-height: 1.1; }
+    .lead { font-size: 17px; color: var(--c-muted); max-width: 700px; line-height: 1.55; }
+
+    /* Pair card */
+    .pair {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+      margin: 32px 0;
+    }
+    .person-card {
+      background: white; border: 1px solid var(--c-line); border-radius: 20px;
+      padding: 24px; position: relative;
+    }
+    .person-card.parent { border-top: 3px solid var(--c-blue); }
+    .person-card.enfant { border-top: 3px solid var(--c-orange); }
+    .person-card .who { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: white; font-size: 16px; }
+    .avatar.p { background: var(--c-blue); }
+    .avatar.e { background: var(--c-orange); }
+    .who .meta { font-size: 12px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .who .name { font-family: var(--font-display); font-size: 22px; font-weight: 600; line-height: 1.1; }
+    .scores { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 18px; }
+    .scores .trait { text-align: center; }
+    .scores .label { font-size: 10px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .scores .val { font-family: var(--font-num); font-size: 22px; font-weight: 700; color: var(--c-ink); }
+
+    /* Radar comparison */
+    .radar-section {
+      background: white; border: 1px solid var(--c-line); border-radius: 24px;
+      padding: 36px; margin-bottom: 32px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;
+    }
+    @media (max-width: 900px) {
+      .pair, .radar-section { grid-template-columns: 1fr; }
+    }
+    .radar-svg { width: 100%; max-width: 520px; margin: 0 auto; display: block; aspect-ratio: 1 / 1; }
+    .radar-legend { display: flex; gap: 18px; align-items: center; justify-content: center; margin-top: 10px; font-size: 12px; color: var(--c-muted); }
+    .legend-dot { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; }
+    .legend-dot.p::before { background: var(--c-blue); }
+    .legend-dot.e::before { background: var(--c-orange); }
+    .radar-side h2 { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .radar-side p { color: var(--c-muted); font-size: 14px; }
+
+    /* Trait deltas */
+    .deltas-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 28px;
+    }
+    @media (max-width: 720px) { .deltas-grid { grid-template-columns: repeat(2, 1fr); } }
+    .delta {
+      padding: 16px; background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 14px;
+    }
+    .delta .name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); margin-bottom: 8px; }
+    .delta .vals { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+    .delta .v { font-family: var(--font-num); font-size: 18px; font-weight: 700; }
+    .delta .v.p { color: var(--c-blue); }
+    .delta .v.e { color: var(--c-orange); }
+    .delta .v.diff { font-size: 14px; color: var(--c-muted); }
+    .delta .takeaway { font-size: 12px; color: var(--c-ink-2); line-height: 1.45; }
+    .delta.high { border-color: rgba(253,105,54,.35); background: rgba(253,105,54,.05); }
+
+    /* Tests comparison list */
+    .tests-list {
+      background: white; border: 1px solid var(--c-line); border-radius: 20px;
+      padding: 28px; margin-bottom: 32px;
+    }
+    .tests-list h3 { font-family: var(--font-display); font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+    .tests-list .lead-2 { color: var(--c-muted); font-size: 14px; margin-bottom: 22px; }
+    table.tests { width: 100%; border-collapse: collapse; }
+    table.tests th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); font-weight: 600; padding: 10px 8px; border-bottom: 1px solid var(--c-line); }
+    table.tests td { padding: 12px 8px; border-bottom: 1px solid rgba(10,14,44,.04); font-size: 14px; }
+    table.tests td.test-name { font-weight: 600; }
+    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .pill.done { background: rgba(34,160,107,.10); color: var(--c-green); }
+    .pill.wip  { background: rgba(253,105,54,.10); color: var(--c-orange); }
+    .pill.todo { background: rgba(72,122,255,.08); color: var(--c-blue-2); }
+
+    /* Conversation prompts */
+    .prompts {
+      background: linear-gradient(135deg, #1320CE 0%, #0A0E2C 100%);
+      color: white; border-radius: 24px; padding: 36px; margin-bottom: 40px;
+      position: relative; overflow: hidden;
+    }
+    .prompts::before {
+      content: ""; position: absolute; top: -60px; right: -60px;
+      width: 240px; height: 240px; border-radius: 50%; background: rgba(245,235,63,.10);
+    }
+    .prompts h3 { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; position: relative; z-index: 1; }
+    .prompts p.lead-3 { color: rgba(255,255,255,.75); font-size: 14px; max-width: 620px; margin-bottom: 22px; position: relative; z-index: 1; }
+    .prompt-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; position: relative; z-index: 1; }
+    @media (max-width: 720px) { .prompt-list { grid-template-columns: 1fr; } }
+    .prompt {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px; padding: 18px;
+    }
+    .prompt .icon { font-size: 22px; margin-bottom: 8px; }
+    .prompt .q { font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+    /* CTA empty-state */
+    .empty {
+      background: white; border: 1px dashed rgba(10,14,44,.18); border-radius: 24px;
+      padding: 48px; text-align: center; margin: 32px 0 48px;
+    }
+    .empty h3 { font-family: var(--font-display); font-size: 28px; font-weight: 600; margin-bottom: 10px; }
+    .empty p { color: var(--c-muted); max-width: 560px; margin: 0 auto 20px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: transform .15s, box-shadow .15s; }
+    .btn-orange { background: var(--c-orange); color: white; }
+    .btn-orange:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253,105,54,.30); }
+    .btn-ghost { background: transparent; color: var(--c-ink); border: 1px solid var(--c-line); }
+
+    footer.foot {
+      border-top: 1px solid var(--c-line); padding: 32px 0;
+      font-size: 12px; color: var(--c-muted);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    footer.foot a { text-decoration: none; color: inherit; }
+
+    /* Empty-state condition: hide comparison contents when no parent data */
+    body.no-parent .comparison-content,
+    body.no-enfant .comparison-content { display: none; }
+    body:not(.no-parent):not(.no-enfant) .empty { display: none; }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Home.html">
+        <span class="logo-mark">P</span>proxxie
+      </a>
+      <nav class="topnav">
+        <a href="Proxxie Dashboard.html">Tableau de bord</a>
+        <a href="Proxxie Documents.html">Documents</a>
+        <a href="Proxxie Rapport.html">Rapport</a>
+        <a href="Proxxie Tests.html">Tests</a>
+        <a href="#" class="active">Comparaison</a>
+      </nav>
+      <span class="role-pill" id="rolePill">Parent · Arthur</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow"><span class="dot"></span>Comparaison parent ↔ ado</span>
+      <h1 class="title" id="heroTitle">Là où vos profils convergent, là où ils s'éloignent.</h1>
+      <p class="lead" id="heroLead">Les deux profils OCEAN-X côte à côte, trait par trait. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation.</p>
+    </div>
+  </section>
+
+  <main class="shell">
+
+    <!-- Empty state if one side hasn't done OCEAN-X -->
+    <div class="empty" id="emptyState" style="display:none">
+      <span class="eyebrow"><span class="dot"></span>En attente</span>
+      <h3 id="emptyTitle">Il manque encore un profil</h3>
+      <p id="emptyText"></p>
+      <a class="btn btn-orange" href="Proxxie Dashboard.html#invitation">Inviter →</a>
+    </div>
+
+    <div class="comparison-content">
+
+      <!-- Pair quick view -->
+      <div class="pair">
+        <div class="person-card parent">
+          <div class="who">
+            <div class="avatar p">J</div>
+            <div>
+              <div class="meta">Parent</div>
+              <div class="name">Julie M.</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--c-muted);">Profil détecté · <strong style="color:var(--c-ink)">Coordinatrice empathique</strong></div>
+          <div class="scores">
+            <div class="trait"><div class="label">Ouv.</div><div class="val">72</div></div>
+            <div class="trait"><div class="label">Cons.</div><div class="val">81</div></div>
+            <div class="trait"><div class="label">Extr.</div><div class="val">64</div></div>
+            <div class="trait"><div class="label">Conv.</div><div class="val">86</div></div>
+            <div class="trait"><div class="label">Stab.</div><div class="val">70</div></div>
+          </div>
+        </div>
+        <div class="person-card enfant">
+          <div class="who">
+            <div class="avatar e">A</div>
+            <div>
+              <div class="meta">Ado</div>
+              <div class="name">Arthur · Terminale</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--c-muted);">Profil détecté · <strong style="color:var(--c-ink)">Exploratrice analytique</strong></div>
+          <div class="scores">
+            <div class="trait"><div class="label">Ouv.</div><div class="val">88</div></div>
+            <div class="trait"><div class="label">Cons.</div><div class="val">62</div></div>
+            <div class="trait"><div class="label">Extr.</div><div class="val">48</div></div>
+            <div class="trait"><div class="label">Conv.</div><div class="val">71</div></div>
+            <div class="trait"><div class="label">Stab.</div><div class="val">76</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radar -->
+      <section class="radar-section">
+        <div class="radar-side">
+          <h2 id="radarTitle">5 traits, 2 angles</h2>
+          <p id="radarLead">Le tracé bleu, c'est le profil parent. L'orange, l'ado. Les écarts les plus larges sont vos endroits de différence cognitive, pas vos endroits de conflit.</p>
+          <div class="radar-legend">
+            <span class="legend-dot p">Parent · Julie</span>
+            <span class="legend-dot e">Ado · Arthur</span>
+          </div>
+        </div>
+        <svg class="radar-svg" viewBox="-260 -260 520 520" aria-label="Radar OCEAN-X parent vs ado">
+          <!-- Grid -->
+          <g fill="none" stroke="rgba(10,14,44,.08)" stroke-width="1">
+            <polygon id="grid1" points=""></polygon>
+            <polygon id="grid2" points=""></polygon>
+            <polygon id="grid3" points=""></polygon>
+            <polygon id="grid4" points=""></polygon>
+            <polygon id="grid5" points=""></polygon>
+          </g>
+          <!-- Axes & labels -->
+          <g id="axesLayer"></g>
+          <!-- Parent polygon -->
+          <polygon id="parentPoly" fill="rgba(19,32,206,.18)" stroke="#1320CE" stroke-width="2.5"></polygon>
+          <!-- Enfant polygon -->
+          <polygon id="enfantPoly" fill="rgba(253,105,54,.18)" stroke="#FD6936" stroke-width="2.5"></polygon>
+          <!-- Points -->
+          <g id="pointsLayer"></g>
+        </svg>
+      </section>
+
+      <!-- Deltas per trait -->
+      <h2 style="font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:16px;">Trait par trait</h2>
+      <div class="deltas-grid" id="deltasGrid"></div>
+
+      <!-- Tests comparison list -->
+      <div class="tests-list" style="margin-top:32px;">
+        <h3>Tous les tests</h3>
+        <p class="lead-2" id="testsLead">Sur les 11 tests psychométriques disponibles, voici qui a passé quoi.</p>
+        <table class="tests">
+          <thead>
+            <tr><th>Test</th><th>Parent · Julie</th><th>Ado · Arthur</th><th>Comparaison</th></tr>
+          </thead>
+          <tbody id="testsBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Conversation prompts -->
+      <section class="prompts">
+        <h3 id="promptsTitle">3 questions à se poser ensemble</h3>
+        <p class="lead-3" id="promptsLead">Les écarts ci-dessus suggèrent quelques sujets à explorer. Pas pour trancher · pour comprendre.</p>
+        <div class="prompt-list" id="promptList"></div>
+      </section>
+
+    </div><!-- /comparison-content -->
+  </main>
+
+  <footer class="foot shell">
+    <span>© 2026 Proxxie</span>
+    <div style="display:flex;gap:18px"><a href="#">Politique</a><a href="#">CGV</a><a href="#">Aide</a></div>
+  </footer>
+
+  <script>
+    (function () {
+      // Detect role from URL or localStorage
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+
+      // Localize header copy
+      document.getElementById("rolePill").textContent = isEnfant ? "Ado · Arthur" : "Parent · Arthur";
+      if (isEnfant) {
+        document.getElementById("heroTitle").textContent = "Là où vos profils convergent, là où ils s'éloignent.";
+        document.getElementById("heroLead").textContent = "Vos deux profils OCEAN-X côte à côte, trait par trait. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation avec ton parent.";
+      }
+
+      // Demo data — both sides have done OCEAN-X
+      var TRAITS = [
+        { key: "O", label: "Ouverture",      parent: 72, enfant: 88, descShort: "Curiosité, créativité, ouverture à la nouveauté." },
+        { key: "C", label: "Conscienciosité", parent: 81, enfant: 62, descShort: "Organisation, persévérance, planification." },
+        { key: "E", label: "Extraversion",   parent: 64, enfant: 48, descShort: "Énergie sociale, recherche de stimulation." },
+        { key: "A", label: "Convivialité",   parent: 86, enfant: 71, descShort: "Coopération, empathie, confiance." },
+        { key: "N", label: "Stabilité",      parent: 70, enfant: 76, descShort: "Régulation émotionnelle, calme sous stress." }
+      ];
+
+      // Build radar SVG
+      function poly(values, scale) {
+        var R = 200; // radius
+        var pts = [];
+        for (var i = 0; i < values.length; i++) {
+          var angle = (-Math.PI / 2) + (i * 2 * Math.PI / values.length);
+          var r = R * (values[i] / 100) * (scale || 1);
+          pts.push((r * Math.cos(angle)).toFixed(1) + "," + (r * Math.sin(angle)).toFixed(1));
+        }
+        return pts.join(" ");
+      }
+      function gridPoly(scale) {
+        var pts = [];
+        for (var i = 0; i < TRAITS.length; i++) {
+          var angle = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
+          var r = 200 * scale;
+          pts.push((r * Math.cos(angle)).toFixed(1) + "," + (r * Math.sin(angle)).toFixed(1));
+        }
+        return pts.join(" ");
+      }
+      for (var i = 1; i <= 5; i++) {
+        document.getElementById("grid" + i).setAttribute("points", gridPoly(i / 5));
+      }
+      // Axes + labels
+      var axes = document.getElementById("axesLayer");
+      for (var i = 0; i < TRAITS.length; i++) {
+        var a = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
+        var x = 200 * Math.cos(a), y = 200 * Math.sin(a);
+        var lx = 230 * Math.cos(a), ly = 230 * Math.sin(a);
+        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", 0); line.setAttribute("y1", 0);
+        line.setAttribute("x2", x.toFixed(1)); line.setAttribute("y2", y.toFixed(1));
+        line.setAttribute("stroke", "rgba(10,14,44,.06)");
+        line.setAttribute("stroke-width", "1");
+        axes.appendChild(line);
+        var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", lx.toFixed(1)); text.setAttribute("y", ly.toFixed(1));
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("font-weight", "600");
+        text.setAttribute("fill", "#0A0E2C");
+        text.setAttribute("font-family", "Inter, sans-serif");
+        text.textContent = TRAITS[i].label;
+        axes.appendChild(text);
+      }
+      document.getElementById("parentPoly").setAttribute("points", poly(TRAITS.map(function(t){return t.parent;})));
+      document.getElementById("enfantPoly").setAttribute("points", poly(TRAITS.map(function(t){return t.enfant;})));
+
+      // Points dots
+      var pl = document.getElementById("pointsLayer");
+      TRAITS.forEach(function (t, i) {
+        var a = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
+        ["parent", "enfant"].forEach(function (k) {
+          var r = 200 * (t[k] / 100);
+          var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c.setAttribute("cx", (r * Math.cos(a)).toFixed(1));
+          c.setAttribute("cy", (r * Math.sin(a)).toFixed(1));
+          c.setAttribute("r", "5");
+          c.setAttribute("fill", k === "parent" ? "#1320CE" : "#FD6936");
+          c.setAttribute("stroke", "white");
+          c.setAttribute("stroke-width", "2");
+          pl.appendChild(c);
+        });
+      });
+
+      // Deltas grid
+      var dg = document.getElementById("deltasGrid");
+      function takeaway(t) {
+        var d = t.enfant - t.parent;
+        var who = isEnfant ? "toi" : "votre ado";
+        var your = isEnfant ? "ton" : "votre";
+        var youHave = isEnfant ? "tu as" : "vous avez";
+        if (Math.abs(d) >= 15) {
+          if (t.key === "O" && d > 0) return "Côté " + who + ", la curiosité est très forte. " + (isEnfant ? "Bon levier pour proposer de nouvelles pistes d'orientation." : "Bon levier pour proposer de nouvelles pistes d'orientation à votre ado.");
+          if (t.key === "C" && d < 0) return (isEnfant ? "Tu fonctionnes par sprints plus que par plan structuré. À canaliser, pas à blâmer." : "Votre ado fonctionne par sprints plus que par plan structuré. À canaliser, pas à blâmer.");
+          if (t.key === "E" && d < 0) return (isEnfant ? "Tu charges tes batteries en solo. Des formations avec gros effectifs peuvent fatiguer." : "Votre ado se ressource en solo. Méfiance avec les formations à très gros effectifs.");
+          if (t.key === "A" && d < 0) return (isEnfant ? "Tu négocies plus que tu n'acquiesces. Atout pour des métiers où il faut tenir position." : "Votre ado négocie plus qu'il n'acquiesce. Atout pour des métiers où il faut tenir position.");
+          if (t.key === "N" && d > 0) return (isEnfant ? "Tu encaisses bien le stress. Les filières exigeantes (prépa, etc.) restent jouables." : "Votre ado encaisse bien le stress. Les filières exigeantes (prépa, etc.) restent jouables.");
+          return "Écart marqué sur ce trait — à explorer en RDV coach.";
+        }
+        if (Math.abs(d) >= 5) return "Proche, avec une nuance — utile à connaître.";
+        return "Très proche. " + (isEnfant ? "Vous vous comprenez instinctivement sur ce point." : "Votre ado et vous vous comprenez instinctivement sur ce point.");
+      }
+      TRAITS.forEach(function (t) {
+        var d = t.enfant - t.parent;
+        var sign = d > 0 ? "+" : d < 0 ? "" : "·";
+        var isHigh = Math.abs(d) >= 15;
+        var el = document.createElement("div");
+        el.className = "delta" + (isHigh ? " high" : "");
+        el.innerHTML =
+          '<div class="name">' + t.label + '</div>' +
+          '<div class="vals">' +
+            '<span class="v p" title="Parent">' + t.parent + '</span>' +
+            '<span class="v diff">' + (d === 0 ? "·" : sign + d) + '</span>' +
+            '<span class="v e" title="Ado">' + t.enfant + '</span>' +
+          '</div>' +
+          '<div class="takeaway">' + takeaway(t) + '</div>';
+        dg.appendChild(el);
+      });
+
+      // Tests comparison list
+      var TESTS = [
+        { id: "big5",    name: "Big Five / OCEAN-X", parent: "done", enfant: "done" },
+        { id: "riasec",  name: "RIASEC",             parent: "todo", enfant: "wip"  },
+        { id: "mbti",    name: "MBTI",               parent: "done", enfant: "todo" },
+        { id: "pcm",     name: "PCM",                parent: "todo", enfant: "todo" },
+        { id: "hpi",     name: "HPI",                parent: "todo", enfant: "done" },
+        { id: "tdah",    name: "TDAH",               parent: "todo", enfant: "todo" },
+        { id: "dys",     name: "DYS",                parent: "todo", enfant: "todo" },
+        { id: "autisme", name: "Autisme",            parent: "todo", enfant: "todo" },
+        { id: "anxiete", name: "Anxiété",            parent: "todo", enfant: "todo" },
+        { id: "besoins", name: "Besoins",            parent: "todo", enfant: "todo" },
+        { id: "drivers", name: "Drivers",            parent: "done", enfant: "todo" },
+        { id: "valeurs", name: "Valeurs",            parent: "done", enfant: "wip"  }
+      ];
+      var labels = { done: "Passé", wip: "En cours", todo: "À passer" };
+      var tb = document.getElementById("testsBody");
+      TESTS.forEach(function (t) {
+        var both = t.parent === "done" && t.enfant === "done";
+        var compare = both ? "Comparable ✓" :
+          (t.parent === "done" ? (isEnfant ? "Invite-toi à passer ce test" : "Ado pas encore passé") :
+          (t.enfant === "done" ? (isEnfant ? "Ton parent ne l'a pas passé" : "Vous ne l'avez pas passé") :
+          "Aucun des deux"));
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          '<td class="test-name">' + t.name + '</td>' +
+          '<td><span class="pill ' + t.parent + '">' + labels[t.parent] + '</span></td>' +
+          '<td><span class="pill ' + t.enfant + '">' + labels[t.enfant] + '</span></td>' +
+          '<td style="color:var(--c-muted);font-size:13px;">' + compare + '</td>';
+        tb.appendChild(tr);
+      });
+
+      // Conversation prompts
+      var PROMPTS_PARENT = [
+        { icon: "🎯", q: "Arthur a +16 en Ouverture · quel projet « pas évident » mérite qu'il l'explore ?" },
+        { icon: "📐", q: "Vous avez +19 en Conscienciosité · comment l'aider à structurer sans étouffer son rythme ?" },
+        { icon: "🔋", q: "Il a -16 en Extraversion · une filière avec petits effectifs serait-elle plus juste ?" }
+      ];
+      var PROMPTS_ENFANT = [
+        { icon: "🎯", q: "+16 en Ouverture côté toi · de quel projet bizarre tu rêves que tu n'oses pas dire ?" },
+        { icon: "📐", q: "Ton parent score +19 en Conscienciosité · qu'est-ce qui t'aide à structurer sans étouffer ?" },
+        { icon: "🔋", q: "-16 en Extraversion · une filière à petit effectif te conviendrait-elle mieux ?" }
+      ];
+      var pl2 = document.getElementById("promptList");
+      var promptsData = isEnfant ? PROMPTS_ENFANT : PROMPTS_PARENT;
+      promptsData.forEach(function (p) {
+        var el = document.createElement("div");
+        el.className = "prompt";
+        el.innerHTML = '<div class="icon">' + p.icon + '</div><div class="q">' + p.q + '</div>';
+        pl2.appendChild(el);
+      });
+
+      // Empty-state demo override via ?missing=parent|enfant
+      var missing = new URLSearchParams(location.search).get("missing");
+      if (missing === "parent" || missing === "enfant") {
+        document.body.classList.add("no-" + missing);
+        var es = document.getElementById("emptyState");
+        es.style.display = "block";
+        if (missing === "parent") {
+          document.getElementById("emptyTitle").textContent = isEnfant ? "Ton parent n'a pas encore passé OCEAN-X" : "Le parent n'a pas encore passé OCEAN-X";
+          document.getElementById("emptyText").textContent = isEnfant
+            ? "Invite ton parent à passer le Big Five pour qu'on puisse comparer. Quelques minutes, et la conversation s'ouvre."
+            : "Invitez l'autre parent à passer le Big Five pour comparer. Quelques minutes, et la conversation s'ouvre.";
+        } else {
+          document.getElementById("emptyTitle").textContent = isEnfant ? "Tu n'as pas encore passé OCEAN-X" : "Votre ado n'a pas encore passé OCEAN-X";
+          document.getElementById("emptyText").textContent = isEnfant
+            ? "Passe le Big Five (10 min) pour débloquer la comparaison avec ton parent."
+            : "Demandez à votre ado de passer le Big Five (10 min) pour débloquer la comparaison.";
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>
