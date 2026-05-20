@@ -108,6 +108,23 @@ const ReengagementBanner = () => {
 };
 
 /* ---------------- GamificationPanel (ado only) ---------------- */
+/* Pick the next test to recommend · first 'wip' if any, else first 'todo'.
+   Reads TESTS_LIST (defined in _patch_tests_panel.py, available at module scope
+   because both patches inject into the same asset). */
+const _proxxieNextTest = () => {
+  if (typeof TESTS_LIST === "undefined") return null;
+  const getStatus = (t) => {
+    try { return localStorage.getItem("proxxie.tests." + t.id) || t.def; } catch (e) { return t.def; }
+  };
+  let wip = null, todo = null;
+  for (const t of TESTS_LIST) {
+    const s = getStatus(t);
+    if (s === "wip" && !wip) wip = t;
+    else if (s === "todo" && !todo) todo = t;
+  }
+  return wip || todo;
+};
+
 const GamificationPanel = () => {
   const role = useProxxieRole();
   const [xp] = React.useState(_proxxieGetXP);
@@ -116,6 +133,7 @@ const GamificationPanel = () => {
   const { cur, next } = _proxxieLevel(xp);
   const progress = next ? Math.min(100, Math.round(((xp - cur.min) / (next.min - cur.min)) * 100)) : 100;
   const toGo = next ? next.min - xp : 0;
+  const nextTest = _proxxieNextTest();
 
   return (
     <section style={{ margin: "0 auto 24px", padding: "0 24px", maxWidth: 1280 }}>
@@ -181,6 +199,35 @@ const GamificationPanel = () => {
             </div>
           </div>
         </div>
+
+        {/* Prochain palier · next concrete action */}
+        {nextTest && (
+          <div style={{
+            position: "relative", zIndex: 1, marginTop: 22, padding: "18px 20px",
+            borderRadius: 16, background: "rgba(255,255,255,.08)",
+            border: "1px solid rgba(245,235,63,.30)",
+            display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap",
+          }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: 12, background: "rgba(245,235,63,.18)",
+              display: "grid", placeItems: "center", fontSize: 22, flexShrink: 0,
+            }}>🎯</div>
+            <div style={{ flex: 1, minWidth: 240 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#F5EB3F", marginBottom: 4 }}>
+                Prochain palier
+              </div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: "white", marginBottom: 4 }}>
+                Passe {nextTest.title} pour +50 XP
+              </div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", lineHeight: 1.4 }}>
+                {nextTest.desc}
+              </div>
+            </div>
+            <a href={nextTest.href} className="btn btn-orange" style={{ padding: "12px 20px", fontSize: 14, borderRadius: 12, whiteSpace: "nowrap", textDecoration: "none" }}>
+              Passer ce test →
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -450,8 +497,10 @@ def patch_manifest_asset(html: str, uuid: str) -> tuple:
     return new_html, f"asset patched ({len(src)} -> {len(new_src)} chars)"
 
 
+# Stop at either the next /* __proxxie_* marker (if another patch was
+# layered on top) or at `const Dashboard`, whichever comes first.
 STRIP_RE = re.compile(
-    r'\n/\* __proxxie_dashboard_v2__ \*/.*?(?=\nconst Dashboard = \(\) =>)',
+    r'\n/\* __proxxie_dashboard_v2__ \*/.*?(?=\n(?:/\* __proxxie_|const Dashboard = \(\) =>))',
     flags=re.S,
 )
 

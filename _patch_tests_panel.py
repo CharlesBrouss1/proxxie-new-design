@@ -55,7 +55,7 @@ const useProxxieRole = () => {
   }, []);
 };
 
-const TestStatusCard = ({ t, role }) => {
+const TestStatusCard = ({ t, role, suggested }) => {
   const status = (() => {
     try { return localStorage.getItem("proxxie.tests." + t.id) || t.def; } catch (e) { return t.def; }
   })();
@@ -64,34 +64,48 @@ const TestStatusCard = ({ t, role }) => {
            : status === "wip"  ? "Reprendre"
            : (role === "enfant" ? "Commencer" : "Lancer le test");
   const ctaColor = status === "done" ? "#22A06B" : "#1320CE";
+  const baseBorder = suggested ? "1.5px solid #F5EB3F" : "1px solid rgba(10,14,44,0.08)";
+  const baseShadow = suggested ? "0 6px 22px rgba(245,235,63,.30)" : "none";
   return (
     <a
       href={t.href}
       data-test-id={t.id}
       style={{
         display: "flex", flexDirection: "column", gap: 10, padding: 18,
-        background: "#fff", border: "1px solid rgba(10,14,44,0.08)", borderRadius: 16,
+        background: suggested ? "linear-gradient(180deg, #FFFCEC 0%, #ffffff 60%)" : "#fff",
+        border: baseBorder, borderRadius: 16,
         textDecoration: "none", color: "inherit",
+        boxShadow: baseShadow,
+        position: "relative",
         transition: "transform .15s ease, box-shadow .15s ease, border-color .15s ease",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-2px)";
-        e.currentTarget.style.borderColor = "#487AFF";
-        e.currentTarget.style.boxShadow = "0 4px 14px rgba(19,32,206,.06)";
+        if (!suggested) e.currentTarget.style.borderColor = "#487AFF";
+        e.currentTarget.style.boxShadow = suggested ? "0 8px 28px rgba(245,235,63,.40)" : "0 4px 14px rgba(19,32,206,.06)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.borderColor = "rgba(10,14,44,0.08)";
-        e.currentTarget.style.boxShadow = "none";
+        if (!suggested) e.currentTarget.style.borderColor = "rgba(10,14,44,0.08)";
+        e.currentTarget.style.boxShadow = baseShadow;
       }}
     >
+      {suggested && (
+        <span style={{
+          position: "absolute", top: -10, left: 14,
+          padding: "3px 10px", borderRadius: 999,
+          background: "#F5EB3F", color: "#0A0E2C",
+          fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+          boxShadow: "0 2px 6px rgba(245,235,63,.4)",
+        }}>★ Suggéré pour la suite</span>
+      )}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#487AFF" }}>{t.title}</span>
         <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 999, background: sb.bg, color: sb.color }}>{sb.label}</span>
       </div>
       <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.3, color: "#0A0E2C" }}>{t.title}</div>
       <div style={{ fontSize: 12, color: "rgba(10,14,44,.55)", flex: 1, lineHeight: 1.45 }}>{t.desc}</div>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: ctaColor, marginTop: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: suggested ? "#FD6936" : ctaColor, marginTop: 4 }}>
         {cta} →
       </div>
     </a>
@@ -101,15 +115,28 @@ const TestStatusCard = ({ t, role }) => {
 const TestsPanel = () => {
   const role = useProxxieRole();
   const isEnfant = role === "enfant";
-  const h2 = isEnfant ? "11 tests pour creuser ton profil" : "11 tests pour creuser le profil de votre ado";
+  /* Pick the first non-done test as "suggested next". 'wip' wins over 'todo'. */
+  const getStatus = (t) => {
+    try { return localStorage.getItem("proxxie.tests." + t.id) || t.def; } catch (e) { return t.def; }
+  };
+  let suggestedId = null;
+  for (const t of TESTS_LIST) { if (getStatus(t) === "wip") { suggestedId = t.id; break; } }
+  if (!suggestedId) for (const t of TESTS_LIST) { if (getStatus(t) === "todo") { suggestedId = t.id; break; } }
+  const suggested = TESTS_LIST.find((t) => t.id === suggestedId);
+
+  const h2 = isEnfant ? "Continue à creuser ton profil" : "Continuez à creuser le profil de votre ado";
   const sub = isEnfant
-    ? "Tests scientifiques en complément du Big Five : orientation, apprentissage, fonctionnement, bien-être. Passe-les à ton rythme, les résultats arrivent dans ton tableau de bord."
-    : "Tests scientifiques en complément du Big Five : orientation, apprentissage, fonctionnement, bien-être. Votre ado peut les passer à son rythme, et vous pouvez aussi les passer de votre côté pour comparer.";
+    ? (suggested
+        ? "Ton prochain test suggéré · " + suggested.title + ". 11 tests scientifiques au total, en complément du Big Five. Plus tu en passes, plus ton rapport devient précis."
+        : "Tu as passé tous les tests, bravo. Tu peux revenir compléter d'autres pistes.")
+    : (suggested
+        ? "Prochain test suggéré pour votre ado · " + suggested.title + ". 11 tests scientifiques au total, en complément du Big Five. Plus il/elle en passe, plus le rapport devient précis."
+        : "Votre ado a passé tous les tests. Vous pouvez les passer aussi pour comparer.");
   return (
     <section style={{ margin: "0 auto 32px", padding: "0 24px", maxWidth: 1280 }}>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, marginBottom: 18, flexWrap: "wrap" }}>
-        <div style={{ maxWidth: 640 }}>
-          <span className="eyebrow"><span className="dot"></span>Tests psychométriques</span>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, marginBottom: 22, flexWrap: "wrap" }}>
+        <div style={{ maxWidth: 680 }}>
+          <span className="eyebrow"><span className="dot"></span>Aller plus loin · tests psychométriques</span>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, letterSpacing: "-0.02em", marginTop: 10, marginBottom: 6, color: "#0A0E2C" }}>
             {h2}
           </h2>
@@ -117,12 +144,19 @@ const TestsPanel = () => {
             {sub}
           </p>
         </div>
-        <a href="Proxxie Tests.html" style={{ fontSize: 13, fontWeight: 600, color: "#1320CE", textDecoration: "none", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(10,14,44,0.12)", background: "#fff", whiteSpace: "nowrap" }}>
-          Voir tous les tests →
-        </a>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {suggested && (
+            <a href={suggested.href} className="btn btn-orange" style={{ padding: "12px 18px", fontSize: 14, borderRadius: 12, whiteSpace: "nowrap", textDecoration: "none" }}>
+              {isEnfant ? "Passer " : "Lancer "}{suggested.title} →
+            </a>
+          )}
+          <a href="Proxxie Tests.html" style={{ fontSize: 13, fontWeight: 600, color: "#1320CE", textDecoration: "none", padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(10,14,44,0.12)", background: "#fff", whiteSpace: "nowrap" }}>
+            Voir tous
+          </a>
+        </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
-        {TESTS_LIST.map((t) => <TestStatusCard key={t.id} t={t} role={role} />)}
+        {TESTS_LIST.map((t) => <TestStatusCard key={t.id} t={t} role={role} suggested={t.id === suggestedId} />)}
       </div>
     </section>
   );
@@ -148,10 +182,25 @@ def extract_template(html: str):
     return start_m.end(), last_close, json.loads(raw.strip())
 
 
+# Match the tests_panel block but STOP at either the next /* __proxxie_*
+# marker (if dashboard_v2 was layered on top) or 'const Dashboard'.
+STRIP_BLOCK_RE = re.compile(
+    r'\n/\* __proxxie_tests_panel_jsx_v1__ \*/.*?(?=\n(?:/\* __proxxie_|const Dashboard = \(\) =>))',
+    flags=re.S,
+)
+
+
+def strip_v1(src: str) -> str:
+    """Reverse the JSX patch so we can re-apply with updated code."""
+    src = STRIP_BLOCK_RE.sub("", src)
+    src = src.replace(JSX_INSERTION, JSX_ANCHOR, 1)
+    return src
+
+
 def patch_manifest_asset(html: str, uuid: str) -> tuple:
     """Returns (new_html, status_str). Modifies the named manifest asset by
     inserting the TestsPanel JSX. The manifest JSON section is rewritten in
-    place."""
+    place. Re-runnable· strips a previous patch before re-applying."""
     m = re.search(r'(<script type="__bundler/manifest"[^>]*>)(.*?)(</script>)', html, re.DOTALL)
     if not m:
         return html, "no manifest"
@@ -165,8 +214,9 @@ def patch_manifest_asset(html: str, uuid: str) -> tuple:
         data = gzip.decompress(data)
     src = data.decode("utf-8")
 
-    if MARKER in src:
-        return html, "asset already patched"
+    was_patched = MARKER in src
+    if was_patched:
+        src = strip_v1(src)
 
     if "const Dashboard = () =>" not in src:
         return html, "Dashboard component not found in asset"
@@ -183,7 +233,8 @@ def patch_manifest_asset(html: str, uuid: str) -> tuple:
 
     new_manifest_json = json.dumps(manifest, separators=(",", ":"), ensure_ascii=False)
     new_html = html[:m.start(2)] + new_manifest_json + html[m.end(2):]
-    return new_html, f"asset patched ({len(src)} -> {len(new_src)} chars)"
+    verb = "re-patched" if was_patched else "patched"
+    return new_html, f"asset {verb} ({len(new_src)} chars)"
 
 
 # Cleanup: remove any prior <script>__proxxie_tests_panel_v1__</script> blocks
