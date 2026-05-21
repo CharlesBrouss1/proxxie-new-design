@@ -301,27 +301,86 @@
         <a class="stage-cta primary" id="stage03Cta" href="Proxxie Activite Reflexion.html">Lancer la première →</a>
       </article>
 
-      <!-- Stage 04 · Séances coaching -->
-      <article class="stage in_progress">
+      <!-- Stage 04 · Coach hub -->
+      <article class="stage in_progress" id="stage-04">
         <div class="stage-num">04</div>
         <div class="stage-body">
-          <span class="stage-status in_progress">1 séance faite · prochaine le 26 mai</span>
+          <span class="stage-status in_progress" id="stage04Status">1 séance faite · prochaine le 26 mai</span>
           <h2 style="margin-top: 8px;">Séances avec ton coach (Charles)</h2>
-          <p class="desc">Un coach qui te connaît, qui a lu ton rapport, et qui te suit dans la durée. Calendrier, messagerie, replays · tout est ici.</p>
-          <div class="stage-substages">
-            <div class="substage-item done">
-              <span class="status-dot"></span>
-              <span class="label">RDV de cadrage · 5 mai</span>
-              <span class="pill">Notes dispos</span>
+          <p class="desc">Un coach qui te connaît, qui a lu ton rapport, et qui te suit dans la durée. Calendrier, messagerie, notes et replays · tout est ici.</p>
+
+          <!-- Coach hub · 4 sub-panels -->
+          <div style="margin-top: 18px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px;">
+            <!-- Next RDV · hero card -->
+            <div style="grid-column: 1 / -1; background: linear-gradient(135deg, #FD6936 0%, #FFA17A 100%); color: white; border-radius: 16px; padding: 22px 26px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;">
+              <div>
+                <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.85; margin-bottom: 6px;">Prochain RDV · dans <span id="rdvCountdown">5 jours</span></div>
+                <div style="font-family: var(--font-display); font-size: 22px; font-weight: 600; line-height: 1.2; margin-bottom: 4px;">Stratégie réception vœux Parcoursup</div>
+                <div style="font-size: 14px; opacity: 0.92;">Mercredi 26 mai · 14h00 · visio 30 min</div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <a href="https://calendly.com/proxxie/reschedule" target="_blank" rel="noopener" style="background: rgba(255,255,255,.18); color: white; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; text-align: center; white-space: nowrap;">Préparer</a>
+                <a href="#" style="background: white; color: #FD6936; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; text-align: center; white-space: nowrap;">Rejoindre la visio →</a>
+              </div>
             </div>
-            <div class="substage-item in_progress">
-              <span class="status-dot"></span>
-              <span class="label">Stratégie vœux · 26 mai · 14h</span>
-              <span class="pill">À préparer</span>
+
+            <!-- Messagerie preview -->
+            <div style="background: rgba(10,14,44,.02); border: 1px solid var(--c-line); border-radius: 14px; padding: 16px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px;">
+                <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted);">Messagerie</div>
+                <a href="#" style="font-size: 11px; color: var(--c-blue); text-decoration: none; font-weight: 600;">Tout voir →</a>
+              </div>
+              <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; font-size: 13px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #487AFF, #1320CE); color: white; display: grid; place-items: center; font-weight: 700; font-size: 11px; flex-shrink: 0;">C</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Charles · il y a 2 jours</div>
+                  <div style="color: var(--c-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pense à uploader tes bulletins T2 avant le RDV, je veux qu'on calibre…</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 13px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(10,14,44,.06); color: var(--c-muted); display: grid; place-items: center; font-weight: 700; font-size: 11px; flex-shrink: 0;">M</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Moi · il y a 3 jours</div>
+                  <div style="color: var(--c-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Merci pour les notes du dernier RDV. J'ai des questions sur les CPGE…</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Historique séances -->
+            <div style="background: rgba(10,14,44,.02); border: 1px solid var(--c-line); border-radius: 14px; padding: 16px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px;">
+                <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted);">Séances passées · 1</div>
+                <a href="#" style="font-size: 11px; color: var(--c-blue); text-decoration: none; font-weight: 600;">Tout voir →</a>
+              </div>
+              <div style="font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(10,14,44,.04);">
+                  <div>
+                    <div style="font-weight: 600;">RDV de cadrage</div>
+                    <div style="font-size: 11px; color: var(--c-muted); margin-top: 2px;">5 mai · 30 min</div>
+                  </div>
+                  <a href="#" style="font-size: 11px; padding: 4px 10px; background: rgba(34,160,107,.10); color: var(--c-green); border-radius: 999px; text-decoration: none; font-weight: 600;">Notes ✓</a>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                  <div>
+                    <div style="font-weight: 600;">Profil Big Five · échange</div>
+                    <div style="font-size: 11px; color: var(--c-muted); margin-top: 2px;">12 mai · 25 min</div>
+                  </div>
+                  <a href="#" style="font-size: 11px; padding: 4px 10px; background: rgba(72,122,255,.08); color: var(--c-blue-2); border-radius: 999px; text-decoration: none; font-weight: 600;">▶ Replay</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Planifier nouveau RDV -->
+            <div style="grid-column: 1 / -1; background: rgba(72,122,255,.04); border: 1.5px dashed rgba(72,122,255,.25); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+              <div>
+                <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px;">Besoin d'un coup de pouce supplémentaire ?</div>
+                <div style="font-size: 12px; color: var(--c-muted);">Tu peux ajouter un RDV de 30 min entre les séances planifiées · 1 séance bonus toutes les 4 séances.</div>
+              </div>
+              <a href="https://calendly.com/proxxie/bonus" target="_blank" rel="noopener" style="padding: 10px 16px; background: white; color: var(--c-blue); border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid rgba(72,122,255,.25); white-space: nowrap;">Planifier un RDV</a>
             </div>
           </div>
         </div>
-        <a class="stage-cta primary" href="Proxxie Coach.html">Préparer le RDV →</a>
+        <a class="stage-cta primary" href="https://calendly.com/proxxie/reschedule" target="_blank" rel="noopener">Préparer le RDV →</a>
       </article>
 
       <!-- Stage 05 · Bilan -->
