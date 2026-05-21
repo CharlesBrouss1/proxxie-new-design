@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Le centre de ressources · Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9;
+      --c-ink: #0A0E2C;
+      --c-ink-2: #2B2E45;
+      --c-muted: rgba(10, 14, 44, 0.55);
+      --c-line: rgba(10, 14, 44, 0.08);
+      --c-blue: #1320CE;
+      --c-blue-2: #487AFF;
+      --c-orange: #FD6936;
+      --c-yellow: #F5EB3F;
+      --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--c-cream-light);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--c-ink);
+      line-height: 1.5;
+    }
+    .shell { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247, 242, 233, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(10, 14, 44, 0.06);
+    }
+    .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--c-ink); }
+    .logo-mark { width: 26px; height: 26px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 14px; }
+    .logo-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+    .topnav { display: flex; gap: 24px; font-size: 14px; font-weight: 500; align-items: center; }
+    .topnav .sep { width: 1px; height: 24px; background: rgba(10, 14, 44, 0.12); }
+    .topnav a { color: var(--c-muted); text-decoration: none; padding-bottom: 4px; }
+    .topnav a.active { color: var(--c-ink); border-bottom: 2px solid var(--c-orange); }
+    .userpill { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; background: white; border-radius: 999px; border: 1px solid var(--c-line); }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #487AFF, #1320CE); color: white; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+    .userpill .who { font-size: 13px; }
+    .userpill .who div:first-child { font-weight: 600; line-height: 1.1; }
+    .userpill .who div:last-child { font-size: 10px; color: var(--c-muted); }
+
+    /* Hero */
+    .hero { padding: 48px 0 28px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 720px; line-height: 1.1; }
+    .hero .lead { font-size: 16px; color: var(--c-muted); max-width: 640px; }
+
+    /* Section heading */
+    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 44px 0 18px; flex-wrap: wrap; }
+    .sec-head h2 { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+    .sec-head .sub { font-size: 13px; color: var(--c-muted); }
+
+    /* Featured guide */
+    .featured {
+      background: linear-gradient(135deg, var(--c-blue) 0%, #0A0E2C 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 38px 42px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured::after {
+      content: "";
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(245,235,63,.22), transparent 70%);
+      pointer-events: none;
+    }
+    .featured .eyebrow { color: var(--c-yellow); }
+    .featured .eyebrow::before { background: var(--c-yellow); }
+    .featured h3 { font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin: 12px 0 10px; line-height: 1.15; max-width: 560px; }
+    .featured p { font-size: 15px; color: rgba(255,255,255,.78); max-width: 540px; margin-bottom: 16px; }
+    .featured .meta { font-family: var(--font-num); font-size: 12px; color: rgba(255,255,255,.6); display: inline-flex; align-items: center; gap: 8px; }
+    .featured-cta {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      white-space: nowrap;
+      background: var(--c-orange);
+      color: white;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .featured-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(253,105,54,.4); }
+
+    /* Articles grid */
+    .cat-block { margin-bottom: 30px; }
+    .cat-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .cat-title .parent-tag { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: rgba(72,122,255,.10); color: var(--c-blue-2); }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card {
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 18px;
+      padding: 22px 22px 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+    }
+    .card:hover { transform: translateY(-2px); border-color: var(--c-blue-2); box-shadow: 0 8px 22px rgba(10,14,44,.05); }
+    .card .type-tag {
+      align-self: flex-start;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .card .type-tag.article { background: rgba(34,160,107,.10); color: var(--c-green); }
+    .card .type-tag.video { background: rgba(253,105,54,.10); color: var(--c-orange); }
+    .card h4 { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+    .card .summary { font-size: 13px; color: var(--c-muted); flex: 1; }
+    .card .foot { font-family: var(--font-num); font-size: 11px; color: var(--c-muted); display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+
+    /* Newsletter archive */
+    .news-strip {
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 22px;
+      padding: 30px 34px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 36px;
+      align-items: stretch;
+    }
+    .news-list { display: flex; flex-direction: column; gap: 4px; }
+    .news-item {
+      display: flex; align-items: baseline; gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--c-line);
+      text-decoration: none; color: inherit;
+      transition: padding-left .15s;
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-item:hover { padding-left: 6px; }
+    .news-item .date { font-family: var(--font-num); font-size: 11px; color: var(--c-blue-2); white-space: nowrap; width: 64px; flex-shrink: 0; }
+    .news-item .ntitle { font-size: 14px; font-weight: 500; }
+    .news-item .arrow { margin-left: auto; color: var(--c-muted); }
+    .news-sub {
+      background: rgba(19,32,206,.04);
+      border: 1px solid rgba(19,32,206,.10);
+      border-radius: 16px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .news-sub h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+    .news-sub p { font-size: 13px; color: var(--c-muted); margin-bottom: 16px; }
+    .news-form { display: flex; gap: 8px; }
+    .news-form input {
+      flex: 1; min-width: 0;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--c-line);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      background: white;
+    }
+    .news-form input:focus { outline: none; border-color: var(--c-blue-2); }
+    .news-form button {
+      padding: 11px 18px;
+      border-radius: 10px;
+      border: none;
+      background: var(--c-blue);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .news-form button:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(19,32,206,.30); }
+    .news-done { font-size: 14px; font-weight: 600; color: var(--c-green); display: flex; align-items: center; gap: 8px; }
+
+    /* Webinars */
+    .events { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .event-card {
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 18px;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      border-left: 4px solid var(--c-orange);
+    }
+    .event-card .when { font-family: var(--font-num); font-size: 12px; font-weight: 700; color: var(--c-orange); text-transform: uppercase; letter-spacing: 0.04em; }
+    .event-card h4 { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+    .event-card .edesc { font-size: 13px; color: var(--c-muted); flex: 1; }
+    .event-cta {
+      align-self: flex-start;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: var(--c-orange);
+      color: white;
+      font-weight: 600; font-size: 13px;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .event-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253,105,54,.30); }
+
+    main.hub { padding-bottom: 60px; }
+
+    footer.foot {
+      border-top: 1px solid var(--c-line);
+      padding: 24px 0 40px;
+      font-size: 12px;
+      color: var(--c-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer.foot a { text-decoration: none; color: inherit; }
+
+    @media (max-width: 900px) {
+      .topnav { gap: 16px; font-size: 13px; }
+      .topnav .sep { display: none; }
+      .userpill .who { display: none; }
+      .hero h1 { font-size: 30px; }
+      .featured { grid-template-columns: 1fr; padding: 28px 26px; }
+      .featured-cta { justify-self: stretch; justify-content: center; }
+      .cards { grid-template-columns: 1fr; }
+      .news-strip { grid-template-columns: 1fr; padding: 24px; }
+      .events { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>
+        <span class="logo-name">proxxie</span>
+      </a>
+      <nav class="topnav">
+        <span class="sep"></span>
+        <a href="Proxxie Dashboard.html">Tableau de bord</a>
+        <a href="Proxxie Parcours.html">Parcours</a>
+        <a href="Proxxie Documents.html">Documents</a>
+        <a href="#" class="active">Ressources</a>
+      </nav>
+      <div class="userpill">
+        <div class="avatar" id="avatarInitial">J</div>
+        <div class="who">
+          <div id="userName">Julie L.</div>
+          <div id="userMeta">Parent · Arthur</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow">Le centre de ressources</span>
+      <h1>Tout pour comprendre l'orientation</h1>
+      <p class="lead" id="heroLead">Articles, guides, décryptages hebdo et webinaires · de quoi avancer un peu chaque semaine, à ton rythme.</p>
+    </div>
+  </section>
+
+  <main class="hub">
+    <div class="shell">
+
+      <!-- Featured guide -->
+      <div class="sec-head">
+        <h2>À la une</h2>
+        <span class="sub">Le dossier incontournable du moment</span>
+      </div>
+      <article class="featured">
+        <div>
+          <span class="eyebrow">Guide complet · gratuit</span>
+          <h3>Le guide Parcoursup 2026</h3>
+          <p id="featuredSummary">Calendrier, attendus, vœux, lettres de motivation : tout le fonctionnement de Parcoursup expliqué simplement, étape par étape, pour ne rien laisser au hasard.</p>
+          <span class="meta">📖 28 min de lecture · mis à jour mai 2026</span>
+        </div>
+        <a class="featured-cta" id="featuredCta" href="guide-orientation.html">Lire le guide →</a>
+      </article>
+
+      <!-- Articles grid -->
+      <div class="sec-head">
+        <h2>Articles & décryptages</h2>
+        <span class="sub">Choisis un thème, on t'explique tout</span>
+      </div>
+
+      <div class="cat-block">
+        <div class="cat-title">Parcoursup &amp; filières</div>
+        <div class="cards">
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>Comprendre les attendus Parcoursup</h4>
+            <p class="summary">Ce que les formations regardent vraiment dans ton dossier, et comment les rassurer dès tes vœux.</p>
+            <span class="foot">📄 6 min · Parcoursup</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>Prépa ou fac · comment choisir</h4>
+            <p class="summary">Encadrement, rythme, débouchés : un comparatif honnête pour trancher selon ton profil, pas selon les clichés.</p>
+            <span class="foot">📄 8 min · Filières</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag video">Vidéo</span>
+            <h4>Les BUT qui recrutent le mieux</h4>
+            <p class="summary">Tour d'horizon des Bachelors Universitaires de Technologie avec les meilleurs taux d'insertion.</p>
+            <span class="foot">▶ 11 min · Filières</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cat-block">
+        <div class="cat-title">Métiers &amp; secteurs</div>
+        <div class="cards">
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>10 métiers qui n'existaient pas il y a 10 ans</h4>
+            <p class="summary">Du prompt engineer au consultant cybersécurité : les jobs nés de la dernière décennie, et comment y accéder.</p>
+            <span class="foot">📄 7 min · Métiers</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag video">Vidéo</span>
+            <h4>L'IA va-t-elle tuer ce métier ?</h4>
+            <p class="summary">On passe au crible 5 métiers populaires : lesquels résistent, lesquels se transforment, lesquels disparaissent.</p>
+            <span class="foot">▶ 9 min · Métiers</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>Travailler dans le soin en 2030</h4>
+            <p class="summary">Infirmier, ergothérapeute, ostéo : un secteur qui recrute massivement et les formations qui y mènent.</p>
+            <span class="foot">📄 6 min · Secteurs</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cat-block">
+        <div class="cat-title">Accompagner son ado <span class="parent-tag">Pour les parents</span></div>
+        <div class="cards">
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>Parler d'orientation sans braquer son ado</h4>
+            <p class="summary">Les phrases qui ferment la discussion, celles qui l'ouvrent : un mode d'emploi pour des échanges apaisés.</p>
+            <span class="foot">📄 7 min · Parents</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag video">Vidéo</span>
+            <h4>Quand l'ado ne sait pas quoi faire</h4>
+            <p class="summary">L'indécision est normale et utile. Comment l'accompagner sans mettre la pression ni décider à sa place.</p>
+            <span class="foot">▶ 10 min · Parents</span>
+          </a>
+          <a class="card" href="#">
+            <span class="type-tag article">Article</span>
+            <h4>Gérer le stress des choix</h4>
+            <p class="summary">Date limite, peur de se tromper : des repères concrets pour traverser la période Parcoursup sereinement.</p>
+            <span class="foot">📄 5 min · Parents</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Newsletter archive -->
+      <div class="sec-head">
+        <h2>Nos derniers décryptages hebdo</h2>
+        <span class="sub">Un éclairage neuf chaque semaine</span>
+      </div>
+      <div class="news-strip">
+        <div class="news-list">
+          <a class="news-item" href="#">
+            <span class="date">16 mai</span>
+            <span class="ntitle">Réforme du lycée : ce qui change pour les vœux 2026</span>
+            <span class="arrow">→</span>
+          </a>
+          <a class="news-item" href="#">
+            <span class="date">9 mai</span>
+            <span class="ntitle">Les écoles d'ingénieurs post-bac valent-elles le coup ?</span>
+            <span class="arrow">→</span>
+          </a>
+          <a class="news-item" href="#">
+            <span class="date">2 mai</span>
+            <span class="ntitle">Année de césure : mode d'emploi et idées reçues</span>
+            <span class="arrow">→</span>
+          </a>
+          <a class="news-item" href="#">
+            <span class="date">25 avr</span>
+            <span class="ntitle">Métiers verts : où sont les vrais débouchés ?</span>
+            <span class="arrow">→</span>
+          </a>
+        </div>
+        <div class="news-sub" id="newsSub">
+          <h3>Reçois le décryptage chaque jeudi</h3>
+          <p id="newsSubLead">Un email court, sans blabla, pour suivre l'actu de l'orientation et ne rien rater des dates clés.</p>
+          <form class="news-form" id="newsForm">
+            <input type="email" id="newsEmail" placeholder="ton@email.fr" required>
+            <button type="submit">S'inscrire</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Webinars / événements -->
+      <div class="sec-head">
+        <h2>Webinaires &amp; événements live</h2>
+        <span class="sub">Pose tes questions en direct</span>
+      </div>
+      <div class="events">
+        <article class="event-card">
+          <span class="when">Jeu. 28 mai · 18h30</span>
+          <h4>Bien remplir ses vœux Parcoursup</h4>
+          <p class="edesc" id="event1Desc">Atelier live avec un coach Proxxie : ordre des vœux, formations en tension, erreurs à éviter. Questions-réponses en fin de session.</p>
+          <a class="event-cta" href="https://calendly.com/proxxie/webinar">S'inscrire →</a>
+        </article>
+        <article class="event-card">
+          <span class="when">Mar. 3 juin · 19h00</span>
+          <h4>Parents : accompagner sans stresser</h4>
+          <p class="edesc" id="event2Desc">Une heure pour comprendre le rôle juste à tenir pendant l'orientation de votre ado, avec une psychologue de l'éducation.</p>
+          <a class="event-cta" href="https://calendly.com/proxxie/webinar">S'inscrire →</a>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="foot shell">
+    <span>© 2026 Proxxie</span>
+    <div style="display: flex; gap: 18px;">
+      <a href="#">Politique</a>
+      <a href="#">CGV</a>
+      <a href="#">Aide</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Detect role
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+
+      // Localize hero + copy (tu / vous)
+      var heroLead = document.getElementById("heroLead");
+      var userMeta = document.getElementById("userMeta");
+      var featuredSummary = document.getElementById("featuredSummary");
+      var newsSubLead = document.getElementById("newsSubLead");
+      var event1Desc = document.getElementById("event1Desc");
+
+      if (isEnfant) {
+        userMeta.textContent = "Ado · Terminale";
+        heroLead.textContent = "Articles, guides, décryptages hebdo et webinaires · de quoi avancer un peu chaque semaine, à ton rythme.";
+        featuredSummary.textContent = "Calendrier, attendus, vœux, lettres de motivation : tout le fonctionnement de Parcoursup expliqué simplement, étape par étape, pour ne rien laisser au hasard.";
+        newsSubLead.textContent = "Un email court, sans blabla, pour suivre l'actu de l'orientation et ne rien rater des dates clés.";
+        event1Desc.textContent = "Atelier live avec un coach Proxxie : ordre des vœux, formations en tension, erreurs à éviter. Pose tes questions en fin de session.";
+      } else {
+        userMeta.textContent = "Parent · Arthur";
+        heroLead.textContent = "Articles, guides, décryptages hebdo et webinaires · de quoi mieux accompagner votre ado, un peu chaque semaine.";
+        featuredSummary.textContent = "Calendrier, attendus, vœux, lettres de motivation : tout le fonctionnement de Parcoursup expliqué simplement, pour suivre le dossier de votre ado sereinement.";
+        newsSubLead.textContent = "Un email court, sans blabla, pour suivre l'actu de l'orientation et ne rien rater des dates clés pour votre ado.";
+        event1Desc.textContent = "Atelier live avec un coach Proxxie : ordre des vœux, formations en tension, erreurs à éviter. Questions-réponses en fin de session.";
+      }
+
+      // Featured guide CTA · pick the best available target
+      var featuredCta = document.getElementById("featuredCta");
+      // "Proxxie Guide Orientation.html" does not exist in this build; fall back to guide-orientation.html
+      featuredCta.setAttribute("href", "guide-orientation.html");
+
+      // Read profile from localStorage
+      try {
+        var parentName = localStorage.getItem("proxxie_parentName") || "Julie L.";
+        document.getElementById("userName").textContent = parentName;
+        document.getElementById("avatarInitial").textContent = (parentName.charAt(0) || "J").toUpperCase();
+      } catch (e) {}
+
+      // Newsletter subscribe
+      var KEY = "proxxie.newsletter.subscribed";
+      var newsSub = document.getElementById("newsSub");
+      var newsForm = document.getElementById("newsForm");
+
+      function showSubscribed() {
+        var lead = document.getElementById("newsSubLead");
+        var done = document.createElement("div");
+        done.className = "news-done";
+        done.textContent = "Déjà inscrit ✓";
+        if (newsForm) newsForm.replaceWith(done);
+        if (lead) lead.textContent = "Tu recevras le prochain décryptage jeudi. Merci !";
+        if (!isEnfant && lead) lead.textContent = "Vous recevrez le prochain décryptage jeudi. Merci !";
+      }
+
+      var already = false;
+      try { already = localStorage.getItem(KEY) === "true"; } catch (e) {}
+      if (already) {
+        showSubscribed();
+      } else if (newsForm) {
+        newsForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var email = document.getElementById("newsEmail");
+          if (email && !email.value) return;
+          try { localStorage.setItem(KEY, "true"); } catch (err) {}
+          showSubscribed();
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
