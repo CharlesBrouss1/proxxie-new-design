@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon parcours d'orientation , Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9;
+      --c-ink: #0A0E2C;
+      --c-ink-2: #2B2E45;
+      --c-muted: rgba(10, 14, 44, 0.55);
+      --c-line: rgba(10, 14, 44, 0.08);
+      --c-blue: #1320CE;
+      --c-blue-2: #487AFF;
+      --c-orange: #FD6936;
+      --c-yellow: #F5EB3F;
+      --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--c-cream-light);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--c-ink);
+      line-height: 1.5;
+    }
+    .shell { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247, 242, 233, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(10, 14, 44, 0.06);
+    }
+    .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--c-ink); }
+    .logo-mark { width: 26px; height: 26px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 14px; }
+    .logo-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+    .topnav { display: flex; gap: 24px; font-size: 14px; font-weight: 500; align-items: center; }
+    .topnav .sep { width: 1px; height: 24px; background: rgba(10, 14, 44, 0.12); }
+    .topnav a { color: var(--c-muted); text-decoration: none; padding-bottom: 4px; }
+    .topnav a.active { color: var(--c-ink); border-bottom: 2px solid var(--c-orange); }
+    .userpill { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; background: white; border-radius: 999px; border: 1px solid var(--c-line); }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #487AFF, #1320CE); color: white; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+    .userpill .who { font-size: 13px; }
+    .userpill .who div:first-child { font-weight: 600; line-height: 1.1; }
+    .userpill .who div:last-child { font-size: 10px; color: var(--c-muted); }
+
+    /* Hero */
+    .hero { padding: 48px 0 28px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 720px; line-height: 1.1; }
+    .hero .lead { font-size: 16px; color: var(--c-muted); max-width: 640px; }
+    .hero-progress {
+      margin-top: 28px;
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 20px;
+      padding: 22px 26px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+    }
+    .hero-progress .label { font-size: 12px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px; }
+    .progress-bar { height: 10px; border-radius: 999px; background: rgba(10, 14, 44, 0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--c-orange) 0%, var(--c-yellow) 100%); transition: width .4s ease; }
+    .hero-progress .meta { display: flex; align-items: baseline; gap: 6px; font-family: var(--font-num); }
+    .hero-progress .meta .num { font-size: 30px; font-weight: 700; color: var(--c-blue); }
+    .hero-progress .meta .total { color: var(--c-muted); }
+
+    /* Stages */
+    .stages { padding-bottom: 60px; }
+    .stage {
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 28px;
+      align-items: start;
+      position: relative;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+    }
+    .stage:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(10, 14, 44, .04); }
+    .stage.done { border-left: 4px solid var(--c-green); }
+    .stage.in_progress { border-left: 4px solid var(--c-orange); }
+    .stage.locked { opacity: 0.55; }
+    .stage-num {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: rgba(10, 14, 44, 0.18);
+      line-height: 1;
+    }
+    .stage.done .stage-num { color: rgba(34, 160, 107, .35); }
+    .stage.in_progress .stage-num { color: rgba(253, 105, 54, .35); }
+    .stage-body h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .stage-body .desc { font-size: 14px; color: var(--c-muted); margin-bottom: 14px; max-width: 580px; }
+    .stage-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .stage-status.done { background: rgba(34, 160, 107, .10); color: var(--c-green); }
+    .stage-status.in_progress { background: rgba(253, 105, 54, .10); color: var(--c-orange); }
+    .stage-status.locked { background: rgba(10, 14, 44, .04); color: var(--c-muted); }
+    .stage-status.available { background: rgba(72, 122, 255, .08); color: var(--c-blue-2); }
+    .stage-substats { font-size: 12px; color: var(--c-muted); margin-top: 12px; }
+    .stage-cta {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .stage-cta.primary { background: var(--c-orange); color: white; }
+    .stage-cta.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253, 105, 54, .30); }
+    .stage-cta.ghost { background: transparent; color: var(--c-ink); border: 1px solid var(--c-line); }
+    .stage-cta.disabled { background: rgba(10, 14, 44, .04); color: var(--c-muted); cursor: not-allowed; pointer-events: none; }
+
+    .stage-substages {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(10, 14, 44, .02);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .substage-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 10px;
+      font-size: 13px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .15s;
+    }
+    .substage-item:hover { border-color: var(--c-blue-2); }
+    .substage-item .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(72, 122, 255, .35);
+    }
+    .substage-item.done .status-dot { background: var(--c-green); }
+    .substage-item.in_progress .status-dot { background: var(--c-orange); }
+    .substage-item .label { flex: 1; min-width: 0; font-weight: 500; }
+    .substage-item .pill { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(72, 122, 255, .08); color: var(--c-blue-2); font-weight: 600; }
+    .substage-item.done .pill { background: rgba(34, 160, 107, .10); color: var(--c-green); }
+    .substage-item.in_progress .pill { background: rgba(253, 105, 54, .10); color: var(--c-orange); }
+
+    /* Footer gamif */
+    .gamif-footer {
+      margin-top: 32px;
+      background: linear-gradient(135deg, var(--c-blue) 0%, #0A0E2C 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 26px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .gamif-footer .xp { font-family: var(--font-num); font-size: 32px; font-weight: 700; color: var(--c-yellow); }
+    .gamif-footer .level { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+    .gamif-footer .next { font-size: 13px; color: rgba(255, 255, 255, .7); }
+
+    footer.foot {
+      border-top: 1px solid var(--c-line);
+      padding: 24px 0 40px;
+      font-size: 12px;
+      color: var(--c-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer.foot a { text-decoration: none; color: inherit; }
+
+    @media (max-width: 900px) {
+      .stage { grid-template-columns: 60px 1fr; padding: 22px; }
+      .stage-num { font-size: 44px; }
+      .stage-cta { grid-column: 1 / -1; align-self: stretch; justify-content: center; margin-top: 12px; }
+      .topnav { gap: 16px; font-size: 13px; }
+      .topnav .sep { display: none; }
+      .userpill .who { display: none; }
+      .hero h1 { font-size: 30px; }
+      .hero-progress { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>
+        <span class="logo-name">proxxie</span>
+      </a>
+      <nav class="topnav">
+        <span class="sep"></span>
+        <a href="Proxxie Dashboard.html">Tableau de bord</a>
+        <a href="#" class="active">Parcours</a>
+        <a href="Proxxie Documents.html">Documents</a>
+        <a href="Proxxie Ressources.html">Ressources</a>
+      </nav>
+      <div class="userpill">
+        <div class="avatar" id="avatarInitial">J</div>
+        <div class="who">
+          <div id="userName">Julie L.</div>
+          <div id="userMeta">Parent · Arthur</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow" id="heroEyebrow">Mon parcours d'orientation</span>
+      <h1 id="heroTitle">Là où tu en es, là où tu vas</h1>
+      <p class="lead" id="heroLead">Cinq étapes pour découvrir ce qui t'allume, calibrer tes choix, et construire un dossier Parcoursup solide.</p>
+      <div class="hero-progress">
+        <div>
+          <div class="label" id="progressLabel">Progression globale</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 35%;"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="num" id="progressNum">35</span>
+          <span class="total">%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="stages">
+    <div class="shell">
+
+      <!-- Stage 01 · Profil OCEAN-X -->
+      <article class="stage done">
+        <div class="stage-num">01</div>
+        <div class="stage-body">
+          <span class="stage-status done">Terminé · 18 mai</span>
+          <h2 style="margin-top: 8px;">Ton profil OCEAN-X (Big Five)</h2>
+          <p class="desc">Le test fondateur. Cinq grands traits qui débloquent tout le reste · ouverture, conscienciosité, extraversion, convivialité, stabilité.</p>
+          <p class="stage-substats">Profil détecté · <strong style="color: var(--c-ink);">Exploratrice analytique</strong></p>
+        </div>
+        <a class="stage-cta ghost" href="Proxxie Test.html">Voir mes résultats →</a>
+      </article>
+
+      <!-- Stage 02 · Tests psychométriques -->
+      <article class="stage in_progress">
+        <div class="stage-num">02</div>
+        <div class="stage-body">
+          <span class="stage-status in_progress">En cours · 2 sur 11 passés</span>
+          <h2 style="margin-top: 8px;">Tests psychométriques complémentaires</h2>
+          <p class="desc">Dix tests scientifiques pour creuser ton profil · orientation, apprentissage, fonctionnement, bien-être. Tu peux les passer à ton rythme.</p>
+          <div class="stage-substages" id="testsList"></div>
+        </div>
+        <a class="stage-cta primary" href="Proxxie Test RIASEC.html">Reprendre RIASEC →</a>
+      </article>
+
+      <!-- Stage 03 · Activités guidées -->
+      <article class="stage" id="stage-03">
+        <div class="stage-num">03</div>
+        <div class="stage-body">
+          <span class="stage-status available">À découvrir · 0 sur 8 faites</span>
+          <h2 style="margin-top: 8px;">Activités guidées</h2>
+          <p class="desc">Réflexions écrites, mini-quiz interactifs, vidéos métiers. Chaque activité prend 5 à 15 minutes et affine tes recommandations.</p>
+          <p class="stage-substats" id="stage03Sub">Disponible bientôt , les premières activités arrivent en Phase 4.</p>
+        </div>
+        <span class="stage-cta disabled">Bientôt disponible</span>
+      </article>
+
+      <!-- Stage 04 · Séances coaching -->
+      <article class="stage in_progress">
+        <div class="stage-num">04</div>
+        <div class="stage-body">
+          <span class="stage-status in_progress">1 séance faite · prochaine le 26 mai</span>
+          <h2 style="margin-top: 8px;">Séances avec ton coach (Charles)</h2>
+          <p class="desc">Un coach qui te connaît, qui a lu ton rapport, et qui te suit dans la durée. Calendrier, messagerie, replays · tout est ici.</p>
+          <div class="stage-substages">
+            <div class="substage-item done">
+              <span class="status-dot"></span>
+              <span class="label">RDV de cadrage · 5 mai</span>
+              <span class="pill">Notes dispos</span>
+            </div>
+            <div class="substage-item in_progress">
+              <span class="status-dot"></span>
+              <span class="label">Stratégie vœux · 26 mai · 14h</span>
+              <span class="pill">À préparer</span>
+            </div>
+          </div>
+        </div>
+        <a class="stage-cta primary" href="Proxxie Coach.html">Préparer le RDV →</a>
+      </article>
+
+      <!-- Stage 05 · Bilan -->
+      <article class="stage locked" id="stage-05">
+        <div class="stage-num">05</div>
+        <div class="stage-body">
+          <span class="stage-status locked">Verrouillé · 3 conditions sur 7</span>
+          <h2 style="margin-top: 8px;">Ton bilan final & vœux Parcoursup</h2>
+          <p class="desc">Une page partageable qui consolide profil + tests + activités + séances coach + vœux Parcoursup. Exportable en PDF.</p>
+          <p class="stage-substats">Débloque ce bilan en passant au moins 5 tests, en faisant 3 activités, et 1 séance coach.</p>
+        </div>
+        <span class="stage-cta disabled">Verrouillé</span>
+      </article>
+
+      <!-- Gamif footer -->
+      <div class="gamif-footer">
+        <div>
+          <div class="level" id="levelLabel">Niveau 2 · Explorateur 🧭</div>
+          <div class="next" id="nextLabel">Encore 20 XP pour passer Cartographe 🗺️</div>
+        </div>
+        <div class="xp" id="xpTotal">280 XP</div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="foot shell">
+    <span>© 2026 Proxxie</span>
+    <div style="display: flex; gap: 18px;">
+      <a href="#">Politique</a>
+      <a href="#">CGV</a>
+      <a href="#">Aide</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Detect role
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+
+      // Localize hero
+      var heroTitle = document.getElementById("heroTitle");
+      var heroLead = document.getElementById("heroLead");
+      var userMeta = document.getElementById("userMeta");
+      if (!isEnfant) {
+        heroTitle.textContent = "Le parcours d'Arthur, étape par étape";
+        heroLead.textContent = "Cinq étapes pour aider votre ado à découvrir ce qui l'allume, calibrer ses choix, et construire un dossier Parcoursup solide.";
+        userMeta.textContent = "Parent · Arthur";
+      } else {
+        userMeta.textContent = "Ado · Terminale";
+        // Localize stage 04 too
+        var s04Title = document.querySelector("article.stage:nth-of-type(4) h2");
+        if (s04Title) s04Title.textContent = "Tes séances avec ton coach (Charles)";
+      }
+
+      // Tests list, read from localStorage
+      var TESTS = [
+        { id: "riasec",  name: "RIASEC",   def: "wip"  },
+        { id: "mbti",    name: "MBTI",     def: "todo" },
+        { id: "pcm",     name: "PCM",      def: "todo" },
+        { id: "hpi",     name: "HPI",      def: "done" },
+        { id: "tdah",    name: "TDAH",     def: "todo" },
+        { id: "dys",     name: "DYS",      def: "todo" },
+        { id: "autisme", name: "Autisme",  def: "todo" },
+        { id: "anxiete", name: "Anxiété",  def: "todo" },
+        { id: "besoins", name: "Besoins",  def: "todo" },
+        { id: "drivers", name: "Drivers",  def: "todo" },
+        { id: "valeurs", name: "Valeurs",  def: "wip"  }
+      ];
+      var labels = { done: "Passé", wip: "En cours", todo: "À passer" };
+      function getStatus(t) {
+        try { return localStorage.getItem("proxxie.tests." + t.id) || t.def; } catch (e) { return t.def; }
+      }
+      var grid = document.getElementById("testsList");
+      var doneCount = 0;
+      TESTS.forEach(function (t) {
+        var s = getStatus(t);
+        if (s === "done") doneCount++;
+        var a = document.createElement("a");
+        a.className = "substage-item " + s;
+        a.href = "Proxxie Test " + (t.id === "riasec" ? "RIASEC" : t.id.charAt(0).toUpperCase() + t.id.slice(1)) + ".html";
+        a.innerHTML =
+          '<span class="status-dot"></span>' +
+          '<span class="label">' + t.name + '</span>' +
+          '<span class="pill">' + labels[s] + '</span>';
+        grid.appendChild(a);
+      });
+
+      // Update stage 02 status badge
+      var s02Status = document.querySelector("article.stage:nth-of-type(2) .stage-status");
+      if (s02Status) {
+        if (doneCount === TESTS.length) {
+          s02Status.textContent = "Terminé · les 11 tests passés";
+          s02Status.className = "stage-status done";
+        } else if (doneCount > 0) {
+          s02Status.textContent = "En cours · " + doneCount + " sur " + TESTS.length + " passés";
+        } else {
+          s02Status.textContent = "À démarrer · 0 sur " + TESTS.length;
+          s02Status.className = "stage-status available";
+        }
+      }
+
+      // Read profile from localStorage
+      try {
+        var firstName = localStorage.getItem("proxxie_firstName") || "Arthur";
+        var parentName = localStorage.getItem("proxxie_parentName") || "Julie L.";
+        document.getElementById("userName").textContent = parentName;
+        document.getElementById("avatarInitial").textContent = (parentName.charAt(0) || "J").toUpperCase();
+      } catch (e) {}
+
+      // XP + level
+      try {
+        var xp = parseInt(localStorage.getItem("proxxie.xp"), 10) || 280;
+        document.getElementById("xpTotal").textContent = xp + " XP";
+        var levels = [
+          { min: 0, name: "Curieux ✨" },
+          { min: 100, name: "Explorateur 🧭" },
+          { min: 300, name: "Cartographe 🗺️" },
+          { min: 700, name: "Stratège ♟️" },
+          { min: 1500, name: "Architecte 🏛️" }
+        ];
+        var cur = levels[0], next = null;
+        for (var i = 0; i < levels.length; i++) {
+          if (xp >= levels[i].min) { cur = levels[i]; next = levels[i + 1] || null; }
+        }
+        document.getElementById("levelLabel").textContent = "Niveau " + (levels.indexOf(cur) + 1) + " · " + cur.name;
+        if (next) {
+          document.getElementById("nextLabel").textContent = "Encore " + (next.min - xp) + " XP pour passer " + next.name;
+        } else {
+          document.getElementById("nextLabel").textContent = "Niveau max atteint, bravo !";
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+</body>
+</html>
