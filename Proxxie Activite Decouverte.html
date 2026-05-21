@@ -78,7 +78,7 @@
         <span>›</span>
         <span>Activités</span>
         <span>›</span>
-        <span style="color: var(--c-ink); font-weight: 600;">Découverte métier</span>
+        <span id="crumb" style="color: var(--c-ink); font-weight: 600;">Découverte</span>
       </div>
       <span id="progressPct" style="font-size: 12px; color: var(--c-muted); font-weight: 600;">0% lu</span>
     </div>
@@ -88,11 +88,11 @@
 
   <section class="hero">
     <div class="shell">
-      <span class="eyebrow">Activité guidée · Découverte</span>
-      <h1>Ingénieur·e biomédical·e · construire les outils qui sauvent</h1>
-      <p class="lead">Un métier à l'intersection de l'ingénierie, de la médecine et de la R&D. 7 minutes de lecture pour comprendre ce qu'il faut pour s'y orienter.</p>
+      <span class="eyebrow" id="eyebrow">Activité guidée · Découverte</span>
+      <h1 id="heroTitle">Découverte</h1>
+      <p class="lead" id="heroLead"></p>
       <div class="meta">
-        <span><strong>Durée</strong>7 min de lecture</span>
+        <span id="metaDuration"><strong>Durée</strong>7 min de lecture</span>
         <span><strong>Format</strong>Article</span>
         <span><strong>XP</strong>+15 à la complétion</span>
       </div>
@@ -101,61 +101,8 @@
 
   <main class="article">
     <div class="shell">
-      <article class="article-card">
-
-        <p>Quand tu portes un appareil dentaire, quand un proche reçoit une prothèse de hanche, quand un hôpital installe un nouveau scanner · derrière ces objets et machines, il y a des ingénieur·es biomédicaux·les. Un métier discret, mais profondément utile.</p>
-
-        <h2>Ce qu'on fait au quotidien</h2>
-        <p>L'ingénieur·e biomédical·e conçoit, fabrique, ou maintient les dispositifs médicaux qui servent en hôpital, en recherche, ou à domicile. Concrètement, ça peut être·</p>
-        <ul>
-          <li>Concevoir une prothèse de genou ou une valve cardiaque artificielle</li>
-          <li>Programmer le logiciel d'un scanner IRM pour qu'il filtre mieux les artefacts</li>
-          <li>Tester la résistance d'un implant aux 30 ans de fatigue mécanique qu'il subira dans un corps</li>
-          <li>Travailler en R&D avec des médecins pour traduire un besoin clinique en cahier des charges technique</li>
-        </ul>
-
-        <div class="quote">
-          « Le plus motivant, c'est qu'à la fin de chaque projet, je sais qu'un objet que j'ai conçu va aider quelqu'un à mieux vivre. Quand tu débugges un capteur, tu débugges aussi un peu la vie de quelqu'un. »
-          <span class="quote-author">, Sarah, ingénieure biomédicale chez Medtronic (3 ans d'expérience)</span>
-        </div>
-
-        <h2>Le marché en 3 chiffres</h2>
-        <div class="stat-box">
-          <div class="stat"><span class="num">+18%</span><span class="lbl">Croissance/an</span></div>
-          <div class="stat"><span class="num">42K€</span><span class="lbl">Salaire sortie d'école</span></div>
-          <div class="stat"><span class="num">92%</span><span class="lbl">Emploi à 6 mois</span></div>
-        </div>
-
-        <h2>Pour s'y orienter en France</h2>
-        <h3>Voie A · École d'ingénieur post-bac</h3>
-        <p>5 ans après le bac, dans une école spécialisée (Polytech Lyon, INSA Rouen, ESPCI Paris, IMT Atlantique). Tu rentres en cycle prépa intégré ou via concours après prépa. La prépa MPSI ou PCSI marche bien.</p>
-        <h3>Voie B · Master après une licence de bio ou physique</h3>
-        <p>3 ans de licence (biologie cellulaire, physique appliquée), puis 2 ans de master en ingénierie biomédicale (Sorbonne Université, Université Paris-Saclay). Voie plus longue mais accessible si tu ne veux pas faire de prépa.</p>
-        <h3>Voie C · Reconversion via BUT puis école</h3>
-        <p>BUT GMP ou GEII en 3 ans, puis admission sur titres en école d'ingé. Plus pratique, moins théorique.</p>
-
-        <h2>Les compétences qui font la différence</h2>
-        <ul>
-          <li><strong>Sciences fondamentales</strong> · maths, physique, biologie · solides bases nécessaires</li>
-          <li><strong>Programmation</strong> · Python pour le traitement signal, C/C++ pour les systèmes embarqués</li>
-          <li><strong>Anglais technique</strong> · 80% de la littérature scientifique est en anglais</li>
-          <li><strong>Capacité à dialoguer avec des médecins</strong> · vocabulaire, écoute des besoins cliniques</li>
-          <li><strong>Rigueur réglementaire</strong> · les dispositifs médicaux suivent la norme ISO 13485 + marquage CE</li>
-        </ul>
-
-        <h2>Si ça te tente, voilà 3 actions pour creuser</h2>
-        <ul>
-          <li>Va une journée en JPO à Polytech Lyon, INSA Rouen, ou Sorbonne · pose des questions concrètes aux étudiants</li>
-          <li>Lis le rapport annuel du SNITEM (syndicat de l'industrie des technologies médicales) · vue d'ensemble du secteur</li>
-          <li>Demande à ton coach Proxxie de te connecter à un·e ingénieur·e biomédical·e pour un échange de 20 min</li>
-        </ul>
-
-        <div class="end-card" id="endCard">
-          <h3>Bravo, tu as fini la lecture !</h3>
-          <p>+15 XP gagnés. Cette découverte est maintenant marquée comme faite dans ton parcours.</p>
-          <a class="btn btn-white" href="Proxxie Parcours.html?activityCompleted=decouverte-bio">Retour au parcours →</a>
-        </div>
-
+      <article class="article-card" id="articleBody">
+        <!-- Contenu injecté depuis le CATALOG selon ?activity= -->
       </article>
     </div>
   </main>
@@ -163,13 +110,173 @@
   <footer class="foot">
     <div class="shell">
       <span>© 2026 Proxxie</span>
-      <span>Source · article rédigé avec Sarah Chen, ingénieure biomédicale</span>
+      <span id="footSource">Source · article Proxxie</span>
     </div>
   </footer>
 
   <script>
     (function () {
-      var ACTIVITY_ID = "decouverte-bio";
+      // ── Catalogue des découvertes (articles) ──────────────────────────
+      // Chaque entrée : en-têtes + corps HTML de l'article (~5 sections).
+      // Le bouton de fin (.end-card) est injecté automatiquement avec le bon id.
+      var CATALOG = {
+        "decouverte-bio": {
+          crumb: "Découverte métier",
+          title: "Ingénieur·e biomédical·e · construire les outils qui sauvent",
+          lead: "Un métier à l'intersection de l'ingénierie, de la médecine et de la R&D. 7 minutes de lecture pour comprendre ce qu'il faut pour s'y orienter.",
+          duration: "7 min de lecture",
+          source: "Source · article rédigé avec Sarah Chen, ingénieure biomédicale",
+          body:
+            '<p>Quand tu portes un appareil dentaire, quand un proche reçoit une prothèse de hanche, quand un hôpital installe un nouveau scanner · derrière ces objets et machines, il y a des ingénieur·es biomédicaux·les. Un métier discret, mais profondément utile.</p>' +
+            '<h2>Ce qu\'on fait au quotidien</h2>' +
+            '<p>L\'ingénieur·e biomédical·e conçoit, fabrique, ou maintient les dispositifs médicaux qui servent en hôpital, en recherche, ou à domicile. Concrètement, ça peut être·</p>' +
+            '<ul>' +
+            '<li>Concevoir une prothèse de genou ou une valve cardiaque artificielle</li>' +
+            '<li>Programmer le logiciel d\'un scanner IRM pour qu\'il filtre mieux les artefacts</li>' +
+            '<li>Tester la résistance d\'un implant aux 30 ans de fatigue mécanique qu\'il subira dans un corps</li>' +
+            '<li>Travailler en R&D avec des médecins pour traduire un besoin clinique en cahier des charges technique</li>' +
+            '</ul>' +
+            '<div class="quote">« Le plus motivant, c\'est qu\'à la fin de chaque projet, je sais qu\'un objet que j\'ai conçu va aider quelqu\'un à mieux vivre. Quand tu débugges un capteur, tu débugges aussi un peu la vie de quelqu\'un. »<span class="quote-author">, Sarah, ingénieure biomédicale chez Medtronic (3 ans d\'expérience)</span></div>' +
+            '<h2>Le marché en 3 chiffres</h2>' +
+            '<div class="stat-box"><div class="stat"><span class="num">+18%</span><span class="lbl">Croissance/an</span></div><div class="stat"><span class="num">42K€</span><span class="lbl">Salaire sortie d\'école</span></div><div class="stat"><span class="num">92%</span><span class="lbl">Emploi à 6 mois</span></div></div>' +
+            '<h2>Pour s\'y orienter en France</h2>' +
+            '<h3>Voie A · École d\'ingénieur post-bac</h3>' +
+            '<p>5 ans après le bac, dans une école spécialisée (Polytech Lyon, INSA Rouen, ESPCI Paris, IMT Atlantique). Tu rentres en cycle prépa intégré ou via concours après prépa. La prépa MPSI ou PCSI marche bien.</p>' +
+            '<h3>Voie B · Master après une licence de bio ou physique</h3>' +
+            '<p>3 ans de licence (biologie cellulaire, physique appliquée), puis 2 ans de master en ingénierie biomédicale (Sorbonne Université, Université Paris-Saclay). Voie plus longue mais accessible si tu ne veux pas faire de prépa.</p>' +
+            '<h3>Voie C · Reconversion via BUT puis école</h3>' +
+            '<p>BUT GMP ou GEII en 3 ans, puis admission sur titres en école d\'ingé. Plus pratique, moins théorique.</p>' +
+            '<h2>Les compétences qui font la différence</h2>' +
+            '<ul>' +
+            '<li><strong>Sciences fondamentales</strong> · maths, physique, biologie · solides bases nécessaires</li>' +
+            '<li><strong>Programmation</strong> · Python pour le traitement signal, C/C++ pour les systèmes embarqués</li>' +
+            '<li><strong>Anglais technique</strong> · 80% de la littérature scientifique est en anglais</li>' +
+            '<li><strong>Capacité à dialoguer avec des médecins</strong> · vocabulaire, écoute des besoins cliniques</li>' +
+            '<li><strong>Rigueur réglementaire</strong> · les dispositifs médicaux suivent la norme ISO 13485 + marquage CE</li>' +
+            '</ul>' +
+            '<h2>Si ça te tente, voilà 3 actions pour creuser</h2>' +
+            '<ul>' +
+            '<li>Va une journée en JPO à Polytech Lyon, INSA Rouen, ou Sorbonne · pose des questions concrètes aux étudiants</li>' +
+            '<li>Lis le rapport annuel du SNITEM (syndicat de l\'industrie des technologies médicales) · vue d\'ensemble du secteur</li>' +
+            '<li>Demande à ton coach Proxxie de te connecter à un·e ingénieur·e biomédical·e pour un échange de 20 min</li>' +
+            '</ul>'
+        },
+        "decouverte-ux-designer": {
+          crumb: "Découverte métier",
+          title: "UX designer · concevoir des produits qu\'on aime utiliser",
+          lead: "Derrière chaque appli fluide, il y a quelqu\'un qui a réfléchi à ton parcours. Un métier à mi-chemin entre la psychologie, le design et le numérique.",
+          duration: "6 min de lecture",
+          source: "Source · article rédigé avec Léa, UX designer en agence",
+          body:
+            '<p>Tu ouvres une appli, tu trouves tout du premier coup, tu n\'y penses même pas : c\'est exactement le travail réussi d\'un·e UX designer. À l\'inverse, quand un site te perd ou qu\'un bouton est introuvable, c\'est un design raté. L\'UX (« expérience utilisateur ») consiste à rendre les produits numériques simples, clairs et agréables.</p>' +
+            '<h2>Ce qu\'on fait au quotidien</h2>' +
+            '<p>Contrairement à ce qu\'on croit, l\'UX designer ne passe pas ses journées à dessiner de jolies maquettes. Une grande partie du métier, c\'est comprendre les gens.</p>' +
+            '<ul>' +
+            '<li>Interroger des utilisateurs pour comprendre leurs besoins et leurs blocages</li>' +
+            '<li>Cartographier le parcours d\'un usager, écran par écran</li>' +
+            '<li>Dessiner des maquettes (« wireframes ») puis des prototypes cliquables sur Figma</li>' +
+            '<li>Tester ces prototypes avec de vraies personnes et observer où elles bloquent</li>' +
+            '<li>Travailler main dans la main avec les développeurs et les chef·fes de produit</li>' +
+            '</ul>' +
+            '<div class="quote">« Mon métier, c\'est défendre la personne qui n\'est pas dans la salle de réunion : l\'utilisateur. Je me bats pour que le produit soit pensé pour elle, pas pour l\'ego de l\'entreprise. »<span class="quote-author">, Léa, UX designer (5 ans d\'expérience)</span></div>' +
+            '<h2>Le marché en 3 chiffres</h2>' +
+            '<div class="stat-box"><div class="stat"><span class="num">+22%</span><span class="lbl">Offres en 3 ans</span></div><div class="stat"><span class="num">38K€</span><span class="lbl">Salaire débutant</span></div><div class="stat"><span class="num">85%</span><span class="lbl">En poste à 6 mois</span></div></div>' +
+            '<h2>Pour s\'y orienter en France</h2>' +
+            '<h3>Voie A · École de design ou de communication numérique</h3>' +
+            '<p>Bachelor puis master en design numérique (Gobelins, L\'École de design Nantes Atlantique, ENSCI). On y apprend autant la méthode que les outils.</p>' +
+            '<h3>Voie B · Université, parcours sciences cognitives ou info-com</h3>' +
+            '<p>Une licence en sciences cognitives, psychologie ou information-communication, complétée par un master UX/design d\'interaction. Voie plus théorique mais reconnue.</p>' +
+            '<h3>Voie C · Reconversion via bootcamp</h3>' +
+            '<p>Des formations intensives de quelques mois (Ironhack, OpenClassrooms) permettent une entrée rapide, souvent après une première expérience dans un autre domaine.</p>' +
+            '<h2>Les compétences qui font la différence</h2>' +
+            '<ul>' +
+            '<li><strong>Empathie et écoute</strong> · comprendre des gens très différents de soi</li>' +
+            '<li><strong>Esprit de synthèse</strong> · transformer du désordre en parcours clairs</li>' +
+            '<li><strong>Maîtrise de Figma</strong> · l\'outil standard du métier aujourd\'hui</li>' +
+            '<li><strong>Curiosité</strong> · s\'intéresser à plein de sujets, car on conçoit pour tous les domaines</li>' +
+            '<li><strong>Communication</strong> · savoir défendre ses choix face à une équipe</li>' +
+            '</ul>' +
+            '<h2>Si ça te tente, voilà 3 actions pour creuser</h2>' +
+            '<ul>' +
+            '<li>Télécharge Figma (gratuit) et tente de redessiner l\'écran d\'accueil d\'une appli que tu utilises</li>' +
+            '<li>Observe une appli que tu détestes utiliser et note précisément ce qui te bloque</li>' +
+            '<li>Demande à ton coach Proxxie de te mettre en lien avec un·e designer pour 20 min de questions</li>' +
+            '</ul>'
+        },
+        "decouverte-prise-parole": {
+          crumb: "Découverte",
+          title: "Bien parler en public · une compétence qui s\'apprend",
+          lead: "La peur de parler devant un groupe n\'est pas une fatalité. C\'est une compétence comme une autre, et elle s\'entraîne. Voici comment.",
+          duration: "5 min de lecture",
+          source: "Source · article Proxxie, avec des coachs en éloquence",
+          body:
+            '<p>Avoir le cœur qui bat avant un exposé, la voix qui tremble, le trou de mémoire : c\'est normal, ça arrive même aux plus grands orateurs. La bonne nouvelle, c\'est que parler en public n\'est pas un don réservé à quelques-uns. C\'est une compétence, et comme toute compétence, elle se travaille.</p>' +
+            '<h2>Pourquoi ça compte pour ton orientation</h2>' +
+            '<p>Que tu deviennes ingénieur·e, soignant·e, commerçant·e ou artiste, tu auras à présenter tes idées : un projet, un diagnostic, une vente, une création. Savoir se faire comprendre et donner envie d\'écouter, c\'est un avantage dans presque tous les métiers, et pour les oraux du bac ou les entretiens d\'admission.</p>' +
+            '<div class="quote">« On croit qu\'il faut être à l\'aise pour bien parler. C\'est l\'inverse : on devient à l\'aise en parlant, encore et encore. Le trac ne disparaît pas, on apprend juste à danser avec lui. »<span class="quote-author">, un coach en éloquence</span></div>' +
+            '<h2>Trois leviers concrets</h2>' +
+            '<h3>1 · La respiration</h3>' +
+            '<p>Avant de commencer, prends trois respirations lentes, en gonflant le ventre plutôt que les épaules. Ça ralentit le cœur et stabilise la voix. Pendant que tu parles, ose les silences : ils paraissent toujours plus longs pour toi que pour ton public.</p>' +
+            '<h3>2 · La structure</h3>' +
+            '<p>Un discours clair tient en trois temps : une accroche qui réveille, deux ou trois idées principales, une conclusion qui marque. Si tu sais où tu vas, ton public te suit, et toi tu stresses moins.</p>' +
+            '<h3>3 · Le regard et le corps</h3>' +
+            '<p>Regarde des personnes précises dans le public, quelques secondes chacune, plutôt que de fixer le vide ou tes notes. Garde les pieds ancrés, les mains visibles. Ton corps parle autant que tes mots.</p>' +
+            '<h2>Un exercice à faire cette semaine</h2>' +
+            '<ul>' +
+            '<li>Choisis un sujet que tu aimes et enregistre-toi 2 minutes avec ton téléphone</li>' +
+            '<li>Réécoute-toi : repère un tic de langage (« euh », « du coup ») et une chose que tu fais bien</li>' +
+            '<li>Recommence le lendemain en corrigeant juste un détail. La progression vient de la répétition, pas de la perfection.</li>' +
+            '</ul>' +
+            '<h2>Pour aller plus loin</h2>' +
+            '<ul>' +
+            '<li>Inscris-toi à un club théâtre, débat ou éloquence dans ton établissement</li>' +
+            '<li>Propose-toi pour présenter un exposé volontaire : chaque prise de parole compte</li>' +
+            '<li>Demande à ton coach Proxxie un mini-entraînement avant ton prochain oral</li>' +
+            '</ul>'
+        },
+        "decouverte-sommeil": {
+          crumb: "Découverte",
+          title: "Le sommeil · le levier oublié de ta réussite",
+          lead: "On parle beaucoup de méthodes de travail, rarement de sommeil. Pourtant, c\'est sans doute le facteur le plus sous-estimé de tes résultats et de ton humeur.",
+          duration: "6 min de lecture",
+          source: "Source · article Proxxie, d\'après les recommandations sur le sommeil des adolescents",
+          body:
+            '<p>Tu peux avoir les meilleures fiches de révision du monde : si tu dors mal, ton cerveau n\'arrive pas à fixer ce que tu apprends. Le sommeil n\'est pas du temps perdu, c\'est le moment où ton cerveau range, trie et mémorise tout ce que tu as vécu dans la journée.</p>' +
+            '<h2>Ce qui se passe quand tu dors</h2>' +
+            '<p>Pendant la nuit, ton cerveau rejoue les apprentissages de la journée et les transfère vers la mémoire long terme. C\'est aussi le moment où il fait le ménage des déchets accumulés, et où ton corps se répare. Réviser tard puis dormir trop peu, c\'est saboter le travail que tu viens de faire.</p>' +
+            '<h2>Combien de sommeil à ton âge</h2>' +
+            '<div class="stat-box"><div class="stat"><span class="num">8-10h</span><span class="lbl">Besoin d\'un ado</span></div><div class="stat"><span class="num">7h</span><span class="lbl">Moyenne réelle</span></div><div class="stat"><span class="num">90 min</span><span class="lbl">Durée d\'un cycle</span></div></div>' +
+            '<p>La plupart des ados dorment une à deux heures de moins que ce dont ils ont besoin. Sur une semaine, ça crée une vraie « dette de sommeil » qui pèse sur la concentration, la mémoire et l\'humeur.</p>' +
+            '<div class="quote">« Un·e ado en manque de sommeil, ce n\'est pas quelqu\'un de paresseux : c\'est quelqu\'un dont le cerveau tourne au ralenti sans qu\'il s\'en rende compte. »<span class="quote-author">, d\'après les spécialistes du sommeil</span></div>' +
+            '<h2>Pourquoi c\'est plus dur à ton âge</h2>' +
+            '<p>À l\'adolescence, ton horloge biologique se décale naturellement : tu as sommeil plus tard, et te lever tôt devient un vrai supplice. Ce n\'est pas un caprice, c\'est biologique. Mais les écrans le soir aggravent tout : la lumière bleue retarde l\'endormissement et raccourcit la nuit.</p>' +
+            '<h2>Cinq habitudes qui changent tout</h2>' +
+            '<ul>' +
+            '<li><strong>Heures régulières</strong> · te coucher et te lever à des horaires stables, même le week-end</li>' +
+            '<li><strong>Écrans en pause</strong> · pose ton téléphone 30 à 60 min avant de dormir</li>' +
+            '<li><strong>Lumière du jour le matin</strong> · elle recale ton horloge interne</li>' +
+            '<li><strong>Pas de révisions au lit</strong> · ton cerveau doit associer le lit au repos, pas au stress</li>' +
+            '<li><strong>Caféine avec modération</strong> · pas de soda ni café après le milieu d\'après-midi</li>' +
+            '</ul>' +
+            '<h2>Le défi de la semaine</h2>' +
+            '<ul>' +
+            '<li>Choisis une heure de coucher réaliste et tiens-la 5 soirs de suite</li>' +
+            '<li>Sors ton téléphone de ta chambre pour la nuit, ou mets-le en mode avion loin du lit</li>' +
+            '<li>Note ton énergie le matin : tu verras la différence en moins d\'une semaine</li>' +
+            '</ul>'
+        }
+      };
+      var DEFAULT_ID = "decouverte-bio";
+
+      function resolveActivityId() {
+        try {
+          var p = new URLSearchParams(location.search).get("activity");
+          if (p && CATALOG[p]) return p;
+        } catch (e) {}
+        return DEFAULT_ID;
+      }
+      var ACTIVITY_ID = resolveActivityId();
+      var DATA = CATALOG[ACTIVITY_ID];
       var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
 
       function getRole() {
@@ -181,6 +288,20 @@
         } catch (e) {}
         return "parent";
       }
+
+      // Inject catalogue content
+      document.getElementById("crumb").textContent = DATA.crumb;
+      document.getElementById("heroTitle").textContent = DATA.title;
+      document.getElementById("heroLead").textContent = DATA.lead;
+      document.getElementById("metaDuration").innerHTML = "<strong>Durée</strong>" + DATA.duration;
+      document.getElementById("footSource").textContent = DATA.source;
+      document.getElementById("articleBody").innerHTML =
+        DATA.body +
+        '<div class="end-card" id="endCard">' +
+          '<h3>Bravo, tu as fini la lecture !</h3>' +
+          '<p>+15 XP gagnés. Cette découverte est maintenant marquée comme faite dans ton parcours.</p>' +
+          '<a class="btn btn-white" href="Proxxie Parcours.html?activityCompleted=' + ACTIVITY_ID + '">Retour au parcours →</a>' +
+        '</div>';
 
       var readingFill = document.getElementById("readingFill");
       var progressPct = document.getElementById("progressPct");
