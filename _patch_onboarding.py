@@ -23,11 +23,18 @@ COMPONENTS_JSX = r"""
 /* __proxxie_onboarding_v1__ */
 
 const _proxxieGetOnboardingState = () => {
-  let profile = false, firsttest = false, firstdoc = false, dismissed = false;
+  let profile = false, firsttest = false, firstdoc = false, invited = false, dismissed = false;
   try {
     profile   = localStorage.getItem("proxxie.onboarding.profile") === "1";
+    invited   = localStorage.getItem("proxxie.onboarding.invited") === "1";
     dismissed = localStorage.getItem("proxxie.onboarding.dismissed") === "1";
-    firsttest = localStorage.getItem("proxxie.tests.big5") === "done";
+    /* firsttest · viewer's own Big Five (role-scoped via _patch_tests_dual_storage) */
+    const role = localStorage.getItem("proxxie.role");
+    if (role === "parent" || role === "enfant") {
+      firsttest = localStorage.getItem("proxxie.tests.big5." + role) === "done";
+    }
+    /* legacy fallback */
+    if (!firsttest) firsttest = localStorage.getItem("proxxie.tests.big5") === "done";
     /* firstdoc · ANY proxxie.docs.X === "1" counts */
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
@@ -36,7 +43,7 @@ const _proxxieGetOnboardingState = () => {
       }
     }
   } catch (e) {}
-  return { profile, firsttest, firstdoc, dismissed };
+  return { profile, firsttest, firstdoc, invited, dismissed };
 };
 
 const EditProfileModal = ({ open, onClose, onSaved }) => {
@@ -116,7 +123,7 @@ const EditProfileModal = ({ open, onClose, onSaved }) => {
   );
 };
 
-const OnboardingChecklist = ({ onOpenProfile }) => {
+const OnboardingChecklist = ({ onOpenProfile, onOpenInvite }) => {
   const role = useProxxieRole();
   const isEnfant = role === "enfant";
   const [state, setState] = React.useState(_proxxieGetOnboardingState);
@@ -133,30 +140,74 @@ const OnboardingChecklist = ({ onOpenProfile }) => {
     };
   }, []);
 
-  const items = [
+  /* Order matches the user's stated parent-first journey · profil →
+     documents → tests → invite. For ado · profil → tests → docs → invite
+     (the ado is more naturally led by tests than docs). */
+  const items = isEnfant ? [
     {
       id: "profile",
       done: state.profile,
-      label: isEnfant ? "Complète ton profil" : "Complétez le profil de votre ado",
-      sub:   isEnfant ? "Prénom + classe, 20 sec." : "Prénom + classe de votre ado, 20 sec.",
-      cta:   isEnfant ? "Compléter" : "Compléter",
+      label: "Complète ton profil",
+      sub:   "Prénom + classe, 20 sec.",
+      cta:   "Compléter",
       onClick: onOpenProfile,
     },
     {
       id: "firsttest",
       done: state.firsttest,
-      label: isEnfant ? "Passe ton premier test (Big Five)" : "Faites passer le premier test (Big Five)",
-      sub:   "10 min · révèle les 5 grands traits de personnalité.",
-      cta:   isEnfant ? "Lancer" : "Lancer",
+      label: "Passe ton premier test (Big Five)",
+      sub:   "10 min · révèle tes 5 grands traits de personnalité.",
+      cta:   "Lancer",
       href:  "Proxxie Test.html",
     },
     {
       id: "firstdoc",
       done: state.firstdoc,
-      label: isEnfant ? "Upload ton premier bulletin" : "Uploadez le premier bulletin",
-      sub:   "Permet de calibrer les recommandations sur les vraies notes.",
-      cta:   isEnfant ? "Uploader" : "Uploader",
+      label: "Upload ton premier bulletin",
+      sub:   "Permet de calibrer les recommandations sur tes vraies notes.",
+      cta:   "Uploader",
       href:  "Proxxie Documents.html",
+    },
+    {
+      id: "invite",
+      done: state.invited,
+      label: "Invite ton parent",
+      sub:   "Pour qu'il puisse comparer son profil avec le tien et te suivre.",
+      cta:   "Inviter",
+      onClick: () => { try { localStorage.setItem("proxxie.onboarding.invited", "1"); } catch (e) {} if (onOpenInvite) onOpenInvite(); },
+    },
+  ] : [
+    {
+      id: "profile",
+      done: state.profile,
+      label: "Complétez le profil de votre ado",
+      sub:   "Prénom + classe, 20 sec. Indispensable pour personnaliser les recommandations.",
+      cta:   "Compléter",
+      onClick: onOpenProfile,
+    },
+    {
+      id: "firstdoc",
+      done: state.firstdoc,
+      label: "Uploadez un premier bulletin",
+      sub:   "Le rapport et les conseils se calibrent sur les vraies notes de votre ado.",
+      cta:   "Uploader",
+      href:  "Proxxie Documents.html",
+    },
+    {
+      id: "firsttest",
+      done: state.firsttest,
+      label: "Passez le Big Five (vous)",
+      sub:   "10 min. Votre profil sert de point de comparaison quand votre ado passera le sien.",
+      cta:   "Lancer",
+      href:  "Proxxie Test.html",
+    },
+    {
+      id: "invite",
+      done: state.invited,
+      label: "Invitez votre ado",
+      sub:   "Lien sécurisé pour qu'il/elle accède à son espace et passe ses propres tests.",
+      cta:   "Inviter",
+      onClick: () => { try { localStorage.setItem("proxxie.onboarding.invited", "1"); } catch (e) {} if (onOpenInvite) onOpenInvite(); },
     },
   ];
   const done = items.filter((i) => i.done).length;
@@ -186,13 +237,13 @@ const OnboardingChecklist = ({ onOpenProfile }) => {
             <span className="eyebrow"><span className="dot"></span>Mise en route</span>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, letterSpacing: "-0.02em", marginTop: 10, marginBottom: 6, color: "#0A0E2C" }}>
               {isEnfant
-                ? "3 actions pour démarrer ton parcours"
-                : "3 actions pour démarrer le parcours de votre ado"}
+                ? items.length + " actions pour démarrer ton parcours"
+                : items.length + " actions pour démarrer le parcours de votre ado"}
             </h2>
             <p style={{ color: "rgba(10,14,44,.55)", fontSize: 14, margin: 0, lineHeight: 1.5 }}>
               {isEnfant
-                ? "Coche ces 3 étapes (5 min au total) pour que ton tableau de bord se remplisse avec tes vraies données."
-                : "Cochez ces 3 étapes (5 min au total) pour que le tableau de bord se remplisse avec les vraies données de votre ado."}
+                ? "Coche ces étapes (10 min au total) pour que ton tableau de bord se remplisse avec tes vraies données et que ton parent puisse te suivre."
+                : "Cochez ces étapes (10 min au total) pour que le tableau de bord se remplisse avec les vraies données de votre ado, et lancez l'accompagnement."}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, minWidth: 160 }}>
@@ -208,7 +259,7 @@ const OnboardingChecklist = ({ onOpenProfile }) => {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
           {items.map((it, i) => {
             const inner = (
               <React.Fragment>
@@ -275,7 +326,7 @@ const OnboardingChecklist = ({ onOpenProfile }) => {
 """
 
 RETURN_ANCHOR = '<ReengagementBanner />'
-RETURN_REPLACE = '<ReengagementBanner />\n      <OnboardingChecklist onOpenProfile={() => setProfileOpen(true)} />'
+RETURN_REPLACE = '<ReengagementBanner />\n      <OnboardingChecklist onOpenProfile={() => setProfileOpen(true)} onOpenInvite={() => setInviteOpen(true)} />'
 
 STATE_HOOK_ANCHOR = 'const [inviteOpen, setInviteOpen] = React.useState(false);'
 STATE_HOOK_INSERT = STATE_HOOK_ANCHOR + '\n  const [profileOpen, setProfileOpen] = React.useState(false);'
