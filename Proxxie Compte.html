@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon compte · Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9;
+      --c-ink: #0A0E2C;
+      --c-ink-2: #2B2E45;
+      --c-muted: rgba(10, 14, 44, 0.55);
+      --c-line: rgba(10, 14, 44, 0.08);
+      --c-blue: #1320CE;
+      --c-blue-2: #487AFF;
+      --c-orange: #FD6936;
+      --c-yellow: #F5EB3F;
+      --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--c-cream-light);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--c-ink);
+      line-height: 1.5;
+    }
+    .shell { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247, 242, 233, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(10, 14, 44, 0.06);
+    }
+    .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--c-ink); }
+    .logo-mark { width: 26px; height: 26px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 14px; }
+    .logo-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+    .topnav { display: flex; gap: 24px; font-size: 14px; font-weight: 500; align-items: center; }
+    .topnav .sep { width: 1px; height: 24px; background: rgba(10, 14, 44, 0.12); }
+    .topnav a { color: var(--c-muted); text-decoration: none; padding-bottom: 4px; }
+    .topnav a.active { color: var(--c-ink); border-bottom: 2px solid var(--c-orange); }
+    .userpill { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; background: white; border-radius: 999px; border: 1px solid var(--c-line); text-decoration: none; color: inherit; transition: border-color .15s; }
+    .userpill.active { border-color: var(--c-blue-2); }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #487AFF, #1320CE); color: white; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+    .userpill .who { font-size: 13px; }
+    .userpill .who div:first-child { font-weight: 600; line-height: 1.1; }
+    .userpill .who div:last-child { font-size: 10px; color: var(--c-muted); }
+
+    /* Breadcrumb */
+    .crumb { padding: 22px 0 0; font-size: 13px; color: var(--c-muted); }
+    .crumb a { text-decoration: none; color: var(--c-muted); }
+    .crumb a:hover { color: var(--c-ink); }
+    .crumb .here { color: var(--c-ink); font-weight: 600; }
+
+    /* Hero */
+    .hero { padding: 24px 0 28px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 720px; line-height: 1.1; }
+    .hero .lead { font-size: 16px; color: var(--c-muted); max-width: 640px; }
+
+    /* Cards layout */
+    .cards { padding-bottom: 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+    .card {
+      background: white;
+      border: 1px solid var(--c-line);
+      border-radius: 20px;
+      padding: 26px 28px;
+    }
+    .card.span-2 { grid-column: 1 / -1; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .card-head h2 { font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+    .card-kicker { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--c-muted); margin-bottom: 4px; }
+    .card-kicker .ic { font-size: 14px; }
+    .card .hint { font-size: 13px; color: var(--c-muted); margin-bottom: 16px; max-width: 540px; }
+
+    /* Form rows */
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 11px 14px; border-radius: 12px;
+      border: 1px solid var(--c-line); background: var(--c-cream-light);
+      font-family: inherit; font-size: 15px; color: var(--c-ink);
+    }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--c-blue-2); background: white; }
+    .field input:disabled, .field select:disabled { color: var(--c-ink); opacity: 1; cursor: default; }
+    .field .static { padding: 11px 14px; border-radius: 12px; background: rgba(10,14,44,.03); font-size: 15px; font-weight: 500; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 540px) { .row-2 { grid-template-columns: 1fr; } }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: transform .15s, box-shadow .15s, background .15s; }
+    .btn-orange { background: var(--c-orange); color: white; }
+    .btn-orange:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253,105,54,.30); }
+    .btn-blue { background: var(--c-blue); color: white; }
+    .btn-blue:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(19,32,206,.28); }
+    .btn-ghost { background: transparent; color: var(--c-ink); border: 1px solid var(--c-line); }
+    .btn-ghost:hover { border-color: var(--c-ink); }
+    .btn-danger { background: transparent; color: var(--c-orange); border: 1px solid rgba(253,105,54,.30); }
+    .btn-danger:hover { background: rgba(253,105,54,.06); }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .badge.role { background: rgba(72,122,255,.10); color: var(--c-blue-2); }
+    .badge.ok { background: rgba(34,160,107,.12); color: var(--c-green); }
+    .badge.neutral { background: rgba(10,14,44,.05); color: var(--c-muted); }
+
+    .saved-note { font-size: 13px; color: var(--c-green); font-weight: 600; opacity: 0; transition: opacity .2s; }
+    .saved-note.show { opacity: 1; }
+
+    /* Link code box */
+    .codebox {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(19,32,206,.05), rgba(72,122,255,.05));
+      border: 1px dashed rgba(19,32,206,.25); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px;
+    }
+    .codebox .code { font-family: var(--font-num); font-size: 28px; font-weight: 700; letter-spacing: 0.04em; color: var(--c-blue); }
+    .linked-box { display: flex; align-items: center; gap: 14px; background: rgba(34,160,107,.06); border: 1px solid rgba(34,160,107,.18); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; }
+    .linked-box .who { font-size: 16px; font-weight: 600; }
+
+    /* Subscription tiers */
+    .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 720px) { .tiers { grid-template-columns: 1fr; } }
+    .tier {
+      border: 1px solid var(--c-line); border-radius: 16px; padding: 20px 22px;
+      display: flex; flex-direction: column; gap: 10px; position: relative;
+    }
+    .tier.active { border-color: var(--c-green); background: rgba(34,160,107,.04); }
+    .tier.highlight { border-color: var(--c-orange); }
+    .tier .name { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+    .tier .price { font-family: var(--font-num); font-size: 26px; font-weight: 700; color: var(--c-ink); }
+    .tier .price .per { font-size: 13px; color: var(--c-muted); font-weight: 500; }
+    .tier ul { list-style: none; font-size: 13px; color: var(--c-muted); display: grid; gap: 6px; margin: 4px 0; }
+    .tier ul li::before { content: "✓ "; color: var(--c-green); font-weight: 700; }
+    .tier .tier-cta { margin-top: auto; }
+
+    .reassure { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+    @media (max-width: 720px) { .reassure { grid-template-columns: 1fr; } }
+    .reassure .item { background: rgba(10,14,44,.02); border-radius: 14px; padding: 16px; }
+    .reassure .item .ic { font-size: 20px; margin-bottom: 6px; }
+    .reassure .item .t { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .reassure .item .d { font-size: 12px; color: var(--c-muted); }
+
+    footer.foot {
+      border-top: 1px solid var(--c-line);
+      padding: 24px 0 40px;
+      font-size: 12px;
+      color: var(--c-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer.foot a { text-decoration: none; color: inherit; }
+
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: 1fr; }
+      .topnav { gap: 16px; font-size: 13px; }
+      .topnav .sep { display: none; }
+      .userpill .who { display: none; }
+      .hero h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>
+        <span class="logo-name">proxxie</span>
+      </a>
+      <nav class="topnav">
+        <span class="sep"></span>
+        <a href="Proxxie Dashboard.html">Tableau de bord</a>
+        <a href="Proxxie Parcours.html">Parcours</a>
+        <a href="Proxxie Documents.html">Documents</a>
+        <a href="Proxxie Ressources.html">Ressources</a>
+      </nav>
+      <a class="userpill active" href="Proxxie Compte.html" aria-current="page">
+        <div class="avatar" id="avatarInitial">J</div>
+        <div class="who">
+          <div id="userName">Julie L.</div>
+          <div id="userMeta">Parent · Arthur</div>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="crumb">
+      <a href="Proxxie Dashboard.html">Tableau de bord</a> · <span class="here">Mon compte</span>
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow" id="heroEyebrow">Mon espace</span>
+      <h1 id="heroTitle">Mon compte</h1>
+      <p class="lead" id="heroLead">Tes informations, ton lien parent–ado, ton abonnement et tes préférences. Tout est ici, et rien ne quitte la France.</p>
+    </div>
+  </section>
+
+  <main class="cards shell">
+
+    <!-- 3 · Profil -->
+    <section class="card">
+      <div>
+        <span class="card-kicker"><span class="ic">👤</span>Profil</span>
+        <div class="card-head"><h2 id="profilTitle">Tes informations</h2><span class="badge role" id="roleBadge">Parent</span></div>
+      </div>
+      <p class="hint" id="profilHint">Modifie ton prénom et ta classe quand tu veux. C'est ce qui personnalise tes recommandations.</p>
+      <div class="row-2">
+        <div class="field">
+          <label for="firstName">Prénom</label>
+          <input id="firstName" type="text" disabled value="Arthur">
+        </div>
+        <div class="field">
+          <label for="grade" id="gradeLabel">Classe</label>
+          <select id="grade" disabled>
+            <option>Seconde</option>
+            <option>Première</option>
+            <option selected>Terminale</option>
+            <option>Études supérieures</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="editBtn" type="button">Modifier</button>
+        <button class="btn btn-orange" id="saveBtn" type="button" style="display:none;">Enregistrer</button>
+        <button class="btn btn-ghost" id="cancelBtn" type="button" style="display:none;">Annuler</button>
+        <span class="saved-note" id="profilSaved">Enregistré ✓</span>
+      </div>
+    </section>
+
+    <!-- 4 · Compte lié -->
+    <section class="card">
+      <div>
+        <span class="card-kicker"><span class="ic">🔗</span>Compte lié</span>
+        <div class="card-head"><h2 id="linkTitle">Lien parent–ado</h2><span class="badge neutral" id="linkBadge">Non lié</span></div>
+      </div>
+
+      <div id="linkNotLinked">
+        <p class="hint" id="linkHint">Partage ce code à ton parent. Au moment de son inscription, il le saisit, et vos deux profils OCEAN-X se rapprochent pour la comparaison.</p>
+        <div class="codebox">
+          <div class="code" id="linkCode">PRX-0000</div>
+          <button class="btn btn-ghost" id="copyBtn" type="button">Copier</button>
+          <span class="saved-note" id="copySaved">Copié ✓</span>
+        </div>
+        <p class="hint" style="margin-bottom:0;">Un seul code par compte. Tant que personne ne l'a saisi, ton espace reste solo.</p>
+      </div>
+
+      <div id="linkLinked" style="display:none;">
+        <div class="linked-box">
+          <div class="avatar" id="linkedAvatar">A</div>
+          <div>
+            <div class="who"><span id="linkedName">Arthur</span> <span style="color:var(--c-green);">✓</span></div>
+            <div class="hint" style="margin:0;" id="linkedSub">Vos profils sont reliés.</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="comparaison.html">Voir la comparaison →</a>
+          <button class="btn btn-danger" id="unlinkBtn" type="button">Délier</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Abonnement -->
+    <section class="card span-2">
+      <div>
+        <span class="card-kicker"><span class="ic">⭐</span>Abonnement</span>
+        <div class="card-head"><h2>Ton offre</h2><span class="badge ok" id="subBadge">Découverte · gratuit</span></div>
+      </div>
+      <p class="hint">Commence gratuitement. Passe à l'accompagnement quand tu veux un coach dédié et le bilan Parcoursup complet.</p>
+      <div class="tiers">
+        <div class="tier" id="tierFree">
+          <div class="name">Découverte</div>
+          <div class="price">Gratuit</div>
+          <ul>
+            <li>Profil OCEAN-X</li>
+            <li>11 tests psychométriques</li>
+            <li>Activités guidées</li>
+          </ul>
+          <div class="tier-cta"><span class="badge neutral" id="freeState">Offre actuelle</span></div>
+        </div>
+        <div class="tier highlight" id="tierPaid">
+          <div class="name">Accompagnement</div>
+          <div class="price">290€ <span class="per">/ mois</span></div>
+          <ul>
+            <li>Tout Découverte, plus :</li>
+            <li>Coach dédié & séances</li>
+            <li>Bilan final & vœux Parcoursup</li>
+          </ul>
+          <div class="tier-cta">
+            <a class="btn btn-orange" id="upgradeCta" href="https://calendly.com/proxxie/accompagnement" target="_blank" rel="noopener">Passer à l'accompagnement →</a>
+            <span class="badge ok" id="paidState" style="display:none;">Offre actuelle</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Newsletter -->
+    <section class="card">
+      <div>
+        <span class="card-kicker"><span class="ic">✉️</span>Newsletter</span>
+        <div class="card-head"><h2>Les conseils Proxxie</h2></div>
+      </div>
+      <p class="hint" id="nlHint">Une fois par mois, des repères concrets sur l'orientation, Parcoursup et les métiers qui montent. Sans spam, désinscription en un clic.</p>
+
+      <div id="nlNotSubscribed">
+        <div class="field">
+          <label for="nlEmail">Ton email</label>
+          <input id="nlEmail" type="email" placeholder="prenom@email.fr">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-blue" id="nlSubBtn" type="button">S'inscrire</button>
+          <span class="saved-note" id="nlSaved">Inscrit ✓</span>
+        </div>
+      </div>
+
+      <div id="nlSubscribed" style="display:none;">
+        <div class="linked-box" style="margin-bottom:14px;">
+          <div style="font-size:22px;">✉️</div>
+          <div>
+            <div class="who">Inscrit <span style="color:var(--c-green);">✓</span></div>
+            <div class="hint" style="margin:0;" id="nlEmailShown">prenom@email.fr</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost" id="nlUnsubBtn" type="button">Se désinscrire</button>
+      </div>
+    </section>
+
+    <!-- 7 · Confidentialité & données -->
+    <section class="card span-2">
+      <div>
+        <span class="card-kicker"><span class="ic">🔒</span>Confidentialité & données</span>
+        <div class="card-head"><h2>Tes données t'appartiennent</h2></div>
+      </div>
+      <div class="reassure">
+        <div class="item">
+          <div class="ic">🇫🇷</div>
+          <div class="t">Hébergé en France</div>
+          <div class="d">OVH, Roubaix. Tes données ne quittent jamais le territoire.</div>
+        </div>
+        <div class="item">
+          <div class="ic">🔐</div>
+          <div class="t">Chiffrement</div>
+          <div class="d">Données chiffrées au repos et en transit. Accès strictement limité.</div>
+        </div>
+        <div class="item">
+          <div class="ic">📤</div>
+          <div class="t">Export & suppression</div>
+          <div class="d">Récupère ou efface tout, à tout moment. C'est ton droit.</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="exportBtn" type="button">Exporter mes données</button>
+        <button class="btn btn-danger" id="deleteBtn" type="button">Supprimer mon compte</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot shell">
+    <span>© 2026 Proxxie</span>
+    <div style="display: flex; gap: 18px;">
+      <a href="#">Politique</a>
+      <a href="#">CGV</a>
+      <a href="#">Aide</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // ---- Role detection (mirrors other pages) ----
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+      var tu = isEnfant; // ado = tutoiement, parent = vouvoiement
+
+      function $(id) { return document.getElementById(id); }
+      function lsGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
+      function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+      function flash(el) { if (!el) return; el.classList.add("show"); setTimeout(function () { el.classList.remove("show"); }, 2200); }
+
+      // ---- Localized copy ----
+      var copy = {
+        heroTitle: tu ? "Mon compte" : "Votre compte",
+        heroLead: tu
+          ? "Tes informations, ton lien parent–ado, ton abonnement et tes préférences. Tout est ici, et rien ne quitte la France."
+          : "Vos informations, votre lien parent–ado, votre abonnement et vos préférences. Tout est ici, et rien ne quitte la France.",
+        profilTitle: tu ? "Tes informations" : "Vos informations",
+        profilHint: tu
+          ? "Modifie ton prénom et ta classe quand tu veux. C'est ce qui personnalise tes recommandations."
+          : "Modifiez votre prénom et la classe de votre ado quand vous voulez. C'est ce qui personnalise les recommandations.",
+        gradeLabel: tu ? "Classe" : "Classe de votre ado",
+        linkHint: tu
+          ? "Partage ce code à ton parent. Au moment de son inscription, il le saisit, et vos deux profils OCEAN-X se rapprochent pour la comparaison."
+          : "Partagez ce code à votre ado. Au moment de son inscription, il le saisit, et vos deux profils OCEAN-X se rapprochent pour la comparaison.",
+        nlHint: tu
+          ? "Une fois par mois, des repères concrets sur l'orientation, Parcoursup et les métiers qui montent. Sans spam, désinscription en un clic."
+          : "Une fois par mois, des repères concrets pour accompagner votre ado : orientation, Parcoursup, métiers. Sans spam, désinscription en un clic.",
+        nlEmailLabel: tu ? "Ton email" : "Votre email",
+        linkedSub: tu ? "Vos profils sont reliés." : "Vos profils sont reliés.",
+        privTitle: tu ? "Tes données t'appartiennent" : "Vos données vous appartiennent",
+        exportConfirm: tu ? "Tes données" : "Vos données",
+        deleteConfirm: tu
+          ? "Supprimer ton compte effacera définitivement ton profil, tes tests et ton parcours. Cette action est irréversible. Continuer ?"
+          : "Supprimer votre compte effacera définitivement votre profil, vos tests et votre parcours. Cette action est irréversible. Continuer ?"
+      };
+      $("heroTitle").textContent = copy.heroTitle;
+      $("heroLead").textContent = copy.heroLead;
+      $("profilTitle").textContent = copy.profilTitle;
+      $("profilHint").textContent = copy.profilHint;
+      $("gradeLabel").textContent = copy.gradeLabel;
+      $("linkHint").textContent = copy.linkHint;
+      $("nlHint").textContent = copy.nlHint;
+      document.querySelector('label[for="nlEmail"]').textContent = copy.nlEmailLabel;
+      $("linkedSub").textContent = copy.linkedSub;
+      document.querySelector("section.card.span-2 .card-head h2").textContent = copy.privTitle;
+
+      // ---- Topbar pill + role badge ----
+      $("roleBadge").textContent = isEnfant ? "Ado" : "Parent";
+      var firstName = lsGet("proxxie_firstName", isEnfant ? "Arthur" : "Arthur");
+      var grade = lsGet("proxxie_grade", "Terminale");
+      var parentName = lsGet("proxxie_parentName", "Julie L.");
+      if (isEnfant) {
+        $("userName").textContent = firstName;
+        $("userMeta").textContent = "Ado · " + grade;
+        $("avatarInitial").textContent = (firstName.charAt(0) || "A").toUpperCase();
+      } else {
+        $("userName").textContent = parentName;
+        $("userMeta").textContent = "Parent · " + firstName;
+        $("avatarInitial").textContent = (parentName.charAt(0) || "J").toUpperCase();
+      }
+
+      // ---- 3 · Profil (editable, persists) ----
+      var firstInput = $("firstName");
+      var gradeSel = $("grade");
+      firstInput.value = firstName;
+      gradeSel.value = grade;
+      var editBtn = $("editBtn"), saveBtn = $("saveBtn"), cancelBtn = $("cancelBtn");
+      function setEditing(on) {
+        firstInput.disabled = !on; gradeSel.disabled = !on;
+        editBtn.style.display = on ? "none" : "";
+        saveBtn.style.display = on ? "" : "none";
+        cancelBtn.style.display = on ? "" : "none";
+        if (on) firstInput.focus();
+      }
+      editBtn.addEventListener("click", function () { setEditing(true); });
+      cancelBtn.addEventListener("click", function () {
+        firstInput.value = lsGet("proxxie_firstName", firstName);
+        gradeSel.value = lsGet("proxxie_grade", grade);
+        setEditing(false);
+      });
+      saveBtn.addEventListener("click", function () {
+        var fn = (firstInput.value || "").trim() || "Arthur";
+        firstInput.value = fn;
+        lsSet("proxxie_firstName", fn);
+        lsSet("proxxie_grade", gradeSel.value);
+        // refresh pill
+        if (isEnfant) {
+          $("userName").textContent = fn;
+          $("userMeta").textContent = "Ado · " + gradeSel.value;
+          $("avatarInitial").textContent = (fn.charAt(0) || "A").toUpperCase();
+        } else {
+          $("userMeta").textContent = "Parent · " + fn;
+        }
+        setEditing(false);
+        flash($("profilSaved"));
+      });
+
+      // ---- 4 · Compte lié ----
+      function genCode() {
+        var s = "";
+        for (var i = 0; i < 4; i++) s += "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".charAt(Math.floor(Math.random() * 32));
+        return "PRX-" + s;
+      }
+      var linkCode = lsGet("proxxie.linkCode", null);
+      if (!linkCode) { linkCode = genCode(); lsSet("proxxie.linkCode", linkCode); }
+      $("linkCode").textContent = linkCode;
+
+      var linkedTo = lsGet("proxxie.linkedTo", null); // default: not linked
+      function renderLink() {
+        var linked = !!linkedTo;
+        $("linkNotLinked").style.display = linked ? "none" : "";
+        $("linkLinked").style.display = linked ? "" : "none";
+        var b = $("linkBadge");
+        if (linked) {
+          b.textContent = "Lié ✓"; b.className = "badge ok";
+          $("linkedName").textContent = linkedTo;
+          $("linkedAvatar").textContent = (linkedTo.charAt(0) || "A").toUpperCase();
+        } else {
+          b.textContent = "Non lié"; b.className = "badge neutral";
+        }
+      }
+      renderLink();
+
+      $("copyBtn").addEventListener("click", function () {
+        var done = function () { flash($("copySaved")); };
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(linkCode).then(done, done);
+          } else { done(); }
+        } catch (e) { done(); }
+      });
+      $("unlinkBtn").addEventListener("click", function () {
+        var msg = tu ? "Délier ce compte ? Vous pourrez vous relier plus tard avec un nouveau code."
+                     : "Délier ce compte ? Vous pourrez vous relier plus tard avec un nouveau code.";
+        if (confirm(msg)) { lsDel("proxxie.linkedTo"); linkedTo = null; renderLink(); }
+      });
+
+      // ---- 5 · Abonnement ----
+      var sub = lsGet("proxxie.subscription", "Découverte · gratuit");
+      var isPaid = /accompagnement/i.test(sub);
+      var subBadge = $("subBadge");
+      if (isPaid) {
+        subBadge.textContent = "Accompagnement · actif";
+        $("tierPaid").classList.add("active"); $("tierPaid").classList.remove("highlight");
+        $("tierFree").classList.remove("active");
+        $("freeState").textContent = "Inclus";
+        $("upgradeCta").style.display = "none";
+        $("paidState").style.display = "";
+      } else {
+        subBadge.textContent = "Découverte · gratuit";
+        $("tierFree").classList.add("active");
+        $("freeState").textContent = "Offre actuelle";
+      }
+
+      // ---- 6 · Newsletter ----
+      var nlSubscribed = lsGet("proxxie.newsletter.subscribed", null) === "true";
+      var nlEmail = lsGet("proxxie.newsletter.email", "");
+      function renderNl() {
+        $("nlNotSubscribed").style.display = nlSubscribed ? "none" : "";
+        $("nlSubscribed").style.display = nlSubscribed ? "" : "none";
+        if (nlSubscribed) $("nlEmailShown").textContent = nlEmail || "(email enregistré)";
+      }
+      renderNl();
+      $("nlSubBtn").addEventListener("click", function () {
+        var email = ($("nlEmail").value || "").trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+          alert(tu ? "Vérifie ton adresse email." : "Vérifiez votre adresse email.");
+          return;
+        }
+        nlSubscribed = true; nlEmail = email;
+        lsSet("proxxie.newsletter.subscribed", "true");
+        lsSet("proxxie.newsletter.email", email);
+        renderNl(); flash($("nlSaved"));
+      });
+      $("nlUnsubBtn").addEventListener("click", function () {
+        nlSubscribed = false;
+        lsDel("proxxie.newsletter.subscribed");
+        lsDel("proxxie.newsletter.email");
+        $("nlEmail").value = "";
+        renderNl();
+      });
+
+      // ---- 7 · Confidentialité & données ----
+      $("exportBtn").addEventListener("click", function () { window.print(); });
+      $("deleteBtn").addEventListener("click", function () {
+        if (confirm(copy.deleteConfirm)) {
+          alert(tu ? "Demande de suppression enregistrée (maquette)." : "Demande de suppression enregistrée (maquette).");
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
