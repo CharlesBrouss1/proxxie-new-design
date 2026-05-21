@@ -253,6 +253,17 @@
       .news-strip { grid-template-columns: 1fr; padding: 24px; }
       .events { grid-template-columns: 1fr; }
     }
+    @media (max-width: 640px) {
+      .topbar .shell { gap: 12px; }
+      .topnav { min-width: 0; flex: 1 1 auto; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      [style*="grid-template-columns"] { grid-template-columns: minmax(0, 1fr) !important; }
+      .featured, .cards, .news-strip, .events { grid-template-columns: minmax(0, 1fr) !important; }
+      .featured > *, .cards > *, .news-strip > *, .events > * { min-width: 0; }
+      .news-list { min-width: 0; }
+      .news-item { min-width: 0; }
+      .news-item .ntitle { min-width: 0; overflow-wrap: anywhere; }
+      body { overflow-x: hidden; }
+    }
   </style>
 </head>
 <body>

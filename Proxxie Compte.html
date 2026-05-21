@@ -169,6 +169,11 @@
       .userpill .who { display: none; }
       .hero h1 { font-size: 30px; }
     }
+    @media (max-width: 640px) {
+      .topnav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+      body { overflow-x: hidden; }
+    }
   </style>
 </head>
 <body>

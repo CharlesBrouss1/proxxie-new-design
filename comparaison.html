@@ -86,6 +86,10 @@
     @media (max-width: 900px) {
       .pair, .radar-section { grid-template-columns: 1fr; }
     }
+    @media (max-width: 640px) {
+      nav.topnav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; gap: 16px; }
+      body { overflow-x: hidden; }
+    }
     .radar-svg { width: 100%; max-width: 520px; margin: 0 auto; display: block; aspect-ratio: 1 / 1; }
     .radar-legend { display: flex; gap: 18px; align-items: center; justify-content: center; margin-top: 10px; font-size: 12px; color: var(--c-muted); }
     .legend-dot { display: inline-flex; align-items: center; gap: 6px; }
