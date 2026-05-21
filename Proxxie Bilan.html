@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bilan d'orientation , Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9; --c-ink: #0A0E2C; --c-ink-2: #2B2E45; --c-muted: rgba(10,14,44,.55);
+      --c-line: rgba(10,14,44,.08); --c-blue: #1320CE; --c-blue-2: #487AFF;
+      --c-orange: #FD6936; --c-yellow: #F5EB3F; --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--c-cream-light); font-family: 'Inter', sans-serif; color: var(--c-ink); line-height: 1.5; }
+    .shell { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(247,242,233,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(10,14,44,.06); }
+    .topbar > .shell { max-width: 1280px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--c-ink); font-family: var(--font-display); font-weight: 600; }
+    .logo-mark { width: 22px; height: 22px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 12px; }
+    .breadcrumb { font-size: 12px; color: var(--c-muted); display: flex; gap: 8px; align-items: center; }
+    .breadcrumb a { text-decoration: none; }
+    .breadcrumb a:hover { color: var(--c-blue); }
+    .top-actions { display: flex; gap: 8px; }
+    .btn-mini { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--c-line); background: white; color: var(--c-ink); cursor: pointer; font-family: inherit; }
+    .btn-mini:hover { border-color: var(--c-blue-2); }
+
+    /* Locked state · full-page takeover */
+    .lock-overlay { display: none; background: var(--c-cream-light); padding: 80px 24px; }
+    body.locked .lock-overlay { display: block; }
+    body.locked .bilan-content { display: none; }
+    .lock-card { max-width: 640px; margin: 0 auto; background: white; border: 1px solid var(--c-line); border-radius: 24px; padding: 48px 40px; text-align: center; }
+    .lock-card .icon { width: 64px; height: 64px; border-radius: 20px; background: rgba(10,14,44,.04); display: grid; place-items: center; font-size: 28px; margin: 0 auto 20px; }
+    .lock-card h1 { font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .lock-card .lead { font-size: 15px; color: var(--c-muted); margin-bottom: 28px; }
+    .lock-progress { background: rgba(10,14,44,.03); border: 1px solid var(--c-line); border-radius: 16px; padding: 22px; margin-bottom: 24px; text-align: left; }
+    .lock-progress h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); font-weight: 700; margin-bottom: 14px; }
+    .lock-condition { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(10,14,44,.04); font-size: 14px; }
+    .lock-condition:last-child { border-bottom: 0; }
+    .lock-condition .check { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; font-size: 12px; font-weight: 700; }
+    .lock-condition .check.done { background: var(--c-green); color: white; }
+    .lock-condition .check.pending { background: rgba(10,14,44,.06); color: var(--c-muted); }
+    .lock-condition .label { flex: 1; }
+    .lock-condition .label.done { color: var(--c-muted); text-decoration: line-through; }
+
+    /* Main Bilan */
+    .hero { padding: 48px 0 28px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 44px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 760px; line-height: 1.1; }
+    .hero .meta-row { display: flex; gap: 18px; font-size: 13px; color: var(--c-muted); margin-top: 14px; flex-wrap: wrap; }
+    .hero .meta-row strong { color: var(--c-ink); font-weight: 600; margin-right: 4px; }
+
+    .section { background: white; border: 1px solid var(--c-line); border-radius: 20px; padding: 36px 40px; margin-bottom: 16px; }
+    .section h2 { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 22px; }
+    .section h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin: 24px 0 10px; }
+    .section .num-prefix { color: var(--c-orange); font-family: var(--font-num); font-weight: 700; margin-right: 8px; font-size: 22px; }
+
+    .trait-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 22px; }
+    .trait { text-align: center; padding: 16px 10px; background: #FAFAF6; border-radius: 14px; }
+    .trait-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); font-weight: 600; margin-bottom: 6px; }
+    .trait-val { font-family: var(--font-num); font-size: 24px; font-weight: 700; color: var(--c-blue); }
+
+    .strengths-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    .strengths-card { background: #FAFAF6; border-left: 3px solid var(--c-green); border-radius: 12px; padding: 18px; }
+    .strengths-card.warn { border-left-color: var(--c-orange); }
+    .strengths-card .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--c-green); margin-bottom: 8px; }
+    .strengths-card.warn .label { color: var(--c-orange); }
+    .strengths-card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+    .strengths-card li { margin-bottom: 4px; }
+
+    .metier-card { background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 14px; padding: 18px 20px; margin-bottom: 10px; }
+    .metier-card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 8px; }
+    .metier-card .name { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+    .metier-card .match { font-family: var(--font-num); font-size: 14px; font-weight: 700; color: var(--c-green); }
+    .metier-card .desc { font-size: 13px; color: var(--c-muted); }
+
+    .voeux-grid { display: grid; gap: 10px; }
+    .voeu-row { display: grid; grid-template-columns: 36px 1fr auto auto; gap: 14px; align-items: center; padding: 14px 18px; background: #FAFAF6; border-radius: 12px; }
+    .voeu-row .num { font-family: var(--font-num); font-weight: 700; color: var(--c-muted); font-size: 13px; }
+    .voeu-row .name { font-size: 14px; font-weight: 600; }
+    .voeu-row .name .sub { display: block; font-size: 12px; color: var(--c-muted); font-weight: 400; margin-top: 2px; }
+    .voeu-row .cat { font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+    .voeu-row .cat.selectif { background: rgba(253,105,54,.10); color: var(--c-orange); }
+    .voeu-row .cat.equilibre { background: rgba(72,122,255,.10); color: var(--c-blue-2); }
+    .voeu-row .cat.securisant { background: rgba(34,160,107,.10); color: var(--c-green); }
+    .voeu-row .status { font-size: 12px; color: var(--c-muted); font-weight: 500; }
+
+    .action-row { display: flex; gap: 12px; padding: 14px 16px; background: #FAFAF6; border-radius: 12px; margin-bottom: 8px; align-items: center; }
+    .action-row .check-empty { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(10,14,44,.18); flex-shrink: 0; }
+    .action-row .text { flex: 1; font-size: 14px; }
+    .action-row .deadline { font-size: 12px; color: var(--c-orange); font-weight: 600; }
+
+    /* Share modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,14,44,.55); z-index: 200; padding: 20px; }
+    .modal-overlay.show { display: grid; place-items: center; }
+    .modal { background: white; border-radius: 24px; max-width: 520px; width: 100%; padding: 32px; box-shadow: 0 24px 60px rgba(10,14,44,.25); }
+    .modal h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+    .modal p { font-size: 14px; color: var(--c-muted); margin-bottom: 22px; }
+    .share-link { display: flex; gap: 8px; align-items: center; padding: 12px 16px; background: rgba(19,32,206,.05); border: 1.5px dashed rgba(19,32,206,.25); border-radius: 14px; margin-bottom: 18px; }
+    .share-link input { flex: 1; background: transparent; border: 0; font-family: var(--font-num); color: var(--c-blue); font-size: 14px; outline: none; font-weight: 600; }
+    .btn { padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; font-family: inherit; }
+    .btn-orange { background: var(--c-orange); color: white; }
+    .btn-ghost { background: transparent; border: 1px solid var(--c-line); color: var(--c-ink); }
+
+    .badge-celebrate { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: rgba(245,235,63,.18); border: 1px solid rgba(245,235,63,.5); border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--c-ink); margin-top: 14px; }
+
+    footer.foot { border-top: 1px solid var(--c-line); padding: 24px 0 40px; font-size: 12px; color: var(--c-muted); }
+    footer.foot .shell { max-width: 1280px; display: flex; justify-content: space-between; align-items: center; }
+
+    @media (max-width: 720px) {
+      .trait-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+      .strengths-row { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+      .section { padding: 24px; }
+      .voeu-row { grid-template-columns: 28px 1fr; gap: 8px; }
+      .voeu-row .cat, .voeu-row .status { grid-column: 2; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>proxxie
+      </a>
+      <div class="breadcrumb">
+        <a href="Proxxie Parcours.html">Parcours</a>
+        <span>›</span>
+        <span>Bilan final</span>
+      </div>
+      <div class="top-actions" id="topActions">
+        <button class="btn-mini" id="exportPdfBtn">📄 Exporter en PDF</button>
+        <button class="btn-mini" id="shareBtn">🔗 Partager</button>
+        <a class="btn-mini" id="bookCoachBtn" href="https://calendly.com/proxxie/accompagnement" target="_blank" rel="noopener" style="background: var(--c-orange); color: white; border-color: var(--c-orange);">📅 Réserver l'accompagnement</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Locked state -->
+  <div class="lock-overlay">
+    <div class="shell">
+      <div class="lock-card">
+        <div class="icon">🔒</div>
+        <h1 id="lockTitle">Ton bilan n'est pas encore débloqué</h1>
+        <p class="lead" id="lockLead">Quelques étapes manquent pour générer un bilan vraiment utile. Voici où tu en es ·</p>
+        <div class="lock-progress">
+          <h3>Conditions de déverrouillage</h3>
+          <div id="lockConditions"></div>
+        </div>
+        <a href="Proxxie Parcours.html" class="btn btn-orange" style="text-decoration: none; display: inline-flex; gap: 8px; padding: 14px 22px;">Continuer mon parcours →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unlocked content -->
+  <div class="bilan-content">
+    <section class="hero">
+      <div class="shell">
+        <span class="eyebrow">Bilan final · v3</span>
+        <h1 id="heroTitle">Ton bilan d'orientation</h1>
+        <div class="meta-row">
+          <span><strong>Pour</strong>Arthur · Terminale</span>
+          <span><strong>Généré le</strong><span id="genDate">21 mai 2026</span></span>
+          <span><strong>Version</strong>v3 (mise à jour automatique)</span>
+        </div>
+        <div class="badge-celebrate">⭐ Carte complète débloquée · +200 XP</div>
+      </div>
+    </section>
+
+    <main style="padding-bottom: 60px;">
+      <div class="shell">
+
+        <!-- Section 1 · Profil consolidé -->
+        <section class="section">
+          <h2><span class="num-prefix">01</span>Profil consolidé</h2>
+          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">Les 5 traits OCEAN-X croisés avec les 11 tests psychométriques et tes activités.</p>
+
+          <h3 style="margin-top: 0;">Big Five OCEAN-X</h3>
+          <div class="trait-grid">
+            <div class="trait"><div class="trait-label">Ouverture</div><div class="trait-val">88</div></div>
+            <div class="trait"><div class="trait-label">Conscienc.</div><div class="trait-val">62</div></div>
+            <div class="trait"><div class="trait-label">Extraversion</div><div class="trait-val">48</div></div>
+            <div class="trait"><div class="trait-label">Convivialité</div><div class="trait-val">71</div></div>
+            <div class="trait"><div class="trait-label">Stabilité</div><div class="trait-val">76</div></div>
+          </div>
+
+          <h3>Profil dominant détecté</h3>
+          <p style="font-size: 16px; line-height: 1.6;"><strong>Exploratrice analytique</strong> · curiosité forte (Ouverture 88), réflexion structurée (analyse RIASEC = Investigateur dominant), travail solo plutôt qu'en grand effectif (Extraversion 48), bonne tolérance au stress (Stabilité 76).</p>
+
+          <div class="strengths-row">
+            <div class="strengths-card">
+              <div class="label">★ Forces</div>
+              <ul>
+                <li>Curiosité, capacité à explorer des sujets nouveaux</li>
+                <li>Pensée analytique, gestion de la complexité</li>
+                <li>Résilience face aux deadlines (prépa, examens jouables)</li>
+                <li>Goût pour l'autonomie</li>
+              </ul>
+            </div>
+            <div class="strengths-card warn">
+              <div class="label">⚠ Points d'attention</div>
+              <ul>
+                <li>Conscienciosité moyenne · gérer le rythme des révisions</li>
+                <li>Recharge en solo · éviter les amphis surdimensionnés</li>
+                <li>Procrastination quand le projet manque de cadre</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 · Métiers compatibles -->
+        <section class="section">
+          <h2><span class="num-prefix">02</span>Métiers compatibles · top 5</h2>
+          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">Croisement profil OCEAN-X + RIASEC + bulletins + activités. Score de match calculé sur 7 dimensions.</p>
+
+          <div class="metier-card">
+            <div class="row"><span class="name">Ingénieure biomédicale</span><span class="match">92% match</span></div>
+            <div class="desc">Ingénierie appliquée à la santé. Conception de dispositifs médicaux, R&D. Polytech Lyon, INSA Rouen, ESPCI Paris.</div>
+          </div>
+          <div class="metier-card">
+            <div class="row"><span class="name">Cherchheuse en data appliquée</span><span class="match">88% match</span></div>
+            <div class="desc">R&D en machine learning ou statistiques appliquées. Master MIASHS, INSA Lyon, IMT Atlantique.</div>
+          </div>
+          <div class="metier-card">
+            <div class="row"><span class="name">Architecte logicielle</span><span class="match">85% match</span></div>
+            <div class="desc">Conception de systèmes informatiques complexes. INSA, Polytech, écoles d'ingé avec dominante info.</div>
+          </div>
+          <div class="metier-card">
+            <div class="row"><span class="name">Designer produit (industriel)</span><span class="match">78% match</span></div>
+            <div class="desc">Mixité technique + créatif. ENSAD, ENSCI Les Ateliers, écoles d'ingé avec spé design.</div>
+          </div>
+          <div class="metier-card">
+            <div class="row"><span class="name">Audit & conseil (technique)</span><span class="match">74% match</span></div>
+            <div class="desc">Diagnostic d'organisations, consulting. Écoles de commerce + spé tech, ou ingé + master conseil.</div>
+          </div>
+        </section>
+
+        <!-- Section 3 · Vœux Parcoursup -->
+        <section class="section">
+          <h2><span class="num-prefix">03</span>Vœux Parcoursup recommandés</h2>
+          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">10 vœux équilibrés entre sélectifs, équilibrés et sécurisants. Charles a validé cette répartition.</p>
+
+          <div class="voeux-grid">
+            <div class="voeu-row"><span class="num">01</span><span class="name">Polytech Lyon · cycle prépa intégré<span class="sub">Spé biomédicale en 4e année</span></span><span class="cat selectif">Sélectif</span><span class="status">À candidater</span></div>
+            <div class="voeu-row"><span class="num">02</span><span class="name">INSA Rouen · cycle prépa<span class="sub">Génie biomédical en majeure</span></span><span class="cat selectif">Sélectif</span><span class="status">À candidater</span></div>
+            <div class="voeu-row"><span class="num">03</span><span class="name">ESPCI Paris · grande école<span class="sub">Sciences appliquées, post-bac sur concours</span></span><span class="cat selectif">Sélectif</span><span class="status">À étudier</span></div>
+            <div class="voeu-row"><span class="num">04</span><span class="name">CPGE MPSI · Lycée Henri-IV<span class="sub">Voie classique avant école d'ingé</span></span><span class="cat equilibre">Équilibré</span><span class="status">À étudier</span></div>
+            <div class="voeu-row"><span class="num">05</span><span class="name">Licence info-math · Sorbonne<span class="sub">Voie universitaire, double licence</span></span><span class="cat equilibre">Équilibré</span><span class="status">À candidater</span></div>
+            <div class="voeu-row"><span class="num">06</span><span class="name">Licence physique · Lyon 1<span class="sub">Voie de secours avec passerelle vers ingé</span></span><span class="cat equilibre">Équilibré</span><span class="status">À candidater</span></div>
+            <div class="voeu-row"><span class="num">07</span><span class="name">BUT MMI · IUT de Lyon<span class="sub">Bac+3 multimédia, voie pro</span></span><span class="cat securisant">Sécurisant</span><span class="status">À candidater</span></div>
+            <div class="voeu-row"><span class="num">08</span><span class="name">Bachelor Design · École de Nantes<span class="sub">Voie créative alternative</span></span><span class="cat securisant">Sécurisant</span><span class="status">À discuter</span></div>
+            <div class="voeu-row"><span class="num">09</span><span class="name">Licence MIASHS · Paris Cité<span class="sub">Maths-info-stats-sciences humaines</span></span><span class="cat securisant">Sécurisant</span><span class="status">Validé</span></div>
+            <div class="voeu-row"><span class="num">10</span><span class="name">Université Paris-Saclay · licence physique<span class="sub">Voie de secours avec passerelle vers ingé</span></span><span class="cat securisant">Sécurisant</span><span class="status">Validé</span></div>
+          </div>
+        </section>
+
+        <!-- Section 4 · Plan d'action -->
+        <section class="section">
+          <h2><span class="num-prefix">04</span>Plan d'action · 5 actions concrètes</h2>
+          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">À faire dans les 30 prochains jours. Charles t'accompagne sur chacune au prochain RDV (26 mai).</p>
+
+          <div class="action-row">
+            <div class="check-empty"></div>
+            <div class="text"><strong>Visite JPO Polytech Lyon</strong> · samedi 25 mai · prends 3 questions précises avec toi</div>
+            <span class="deadline">Sous 7 j</span>
+          </div>
+          <div class="action-row">
+            <div class="check-empty"></div>
+            <div class="text"><strong>Lettre de motivation INSA Rouen</strong> · template ci-dessous, à adapter</div>
+            <span class="deadline">Sous 10 j</span>
+          </div>
+          <div class="action-row">
+            <div class="check-empty"></div>
+            <div class="text"><strong>Discussion avec Sarah Chen</strong> (ingé biomédicale) · Charles te connecte</div>
+            <span class="deadline">Sous 14 j</span>
+          </div>
+          <div class="action-row">
+            <div class="check-empty"></div>
+            <div class="text"><strong>Confirmation des 10 vœux Parcoursup</strong> · 1 séance avec Charles dédiée</div>
+            <span class="deadline">Sous 21 j</span>
+          </div>
+          <div class="action-row">
+            <div class="check-empty"></div>
+            <div class="text"><strong>Bulletins T3 à uploader</strong> · dès qu'ils sortent · met à jour le bilan automatiquement</div>
+            <span class="deadline">Juin</span>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Share modal -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal">
+      <h3>Partager ton bilan</h3>
+      <p>Un lien nominatif, expirable en 30 jours. Tu peux le révoquer à tout moment depuis Documents.</p>
+      <div class="share-link">
+        <input id="shareLink" readonly value="https://app.proxxie.co/b/arthur-2026-PRX-7G2F">
+        <button class="btn btn-orange" id="copyBtn">Copier</button>
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="btn btn-ghost" id="closeShareBtn">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div class="shell">
+      <span>© 2026 Proxxie · Bilan v3</span>
+      <span id="footRoleNote">Données privées · stockées en France (OVH Roubaix)</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Detect role + tone localization
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+
+      // Compute lock conditions from localStorage
+      function getStatus(k, fallback) {
+        try { return localStorage.getItem(k) || fallback; } catch (e) { return fallback; }
+      }
+      var conditions = [
+        { id: "big5", label: "Test OCEAN-X (Big Five) passé", check: function () { return localStorage.getItem("proxxie.tests.big5") === "done"; } },
+        { id: "tests5", label: "5 tests psychométriques passés (sur 11)", check: function () {
+          var done = 0;
+          ["riasec","mbti","pcm","hpi","tdah","dys","autisme","anxiete","besoins","drivers","valeurs"].forEach(function(id){
+            if (localStorage.getItem("proxxie.tests." + id) === "done") done++;
+          });
+          return done >= 5;
+        } },
+        { id: "act3", label: "3 activités guidées faites", check: function () {
+          var keys = Object.keys(localStorage).filter(function (k) { return k.indexOf("proxxie.activities.") === 0; });
+          var done = 0;
+          keys.forEach(function (k) { try { var v = JSON.parse(localStorage.getItem(k) || "{}"); if (v.status === "done") done++; } catch (e) {} });
+          return done >= 3;
+        } },
+        { id: "coach1", label: "1 séance coach effectuée", check: function () { return getStatus("proxxie.coach.sessions", "1") !== "0"; } },
+        { id: "docs", label: "Bulletins de l'année en cours uploadés", check: function () {
+          return localStorage.getItem("proxxie.docs.bull_t1") === "1" && localStorage.getItem("proxxie.docs.bull_t2") === "1";
+        } },
+        { id: "profile", label: "Profil ado complété (prénom + classe)", check: function () { return localStorage.getItem("proxxie.onboarding.profile") === "1" || localStorage.getItem("proxxie_firstName"); } },
+        { id: "rapport", label: "Rapport validé par le coach", check: function () { return getStatus("proxxie.report.coachValidated", "1") === "1"; } }
+      ];
+
+      var lockEl = document.getElementById("lockConditions");
+      var doneCount = 0;
+      conditions.forEach(function (c) {
+        var done = false;
+        try { done = c.check(); } catch (e) {}
+        if (done) doneCount++;
+        var row = document.createElement("div");
+        row.className = "lock-condition";
+        row.innerHTML =
+          '<div class="check ' + (done ? "done" : "pending") + '">' + (done ? "✓" : "·") + '</div>' +
+          '<div class="label ' + (done ? "done" : "") + '">' + c.label + '</div>';
+        lockEl.appendChild(row);
+      });
+
+      // Override via ?force=unlocked|locked (for design preview)
+      var forceState = new URLSearchParams(location.search).get("force");
+      var isUnlocked = forceState === "unlocked" ? true : forceState === "locked" ? false : doneCount >= conditions.length;
+
+      if (!isUnlocked) {
+        document.body.classList.add("locked");
+        document.getElementById("topActions").style.display = "none";
+        document.getElementById("lockTitle").textContent = isEnfant
+          ? "Ton bilan n'est pas encore débloqué"
+          : "Le bilan d'Arthur n'est pas encore débloqué";
+        document.getElementById("lockLead").textContent = isEnfant
+          ? "Quelques étapes manquent pour générer un bilan vraiment utile. Voici où tu en es ·"
+          : "Quelques étapes manquent pour générer un bilan vraiment utile pour votre ado. Voici où il/elle en est ·";
+      } else {
+        // Localize hero
+        if (!isEnfant) {
+          document.getElementById("heroTitle").textContent = "Le bilan d'orientation d'Arthur";
+        }
+        document.getElementById("genDate").textContent = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+      }
+
+      // Share modal
+      var shareModal = document.getElementById("shareModal");
+      document.getElementById("shareBtn").addEventListener("click", function () { shareModal.classList.add("show"); });
+      document.getElementById("closeShareBtn").addEventListener("click", function () { shareModal.classList.remove("show"); });
+      shareModal.addEventListener("click", function (e) { if (e.target === shareModal) shareModal.classList.remove("show"); });
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var input = document.getElementById("shareLink");
+        try {
+          input.select();
+          document.execCommand("copy");
+          var btn = document.getElementById("copyBtn");
+          var orig = btn.textContent;
+          btn.textContent = "Copié ✓";
+          setTimeout(function () { btn.textContent = orig; }, 1500);
+        } catch (e) {}
+      });
+
+      // Export PDF · trigger print
+      document.getElementById("exportPdfBtn").addEventListener("click", function () { window.print(); });
+    })();
+  </script>
+
+</body>
+</html>

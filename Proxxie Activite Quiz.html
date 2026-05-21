@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activité · Quiz métiers , Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9; --c-ink: #0A0E2C; --c-muted: rgba(10,14,44,.55);
+      --c-line: rgba(10,14,44,.08); --c-blue: #1320CE; --c-blue-2: #487AFF;
+      --c-orange: #FD6936; --c-yellow: #F5EB3F; --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-num: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--c-cream-light); font-family: 'Inter', sans-serif; color: var(--c-ink); line-height: 1.5; }
+    .shell { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(247,242,233,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(10,14,44,.06); }
+    .topbar > .shell { max-width: 1280px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--c-ink); font-family: var(--font-display); font-weight: 600; }
+    .logo-mark { width: 22px; height: 22px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 12px; }
+    .breadcrumb { font-size: 12px; color: var(--c-muted); display: flex; gap: 8px; align-items: center; }
+    .breadcrumb a { text-decoration: none; }
+    .progress-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(72,122,255,.08); color: var(--c-blue); font-family: var(--font-num); font-weight: 700; font-size: 12px; }
+
+    .hero { padding: 36px 0 16px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; margin: 12px 0 8px; line-height: 1.1; }
+    .hero .lead { font-size: 15px; color: var(--c-muted); }
+
+    .body { padding-bottom: 60px; }
+    .card { background: white; border: 1px solid var(--c-line); border-radius: 20px; padding: 32px; }
+
+    .progress-bar-outer { height: 6px; border-radius: 999px; background: rgba(10,14,44,.06); margin-bottom: 28px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 999px; background: var(--c-orange); transition: width .3s ease; }
+
+    .q-number { font-size: 12px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 12px; }
+    .q-text { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1.3; margin-bottom: 24px; }
+
+    .options { display: grid; gap: 10px; margin-bottom: 28px; }
+    .option {
+      padding: 16px 20px;
+      border: 1.5px solid var(--c-line);
+      border-radius: 14px;
+      background: #FAFAF6;
+      cursor: pointer;
+      transition: border-color .15s, background .15s, transform .15s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      font-family: inherit;
+      font-size: 15px;
+      width: 100%;
+      color: var(--c-ink);
+    }
+    .option:hover { border-color: var(--c-blue-2); background: white; }
+    .option.selected { border-color: var(--c-blue); background: rgba(72,122,255,.05); }
+    .option-letter {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: white; border: 1px solid var(--c-line);
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 13px; color: var(--c-muted);
+      flex-shrink: 0;
+    }
+    .option.selected .option-letter { background: var(--c-blue); color: white; border-color: var(--c-blue); }
+
+    .nav-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: transform .15s, box-shadow .15s; }
+    .btn-orange { background: var(--c-orange); color: white; }
+    .btn-orange:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253,105,54,.30); }
+    .btn-orange:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--c-muted); border: 1px solid var(--c-line); }
+
+    /* Results screen */
+    .results { display: none; }
+    .results.show { display: block; }
+    .quiz-form.hidden { display: none; }
+    .score-circle {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: conic-gradient(var(--c-green) 0 calc(var(--score) * 1%), rgba(10,14,44,.06) 0);
+      display: grid; place-items: center;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+    .score-circle::before {
+      content: ""; position: absolute; inset: 12px;
+      background: white; border-radius: 50%;
+    }
+    .score-circle .score-num { position: relative; font-family: var(--font-num); font-size: 36px; font-weight: 700; color: var(--c-green); }
+    .results h2 { font-family: var(--font-display); font-size: 28px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+    .results .reveal { text-align: center; font-size: 14px; color: var(--c-muted); max-width: 520px; margin: 0 auto 28px; }
+    .results .next { display: flex; justify-content: center; }
+
+    footer.foot { border-top: 1px solid var(--c-line); padding: 24px 0; font-size: 12px; color: var(--c-muted); }
+    footer.foot .shell { max-width: 1280px; display: flex; justify-content: space-between; align-items: center; }
+
+    @media (max-width: 640px) { .hero h1 { font-size: 24px; } .card { padding: 22px; } .q-text { font-size: 20px; } }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>proxxie
+      </a>
+      <div class="breadcrumb">
+        <a href="Proxxie Parcours.html">Parcours</a>
+        <span>›</span>
+        <span>Activités</span>
+        <span>›</span>
+        <span style="color: var(--c-ink); font-weight: 600;">Quiz métiers</span>
+      </div>
+      <span class="progress-pill" id="progressPill">Q1/5</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow">Activité guidée · Mini-quiz</span>
+      <h1 id="heroTitle">Quiz · ton style de travail idéal</h1>
+      <p class="lead" id="heroLead">5 questions, 3 minutes. À la fin, on identifie le type d'environnement qui te conviendra le mieux.</p>
+    </div>
+  </section>
+
+  <main class="body">
+    <div class="shell">
+
+      <div class="card quiz-form" id="quizForm">
+        <div class="progress-bar-outer">
+          <div class="progress-bar-fill" id="progressFill" style="width: 20%;"></div>
+        </div>
+        <div class="q-number" id="qNumber">Question 1 sur 5</div>
+        <div class="q-text" id="qText">Quand tu travailles sur un projet, tu préfères...</div>
+        <div class="options" id="options"></div>
+
+        <div class="nav-row">
+          <button class="btn btn-ghost" id="prevBtn" disabled>← Précédent</button>
+          <button class="btn btn-orange" id="nextBtn" disabled>Suivant →</button>
+        </div>
+      </div>
+
+      <div class="card results" id="resultsCard">
+        <div class="score-circle" id="scoreCircle" style="--score: 0;">
+          <span class="score-num" id="scoreNum">0%</span>
+        </div>
+        <h2 id="resultTitle">Profil détecté · Pragmatique structuré</h2>
+        <p class="reveal" id="resultReveal">Tu fonctionnes mieux quand tu sais ce qu'on attend de toi, dans un cadre clair, avec des étapes concrètes. Les métiers d'ingénieur, de chef de projet ou de fonctionnaire te conviennent particulièrement.</p>
+        <div class="next">
+          <a class="btn btn-orange" href="Proxxie Parcours.html?activityCompleted=quiz-style-travail">Retour au parcours →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="shell">
+      <span>© 2026 Proxxie</span>
+      <span>Activité Quiz · +25 XP à la complétion</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var ACTIVITY_ID = "quiz-style-travail";
+      var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
+
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+      var role = getRole();
+      var isEnfant = role === "enfant";
+
+      if (!isEnfant) {
+        document.getElementById("heroTitle").textContent = "Quiz · style de travail de votre ado";
+        document.getElementById("heroLead").textContent = "Cette activité interactive aide à identifier l'environnement de travail le plus adapté. Vous voyez le statut, votre ado garde le détail de ses réponses.";
+      }
+
+      // 5 quiz questions
+      var QUESTIONS = [
+        {
+          q: isEnfant ? "Quand tu travailles sur un projet, tu préfères..." : "Quand l'ado travaille sur un projet, il/elle préfère...",
+          opts: [
+            { l: "Un cadre clair et des étapes précises", w: { structure: 2 } },
+            { l: "Explorer librement et bricoler", w: { creativity: 2 } },
+            { l: "Bosser avec d'autres et confronter les idées", w: { collab: 2 } },
+            { l: "Suivre une méthode éprouvée", w: { structure: 1 } }
+          ]
+        },
+        {
+          q: isEnfant ? "Tu retiens mieux quand..." : "L'ado retient mieux quand...",
+          opts: [
+            { l: "Tu lis et tu prends des notes", w: { analytical: 2 } },
+            { l: "Tu fais et tu touches", w: { hands: 2 } },
+            { l: "Tu écoutes quelqu'un l'expliquer", w: { social: 1 } },
+            { l: "Tu visualises des schémas", w: { analytical: 1, creativity: 1 } }
+          ]
+        },
+        {
+          q: isEnfant ? "Dans un groupe, tu es plutôt..." : "Dans un groupe, l'ado est plutôt...",
+          opts: [
+            { l: "Celui/celle qui propose", w: { leadership: 2 } },
+            { l: "Celui/celle qui organise", w: { structure: 1, leadership: 1 } },
+            { l: "Celui/celle qui écoute et synthétise", w: { analytical: 2 } },
+            { l: "Celui/celle qui détend l'ambiance", w: { social: 2 } }
+          ]
+        },
+        {
+          q: isEnfant ? "L'idée d'un job avec beaucoup d'autonomie..." : "L'idée d'un job avec beaucoup d'autonomie...",
+          opts: [
+            { l: "Me motive, j'aime gérer mon temps", w: { autonomy: 2 } },
+            { l: "Me stresse un peu, je préfère un cadre", w: { structure: 2 } },
+            { l: "Dépend du sujet", w: { autonomy: 1, structure: 1 } },
+            { l: "M'indiffère", w: {} }
+          ]
+        },
+        {
+          q: isEnfant ? "Si tu pouvais bosser n'importe où dans 10 ans..." : "Si l'ado pouvait bosser n'importe où dans 10 ans...",
+          opts: [
+            { l: "Un bureau structuré, en équipe", w: { collab: 2, structure: 1 } },
+            { l: "Un atelier où je fabrique", w: { hands: 2, creativity: 1 } },
+            { l: "Sur la route, en mouvement", w: { autonomy: 2 } },
+            { l: "Devant un ordi, en solo", w: { analytical: 2, autonomy: 1 } }
+          ]
+        }
+      ];
+
+      var current = 0;
+      var answers = [];
+
+      // Load existing draft
+      try {
+        var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        if (saved.answers) {
+          answers = saved.answers;
+          current = Math.min(answers.length, QUESTIONS.length - 1);
+        }
+      } catch (e) {}
+
+      var optionsEl = document.getElementById("options");
+      var qText = document.getElementById("qText");
+      var qNumber = document.getElementById("qNumber");
+      var progressFill = document.getElementById("progressFill");
+      var progressPill = document.getElementById("progressPill");
+      var prevBtn = document.getElementById("prevBtn");
+      var nextBtn = document.getElementById("nextBtn");
+
+      function render() {
+        var q = QUESTIONS[current];
+        qText.textContent = q.q;
+        qNumber.textContent = "Question " + (current + 1) + " sur " + QUESTIONS.length;
+        progressFill.style.width = ((current + 1) / QUESTIONS.length * 100) + "%";
+        progressPill.textContent = "Q" + (current + 1) + "/" + QUESTIONS.length;
+        optionsEl.innerHTML = "";
+        q.opts.forEach(function (opt, i) {
+          var btn = document.createElement("button");
+          btn.className = "option" + (answers[current] === i ? " selected" : "");
+          btn.innerHTML = '<span class="option-letter">' + ["A", "B", "C", "D"][i] + '</span><span>' + opt.l + '</span>';
+          btn.addEventListener("click", function () {
+            answers[current] = i;
+            autosave();
+            render();
+          });
+          optionsEl.appendChild(btn);
+        });
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = answers[current] == null;
+        nextBtn.textContent = current === QUESTIONS.length - 1 ? "Voir mes résultats →" : "Suivant →";
+      }
+
+      function autosave() {
+        try {
+          var existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          existing.answers = answers;
+          existing.lastSaved = new Date().toISOString();
+          existing.type = "quiz";
+          if (!existing.status || existing.status !== "done") existing.status = "in_progress";
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+        } catch (e) {}
+      }
+
+      function computeScore() {
+        var weights = {};
+        answers.forEach(function (i, qIdx) {
+          if (i == null) return;
+          var w = QUESTIONS[qIdx].opts[i].w || {};
+          for (var k in w) weights[k] = (weights[k] || 0) + w[k];
+        });
+        var top = Object.keys(weights).sort(function (a, b) { return weights[b] - weights[a]; })[0] || "balanced";
+        var maxScore = 10;
+        var actualScore = Math.min(maxScore, Object.keys(weights).reduce(function (s, k) { return s + weights[k]; }, 0));
+        return { topProfile: top, percent: Math.round((actualScore / maxScore) * 100), weights: weights };
+      }
+
+      var PROFILE_LABELS = {
+        structure: { name: "Pragmatique structuré", desc: "Tu fonctionnes mieux dans un cadre clair, avec des étapes définies. Ingénieur, chef de projet, fonctions opérationnelles." },
+        creativity: { name: "Créatif exploratoire", desc: "Tu as besoin de liberté pour bricoler et tester. Design, recherche, métiers d'art ou de l'innovation." },
+        collab: { name: "Collaboratif social", desc: "Tu donnes le meilleur en équipe. Métiers en relations humaines, animation, négociation, conseil." },
+        analytical: { name: "Analytique réflexif", desc: "Tu aimes décortiquer, modéliser, comprendre. Métiers data, recherche, audit, expertise technique." },
+        hands: { name: "Manuel concret", desc: "Tu apprends en faisant. Métiers techniques, artisanat, ingénierie pratique, médical." },
+        leadership: { name: "Leader naturel", desc: "Tu sais embarquer et décider. Direction d'équipe, entrepreneuriat, métiers à responsabilité." },
+        social: { name: "Empathique relationnel", desc: "Tu lis bien les autres. Métiers du soin, éducation, communication." },
+        autonomy: { name: "Indépendant autonome", desc: "Tu as besoin d'espace. Freelance, commercial, métiers de terrain ou créateur." }
+      };
+
+      document.getElementById("nextBtn").addEventListener("click", function () {
+        if (current < QUESTIONS.length - 1) {
+          current++;
+          render();
+        } else {
+          // Finalize
+          var result = computeScore();
+          var profile = PROFILE_LABELS[result.topProfile] || PROFILE_LABELS.structure;
+
+          try {
+            var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            saved.answers = answers;
+            saved.status = "done";
+            saved.score = result.percent;
+            saved.profile = profile.name;
+            saved.completedAt = new Date().toISOString();
+            saved.type = "quiz";
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+            var xp = parseInt(localStorage.getItem("proxxie.xp"), 10) || 280;
+            localStorage.setItem("proxxie.xp", String(xp + 25));
+          } catch (e) {}
+
+          // Show results
+          document.getElementById("quizForm").classList.add("hidden");
+          document.getElementById("resultsCard").classList.add("show");
+          document.getElementById("scoreNum").textContent = result.percent + "%";
+          document.getElementById("scoreCircle").style.setProperty("--score", result.percent);
+          document.getElementById("resultTitle").textContent = "Profil détecté · " + profile.name;
+          document.getElementById("resultReveal").textContent = profile.desc;
+        }
+      });
+
+      prevBtn.addEventListener("click", function () {
+        if (current > 0) { current--; render(); }
+      });
+
+      render();
+    })();
+  </script>
+
+</body>
+</html>

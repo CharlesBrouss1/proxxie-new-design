@@ -333,14 +333,57 @@
         document.getElementById("heroLead").textContent = "Vos deux profils OCEAN-X côte à côte, trait par trait. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation avec ton parent.";
       }
 
-      // Demo data — both sides have done OCEAN-X
+      // Read real Big Five scores from dual storage (parent + ado).
+      // Fallback to demo defaults so the design still renders before either
+      // side has done the test in localStorage.
+      function readBig5(role) {
+        try {
+          var raw = localStorage.getItem("proxxie.tests.big5." + role + ".results");
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        return null;
+      }
+      var p5 = readBig5("parent");
+      var e5 = readBig5("enfant");
+      // Empty-state detection: if a side has no .results saved, treat as missing.
+      // ?missing=parent|enfant override kept below for design preview.
+      var parentMissing = !p5;
+      var enfantMissing = !e5;
+      // Demo defaults if both are missing (so the design page still works
+      // standalone as a marketing/preview page)
+      var DEMO_P = { O: 72, C: 81, E: 64, A: 86, N: 70, profile: "Coordinatrice empathique" };
+      var DEMO_E = { O: 88, C: 62, E: 48, A: 71, N: 76, profile: "Exploratrice analytique" };
+      if (parentMissing && enfantMissing) { p5 = DEMO_P; e5 = DEMO_E; parentMissing = enfantMissing = false; }
+      else if (parentMissing) p5 = DEMO_P;
+      else if (enfantMissing) e5 = DEMO_E;
+
       var TRAITS = [
-        { key: "O", label: "Ouverture",      parent: 72, enfant: 88, descShort: "Curiosité, créativité, ouverture à la nouveauté." },
-        { key: "C", label: "Conscienciosité", parent: 81, enfant: 62, descShort: "Organisation, persévérance, planification." },
-        { key: "E", label: "Extraversion",   parent: 64, enfant: 48, descShort: "Énergie sociale, recherche de stimulation." },
-        { key: "A", label: "Convivialité",   parent: 86, enfant: 71, descShort: "Coopération, empathie, confiance." },
-        { key: "N", label: "Stabilité",      parent: 70, enfant: 76, descShort: "Régulation émotionnelle, calme sous stress." }
+        { key: "O", label: "Ouverture",      parent: p5.O, enfant: e5.O, descShort: "Curiosité, créativité, ouverture à la nouveauté." },
+        { key: "C", label: "Conscienciosité", parent: p5.C, enfant: e5.C, descShort: "Organisation, persévérance, planification." },
+        { key: "E", label: "Extraversion",   parent: p5.E, enfant: e5.E, descShort: "Énergie sociale, recherche de stimulation." },
+        { key: "A", label: "Convivialité",   parent: p5.A, enfant: e5.A, descShort: "Coopération, empathie, confiance." },
+        { key: "N", label: "Stabilité",      parent: p5.N, enfant: e5.N, descShort: "Régulation émotionnelle, calme sous stress." }
       ];
+      // Update profile labels in DOM if we have real data
+      var parentProfileEl = document.querySelector(".person-card.parent .who + div strong");
+      var enfantProfileEl = document.querySelector(".person-card.enfant .who + div strong");
+      if (parentProfileEl && p5.profile) parentProfileEl.textContent = p5.profile;
+      if (enfantProfileEl && e5.profile) enfantProfileEl.textContent = e5.profile;
+      // Update the scores grid values in DOM directly
+      var pTraitCells = document.querySelectorAll(".person-card.parent .scores .val");
+      var eTraitCells = document.querySelectorAll(".person-card.enfant .scores .val");
+      ["O","C","E","A","N"].forEach(function (k, i) {
+        if (pTraitCells[i]) pTraitCells[i].textContent = p5[k];
+        if (eTraitCells[i]) eTraitCells[i].textContent = e5[k];
+      });
+      // Auto-trigger empty state if either side is missing in localStorage
+      // (and ?missing= wasn't already in URL)
+      if ((parentMissing || enfantMissing) && !new URLSearchParams(location.search).get("missing")) {
+        var which = parentMissing ? "parent" : "enfant";
+        var url = new URL(location.href);
+        url.searchParams.set("missing", which);
+        history.replaceState({}, "", url.toString());
+      }
 
       // Build radar SVG
       function poly(values, scale) {
@@ -443,21 +486,53 @@
         dg.appendChild(el);
       });
 
-      // Tests comparison list
-      var TESTS = [
-        { id: "big5",    name: "Big Five / OCEAN-X", parent: "done", enfant: "done" },
-        { id: "riasec",  name: "RIASEC",             parent: "todo", enfant: "wip"  },
-        { id: "mbti",    name: "MBTI",               parent: "done", enfant: "todo" },
-        { id: "pcm",     name: "PCM",                parent: "todo", enfant: "todo" },
-        { id: "hpi",     name: "HPI",                parent: "todo", enfant: "done" },
-        { id: "tdah",    name: "TDAH",               parent: "todo", enfant: "todo" },
-        { id: "dys",     name: "DYS",                parent: "todo", enfant: "todo" },
-        { id: "autisme", name: "Autisme",            parent: "todo", enfant: "todo" },
-        { id: "anxiete", name: "Anxiété",            parent: "todo", enfant: "todo" },
-        { id: "besoins", name: "Besoins",            parent: "todo", enfant: "todo" },
-        { id: "drivers", name: "Drivers",            parent: "done", enfant: "todo" },
-        { id: "valeurs", name: "Valeurs",            parent: "done", enfant: "wip"  }
+      // Tests comparison list · reads role-scoped storage from each test
+      function readTestStatus(id, role) {
+        try { return localStorage.getItem("proxxie.tests." + id + "." + role) || "todo"; }
+        catch (e) { return "todo"; }
+      }
+      var TEST_NAMES = [
+        { id: "big5",    name: "Big Five / OCEAN-X" },
+        { id: "riasec",  name: "RIASEC" },
+        { id: "mbti",    name: "MBTI" },
+        { id: "pcm",     name: "PCM" },
+        { id: "hpi",     name: "HPI" },
+        { id: "tdah",    name: "TDAH" },
+        { id: "dys",     name: "DYS" },
+        { id: "autisme", name: "Autisme" },
+        { id: "anxiete", name: "Anxiété" },
+        { id: "besoins", name: "Besoins" },
+        { id: "drivers", name: "Drivers" },
+        { id: "valeurs", name: "Valeurs" }
       ];
+      // Demo defaults · used when no localStorage data exists (preview mode)
+      var DEMO_TESTS = {
+        big5:    { parent: "done", enfant: "done" },
+        riasec:  { parent: "todo", enfant: "wip"  },
+        mbti:    { parent: "done", enfant: "todo" },
+        pcm:     { parent: "todo", enfant: "todo" },
+        hpi:     { parent: "todo", enfant: "done" },
+        tdah:    { parent: "todo", enfant: "todo" },
+        dys:     { parent: "todo", enfant: "todo" },
+        autisme: { parent: "todo", enfant: "todo" },
+        anxiete: { parent: "todo", enfant: "todo" },
+        besoins: { parent: "todo", enfant: "todo" },
+        drivers: { parent: "done", enfant: "todo" },
+        valeurs: { parent: "done", enfant: "wip"  }
+      };
+      var anyLocalData = TEST_NAMES.some(function (t) {
+        return readTestStatus(t.id, "parent") !== "todo" || readTestStatus(t.id, "enfant") !== "todo";
+      });
+      var TESTS = TEST_NAMES.map(function (t) {
+        if (anyLocalData) {
+          return { id: t.id, name: t.name,
+                   parent: readTestStatus(t.id, "parent"),
+                   enfant: readTestStatus(t.id, "enfant") };
+        }
+        return { id: t.id, name: t.name,
+                 parent: DEMO_TESTS[t.id].parent,
+                 enfant: DEMO_TESTS[t.id].enfant };
+      });
       var labels = { done: "Passé", wip: "En cours", todo: "À passer" };
       var tb = document.getElementById("testsBody");
       TESTS.forEach(function (t) {

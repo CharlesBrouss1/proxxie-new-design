@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activité · Découverte d'un métier , Proxxie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-cream-light: #F7F2E9; --c-ink: #0A0E2C; --c-muted: rgba(10,14,44,.55);
+      --c-line: rgba(10,14,44,.08); --c-blue: #1320CE; --c-blue-2: #487AFF;
+      --c-orange: #FD6936; --c-yellow: #F5EB3F; --c-green: #22A06B;
+      --font-display: 'Fraunces', Georgia, serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--c-cream-light); font-family: 'Inter', sans-serif; color: var(--c-ink); line-height: 1.6; }
+    .shell { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(247,242,233,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(10,14,44,.06); }
+    .topbar > .shell { max-width: 1280px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--c-ink); font-family: var(--font-display); font-weight: 600; }
+    .logo-mark { width: 22px; height: 22px; border-radius: 6px; background: var(--c-blue); display: grid; place-items: center; color: white; font-weight: 700; font-size: 12px; }
+    .breadcrumb { font-size: 12px; color: var(--c-muted); display: flex; gap: 8px; align-items: center; }
+    .breadcrumb a { text-decoration: none; }
+
+    /* Sticky reading progress at top of viewport */
+    .reading-progress { position: fixed; top: 64px; left: 0; right: 0; height: 3px; background: rgba(10,14,44,.06); z-index: 49; }
+    .reading-progress .fill { height: 100%; background: var(--c-orange); width: 0; transition: width .1s linear; }
+
+    .hero { padding: 56px 0 32px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
+    .hero h1 { font-family: var(--font-display); font-size: 42px; font-weight: 600; letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.1; }
+    .hero .lead { font-size: 18px; color: var(--c-muted); }
+    .hero .meta { display: flex; gap: 18px; margin-top: 22px; font-size: 13px; color: var(--c-muted); flex-wrap: wrap; }
+    .hero .meta strong { color: var(--c-ink); font-weight: 600; margin-right: 4px; }
+
+    .article { padding-bottom: 80px; }
+    .article-card { background: white; border: 1px solid var(--c-line); border-radius: 20px; padding: 40px 44px; }
+    .article-card h2 { font-family: var(--font-display); font-size: 26px; font-weight: 600; margin: 32px 0 12px; line-height: 1.2; }
+    .article-card h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin: 26px 0 8px; }
+    .article-card p { margin-bottom: 16px; font-size: 16px; color: var(--c-ink-2, #2B2E45); }
+    .article-card ul { margin: 0 0 18px 18px; }
+    .article-card li { margin-bottom: 6px; font-size: 16px; }
+    .article-card .quote { border-left: 3px solid var(--c-orange); padding: 8px 0 8px 18px; margin: 22px 0; font-family: var(--font-display); font-size: 19px; font-style: italic; color: var(--c-ink); }
+    .article-card .quote-author { font-style: normal; font-size: 13px; color: var(--c-muted); display: block; margin-top: 8px; }
+
+    .stat-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 22px; background: rgba(72,122,255,.06); border-radius: 16px; margin: 24px 0 32px; }
+    .stat-box .stat { text-align: center; }
+    .stat-box .num { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--c-blue); display: block; }
+    .stat-box .lbl { font-size: 11px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+
+    .end-card { background: linear-gradient(135deg, #22A06B 0%, #1A7F54 100%); color: white; border-radius: 20px; padding: 32px; margin-top: 30px; text-align: center; }
+    .end-card h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+    .end-card p { font-size: 15px; opacity: 0.9; margin-bottom: 22px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: transform .15s; }
+    .btn-white { background: white; color: var(--c-green); }
+    .btn-white:hover { transform: translateY(-1px); }
+
+    footer.foot { border-top: 1px solid var(--c-line); padding: 24px 0; font-size: 12px; color: var(--c-muted); }
+    footer.foot .shell { max-width: 1280px; display: flex; justify-content: space-between; align-items: center; }
+
+    @media (max-width: 640px) { .hero h1 { font-size: 30px; } .article-card { padding: 26px; } .stat-box { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="shell">
+      <a class="logo" href="Proxxie Dashboard.html">
+        <span class="logo-mark">P</span>proxxie
+      </a>
+      <div class="breadcrumb">
+        <a href="Proxxie Parcours.html">Parcours</a>
+        <span>›</span>
+        <span>Activités</span>
+        <span>›</span>
+        <span style="color: var(--c-ink); font-weight: 600;">Découverte métier</span>
+      </div>
+      <span id="progressPct" style="font-size: 12px; color: var(--c-muted); font-weight: 600;">0% lu</span>
+    </div>
+  </header>
+
+  <div class="reading-progress"><div class="fill" id="readingFill"></div></div>
+
+  <section class="hero">
+    <div class="shell">
+      <span class="eyebrow">Activité guidée · Découverte</span>
+      <h1>Ingénieur·e biomédical·e · construire les outils qui sauvent</h1>
+      <p class="lead">Un métier à l'intersection de l'ingénierie, de la médecine et de la R&D. 7 minutes de lecture pour comprendre ce qu'il faut pour s'y orienter.</p>
+      <div class="meta">
+        <span><strong>Durée</strong>7 min de lecture</span>
+        <span><strong>Format</strong>Article</span>
+        <span><strong>XP</strong>+15 à la complétion</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="article">
+    <div class="shell">
+      <article class="article-card">
+
+        <p>Quand tu portes un appareil dentaire, quand un proche reçoit une prothèse de hanche, quand un hôpital installe un nouveau scanner · derrière ces objets et machines, il y a des ingénieur·es biomédicaux·les. Un métier discret, mais profondément utile.</p>
+
+        <h2>Ce qu'on fait au quotidien</h2>
+        <p>L'ingénieur·e biomédical·e conçoit, fabrique, ou maintient les dispositifs médicaux qui servent en hôpital, en recherche, ou à domicile. Concrètement, ça peut être·</p>
+        <ul>
+          <li>Concevoir une prothèse de genou ou une valve cardiaque artificielle</li>
+          <li>Programmer le logiciel d'un scanner IRM pour qu'il filtre mieux les artefacts</li>
+          <li>Tester la résistance d'un implant aux 30 ans de fatigue mécanique qu'il subira dans un corps</li>
+          <li>Travailler en R&D avec des médecins pour traduire un besoin clinique en cahier des charges technique</li>
+        </ul>
+
+        <div class="quote">
+          « Le plus motivant, c'est qu'à la fin de chaque projet, je sais qu'un objet que j'ai conçu va aider quelqu'un à mieux vivre. Quand tu débugges un capteur, tu débugges aussi un peu la vie de quelqu'un. »
+          <span class="quote-author">, Sarah, ingénieure biomédicale chez Medtronic (3 ans d'expérience)</span>
+        </div>
+
+        <h2>Le marché en 3 chiffres</h2>
+        <div class="stat-box">
+          <div class="stat"><span class="num">+18%</span><span class="lbl">Croissance/an</span></div>
+          <div class="stat"><span class="num">42K€</span><span class="lbl">Salaire sortie d'école</span></div>
+          <div class="stat"><span class="num">92%</span><span class="lbl">Emploi à 6 mois</span></div>
+        </div>
+
+        <h2>Pour s'y orienter en France</h2>
+        <h3>Voie A · École d'ingénieur post-bac</h3>
+        <p>5 ans après le bac, dans une école spécialisée (Polytech Lyon, INSA Rouen, ESPCI Paris, IMT Atlantique). Tu rentres en cycle prépa intégré ou via concours après prépa. La prépa MPSI ou PCSI marche bien.</p>
+        <h3>Voie B · Master après une licence de bio ou physique</h3>
+        <p>3 ans de licence (biologie cellulaire, physique appliquée), puis 2 ans de master en ingénierie biomédicale (Sorbonne Université, Université Paris-Saclay). Voie plus longue mais accessible si tu ne veux pas faire de prépa.</p>
+        <h3>Voie C · Reconversion via BUT puis école</h3>
+        <p>BUT GMP ou GEII en 3 ans, puis admission sur titres en école d'ingé. Plus pratique, moins théorique.</p>
+
+        <h2>Les compétences qui font la différence</h2>
+        <ul>
+          <li><strong>Sciences fondamentales</strong> · maths, physique, biologie · solides bases nécessaires</li>
+          <li><strong>Programmation</strong> · Python pour le traitement signal, C/C++ pour les systèmes embarqués</li>
+          <li><strong>Anglais technique</strong> · 80% de la littérature scientifique est en anglais</li>
+          <li><strong>Capacité à dialoguer avec des médecins</strong> · vocabulaire, écoute des besoins cliniques</li>
+          <li><strong>Rigueur réglementaire</strong> · les dispositifs médicaux suivent la norme ISO 13485 + marquage CE</li>
+        </ul>
+
+        <h2>Si ça te tente, voilà 3 actions pour creuser</h2>
+        <ul>
+          <li>Va une journée en JPO à Polytech Lyon, INSA Rouen, ou Sorbonne · pose des questions concrètes aux étudiants</li>
+          <li>Lis le rapport annuel du SNITEM (syndicat de l'industrie des technologies médicales) · vue d'ensemble du secteur</li>
+          <li>Demande à ton coach Proxxie de te connecter à un·e ingénieur·e biomédical·e pour un échange de 20 min</li>
+        </ul>
+
+        <div class="end-card" id="endCard">
+          <h3>Bravo, tu as fini la lecture !</h3>
+          <p>+15 XP gagnés. Cette découverte est maintenant marquée comme faite dans ton parcours.</p>
+          <a class="btn btn-white" href="Proxxie Parcours.html?activityCompleted=decouverte-bio">Retour au parcours →</a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="shell">
+      <span>© 2026 Proxxie</span>
+      <span>Source · article rédigé avec Sarah Chen, ingénieure biomédicale</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var ACTIVITY_ID = "decouverte-bio";
+      var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
+
+      function getRole() {
+        try {
+          var u = new URLSearchParams(location.search).get("role");
+          if (u === "parent" || u === "enfant") return u;
+          var s = localStorage.getItem("proxxie.role");
+          if (s === "parent" || s === "enfant") return s;
+        } catch (e) {}
+        return "parent";
+      }
+
+      var readingFill = document.getElementById("readingFill");
+      var progressPct = document.getElementById("progressPct");
+      var endCard = document.getElementById("endCard");
+      var hasCompleted = false;
+
+      function updateProgress() {
+        var doc = document.documentElement;
+        var winH = window.innerHeight;
+        var bodyH = doc.scrollHeight - winH;
+        var scroll = window.scrollY || doc.scrollTop;
+        var pct = bodyH > 0 ? Math.min(100, Math.round((scroll / bodyH) * 100)) : 100;
+        readingFill.style.width = pct + "%";
+        progressPct.textContent = pct + "% lu";
+
+        // Save progress
+        try {
+          var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          saved.progress = pct;
+          saved.lastSaved = new Date().toISOString();
+          saved.type = "discovery";
+          if (!saved.status || saved.status !== "done") saved.status = pct > 5 ? "in_progress" : "todo";
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        } catch (e) {}
+
+        // Mark as done when >= 90% read
+        if (pct >= 90 && !hasCompleted) {
+          hasCompleted = true;
+          try {
+            var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            saved.status = "done";
+            saved.progress = 100;
+            saved.completedAt = new Date().toISOString();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+            var xp = parseInt(localStorage.getItem("proxxie.xp"), 10) || 280;
+            localStorage.setItem("proxxie.xp", String(xp + 15));
+          } catch (e) {}
+        }
+      }
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+      updateProgress();
+
+      // For parent · gray-out the article and show a notice
+      if (getRole() === "parent") {
+        var notice = document.createElement("div");
+        notice.style.cssText = "background: rgba(72,122,255,.08); border: 1px solid rgba(72,122,255,.2); border-radius: 14px; padding: 14px 18px; margin: 20px 24px; font-size: 13px; color: var(--c-ink); text-align: center;";
+        notice.textContent = "Vous consultez le contenu de la découverte proposée à votre ado. Le statut (lue / non lue) apparaît dans le Parcours.";
+        document.querySelector(".article .shell").insertBefore(notice, document.querySelector(".article-card"));
+      }
+    })();
+  </script>
+
+</body>
+</html>
