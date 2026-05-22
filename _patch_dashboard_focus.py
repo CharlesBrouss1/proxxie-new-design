@@ -206,7 +206,6 @@ const ProxxieFocusCards = () => (
         <RapportSummaryCard />
       </div>
     </section>
-    <AccompagnementCard />
   </React.Fragment>
 );
 """ + END + "\n\n" + CREATE_ROOT
