@@ -58,6 +58,21 @@ const _proxxieOverlay = { position: "fixed", inset: 0, background: "rgba(10,14,4
 
 const TestsModal = ({ open, onClose, role }) => {
   if (!open) return null;
+  // Accès libre · seuls OCEAN-X (Big Five) et RIASEC sont accessibles sans RDV.
+  const freeTests = [
+    { id: "big5", title: "OCEAN-X (Big Five)", href: "Proxxie Test.html" },
+    TESTS_LIST.find((t) => t.id === "riasec"),
+  ].filter(Boolean);
+  const freeRow = (t) => (
+    <a key={t.id} href={t.href} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderTop: "1px solid var(--c-line)", textDecoration: "none", color: "inherit" }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>{t.title}</div>
+        <div style={{ fontSize: 11, color: "var(--c-muted)", fontFamily: "var(--font-num)" }}>⏱ ~{_proxxieTestMin(t.id)} min</div>
+      </div>
+      <ProxxieDualStatus t={t} role={role} />
+      <span style={{ fontSize: 16, color: "var(--c-muted)", flexShrink: 0 }}>→</span>
+    </a>
+  );
   return (
     <div onClick={onClose} style={_proxxieOverlay}>
       <div onClick={(e) => e.stopPropagation()} style={{ background: "white", borderRadius: 24, maxWidth: 640, width: "100%", maxHeight: "86vh", overflowY: "auto", boxShadow: "0 24px 70px rgba(10,14,44,.3)" }}>
@@ -66,21 +81,26 @@ const TestsModal = ({ open, onClose, role }) => {
           <button onClick={onClose} aria-label="Fermer" style={{ background: "transparent", border: "none", fontSize: 24, color: "var(--c-muted)", cursor: "pointer", lineHeight: 1, fontFamily: "inherit" }}>×</button>
         </div>
         <div style={{ padding: "8px 26px 22px" }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: "rgba(34,160,107,.07)", border: "1px solid rgba(34,160,107,.25)", borderRadius: 12, padding: "12px 14px", margin: "12px 0 4px", fontSize: 13, color: "var(--c-ink)", lineHeight: 1.45 }}>
+            <span style={{ flexShrink: 0 }}>🔓</span>
+            <span><strong>OCEAN-X et RIASEC</strong> sont en accès libre. Les autres tests se débloquent après le premier RDV de cadrage avec Charles.</span>
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#1d7a52", margin: "16px 0 4px" }}>Accès libre</div>
+          {freeTests.map(freeRow)}
           {PROXXIE_TEST_CATS.map((cat) => {
-            const tests = cat.ids.map((id) => TESTS_LIST.find((t) => t.id === id)).filter(Boolean);
+            const tests = cat.ids.map((id) => TESTS_LIST.find((t) => t.id === id)).filter(Boolean).filter((t) => t.id !== "riasec");
             if (!tests.length) return null;
             return (
               <div key={cat.id}>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--c-muted)", margin: "16px 0 4px" }}>{cat.label}</div>
                 {tests.map((t) => (
-                  <a key={t.id} href={t.href} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderTop: "1px solid var(--c-line)", textDecoration: "none", color: "inherit" }}>
+                  <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderTop: "1px solid var(--c-line)", opacity: 0.55 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 14, fontWeight: 600 }}>{t.title}</div>
                       <div style={{ fontSize: 11, color: "var(--c-muted)", fontFamily: "var(--font-num)" }}>⏱ ~{_proxxieTestMin(t.id)} min</div>
                     </div>
-                    <ProxxieDualStatus t={t} role={role} />
-                    <span style={{ fontSize: 16, color: "var(--c-muted)", flexShrink: 0 }}>→</span>
-                  </a>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: "var(--c-muted)", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(10,14,44,.05)", borderRadius: 999, padding: "5px 10px", whiteSpace: "nowrap" }}>🔒 Après le RDV</span>
+                  </div>
                 ))}
               </div>
             );
@@ -274,12 +294,13 @@ def patch_one(target: pathlib.Path) -> str:
     src = src.replace(CREATE_ROOT, COMPONENT, 1)
     changes.append("components")
 
-    # 2 · render · first migrate the sprawling block if still present
+    # 2 · render · first migrate the sprawling block if still present.
+    # (Later patches may legitimately remove <ProxxieFocusCards /> from the
+    # render tree — e.g. the KPI/explore refactor. TestsModal is still reached
+    # via ProxxieExploreCards, so we always re-write the component block.)
     if RENDER_OLD in src:
         src = src.replace(RENDER_OLD, RENDER_NEW, 1)
         changes.append("render")
-    elif "<ProxxieFocusCards />" not in src:
-        return "SKIP render anchor not found"
 
     # 3 · idempotent tidy ops (drop redundant banners, move beta intro to bottom)
     if PERSONAL_BLURB in src:
