@@ -155,6 +155,12 @@ const DocsUploader = () => {
           </div>
         </div>
       )}
+
+      {uploads.length === 0 && !toast && (
+        <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "var(--c-cream)", textAlign: "center", fontSize: 12, color: "var(--c-muted)", lineHeight: 1.45 }}>
+          Vos documents ajoutés apparaîtront ici · commencez par un bulletin récent.
+        </div>
+      )}
     </div>
   );
 };
