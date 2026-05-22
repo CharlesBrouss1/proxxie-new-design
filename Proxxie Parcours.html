@@ -307,6 +307,35 @@
         });
       });
 
+      // Tests en modale · rester dans l'espace connecté
+      (function () {
+        var modal = document.createElement("div");
+        modal.style.cssText = "position:fixed;inset:0;background:rgba(10,14,44,.6);z-index:500;display:none;place-items:center;padding:20px;";
+        modal.innerHTML =
+          '<div id="ptm-card" style="width:100%;max-width:1000px;height:92vh;background:white;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(10,14,44,.4);">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--c-line);flex-shrink:0;">' +
+              '<span style="display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--c-orange);"></span><span id="ptm-title">Test</span></span>' +
+              '<button id="ptm-close" style="background:rgba(10,14,44,.05);border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--c-ink);">Fermer ✕</button>' +
+            '</div>' +
+            '<iframe id="ptm-frame" style="flex:1;border:none;width:100%;"></iframe>' +
+          '</div>';
+        document.body.appendChild(modal);
+        function close() { modal.style.display = "none"; document.getElementById("ptm-frame").src = "about:blank"; document.body.style.overflow = ""; }
+        document.getElementById("ptm-close").addEventListener("click", close);
+        modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+        document.addEventListener("click", function (e) {
+          var a = e.target && e.target.closest ? e.target.closest("a") : null;
+          if (!a) return;
+          var href = a.getAttribute("href") || "";
+          if (/^Proxxie Test.*\.html/.test(href) || /Proxxie%20Test[^"']*\.html/.test(href)) {
+            e.preventDefault(); e.stopPropagation();
+            document.getElementById("ptm-frame").src = a.href;
+            document.getElementById("ptm-title").textContent = (a.textContent || "Test").replace(/→.*/, "").replace(/Voir mes résultats/i, "Résultats").trim().slice(0, 46) || "Test";
+            modal.style.display = "grid"; document.body.style.overflow = "hidden";
+          }
+        }, true);
+      })();
+
       // Per-phase meta (done / total)
       document.querySelectorAll("[data-phase]").forEach(function (p) {
         var meta = p.querySelector("[data-meta]");
