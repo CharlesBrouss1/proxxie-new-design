@@ -85,6 +85,14 @@
     .m-auto { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c-blue-2); background: rgba(72,122,255,.10); padding: 3px 8px; border-radius: 999px; }
     .btn-go { display: inline-flex; align-items: center; gap: 6px; background: var(--c-orange); color: white; font-weight: 700; font-size: 13px; padding: 8px 16px; border-radius: 10px; text-decoration: none; white-space: nowrap; border: none; cursor: pointer; font-family: inherit; }
 
+    /* Coaching session · inline module row (interspersed) */
+    .module.coaching-mod { background: linear-gradient(135deg, rgba(253,105,54,.07), rgba(245,235,63,.05)); border-color: rgba(253,105,54,.22); gap: 12px; }
+    .module.coaching-mod.locked { background: rgba(253,105,54,.04); border-color: rgba(253,105,54,.16); }
+    .module.coaching-mod .cm-av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #FD6936, #F5EB3F); color: #0A0E2C; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .module.coaching-mod.locked .cm-av { background: rgba(10,14,44,.10); color: var(--c-muted); }
+    .module.coaching-mod .m-name { text-align: left; }
+    .module.coaching-mod .m-name small { display: block; font-size: 11px; font-weight: 400; color: var(--c-muted); margin-top: 1px; }
+
     /* Coaching rows · interspersed on the same timeline */
     .coaching { display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 18px; background: white; border: 1px solid var(--c-line); }
     .coaching.gate { background: linear-gradient(135deg, rgba(253,105,54,.10), rgba(245,235,63,.10)); border: 1.5px solid rgba(253,105,54,.30); }
@@ -204,24 +212,13 @@
           <span class="chev">▾</span>
         </div>
         <div class="phase-body">
-          <div class="module locked"><span class="m-name">Introduction Fondation</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Frise du parcours</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Mes réussites</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching<small>avec Charles · 30 min</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Mes valeurs</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Mes besoins</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
-          <div class="module locked"><span class="m-name">Conclusion partie I</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
         </div>
       </section>
-
-      <!-- Séance coaching #2 (intercalée) -->
-      <div class="coaching">
-        <div class="coach-av" style="background: rgba(10,14,44,.06); color: var(--c-muted); background-image: none;">C</div>
-        <div class="coach-body">
-          <div class="coach-title" style="color: var(--c-muted);">Séance coaching · point fondation</div>
-          <div class="coach-sub">Se débloque une fois La fondation terminée.</div>
-        </div>
-        <span class="coach-lock">🔒 À venir</span>
-      </div>
 
       <!-- Phase 3 · La vision (verrouillée) -->
       <section class="phase locked collapsed" data-phase data-locked>
@@ -231,26 +228,17 @@
           <span class="chev">▾</span>
         </div>
         <div class="phase-body">
-          <div class="module locked"><span class="m-name">Introduction Vision</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Tes savoirs</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Passion et centres d'intérêts</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Objectifs et ambitions</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching<small>avec Charles · 30 min</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Questionnaire équipe</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Mes secteurs d'activités</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Investigation métiers</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
-          <div class="module locked"><span class="m-name">Conclusion partie II</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching<small>avec Charles · 30 min</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching<small>avec Charles · 30 min</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
         </div>
       </section>
-
-      <!-- Séance coaching #3 (intercalée) -->
-      <div class="coaching">
-        <div class="coach-av" style="background: rgba(10,14,44,.06); color: var(--c-muted); background-image: none;">C</div>
-        <div class="coach-body">
-          <div class="coach-title" style="color: var(--c-muted);">Séance coaching · point vision</div>
-          <div class="coach-sub">Se débloque une fois La vision terminée.</div>
-        </div>
-        <span class="coach-lock">🔒 À venir</span>
-      </div>
 
       <!-- Phase 4 · La construction (verrouillée) -->
       <section class="phase locked collapsed" data-phase data-locked>
@@ -260,12 +248,12 @@
           <span class="chev">▾</span>
         </div>
         <div class="phase-body">
-          <div class="module locked"><span class="m-name">Introduction Construction</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Entretiens experts</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Priorisation métiers</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching<small>avec Charles · 30 min</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Plan d'action</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
           <div class="module locked"><span class="m-name">Evaluation finale</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
-          <div class="module locked"><span class="m-name">Conclusion partie III</span><span class="m-status"><span class="m-lock">🔒</span></span></div>
+          <div class="module coaching-mod locked"><span class="cm-av">C</span><span class="m-name">Séance de coaching finale<small>avec Charles · bilan &amp; plan d'action</small></span><span class="m-status"><span class="m-lock">🔒</span></span></div>
         </div>
       </section>
 
