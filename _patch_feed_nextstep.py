@@ -38,15 +38,21 @@ NEW_FN = r"""const WhatsNewFeed = ({ onOpenProfile, onOpenInvite }) => {
   try { st = _proxxieGetOnboardingState(); } catch (e) {}
   let rdvBooked = false;
   try { rdvBooked = localStorage.getItem("proxxie.rdv.booked") === "1"; } catch (e) {}
+  /* OCEAN-X (Big Five) puis RIASEC · les deux tests en autonomie du parcours */
+  const oceanDone = st.firsttest;
+  let riasecDone = false;
+  try { riasecDone = (localStorage.getItem("proxxie.tests.riasec." + role) || localStorage.getItem("proxxie.tests.riasec")) === "done"; } catch (e) {}
   const steps = isEnfant ? [
     { done: st.profile,  title: "Complète ton profil", cta: "Compléter mon profil", kind: "profile" },
-    { done: st.firsttest, title: "Passe ton premier test · le Big Five", cta: "Lancer le test", href: "Proxxie Test.html" },
+    { done: oceanDone,  title: "Passe le test OCEAN-X (Big Five)", cta: "Passer l'OCEAN-X", href: "Proxxie Test.html" },
+    { done: riasecDone, title: "Passe le test RIASEC", cta: "Passer le RIASEC", href: "Proxxie Test RIASEC.html" },
     { done: st.firstdoc, title: "Ajoute ton premier bulletin", cta: "Ajouter un document", href: "Proxxie Documents.html" },
     { done: st.invited,  title: "Invite ton parent", cta: "Inviter mon parent", kind: "invite" },
   ] : [
     { done: st.profile,  title: "Indiquez le profil de " + FIRST_NAME, cta: "Compléter le profil", kind: "profile" },
+    { done: oceanDone,  title: "Passez le test OCEAN-X (Big Five) pour " + FIRST_NAME, cta: "Passer l'OCEAN-X", href: "Proxxie Test.html" },
+    { done: riasecDone, title: "Passez le test RIASEC pour " + FIRST_NAME, cta: "Passer le RIASEC", href: "Proxxie Test RIASEC.html" },
     { done: st.firstdoc, title: "Ajoutez le premier bulletin de " + FIRST_NAME, cta: "Ajouter un document", href: "Proxxie Documents.html" },
-    { done: st.firsttest, title: "Passez le Big Five à la place de " + FIRST_NAME, cta: "Lancer le test", href: "Proxxie Test.html" },
     { done: st.invited,  title: "Invitez " + FIRST_NAME + " à rejoindre", cta: "Inviter " + FIRST_NAME, kind: "invite" },
     { done: rdvBooked,   title: "Réservez le premier RDV avec le coach", cta: "Prendre RDV", href: "https://calendly.com/proxxie/cadrage" },
   ];
@@ -70,17 +76,29 @@ NEW_FN = r"""const WhatsNewFeed = ({ onOpenProfile, onOpenInvite }) => {
         ? <a href={step.href} target="_blank" rel="noopener noreferrer" style={ctaStyle}>{ctaLabel}</a>
         : <a href={step.href} style={ctaStyle}>{ctaLabel}</a>);
 
-  /* ---- Items du fil (visiteurs de retour) ---- */
+  /* ---- Article de la semaine · choisi selon la classe de l'ado ---- */
+  let grade = "Terminale";
+  try { grade = (typeof GRADE !== "undefined" && GRADE) || localStorage.getItem("proxxie_grade") || "Terminale"; } catch (e) {}
+  const _ARTICLES = {
+    "3ème": "Bien choisir son lycée et ses options",
+    "2nde": "Choisir ses 3 spécialités de 1ère sans se tromper",
+    "1ère": "Quelles spécialités garder en Terminale ?",
+    "Terminale": "Phase d'admission Parcoursup · décrypter les réponses",
+    "Post-Bac": "Réorientation · les passerelles après une 1re année",
+  };
+  const article = _ARTICLES[grade] || _ARTICLES["Terminale"];
+
+  /* ---- Items du fil ---- */
   const items = [];
   if (lastVisit) {
     const ms = _proxxieNextMilestone(now);
     const msDays = _proxxieDaysTo(ms.dt, now);
     items.push({ cat: "Échéance", color: "#FD6936", bg: "rgba(253,105,54,.10)", icon: "📅", title: ms.t, text: ms.x, when: _proxxieFmtDate(ms.dt) + " · " + _proxxieCountdownLabel(msDays), href: "Proxxie Parcours.html", action: "Voir le parcours" });
-    const rdv = new Date(now.getTime() + 4 * 86400000);
-    const rdvDays = _proxxieDaysTo(rdv, now);
-    items.push({ cat: "Coach", color: "#1320CE", bg: "rgba(19,32,206,.08)", icon: "🎓", title: isEnfant ? "Ton prochain RDV avec Charles" : "Prochain RDV de votre ado avec le coach", text: isEnfant ? "Stratégie réception des vœux Parcoursup · visio de 30 min. Prépare tes questions." : "Stratégie réception des vœux Parcoursup · visio de 30 min. Le coach a relu le rapport.", when: _proxxieFmtDate(rdv) + " 14h · " + _proxxieCountdownLabel(rdvDays), href: "Proxxie Coach.html", action: "Préparer le RDV" });
-    items.push({ cat: "Nouveauté", color: "#22A06B", bg: "rgba(34,160,107,.10)", icon: "✨", title: isEnfant ? "Un nouveau guide est en ligne" : "Un nouveau guide pour les parents", text: isEnfant ? "« Décrypter les réponses Parcoursup » · 6 min de lecture, ajouté au centre de ressources." : "« Accompagner son ado pendant la phase d'admission » · à lire avant le prochain RDV.", when: "récemment", href: "Proxxie Ressources Hub.html", action: "Lire" });
   }
+  /* Article de la semaine · adapté à la classe */
+  items.push({ cat: "Article de la semaine", color: "#22A06B", bg: "rgba(34,160,107,.10)", icon: "📰", title: article, text: isEnfant ? "Sélectionné pour ta classe (" + grade + ") · guide de l'orientation." : "Sélectionné pour la classe de " + FIRST_NAME + " (" + grade + ") · guide de l'orientation.", when: "cette semaine", href: "guide-orientation.html", action: "Lire l'article" });
+  /* Push upload de documents */
+  items.push({ cat: "Documents", color: "#487AFF", bg: "rgba(72,122,255,.10)", icon: "📄", title: isEnfant ? "Ajoute tes bulletins" : "Ajoutez les bulletins de " + FIRST_NAME, text: isEnfant ? "Plus on a de données, plus ton rapport est précis. Glisse-les en 30 sec." : "Plus on a de données, plus le rapport est précis. Glissez-les en 30 sec.", when: "recommandé", href: "Proxxie Documents.html", action: "Ajouter un document" });
 
   const daysSince = lastVisit ? Math.max(0, Math.round((now.getTime() - lastVisit) / 86400000)) : 0;
   const sinceLabel = daysSince === 0 ? "aujourd'hui" : daysSince === 1 ? "hier" : "il y a " + daysSince + " jours";
