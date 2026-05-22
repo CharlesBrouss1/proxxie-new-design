@@ -215,6 +215,20 @@
       .hero h1 { font-size: 30px; }
       .hero-progress { grid-template-columns: 1fr; }
     }
+    /* Mobile · the Coach hub (stage 04) uses inline grids that can't be
+       targeted by class selectors. Force every inline grid inside a stage
+       to single-column, and stack the substages. */
+    @media (max-width: 640px) {
+      .stage { grid-template-columns: 48px minmax(0, 1fr) !important; gap: 16px; }
+      .stage-body { min-width: 0; }
+      .stage-body [style*="grid-template-columns"] { grid-template-columns: minmax(0, 1fr) !important; }
+      .stage-body [style*="grid-template-columns"] > * { min-width: 0; }
+      .stage-substages { grid-template-columns: minmax(0, 1fr) !important; }
+      .stage-substages > * { min-width: 0; }
+      .topbar .shell { gap: 12px; }
+      .topnav { min-width: 0; flex: 1 1 auto; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      body { overflow-x: hidden; }
+    }
   </style>
 </head>
 <body>

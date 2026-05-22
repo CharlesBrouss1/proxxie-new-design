@@ -72,6 +72,10 @@
     @media (max-width: 640px) {
       .hero h1 { font-size: 28px; }
       .card { padding: 22px; }
+      body { overflow-x: hidden; }
+      nav.topnav, .topnav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      .breadcrumb { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
