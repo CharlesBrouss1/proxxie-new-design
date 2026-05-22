@@ -147,7 +147,72 @@
 
   <script>
     (function () {
-      var ACTIVITY_ID = "reflexion-metiers";
+      // ── Catalogue des réflexions guidées ──────────────────────────────
+      // Chaque entrée pilote le titre, le chapeau, la question et le placeholder.
+      // `parentQuestion` est la formulation montrée au parent (lecture seule).
+      var CATALOG = {
+        "reflexion-metiers": {
+          eyebrow: "Activité guidée · Réflexion écrite",
+          heroTu: "Tes 3 métiers d'envie",
+          heroVous: "Les 3 métiers d'envie de votre ado",
+          leadTu: "Pas de bonnes ou mauvaises réponses. Plus tu es honnête, plus on peut t'aider à orienter ton parcours.",
+          questionTu: "Nomme 3 métiers qui te font envie, et explique pourquoi pour chacun.",
+          parentQuestion: "Nomme 3 métiers qui te font envie, et explique pourquoi pour chacun.",
+          placeholder: "1. Le métier qui me fait envie, c'est…",
+          duration: "10 min"
+        },
+        "reflexion-journee-2035": {
+          eyebrow: "Activité guidée · Réflexion écrite",
+          heroTu: "Une journée idéale dans 10 ans",
+          heroVous: "La journée idéale de votre ado dans 10 ans",
+          leadTu: "Ferme les yeux, on est en 2035. Pas besoin que ce soit réaliste : décris ce qui te ferait te sentir bien.",
+          questionTu: "Décris une journée idéale dans 10 ans, du réveil au coucher. Où tu vis, avec qui, ce que tu fais de tes journées, ce qui te rend fier·e le soir.",
+          parentQuestion: "Décris une journée idéale dans 10 ans, du réveil au coucher.",
+          placeholder: "Je me réveille dans…",
+          duration: "12 min"
+        },
+        "reflexion-conflit": {
+          eyebrow: "Activité guidée · Réflexion écrite",
+          heroTu: "Un conflit récent, et comment tu l'as géré",
+          heroVous: "La gestion d'un conflit par votre ado",
+          leadTu: "Tout le monde vit des tensions, ça ne dit rien de mal sur toi. Ce qui compte, c'est ce que tu en apprends.",
+          questionTu: "Raconte une situation de conflit récente (avec un·e ami·e, en famille, en cours). Qu'est-ce qui s'est passé, comment tu as réagi, et qu'est-ce que tu ferais différemment aujourd'hui ?",
+          parentQuestion: "Raconte une situation de conflit récente et comment tu l'as gérée.",
+          placeholder: "La dernière fois que j'ai été en conflit, c'était…",
+          duration: "10 min"
+        },
+        "reflexion-stress": {
+          eyebrow: "Activité guidée · Réflexion écrite",
+          heroTu: "Comment tu gères le stress",
+          heroVous: "La façon dont votre ado gère le stress",
+          leadTu: "Le stress fait partie de la vie. Mieux tu le connais, mieux tu peux choisir des études et un métier qui te conviennent.",
+          questionTu: "Décris une période récente où tu as été stressé·e. Qu'est-ce qui te stresse le plus, comment ton corps réagit, et qu'est-ce qui t'aide à redescendre ?",
+          parentQuestion: "Décris une période récente de stress et ce qui t'aide à redescendre.",
+          placeholder: "Ce qui me stresse le plus, c'est…",
+          duration: "10 min"
+        },
+        "reflexion-motivation": {
+          eyebrow: "Activité guidée · Réflexion écrite",
+          heroTu: "Ce qui te fait te lever le matin",
+          heroVous: "Ce qui motive votre ado au quotidien",
+          leadTu: "Repère ce qui te donne de l'énergie : c'est souvent un indice précieux pour ton orientation.",
+          questionTu: "Pense à un moment récent où tu t'es senti·e vraiment motivé·e, où le temps a filé sans que tu le voies. Qu'est-ce que tu faisais, et qu'est-ce qui te plaisait là-dedans ?",
+          parentQuestion: "Décris un moment où tu t'es senti·e vraiment motivé·e et pourquoi.",
+          placeholder: "La dernière fois que j'étais à fond, je…",
+          duration: "10 min"
+        }
+      };
+      var DEFAULT_ID = "reflexion-metiers";
+
+      function resolveActivityId() {
+        try {
+          var p = new URLSearchParams(location.search).get("activity");
+          if (p && CATALOG[p]) return p;
+        } catch (e) {}
+        return DEFAULT_ID;
+      }
+      var ACTIVITY_ID = resolveActivityId();
+      var DATA = CATALOG[ACTIVITY_ID];
       var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
 
       function getRole() {
@@ -162,11 +227,20 @@
       var role = getRole();
       var isEnfant = role === "enfant";
 
-      // Localize
+      // Inject catalogue content (ado view by default)
+      document.querySelector(".eyebrow").textContent = DATA.eyebrow;
+      document.getElementById("heroTitle").textContent = DATA.heroTu;
+      document.getElementById("heroLead").textContent = DATA.leadTu;
+      document.getElementById("question").textContent = DATA.questionTu;
+      document.getElementById("answer").placeholder = DATA.placeholder;
+      var durationEl = document.querySelector(".meta-row span");
+      if (durationEl) durationEl.innerHTML = "<strong>Durée</strong>" + DATA.duration;
+
+      // Localize for parent
       if (!isEnfant) {
-        document.getElementById("heroTitle").textContent = "Les 3 métiers d'envie de votre ado";
+        document.getElementById("heroTitle").textContent = DATA.heroVous;
         document.getElementById("heroLead").textContent = "Cette réflexion est privée · seul votre ado voit ses réponses, vous n'avez accès qu'au statut (faite / en cours).";
-        document.getElementById("question").textContent = "Voici la question posée à votre ado · « Nomme 3 métiers qui te font envie, et explique pourquoi pour chacun. »";
+        document.getElementById("question").textContent = "Voici la question posée à votre ado · « " + DATA.parentQuestion + " »";
         // For parent, disable interaction
         var ta = document.getElementById("answer");
         ta.disabled = true;

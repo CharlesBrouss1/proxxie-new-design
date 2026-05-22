@@ -154,7 +154,7 @@
         <h2 id="resultTitle">Profil détecté · Pragmatique structuré</h2>
         <p class="reveal" id="resultReveal">Tu fonctionnes mieux quand tu sais ce qu'on attend de toi, dans un cadre clair, avec des étapes concrètes. Les métiers d'ingénieur, de chef de projet ou de fonctionnaire te conviennent particulièrement.</p>
         <div class="next">
-          <a class="btn btn-orange" href="Proxxie Parcours.html?activityCompleted=quiz-style-travail">Retour au parcours →</a>
+          <a class="btn btn-orange" id="resultCta" href="Proxxie Parcours.html?activityCompleted=quiz-style-travail">Retour au parcours →</a>
         </div>
       </div>
 
@@ -170,9 +170,6 @@
 
   <script>
     (function () {
-      var ACTIVITY_ID = "quiz-style-travail";
-      var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
-
       function getRole() {
         try {
           var u = new URLSearchParams(location.search).get("role");
@@ -185,59 +182,240 @@
       var role = getRole();
       var isEnfant = role === "enfant";
 
-      if (!isEnfant) {
-        document.getElementById("heroTitle").textContent = "Quiz · style de travail de votre ado";
-        document.getElementById("heroLead").textContent = "Cette activité interactive aide à identifier l'environnement de travail le plus adapté. Vous voyez le statut, votre ado garde le détail de ses réponses.";
-      }
+      // Helper: pick tu/vous formulation for a question
+      function tv(tu, vous) { return isEnfant ? tu : vous; }
 
-      // 5 quiz questions
-      var QUESTIONS = [
-        {
-          q: isEnfant ? "Quand tu travailles sur un projet, tu préfères..." : "Quand l'ado travaille sur un projet, il/elle préfère...",
-          opts: [
-            { l: "Un cadre clair et des étapes précises", w: { structure: 2 } },
-            { l: "Explorer librement et bricoler", w: { creativity: 2 } },
-            { l: "Bosser avec d'autres et confronter les idées", w: { collab: 2 } },
-            { l: "Suivre une méthode éprouvée", w: { structure: 1 } }
-          ]
+      // ── Catalogue des quiz ────────────────────────────────────────────
+      // Chaque quiz : un titre, un chapeau, 5 questions à 4 options pondérées,
+      // et un mapping de profils (PROFILE_LABELS) pour la révélation finale.
+      var CATALOG = {
+        "quiz-style-travail": {
+          heroTu: "Quiz · ton style de travail idéal",
+          heroVous: "Quiz · style de travail de votre ado",
+          breadcrumb: "Quiz métiers",
+          leadTu: "5 questions, 3 minutes. À la fin, on identifie le type d'environnement qui te conviendra le mieux.",
+          leadVous: "Cette activité interactive aide à identifier l'environnement de travail le plus adapté. Vous voyez le statut, votre ado garde le détail de ses réponses.",
+          questions: function () { return [
+            { q: tv("Quand tu travailles sur un projet, tu préfères…", "Quand l'ado travaille sur un projet, il/elle préfère…"),
+              opts: [
+                { l: "Un cadre clair et des étapes précises", w: { structure: 2 } },
+                { l: "Explorer librement et bricoler", w: { creativity: 2 } },
+                { l: "Bosser avec d'autres et confronter les idées", w: { collab: 2 } },
+                { l: "Suivre une méthode éprouvée", w: { structure: 1 } }
+              ] },
+            { q: tv("Tu retiens mieux quand…", "L'ado retient mieux quand…"),
+              opts: [
+                { l: "Tu lis et tu prends des notes", w: { analytical: 2 } },
+                { l: "Tu fais et tu touches", w: { hands: 2 } },
+                { l: "Tu écoutes quelqu'un l'expliquer", w: { social: 1 } },
+                { l: "Tu visualises des schémas", w: { analytical: 1, creativity: 1 } }
+              ] },
+            { q: tv("Dans un groupe, tu es plutôt…", "Dans un groupe, l'ado est plutôt…"),
+              opts: [
+                { l: "Celui/celle qui propose", w: { leadership: 2 } },
+                { l: "Celui/celle qui organise", w: { structure: 1, leadership: 1 } },
+                { l: "Celui/celle qui écoute et synthétise", w: { analytical: 2 } },
+                { l: "Celui/celle qui détend l'ambiance", w: { social: 2 } }
+              ] },
+            { q: "L'idée d'un job avec beaucoup d'autonomie…",
+              opts: [
+                { l: "Me motive, j'aime gérer mon temps", w: { autonomy: 2 } },
+                { l: "Me stresse un peu, je préfère un cadre", w: { structure: 2 } },
+                { l: "Dépend du sujet", w: { autonomy: 1, structure: 1 } },
+                { l: "M'indiffère", w: {} }
+              ] },
+            { q: tv("Si tu pouvais bosser n'importe où dans 10 ans…", "Si l'ado pouvait bosser n'importe où dans 10 ans…"),
+              opts: [
+                { l: "Un bureau structuré, en équipe", w: { collab: 2, structure: 1 } },
+                { l: "Un atelier où je fabrique", w: { hands: 2, creativity: 1 } },
+                { l: "Sur la route, en mouvement", w: { autonomy: 2 } },
+                { l: "Devant un ordi, en solo", w: { analytical: 2, autonomy: 1 } }
+              ] }
+          ]; },
+          profiles: {
+            structure: { name: "Pragmatique structuré", desc: "Tu fonctionnes mieux dans un cadre clair, avec des étapes définies. Ingénieur, chef de projet, fonctions opérationnelles." },
+            creativity: { name: "Créatif exploratoire", desc: "Tu as besoin de liberté pour bricoler et tester. Design, recherche, métiers d'art ou de l'innovation." },
+            collab: { name: "Collaboratif social", desc: "Tu donnes le meilleur en équipe. Métiers en relations humaines, animation, négociation, conseil." },
+            analytical: { name: "Analytique réflexif", desc: "Tu aimes décortiquer, modéliser, comprendre. Métiers data, recherche, audit, expertise technique." },
+            hands: { name: "Manuel concret", desc: "Tu apprends en faisant. Métiers techniques, artisanat, ingénierie pratique, médical." },
+            leadership: { name: "Leader naturel", desc: "Tu sais embarquer et décider. Direction d'équipe, entrepreneuriat, métiers à responsabilité." },
+            social: { name: "Empathique relationnel", desc: "Tu lis bien les autres. Métiers du soin, éducation, communication." },
+            autonomy: { name: "Indépendant autonome", desc: "Tu as besoin d'espace. Freelance, commercial, métiers de terrain ou créateur." }
+          }
         },
-        {
-          q: isEnfant ? "Tu retiens mieux quand..." : "L'ado retient mieux quand...",
-          opts: [
-            { l: "Tu lis et tu prends des notes", w: { analytical: 2 } },
-            { l: "Tu fais et tu touches", w: { hands: 2 } },
-            { l: "Tu écoutes quelqu'un l'expliquer", w: { social: 1 } },
-            { l: "Tu visualises des schémas", w: { analytical: 1, creativity: 1 } }
-          ]
+        "quiz-leadership": {
+          heroTu: "Quiz · ton rapport au leadership",
+          heroVous: "Quiz · le rapport de votre ado au leadership",
+          breadcrumb: "Quiz leadership",
+          leadTu: "5 questions pour comprendre comment tu te places face à un groupe. Aucune réponse n'est meilleure qu'une autre.",
+          leadVous: "Ce quiz aide à comprendre comment votre ado se positionne dans un groupe. Vous voyez le statut, le détail reste privé.",
+          questions: function () { return [
+            { q: "Dans un projet de groupe au lycée, le plus souvent…",
+              opts: [
+                { l: "Je prends les choses en main et je répartis", w: { directif: 2 } },
+                { l: "Je propose une idée puis je laisse chacun s'en emparer", w: { inspirant: 2 } },
+                { l: "Je m'assure que tout le monde se sente bien et avance", w: { facilitateur: 2 } },
+                { l: "Je préfère qu'on me dise quoi faire et je le fais bien", w: { contributeur: 2 } }
+              ] },
+            { q: "Quand une décision doit être prise vite, tu…",
+              opts: [
+                { l: "Tranches et tu assumes", w: { directif: 2 } },
+                { l: "Donnes une direction mais tu restes ouvert·e", w: { inspirant: 1, directif: 1 } },
+                { l: "Demandes l'avis du groupe avant de choisir", w: { facilitateur: 2 } },
+                { l: "Attends que quelqu'un d'autre décide", w: { contributeur: 2 } }
+              ] },
+            { q: "Ce qui te motive le plus dans le fait de mener un groupe…",
+              opts: [
+                { l: "Voir un objectif atteint grâce à mon organisation", w: { directif: 2 } },
+                { l: "Donner envie aux autres et créer une dynamique", w: { inspirant: 2 } },
+                { l: "Que personne ne soit laissé de côté", w: { facilitateur: 2 } },
+                { l: "Honnêtement, mener ne me motive pas tant que ça", w: { contributeur: 2 } }
+              ] },
+            { q: "Face à un désaccord dans l'équipe, tu…",
+              opts: [
+                { l: "Recadres pour qu'on avance", w: { directif: 2 } },
+                { l: "Reformules une vision qui rassemble", w: { inspirant: 2 } },
+                { l: "Fais parler chacun pour trouver un compromis", w: { facilitateur: 2 } },
+                { l: "Évites le conflit et tu te mets en retrait", w: { contributeur: 1 } }
+              ] },
+            { q: "On te confie la responsabilité d'un événement. Ta première réaction…",
+              opts: [
+                { l: "Je fais un rétroplanning et je distribue les rôles", w: { directif: 2 } },
+                { l: "Je commence par embarquer une équipe motivée", w: { inspirant: 2 } },
+                { l: "Je vérifie que chacun a envie et se sent capable", w: { facilitateur: 2 } },
+                { l: "Je préfère soutenir quelqu'un d'autre qui pilote", w: { contributeur: 2 } }
+              ] }
+          ]; },
+          profiles: {
+            directif: { name: "Leader directif", desc: "Tu sais décider et structurer. Tu donnes le cap et tu tiens la barre. Direction de projet, management opérationnel, entrepreneuriat." },
+            inspirant: { name: "Leader inspirant", desc: "Tu embarques les autres par la vision et l'énergie. Métiers où il faut fédérer : communication, associatif, création d'équipe." },
+            facilitateur: { name: "Leader facilitateur", desc: "Tu mènes en prenant soin du collectif. Métiers du soin, des RH, de la médiation, de l'enseignement." },
+            contributeur: { name: "Contributeur essentiel", desc: "Tu préfères faire avancer les choses sans être devant. C'est précieux : expertise, recherche, métiers techniques de haut niveau." }
+          }
         },
-        {
-          q: isEnfant ? "Dans un groupe, tu es plutôt..." : "Dans un groupe, l'ado est plutôt...",
-          opts: [
-            { l: "Celui/celle qui propose", w: { leadership: 2 } },
-            { l: "Celui/celle qui organise", w: { structure: 1, leadership: 1 } },
-            { l: "Celui/celle qui écoute et synthétise", w: { analytical: 2 } },
-            { l: "Celui/celle qui détend l'ambiance", w: { social: 2 } }
-          ]
+        "quiz-decision": {
+          heroTu: "Quiz · comment tu prends une décision",
+          heroVous: "Quiz · la prise de décision de votre ado",
+          breadcrumb: "Quiz décision",
+          leadTu: "5 questions pour repérer ta manière de choisir. Ça t'aidera à comprendre dans quels métiers tu seras à l'aise.",
+          leadVous: "Ce quiz révèle le style de décision de votre ado. Vous voyez le statut, les réponses détaillées restent privées.",
+          questions: function () { return [
+            { q: "Tu dois choisir une spécialité pour l'an prochain. Tu…",
+              opts: [
+                { l: "Listes le pour/contre de chaque option", w: { analytique: 2 } },
+                { l: "Écoutes ce que ton instinct te dit", w: { intuitif: 2 } },
+                { l: "Demandes l'avis de tes proches", w: { collectif: 2 } },
+                { l: "Repousses jusqu'à être obligé·e de choisir", w: { prudent: 2 } }
+              ] },
+            { q: "Quand tu as fait un choix, en général…",
+              opts: [
+                { l: "Tu ne reviens pas dessus, c'est pesé", w: { analytique: 1, intuitif: 1 } },
+                { l: "Tu te fies à ton ressenti et tu fonces", w: { intuitif: 2 } },
+                { l: "Tu vérifies que les autres approuvent", w: { collectif: 2 } },
+                { l: "Tu doutes encore un moment", w: { prudent: 2 } }
+              ] },
+            { q: "Devant un choix important, ce qui te bloque le plus…",
+              opts: [
+                { l: "Le manque d'informations", w: { analytique: 2 } },
+                { l: "Rien, je décide vite", w: { intuitif: 2 } },
+                { l: "La peur de décevoir les autres", w: { collectif: 2 } },
+                { l: "La peur de me tromper", w: { prudent: 2 } }
+              ] },
+            { q: "Pour acheter quelque chose d'important, tu…",
+              opts: [
+                { l: "Compares les avis et les caractéristiques pendant des heures", w: { analytique: 2 } },
+                { l: "Achètes ce qui te plaît au premier coup d'œil", w: { intuitif: 2 } },
+                { l: "Demandes à quelqu'un qui s'y connaît", w: { collectif: 2 } },
+                { l: "Attends les soldes ou un meilleur moment", w: { prudent: 2 } }
+              ] },
+            { q: "Avec le recul, tes meilleures décisions, tu les as prises…",
+              opts: [
+                { l: "En réfléchissant calmement", w: { analytique: 2 } },
+                { l: "Sur un coup de tête qui s'est avéré juste", w: { intuitif: 2 } },
+                { l: "En étant bien entouré·e", w: { collectif: 2 } },
+                { l: "En prenant mon temps", w: { prudent: 2 } }
+              ] }
+          ]; },
+          profiles: {
+            analytique: { name: "Décideur analytique", desc: "Tu pèses, tu compares, tu structures. Métiers où l'analyse compte : data, finance, ingénierie, droit, conseil." },
+            intuitif: { name: "Décideur intuitif", desc: "Tu te fies à ton ressenti et tu sais trancher vite. Métiers créatifs, commerciaux, entrepreneuriaux, du terrain." },
+            collectif: { name: "Décideur collectif", desc: "Tu décides mieux en concertation. Métiers de la collaboration : management, RH, métiers du soin et de l'éducation." },
+            prudent: { name: "Décideur prudent", desc: "Tu prends le temps de sécuriser tes choix. C'est une vraie qualité : audit, qualité, gestion de risque, recherche." }
+          }
         },
-        {
-          q: isEnfant ? "L'idée d'un job avec beaucoup d'autonomie..." : "L'idée d'un job avec beaucoup d'autonomie...",
-          opts: [
-            { l: "Me motive, j'aime gérer mon temps", w: { autonomy: 2 } },
-            { l: "Me stresse un peu, je préfère un cadre", w: { structure: 2 } },
-            { l: "Dépend du sujet", w: { autonomy: 1, structure: 1 } },
-            { l: "M'indiffère", w: {} }
-          ]
-        },
-        {
-          q: isEnfant ? "Si tu pouvais bosser n'importe où dans 10 ans..." : "Si l'ado pouvait bosser n'importe où dans 10 ans...",
-          opts: [
-            { l: "Un bureau structuré, en équipe", w: { collab: 2, structure: 1 } },
-            { l: "Un atelier où je fabrique", w: { hands: 2, creativity: 1 } },
-            { l: "Sur la route, en mouvement", w: { autonomy: 2 } },
-            { l: "Devant un ordi, en solo", w: { analytical: 2, autonomy: 1 } }
-          ]
+        "quiz-equilibre": {
+          heroTu: "Quiz · équilibre études et vie perso",
+          heroVous: "Quiz · l'équilibre études / vie perso de votre ado",
+          breadcrumb: "Quiz équilibre",
+          leadTu: "5 questions pour voir comment tu jongles entre le travail et le reste. Sois honnête, c'est pour toi.",
+          leadVous: "Ce quiz aide votre ado à prendre conscience de son équilibre. Vous voyez le statut, le détail reste privé.",
+          questions: function () { return [
+            { q: "En période de devoirs, le soir, tu…",
+              opts: [
+                { l: "Bosses jusqu'à ce que tout soit fini, quitte à veiller", w: { intense: 2 } },
+                { l: "Te fixes un horaire de fin et tu t'y tiens", w: { organise: 2 } },
+                { l: "Alternes travail et pauses sans vraiment planifier", w: { souple: 2 } },
+                { l: "Repousses au lendemain matin", w: { detendu: 2 } }
+              ] },
+            { q: "Le week-end, en pleine période de cours…",
+              opts: [
+                { l: "Je continue de bosser, j'ai du mal à décrocher", w: { intense: 2 } },
+                { l: "Je garde un créneau pour réviser, le reste est à moi", w: { organise: 2 } },
+                { l: "Ça dépend de mon humeur et de ce qu'il y a à faire", w: { souple: 2 } },
+                { l: "Je coupe complètement, le week-end c'est sacré", w: { detendu: 2 } }
+              ] },
+            { q: "Quand tu as beaucoup de choses à faire, tu ressens…",
+              opts: [
+                { l: "De la pression, mais ça me pousse à fond", w: { intense: 2 } },
+                { l: "Le besoin de tout lister et prioriser", w: { organise: 2 } },
+                { l: "Que je gère au feeling", w: { souple: 2 } },
+                { l: "L'envie de faire autre chose d'abord", w: { detendu: 2 } }
+              ] },
+            { q: "Tes loisirs et amis, par rapport aux études…",
+              opts: [
+                { l: "Passent souvent après, je culpabilise sinon", w: { intense: 2 } },
+                { l: "Ont leur place dans mon emploi du temps", w: { organise: 2 } },
+                { l: "Varient selon les semaines", w: { souple: 2 } },
+                { l: "Comptent autant, voire plus", w: { detendu: 2 } }
+              ] },
+            { q: "L'idée d'études ou d'un métier très prenants…",
+              opts: [
+                { l: "Me va, j'aime me donner à fond", w: { intense: 2 } },
+                { l: "OK si je peux organiser mon temps", w: { organise: 2 } },
+                { l: "Dépend de si le sujet me passionne", w: { souple: 2 } },
+                { l: "Très peu pour moi, je veux du temps libre", w: { detendu: 2 } }
+              ] }
+          ]; },
+          profiles: {
+            intense: { name: "Engagé intense", desc: "Tu te donnes à fond, quitte à mettre le reste de côté. Attention au surmenage : apprends à poser des limites. Cette énergie est un atout dans les filières exigeantes." },
+            organise: { name: "Équilibriste organisé", desc: "Tu sais cloisonner travail et détente. Un vrai super-pouvoir pour des études longues ou un métier prenant : médecine, prépa, droit." },
+            souple: { name: "Adaptable au feeling", desc: "Tu t'ajustes selon les semaines. C'est flexible, mais gagne à être un peu cadré en période chargée. Utile dans les métiers de terrain." },
+            detendu: { name: "Protecteur de son temps", desc: "Tu tiens à ta vie perso. Cherche des voies où l'équilibre est valorisé, et un cadre clair sur les attentes." }
+          }
         }
-      ];
+      };
+      var DEFAULT_ID = "quiz-style-travail";
+
+      function resolveActivityId() {
+        try {
+          var p = new URLSearchParams(location.search).get("activity");
+          if (p && CATALOG[p]) return p;
+        } catch (e) {}
+        return DEFAULT_ID;
+      }
+      var ACTIVITY_ID = resolveActivityId();
+      var DATA = CATALOG[ACTIVITY_ID];
+      var STORAGE_KEY = "proxxie.activities." + ACTIVITY_ID;
+
+      // Inject catalogue header content
+      document.getElementById("heroTitle").textContent = isEnfant ? DATA.heroTu : DATA.heroVous;
+      document.getElementById("heroLead").textContent = isEnfant ? DATA.leadTu : DATA.leadVous;
+      var crumb = document.querySelector(".breadcrumb span[style*='font-weight']");
+      if (crumb) crumb.textContent = DATA.breadcrumb;
+
+      // 5 quiz questions for the resolved activity
+      var QUESTIONS = DATA.questions();
+      var PROFILE_LABELS = DATA.profiles;
 
       var current = 0;
       var answers = [];
@@ -306,17 +484,6 @@
         return { topProfile: top, percent: Math.round((actualScore / maxScore) * 100), weights: weights };
       }
 
-      var PROFILE_LABELS = {
-        structure: { name: "Pragmatique structuré", desc: "Tu fonctionnes mieux dans un cadre clair, avec des étapes définies. Ingénieur, chef de projet, fonctions opérationnelles." },
-        creativity: { name: "Créatif exploratoire", desc: "Tu as besoin de liberté pour bricoler et tester. Design, recherche, métiers d'art ou de l'innovation." },
-        collab: { name: "Collaboratif social", desc: "Tu donnes le meilleur en équipe. Métiers en relations humaines, animation, négociation, conseil." },
-        analytical: { name: "Analytique réflexif", desc: "Tu aimes décortiquer, modéliser, comprendre. Métiers data, recherche, audit, expertise technique." },
-        hands: { name: "Manuel concret", desc: "Tu apprends en faisant. Métiers techniques, artisanat, ingénierie pratique, médical." },
-        leadership: { name: "Leader naturel", desc: "Tu sais embarquer et décider. Direction d'équipe, entrepreneuriat, métiers à responsabilité." },
-        social: { name: "Empathique relationnel", desc: "Tu lis bien les autres. Métiers du soin, éducation, communication." },
-        autonomy: { name: "Indépendant autonome", desc: "Tu as besoin d'espace. Freelance, commercial, métiers de terrain ou créateur." }
-      };
-
       document.getElementById("nextBtn").addEventListener("click", function () {
         if (current < QUESTIONS.length - 1) {
           current++;
@@ -324,7 +491,8 @@
         } else {
           // Finalize
           var result = computeScore();
-          var profile = PROFILE_LABELS[result.topProfile] || PROFILE_LABELS.structure;
+          var profileKeys = Object.keys(PROFILE_LABELS);
+          var profile = PROFILE_LABELS[result.topProfile] || PROFILE_LABELS[profileKeys[0]];
 
           try {
             var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
@@ -347,6 +515,7 @@
           document.getElementById("scoreCircle").style.setProperty("--score", result.percent);
           document.getElementById("resultTitle").textContent = "Profil détecté · " + profile.name;
           document.getElementById("resultReveal").textContent = profile.desc;
+          document.getElementById("resultCta").href = "Proxxie Parcours.html?activityCompleted=" + ACTIVITY_ID;
         }
       });
 
