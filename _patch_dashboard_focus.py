@@ -56,36 +56,6 @@ const _proxxieCard = { background: "white", border: "1px solid var(--c-line)", b
 const _proxxieGhostBtn = { display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 16px", borderRadius: 10, border: "1px solid var(--c-line)", background: "white", fontSize: 13, fontWeight: 600, color: "var(--c-blue)", cursor: "pointer", fontFamily: "inherit", textDecoration: "none" };
 const _proxxieOverlay = { position: "fixed", inset: 0, background: "rgba(10,14,44,.55)", display: "grid", placeItems: "center", zIndex: 200, padding: 20, overflowY: "auto" };
 
-const StatusStrip = () => {
-  const role = useProxxieRole();
-  const isEnfant = role === "enfant";
-  const testsDone = _proxxieTestsDone(role);
-  const docs = _proxxieGetDocs();
-  const docsDone = DOCS_EXPECTED.filter((d) => docs[d.id]).length;
-  const rdv = new Date(Date.now() + 4 * 86400000).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-  const metrics = [
-    ["Tests", testsDone + "/" + TESTS_LIST.length],
-    ["Documents", docsDone + "/" + DOCS_EXPECTED.length],
-    ["Prochain RDV", rdv],
-  ];
-  return (
-    <section style={{ margin: "0 auto 22px", padding: "0 24px", maxWidth: 1280 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", fontSize: 14, color: "var(--c-muted)" }}>
-        {metrics.map((m, i) => (
-          <span key={i} style={{ padding: "0 18px", borderRight: i < metrics.length - 1 ? "1px solid var(--c-line)" : "none" }}>
-            {m[0]} <b style={{ color: "var(--c-ink)", fontFamily: "var(--font-num)", fontWeight: 700 }}>{m[1]}</b>
-          </span>
-        ))}
-      </div>
-      <div style={{ textAlign: "center", marginTop: 8 }}>
-        <a href={isEnfant ? "Proxxie Bilan.html" : "Proxxie Rapport.html"} style={{ fontSize: 13, fontWeight: 600, color: "var(--c-blue)", textDecoration: "none" }}>
-          {isEnfant ? "Voir mon rapport complet →" : "Voir le rapport complet d'" + FIRST_NAME + " →"}
-        </a>
-      </div>
-    </section>
-  );
-};
-
 const TestsModal = ({ open, onClose, role }) => {
   if (!open) return null;
   return (
@@ -213,12 +183,27 @@ const AccompagnementCard = () => {
   );
 };
 
+const RapportSummaryCard = () => {
+  const role = useProxxieRole();
+  const isEnfant = role === "enfant";
+  return (
+    <div style={_proxxieCard}>
+      <h3 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600, marginBottom: 4 }}>Rapport d'orientation</h3>
+      <div style={{ fontSize: 13, color: "var(--c-muted)", marginBottom: 14 }}>
+        {isEnfant ? "Ta synthèse complète, mise à jour à chaque test." : "La synthèse complète d'" + FIRST_NAME + ", mise à jour à chaque test."}
+      </div>
+      <a href={isEnfant ? "Proxxie Bilan.html" : "Proxxie Rapport.html"} style={_proxxieGhostBtn}>Ouvrir le rapport →</a>
+    </div>
+  );
+};
+
 const ProxxieFocusCards = () => (
   <React.Fragment>
     <section style={{ margin: "0 auto 18px", padding: "0 24px", maxWidth: 1280 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 18 }}>
         <TestsSummaryCard />
         <DocsSummaryCard />
+        <RapportSummaryCard />
       </div>
     </section>
     <AccompagnementCard />
@@ -226,7 +211,8 @@ const ProxxieFocusCards = () => (
 );
 """ + END + "\n\n" + CREATE_ROOT
 
-# --- render tree swap ---
+# --- render tree · target the calm focus layout ---
+# The original sprawling block (first migration from the pre-focus dashboard).
 RENDER_OLD = """      <NextBestAction onOpenProfile={() => setProfileOpen(true)} onOpenInvite={() => setInviteOpen(true)} />
       <WhatsNewFeed />
       <ProxxieBetaIntro />
@@ -240,12 +226,18 @@ RENDER_OLD = """      <NextBestAction onOpenProfile={() => setProfileOpen(true)}
       <PaidConversionCTA />
       <NewsletterCard />
 """
+# Focus body · hero + feed + summary cards. No status strip, no beta intro here.
 RENDER_NEW = """      <NextBestAction onOpenProfile={() => setProfileOpen(true)} onOpenInvite={() => setInviteOpen(true)} />
-      <ProxxieBetaIntro />
-      <StatusStrip />
       <WhatsNewFeed />
       <ProxxieFocusCards />
 """
+
+# Idempotent line-ops applied after the block swap · work from either the
+# original sprawling asset or an earlier focus build.
+PERSONAL_BLURB = '      {mode === "personal" && <PersonalModeBlurb />}\n'   # redundant banner · drop
+STATUS_STRIP = "      <StatusStrip />\n"                                   # redundant metrics · drop
+BETA = "      <ProxxieBetaIntro />\n"                                      # move to the very bottom
+FOOTER = "      <Footer />"
 
 
 def find_dash_asset(manifest):
@@ -283,14 +275,23 @@ def patch_one(target: pathlib.Path) -> str:
     src = src.replace(CREATE_ROOT, COMPONENT, 1)
     changes.append("components")
 
-    # 2 · render swap
-    if "<ProxxieFocusCards />" in src:
-        changes.append("render(already)")
-    elif RENDER_OLD in src:
+    # 2 · render · first migrate the sprawling block if still present
+    if RENDER_OLD in src:
         src = src.replace(RENDER_OLD, RENDER_NEW, 1)
         changes.append("render")
-    else:
+    elif "<ProxxieFocusCards />" not in src:
         return "SKIP render anchor not found"
+
+    # 3 · idempotent tidy ops (drop redundant banners, move beta intro to bottom)
+    if PERSONAL_BLURB in src:
+        src = src.replace(PERSONAL_BLURB, "", 1); changes.append("-blurb")
+    if STATUS_STRIP in src:
+        src = src.replace(STATUS_STRIP, "", 1); changes.append("-statusstrip")
+    # remove any in-flow beta intro, then re-place it just above the footer
+    had_beta = BETA in src
+    src = src.replace(BETA, "", 1) if had_beta else src
+    if FOOTER in src and (BETA + FOOTER) not in src:
+        src = src.replace(FOOTER, BETA + FOOTER, 1); changes.append("beta→bottom")
 
     nd = src.encode("utf-8")
     if comp:
