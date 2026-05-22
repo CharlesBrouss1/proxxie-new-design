@@ -225,6 +225,7 @@
       .stage-body [style*="grid-template-columns"] > * { min-width: 0; }
       .stage-substages { grid-template-columns: minmax(0, 1fr) !important; }
       .stage-substages > * { min-width: 0; }
+      .value [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
       .topbar .shell { gap: 12px; }
       .topnav { min-width: 0; flex: 1 1 auto; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
       body { overflow-x: hidden; }
@@ -271,6 +272,68 @@
         <div class="meta">
           <span class="num" id="progressNum">35</span>
           <span class="total">%</span>
+        </div>
+      </div>
+      <div style="margin-top: 22px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+        <a id="heroCta" href="https://calendly.com/proxxie/cadrage" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; padding: 15px 26px; border-radius: 12px; background: var(--c-orange); color: white; font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: 0 6px 18px rgba(253,105,54,.28);">Réserver le RDV de cadrage offert →</a>
+        <span id="heroCtaNote" style="font-size: 13px; color: var(--c-muted);">30 min en visio · sans engagement</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value · comment se passe l'accompagnement + ce qu'on en retire (F4) -->
+  <section class="value" style="padding: 8px 0 4px;">
+    <div class="shell">
+      <div style="background: white; border: 1px solid var(--c-line); border-radius: 24px; padding: 34px 36px;">
+        <span class="eyebrow"><span class="dot"></span><span id="valueEyebrow">L'accompagnement Proxxie</span></span>
+        <h2 id="valueTitle" style="font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 12px 0 8px;">Comment se passe l'accompagnement</h2>
+        <p id="valueLead" class="lead" style="max-width: 680px; margin-bottom: 26px;">Un coach qui connaît le dossier de votre ado, qui a lu son rapport, et qui le suit dans la durée. Voici comment ça se déroule, et ce que vous en retirez.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px;">
+          <div style="background: rgba(253,105,54,.05); border: 1px solid rgba(253,105,54,.18); border-radius: 16px; padding: 18px 18px;">
+            <div style="font-family: var(--font-num); font-size: 13px; font-weight: 700; color: var(--c-orange); margin-bottom: 8px;">01</div>
+            <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">RDV de cadrage offert</div>
+            <div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">On fait le point sur le rapport, les objectifs et les points de blocage.</div>
+          </div>
+          <div style="background: rgba(72,122,255,.05); border: 1px solid rgba(72,122,255,.18); border-radius: 16px; padding: 18px 18px;">
+            <div style="font-family: var(--font-num); font-size: 13px; font-weight: 700; color: var(--c-blue-2); margin-bottom: 8px;">02</div>
+            <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">Séances régulières</div>
+            <div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">Visios de 30 min : stratégie vœux, choix de spés, méthodo, motivation.</div>
+          </div>
+          <div style="background: rgba(34,160,107,.05); border: 1px solid rgba(34,160,107,.18); border-radius: 16px; padding: 18px 18px;">
+            <div style="font-family: var(--font-num); font-size: 13px; font-weight: 700; color: var(--c-green); margin-bottom: 8px;">03</div>
+            <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">Plan d'action concret</div>
+            <div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">À chaque séance, des prochaines actions claires, notées et suivies.</div>
+          </div>
+          <div style="background: rgba(10,14,44,.03); border: 1px solid var(--c-line); border-radius: 16px; padding: 18px 18px;">
+            <div style="font-family: var(--font-num); font-size: 13px; font-weight: 700; color: var(--c-ink); margin-bottom: 8px;">04</div>
+            <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">Suivi dans la durée</div>
+            <div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">Messagerie, notes et replays entre les séances. Le coach reste joignable.</div>
+          </div>
+        </div>
+
+        <h3 id="benefitsTitle" style="font-family: var(--font-display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 14px;">Ce que vous en retirez</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-size: 20px; line-height: 1.2; flex-shrink: 0;">🧭</span>
+            <div><div style="font-weight: 600; font-size: 14px; margin-bottom: 2px;">Un cap clair</div><div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">Des choix d'orientation alignés sur un profil réel, pas sur des intuitions.</div></div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-size: 20px; line-height: 1.2; flex-shrink: 0;">⏱️</span>
+            <div><div style="font-weight: 600; font-size: 14px; margin-bottom: 2px;">Du temps gagné</div><div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">Fini les heures à décrypter Parcoursup seul. Un expert balise le chemin.</div></div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-size: 20px; line-height: 1.2; flex-shrink: 0;">🌱</span>
+            <div><div style="font-weight: 600; font-size: 14px; margin-bottom: 2px;">De la sérénité</div><div style="font-size: 13px; color: var(--c-muted); line-height: 1.45;">Quelqu'un qui connaît le dossier et répond aux questions, à chaque étape.</div></div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap; padding: 18px 20px; background: rgba(10,14,44,.02); border-radius: 16px;">
+          <div style="flex: 1; min-width: 260px;">
+            <div style="font-size: 14px; font-style: italic; color: var(--c-ink); line-height: 1.5; margin-bottom: 6px;">« En trois séances, on est passés de la panique des vœux à une liste qu'on assume tous les deux. »</div>
+            <div style="font-size: 12px; color: var(--c-muted);">Sophie, maman de Léa (Terminale) · accompagnement Proxxie</div>
+          </div>
+          <a id="valueCta" href="https://calendly.com/proxxie/cadrage" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 12px; background: var(--c-orange); color: white; font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; box-shadow: 0 6px 18px rgba(253,105,54,.28);">Réserver le RDV de cadrage →</a>
         </div>
       </div>
     </div>
@@ -458,6 +521,13 @@
         // Localize stage 04 too
         var s04Title = document.querySelector("article.stage:nth-of-type(4) h2");
         if (s04Title) s04Title.textContent = "Tes séances avec ton coach (Charles)";
+        // Localize the value / accompagnement section for the ado (tu)
+        var _setTxt = function (id, t) { var el = document.getElementById(id); if (el) el.textContent = t; };
+        _setTxt("valueTitle", "Comment se passent tes séances avec le coach");
+        _setTxt("valueLead", "Un coach qui te connaît, qui a lu ton rapport, et qui te suit dans la durée. Voici comment ça se déroule, et ce que tu en retires.");
+        _setTxt("benefitsTitle", "Ce que tu en retires");
+        _setTxt("heroCta", "Réserver mon RDV de cadrage offert →");
+        _setTxt("valueCta", "Réserver mon RDV de cadrage →");
       }
 
       // Tests list, read from localStorage
