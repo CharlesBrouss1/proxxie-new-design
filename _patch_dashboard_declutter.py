@@ -1,25 +1,31 @@
 #!/usr/bin/env python3
-"""Déclutter · retirer la checklist d'onboarding redondante du dashboard.
+"""Déclutter · alléger le haut du dashboard, qu'un seul élément domine.
 
-Le haut du dashboard avait DEUX blocs de mise en route empilés :
+Le haut empilait trois blocs concurrents :
+  · ReengagementBanner (bandeau « c'est la période · bulletins ? »),
   · NextBestAction (« Votre prochaine étape » · l'action unique du moment, F1),
   · OnboardingChecklist (« N actions pour démarrer » · la liste complète).
 
-Les deux guident le même démarrage (profil → doc → test → invitation), donc ils
-font doublon et surchargent la page. On garde le héros action-unique (plus
-clair, une seule action + progression) et on retire la checklist.
+NextBestAction et OnboardingChecklist guident le même démarrage (doublon), et
+le rappel doc du ReengagementBanner est déjà couvert par l'étape document du
+héros, son état régime, et le panel de complétude plus bas. On garde le héros
+action-unique comme élément dominant + le fil « depuis ta dernière visite »,
+et on retire les deux autres rendus du haut de page.
 
-On supprime simplement le rendu <OnboardingChecklist .../> de l'arbre du
-composant Dashboard. La définition du composant et les autres usages restent
-intacts (zéro risque de référence cassée · NextBestAction couvre les mêmes
-étapes). Idempotent : no-op si le rendu est déjà absent.
+On supprime simplement les rendus <OnboardingChecklist .../> et
+<ReengagementBanner /> de l'arbre du composant Dashboard. Les définitions des
+composants restent intactes (zéro référence cassée). Idempotent : no-op si un
+rendu est déjà absent.
 """
 import re, json, base64, gzip, pathlib
 
 REPO = pathlib.Path(__file__).parent
 FILES = ["Proxxie Dashboard.html", "dashboard.html"]
 
-RENDER_OLD = "      <OnboardingChecklist onOpenProfile={() => setProfileOpen(true)} onOpenInvite={() => setInviteOpen(true)} />\n"
+RENDERS_TO_REMOVE = [
+    "      <OnboardingChecklist onOpenProfile={() => setProfileOpen(true)} onOpenInvite={() => setInviteOpen(true)} />\n",
+    "      <ReengagementBanner />\n",
+]
 
 
 def find_dash_asset(manifest):
@@ -48,9 +54,13 @@ def patch_one(target: pathlib.Path) -> str:
     if not uuid:
         return "SKIP no dashboard asset"
 
-    if RENDER_OLD not in src:
+    removed = []
+    for r in RENDERS_TO_REMOVE:
+        if r in src:
+            src = src.replace(r, "", 1)
+            removed.append(r.strip().split()[0].lstrip("<"))
+    if not removed:
         return "noop (already removed)"
-    src = src.replace(RENDER_OLD, "", 1)
 
     nd = src.encode("utf-8")
     if comp:
@@ -59,7 +69,7 @@ def patch_one(target: pathlib.Path) -> str:
     new_manifest = json.dumps(manifest, separators=(",", ":"), ensure_ascii=False)
     new_html = html[:m.start(2)] + new_manifest + html[m.end(2):]
     target.write_text(new_html, encoding="utf-8")
-    return "removed OnboardingChecklist render (asset " + uuid[:8] + ")"
+    return "removed [" + ", ".join(removed) + "] (asset " + uuid[:8] + ")"
 
 
 if __name__ == "__main__":
