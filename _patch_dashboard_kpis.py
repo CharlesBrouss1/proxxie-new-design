@@ -64,7 +64,7 @@ const ProxxieKpiCards = () => {
 
   const cards = [
     { label: "Spécialités", value: "Maths · NSI", sub: "à garder en Terminale", color: "#22A06B", onClick: () => setFiliereOpen(true) },
-    { label: "Documents", value: docsDone + "/" + DOCS_EXPECTED.length, sub: "documents reçus", color: "#487AFF", href: "Proxxie Documents.html" },
+    { label: "Documents", value: String(docsDone), sub: "les parents mettent en moyenne 15 documents", color: "#487AFF", href: "Proxxie Documents.html" },
     { label: "Parcours Proxxie", value: "Étape " + Math.min(stepDone + 1, 5) + "/5", sub: stepDone + " étape" + (stepDone > 1 ? "s" : "") + " complétée" + (stepDone > 1 ? "s" : ""), color: "#FD6936", href: "Proxxie Parcours.html" },
     { label: "RDV Charles", value: "À réserver", sub: "1er cadrage offert", color: "#1d7a52", bg: "rgba(34,160,107,.05)", onClick: () => setRdvOpen(true) },
   ];
