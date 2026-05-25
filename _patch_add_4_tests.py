@@ -59,7 +59,7 @@ ANCHOR_O = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="
 # ---------- 1 nouvelle entrée TESTS_ATYPIQUE (après Anxiété, son pair clinique) ----------
 
 NEW_ATYPIQUE = BEGIN_A + r"""
-  { code: "Dépression", name: "Test Dépression", model: "PHQ-9 (Kroenke)", accent: "#5C6BC0", accentSoft: "rgba(92,107,192,0.12)", href: "#bientot", bientot: true, duration: "3 min", questions: "9 questions", eyebrow: "Traits dépressifs",
+  { code: "Dépression", name: "Test Dépression", model: "PHQ-9 (Kroenke)", accent: "#5C6BC0", accentSoft: "rgba(92,107,192,0.12)", href: "./Proxxie Test PHQ9.html", duration: "3 min", questions: "9 questions", eyebrow: "Traits dépressifs",
     short: "Screening PHQ-9, outil clinique de référence pour la dépression chez l'ado.",
     long: "Patient Health Questionnaire (Kroenke, Spitzer & Williams, 2001). Utilisé en médecine générale dans le monde entier. Complète le GAD-7 (anxiété) qui n'évalue qu'une moitié du couple anxiété-dépression. Anxiété + dépression sont co-occurrentes dans 50-60% des cas.",
     output: "Score PHQ-9 + niveau de sévérité", results: [{k:"Score PHQ-9",v:"Score sur 27 avec niveau clinique · minimal, léger, modéré, modérément sévère, sévère."},{k:"Anxiété + dépression",v:"Lecture croisée GAD-7 / PHQ-9 si les deux tests sont passés. Comorbidité fréquente à l'ado."},{k:"Alerte sécurité",v:"Si signaux d'idées noires (item 9), affichage immédiat du 3114 (numéro national prévention suicide)."},{k:"Pistes graduées",v:"Pistes par niveau · auto-régulation, posture parent, ou consultation pédopsy."}], tags: ["Dépression", "Screening", "PHQ-9"],
