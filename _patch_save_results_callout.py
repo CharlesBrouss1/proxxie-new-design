@@ -41,8 +41,10 @@ TARGETS = [
     "Proxxie Test Besoins.html",
     "Proxxie Test Drivers.html",
     "Proxxie Test Valeurs.html",
-    # Nouveau (construit par _patch_build_phq9.py)
+    # Nouveaux (construits par _patch_build_phq9.py / _grit.py / _caas.py)
     "Proxxie Test PHQ9.html",
+    "Proxxie Test Grit.html",
+    "Proxxie Test CAAS.html",
     # Twins lowercase (cf. convention _patch_test_pages_phase1.py)
     "test-riasec.html",
     "test-pcm.html",
@@ -56,6 +58,8 @@ TARGETS = [
     "test-drivers.html",
     "test-valeurs.html",
     "test-phq9.html",
+    "test-grit.html",
+    "test-caas.html",
 ]
 
 # Sentinelles JS-context (module top level) · plain block comments OK
