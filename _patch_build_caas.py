@@ -199,6 +199,266 @@ const LEVEL_COPY = {
   "faible": { color: "#C62828", body: "Adaptabilité à renforcer en priorité. Risque de subir les choix plus que de les faire. L'adaptabilité se travaille à tout âge. Programme structuré : 1 exercice par dimension, 3 mois." },
 };
 
+/* RICH_RESULTS · contenu psychométrique étayé par niveau global */
+const RICH_RESULTS = {
+  "très fort": {
+    headline: "Adaptabilité exceptionnelle, prête pour les métiers de 2040",
+    decoding: [
+      "Un score ≥ 4.0/5 sur le CAAS place votre ado dans les 15-20% des ados les plus adaptables (échantillon validation 18 pays). Les 4 muscles (anticiper, décider, explorer, oser) sont solides. C'est le profil le plus prédictif de réussite dans un marché du travail où, selon l'OCDE et le WEF, 65% des métiers de 2040 n'existent pas encore et 50% des compétences actuelles seront obsolètes d'ici 2027.",
+      "À ce niveau, l'ado peut envisager sereinement des parcours non-linéaires (pivots, doubles compétences, entrepreneuriat). Le risque inverse à surveiller : éparpillement, difficulté à finir ce qu'il commence (croiser avec le test Grit). L'idéal : grit forte + CAAS très fort = profil ultra-rare et très recherché.",
+    ],
+    forces: [
+      { t: "Vision long terme nette", d: "Capable de se projeter à 10 ans et de structurer son présent." },
+      { t: "Autonomie décisionnelle", d: "Prend des décisions sans attendre l'avis des autres." },
+      { t: "Curiosité active", d: "Cherche, teste, expérimente sans pression de résultat immédiat." },
+      { t: "Confiance en sa capacité d'apprendre", d: "Voit chaque nouveau défi comme un terrain de jeu." },
+      { t: "Résilience aux transitions", d: "Sait que les pivots font partie du jeu, pas un échec." },
+    ],
+    vigilances: [
+      { t: "Dispersion potentielle", d: "Curiosité forte peut empêcher de finir ce qu'il commence." },
+      { t: "Surconfiance face au risque", d: "Peut sous-estimer la difficulté d'une transition mal préparée." },
+      { t: "Frustration en cadre rigide", d: "Souffre en filière ou entreprise très structurée." },
+      { t: "Pression sociale du choix", d: "Difficulté à faire UN choix Parcoursup parmi 10 envies." },
+      { t: "Risque burnout par sur-engagement", d: "L'enthousiasme peut masquer une charge réelle excessive." },
+    ],
+    portraits: [
+      { n: "Le futur entrepreneur", d: "A déjà lancé un side-project, monétisé un compte, organisé un événement. Adaptabilité = identité." },
+      { n: "Le polyvalent global", d: "Vise carrière internationale, langues, mobilité géographique. Pivots et changements sont la norme." },
+      { n: "L'autodidacte structuré", d: "Apprend hors école (YouTube, MOOC, livres), construit ses propres parcours." },
+    ],
+    pistes_parent: [
+      { t: "Ne pas écraser sous le « choisis enfin »", d: "À ce niveau, multi-potentialité est un atout, pas un défaut. Pression au choix unique = contre-productif." },
+      { t: "Valoriser les pivots passés", d: "Si l'ado a quitté un sport / un hobby, le présenter comme un choix de croissance, pas un abandon." },
+      { t: "Présenter des modèles non-linéaires", d: "Inviter à dîner / rencontrer des adultes qui ont eu 2-3 carrières différentes." },
+      { t: "Aider à structurer le choix Parcoursup", d: "Pas pour réduire, pour cartographier : quels paths ouvrent quoi ?" },
+      { t: "Surveiller l'éparpillement scolaire", d: "Forte adaptabilité + faible grit = risque de bulletin déséquilibré. Aider à finir." },
+    ],
+    pistes_ado: [
+      { t: "Choisir un parcours qui maximise l'optionalité", d: "Préférer Sciences Po, écoles généralistes, doubles cursus, plutôt que filière ultra-spécialisée." },
+      { t: "Investir dans des compétences transverses", d: "Anglais, code, écriture, présentation : utiles partout, déclassables nulle part." },
+      { t: "Tester avant de t'engager", d: "Stage d'observation, projet associatif, side-project : avant de choisir, expérimente." },
+      { t: "Cultiver 1 expertise forte", d: "Adaptabilité sans expertise = touche-à-tout. Garde 1 sujet où tu es vraiment bon(ne)." },
+      { t: "Garde la grit en parallèle", d: "Faire le test Grit. Si grit faible, c'est ton chantier prioritaire à 17 ans." },
+    ],
+    impact_orientation: [
+      "Avec ce niveau d'adaptabilité, les meilleurs choix Parcoursup sont ceux qui maximisent l'optionalité : Sciences Po, ENS, écoles d'ingé généralistes, doubles cursus universitaires, double-licences (droit-éco, maths-info), écoles de commerce post-prépa. À éviter : filières ultra-spécialisées dès la L1 (médecine sans alternative claire, médico-social, métiers d'art à débouché unique). L'idée : garder 3-5 portes ouvertes pendant 2-3 ans, puis spécialiser quand le sens est clair. L'entrepreneuriat est aussi une option crédible pour ce profil dès 18-20 ans.",
+    ],
+    ressources: [
+      { type: "Livre", title: "Range, comment les généralistes triomphent dans un monde spécialisé", author: "David Epstein", desc: "Argument scientifique pour les parcours non-linéaires. Lecture-clé pour ce profil." },
+      { type: "Podcast", title: "Génération Do It Yourself", host: "Matthieu Stefani", desc: "Interviews longues d'entrepreneurs avec parcours non-linéaires." },
+      { type: "Site", title: "80 000 Hours", url: "https://80000hours.org", desc: "Méthodologie pour choisir une carrière à fort impact. Outils gratuits, communauté." },
+    ],
+  },
+  "fort": {
+    headline: "Adaptabilité solide, profil prêt pour pivoter avec préparation",
+    decoding: [
+      "Un score entre 3.5 et 4.0/5 indique une adaptabilité au-dessus de la moyenne. L'ado est capable d'apprendre, de décider, d'explorer, mais une des 4 dimensions est probablement plus faible que les autres. C'est le profil le plus courant des ados qui réussiront à naviguer un marché du travail mouvant : suffisamment ancré pour ne pas être perdu, suffisamment flexible pour pivoter quand nécessaire.",
+      "Le travail à cet âge : identifier la dimension la plus faible (visible dans le détail par dimension ci-dessus) et la muscler avec les 3 exercices proposés sur 30 jours. À ce niveau, un coup de pouce ciblé peut faire passer le profil au niveau « très fort » en 6 mois.",
+    ],
+    forces: [
+      { t: "Équilibre entre stabilité et flexibilité", d: "Ni rigide ni dispersé(e), capacité d'ajuster sans s'effondrer." },
+      { t: "Apprentissage actif", d: "Ne subit pas la formation, va chercher l'info qui manque." },
+      { t: "Capacité de projection", d: "Se projette à 3-5 ans avec assez de clarté pour structurer le présent." },
+      { t: "Demande d'aide quand nécessaire", d: "Sait reconnaître ses zones d'incompétence sans en faire un drame." },
+      { t: "Réseau social mobilisable", d: "A des liens qui peuvent l'aider à explorer (amis, profs, famille élargie)." },
+    ],
+    vigilances: [
+      { t: "Dimension faible non identifiée", d: "Sans travail ciblé, la dimension la plus basse reste un frein chronique." },
+      { t: "Confort de la zone connue", d: "Tendance à rester sur les choix prévisibles plutôt qu'explorer." },
+      { t: "Dépendance au cadre", d: "Adaptabilité forte en contexte structuré, plus fragile en autonomie totale." },
+      { t: "Difficulté avec les décisions sans info parfaite", d: "Tendance à attendre toutes les données avant de décider." },
+      { t: "Fluctuation selon contexte", d: "Score peut chuter en période de stress ou de transition (déménagement, rupture)." },
+    ],
+    portraits: [
+      { n: "Le futur cadre adaptable", d: "Vise grande école ou master, sait que la carrière sera faite de pivots et l'accepte." },
+      { n: "Le bilingue multi-culturel", d: "A vécu à l'étranger ou enfant de famille internationale. L'adaptabilité est culturelle." },
+      { n: "L'aîné(e) responsabilisé(e)", d: "A pris des responsabilités tôt (famille, association). Adaptabilité forgée par la pratique." },
+    ],
+    pistes_parent: [
+      { t: "Identifier la dimension faible", d: "Lire le détail par dimension dans les résultats. Focus sur la plus basse." },
+      { t: "Proposer des contextes nouveaux", d: "Échanges internationaux, séjours en autonomie, jobs d'été : muscler l'adaptabilité par l'expérience." },
+      { t: "Encourager les pivots assumés", d: "Si l'ado veut quitter un projet, accompagner sans culpabiliser." },
+      { t: "Présenter des parcours non-linéaires", d: "Modèles d'adultes qui ont changé de voie en cours de route." },
+      { t: "Préparer aux transitions difficiles", d: "L'entrée en L1 ou en école est un test. Préparer mentalement, pas juste logistiquement." },
+    ],
+    pistes_ado: [
+      { t: "Travailler la dimension la plus basse", d: "3 exercices ciblés sur 30 jours (voir détail dans les résultats par dimension)." },
+      { t: "1 expérience hors zone de confort par trimestre", d: "Stage dans un domaine inconnu, voyage seul(e), nouvelle activité : musculation directe." },
+      { t: "Identifier 2-3 paths possibles", d: "Pas 1 seul plan, pas 10. Cartographier 2-3 scénarios cohérents." },
+      { t: "Construire un réseau d'adultes hors famille", d: "5-10 adultes que tu peux appeler pour conseil. Profs, anciens stages, voisins, etc." },
+      { t: "Pratiquer la décision imparfaite", d: "1 décision/semaine sans toutes les infos. Apprends à décider en incertitude." },
+    ],
+    impact_orientation: [
+      "Avec ce niveau, la plupart des filières post-bac sont jouables sans grande précaution. Vise des parcours qui te laissent 1-2 portes ouvertes : double-licence, école d'ingé ou de commerce avec spécialisation tardive, prépa généraliste (B/L, MP2I), L1 en université avec mineures. Si tu vises une filière très spécialisée (médecine, pharmacie, école d'art), prévois mentalement un plan B en parallèle, pour ne pas te retrouver coincé si la voie ne te convient pas après 1-2 ans.",
+    ],
+    ressources: [
+      { type: "Livre", title: "Ikigai, le secret japonais d'une vie longue et heureuse", author: "Garcia & Miralles", desc: "Cadre simple pour aligner intérêts, talents, mission et viabilité économique." },
+      { type: "Podcast", title: "Métamorphose, par Anne Ghesquière", host: "Anne Ghesquière", desc: "Témoignages de pivots de vie réussis, applicables au pivot d'orientation." },
+      { type: "Site", title: "Onisep, métiers d'avenir", url: "https://www.onisep.fr", desc: "Cartographie des métiers émergents (IA, climat, santé, créatifs) avec parcours d'accès." },
+    ],
+  },
+  "moyen": {
+    headline: "Adaptabilité moyenne, une dimension à muscler en priorité",
+    decoding: [
+      "Un score entre 2.5 et 3.5/5 est dans la moyenne. L'ado a les bases mais probablement 1 ou 2 dimensions clairement faibles. Cette dimension faible va devenir un frein chronique face aux transitions importantes (entrée en L1, choix de spécialisation, premier emploi) si elle n'est pas travaillée. À 17 ans, c'est le moment idéal pour le faire : le cerveau est encore plastique et l'enjeu est concret (Parcoursup).",
+      "Important : adaptabilité moyenne ne signifie pas « moyenne en tout ». Souvent, 2-3 dimensions sont fortes (3.5-4.0) et 1 est très basse (1.5-2.0), ce qui tire la moyenne vers le bas. Identifier la faiblesse précise dans le détail par dimension est la première étape, puis muscler avec un programme de 30 jours.",
+    ],
+    forces: [
+      { t: "Bases solides sur 2-3 dimensions", d: "Tout n'est pas faible, c'est une dimension qui tire l'ensemble vers le bas." },
+      { t: "Marge de progression nette", d: "À ce niveau, un travail de 30-60 jours fait des progrès mesurables." },
+      { t: "Conscience implicite du blocage", d: "L'ado sent souvent dans quelle dimension il bloque, même sans le formuler." },
+      { t: "Pas de retard structurel", d: "Tu as 1-2 ans devant toi avant Parcoursup engageant pour rattraper." },
+      { t: "Apprenable par l'expérience", d: "Les 4 dimensions se développent par la pratique répétée, plus que par la lecture." },
+    ],
+    vigilances: [
+      { t: "Dimension faible non traitée = frein chronique", d: "Sans travail ciblé, elle reste un plafond invisible toute la vie pro." },
+      { t: "Risque de subir l'orientation", d: "Tendance à choisir par défaut, par confort familial ou social." },
+      { t: "Conformisme silencieux", d: "Suit le groupe par défaut plutôt que de tracer son propre chemin." },
+      { t: "Difficulté à imaginer un futur différent", d: "Manque d'exemples concrets de pivots ou de chemins alternatifs." },
+      { t: "Fenêtre de plasticité qui rétrécit", d: "Plus on attend, plus c'est dur. À 17 ans, c'est encore très accessible." },
+    ],
+    portraits: [
+      { n: "Le suiveur du parcours classique", d: "L1 généraliste par défaut, sans projet clair. Adaptabilité moyenne car peu testée." },
+      { n: "Le surinvesti scolaire", d: "Score élevé en école mais faible en autonomie / décision. Risque d'effondrement post-bac." },
+      { n: "Le doutant chronique", d: "Sait ce qu'il aime mais n'ose pas le poursuivre. Confidence faible, autres dimensions OK." },
+    ],
+    pistes_parent: [
+      { t: "Lire le détail par dimension", d: "Identifier précisément quelle dimension est faible. Ne pas généraliser." },
+      { t: "Programme 30 jours sur la plus faible", d: "3 exercices proposés ci-dessus. Suivi hebdo, sans pression mais avec consistance." },
+      { t: "Ne pas surprotéger", d: "L'adaptabilité se muscle par l'expérience. Laisser prendre des risques mesurés." },
+      { t: "Présenter des modèles", d: "Adultes du réseau qui ont eu des parcours différents du tien. Récit > leçon." },
+      { t: "Aider à l'autonomie quotidienne", d: "Tâches déléguées progressivement (rdv médical, démarches admin), petits actes d'autonomie." },
+    ],
+    pistes_ado: [
+      { t: "Programme 30 jours sur ta dimension faible", d: "Voir le détail par dimension. 3 exercices simples, répétés 4 semaines." },
+      { t: "1 expérience qui te sort de ta zone par mois", d: "Stage dans un domaine inconnu, sortie seule, prise de parole en public, etc." },
+      { t: "Identifier 1 modèle adulte différent de tes parents", d: "Quelqu'un qui a fait un parcours qui te parle. Lire/écouter son histoire." },
+      { t: "Tester 2 filières Parcoursup avant de choisir", d: "Stage d'observation, journée portes ouvertes, échange étudiant. Ne pas choisir aveugle." },
+      { t: "Décider 1 chose par semaine sans demander", d: "Sortie, achat, planning. Apprends à décider, c'est un muscle." },
+    ],
+    impact_orientation: [
+      "À ce niveau, le choix Parcoursup compte plus qu'à un niveau élevé. Évite les filières où l'autonomie est totale dès le 1er jour (L1 anonyme avec 800 étudiants, fac sans tutorat). Privilégie les formats avec encadrement humain : BTS, BUT, prépa avec petite promo, école avec parrainage étudiant, alternance. Le cadre compensera le temps de muscler ton adaptabilité. À 19-20 ans, après 1-2 ans de musculation, tu pourras envisager des choix plus autonomes (master, pivot, mobilité internationale).",
+    ],
+    ressources: [
+      { type: "Livre", title: "L'art d'avoir toujours raison de l'imposteur", author: "Kévin Chassangre", desc: "Travail sur la confiance et l'auto-efficacité, dimensions souvent faibles à ce niveau." },
+      { type: "Podcast", title: "Mes possibles, par Camille Sfez", host: "Camille Sfez", desc: "Témoignages d'adultes qui ont changé de vie. Modèles d'adaptabilité concrets." },
+      { type: "Site", title: "JobIRL", url: "https://www.jobirl.com", desc: "Réseau d'adultes pros qui répondent aux questions des ados, gratuit." },
+    ],
+  },
+  "faible": {
+    headline: "Adaptabilité faible, priorité absolue avant Parcoursup",
+    decoding: [
+      "Un score sous 2.5/5 est un signal d'alerte. À 17 ans, c'est un facteur de risque majeur face aux transitions à venir (Parcoursup, entrée en L1, premier emploi). Sans travail dédié, le risque est de subir l'orientation, de s'enfermer dans la première voie choisie sans capacité à pivoter si elle ne convient pas, et de se retrouver à 25 ans dans une situation pro qui ne ressemble pas à ce qu'on voulait.",
+      "Important : l'adaptabilité se travaille à tout âge, mais elle se construit le mieux par l'expérience, pas par la théorie. À ce score, la priorité n'est pas le choix de filière mais le programme d'autonomisation : laisser l'ado faire des choix réels, prendre des risques mesurés, vivre des expériences hors cadre familier. 6-12 mois de travail intensif peuvent transformer le profil.",
+    ],
+    forces: [
+      { t: "Honnêteté avec soi", d: "Avoir répondu honnêtement à ce test est en soi un acte de courage." },
+      { t: "Marge de croissance massive", d: "À ce niveau, le potentiel d'amélioration est énorme avec un travail dédié." },
+      { t: "Conscience du blocage", d: "L'ado sait souvent qu'il est en difficulté avec les choix et les transitions." },
+      { t: "Capacité à accepter l'aide", d: "Moins de fierté à surmonter qu'un profil high-adaptabilité paradoxalement orgueilleux." },
+      { t: "Sécurité de base présente", d: "Si l'ado a fait le test avec ses parents, le filet de sécurité familial est là, c'est précieux." },
+    ],
+    vigilances: [
+      { t: "Risque de subir l'orientation", d: "Choisira la filière de moindre résistance, pas celle qui lui correspond." },
+      { t: "Sous-jacents possibles", d: "Faire les tests Anxiété (GAD-7), Dépression (PHQ-9), TDAH (ASRS). Souvent une cause traitable." },
+      { t: "Dépendance excessive aux parents", d: "Si vous décidez à sa place, ça ne se musclera pas. Tension à gérer." },
+      { t: "Évitement des situations nouvelles", d: "Phobie sociale, anxiété de performance peuvent être présentes." },
+      { t: "Risque décrochage post-bac élevé", d: "Sans cadre humain fort, la rupture du lycée est très difficile à traverser." },
+    ],
+    portraits: [
+      { n: "L'ado en sur-protection", d: "Famille bienveillante mais qui a tout fait à sa place. Capacités d'autonomie pas développées." },
+      { n: "L'anxieux invisible", d: "Score CAAS faible est ici un symptôme d'anxiété chronique. Traiter l'anxiété fait remonter le CAAS." },
+      { n: "Le post-trauma", d: "Évènement passé (deuil, échec scolaire majeur, harcèlement) qui a coupé l'élan vital." },
+    ],
+    pistes_parent: [
+      { t: "Faire les screenings de cause", d: "GAD-7, PHQ-9, ASRS, AQ. Souvent une cause traitable explique le score CAAS faible." },
+      { t: "Coach d'orientation pendant 6 mois", d: "Tiers neutre qui aide l'ado à construire son adaptabilité par étapes." },
+      { t: "Lâcher progressivement les décisions", d: "Délégation graduée : 1 décision/semaine d'abord, puis hebdo, puis quotidienne." },
+      { t: "Année de césure structurée", d: "Service civique, séjour à l'étranger, projet personnel : 1 an pour muscler avant filière engageante." },
+      { t: "Travailler son propre lâcher-prise", d: "Parents anxieux freinent souvent l'adaptabilité ado. Voir un psy en parallèle si besoin." },
+    ],
+    pistes_ado: [
+      { t: "Faire les autres tests", d: "GAD-7, PHQ-9. Une anxiété traitée peut faire remonter ton CAAS de 1 point en 3 mois." },
+      { t: "Pas d'orientation engageante cette année", d: "Si Parcoursup arrive et que tu n'es pas prêt, demander une césure est légitime et structurant." },
+      { t: "1 expérience d'autonomie cette année", d: "Job d'été seul, voyage seul, stage dans une ville où tu connais personne. Petit mais réel." },
+      { t: "Coach d'orientation neutre", d: "Pas un psy : un coach. 5-10 séances pour clarifier sans pression familiale." },
+      { t: "Demander un mentor adulte", d: "Quelqu'un qui n'est pas parent ni prof. Voisin, parent d'ami, ancien stagiaire. 1h/mois." },
+    ],
+    impact_orientation: [
+      "À ce score, le pire choix est une filière exigeante et anonyme (L1 médecine, prépa parisienne en internat, école d'ingé loin de la maison) sans préparation. Le meilleur choix est : (1) traiter d'abord les causes sous-jacentes (anxiété, dépression, TDAH), (2) si Parcoursup arrive trop vite, demander une année de césure formalisée pour structurer (service civique, langue, projet associatif), (3) ensuite, choisir une formation avec encadrement humain fort (BTS, BUT en alternance, école avec petite promo + parrainage). L'objectif des 12 prochains mois : pas le diplôme, l'adaptabilité.",
+    ],
+    ressources: [
+      { type: "Livre", title: "Et si je m'écoutais ?", author: "Sophie Carquain", desc: "Pour ado qui doute. Aide à distinguer ses propres envies des attentes parentales." },
+      { type: "Podcast", title: "InPower, par Louise Aubery", host: "Louise Aubery", desc: "Épisodes sur autonomie, construction de soi, sortir du syndrome d'imposteur." },
+      { type: "Association", title: "Maison des Adolescents", url: "https://anmda.fr", desc: "Lieu d'écoute multidisciplinaire dans chaque département. Gratuit, sans rendez-vous, idéal pour ce profil." },
+    ],
+  },
+};
+
+const RichAnalysisSection = ({ rich, accent, accentSoft }) => {
+  if (!rich) return null;
+  const card = { background: "white", borderRadius: 18, padding: 22, border: "1px solid var(--c-line)" };
+  const h3style = { fontSize: 16, marginBottom: 14, color: accent, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700 };
+  return (
+    <section style={{ paddingTop: 50, paddingBottom: 50, background: "var(--c-cream-light)" }}>
+      <div className="shell" style={{ maxWidth: 920 }}>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <span className="eyebrow"><span className="dot"></span>Analyse approfondie</span>
+          <h2 style={{ marginTop: 10, fontSize: 28 }}>{rich.headline}</h2>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>Décodage du score</h3>
+          {rich.decoding.map((p, i) => (<p key={i} style={{ fontSize: 15, lineHeight: 1.65, color: "var(--c-ink-2)", marginBottom: i < rich.decoding.length - 1 ? 12 : 0 }}>{p}</p>))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+          <div style={card}>
+            <h3 style={h3style}>Forces typiques · 5</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.forces.map((f, i) => (<li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}><strong style={{ color: "var(--c-ink)" }}>{f.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{f.d}</span></li>))}
+            </ul>
+          </div>
+          <div style={card}>
+            <h3 style={{ ...h3style, color: "#C62828" }}>Points de vigilance · 5</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.vigilances.map((v, i) => (<li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}><strong style={{ color: "var(--c-ink)" }}>{v.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{v.d}</span></li>))}
+            </ul>
+          </div>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>3 profils typiques à ce niveau</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+            {rich.portraits.map((p, i) => (<div key={i} style={{ background: accentSoft, borderRadius: 12, padding: 14 }}><div style={{ fontSize: 13, fontWeight: 700, color: accent, marginBottom: 6 }}>{p.n}</div><p style={{ fontSize: 13, lineHeight: 1.5, color: "var(--c-ink-2)", margin: 0 }}>{p.d}</p></div>))}
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+          <div style={card}>
+            <h3 style={h3style}>Côté parent · 5 actions</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.pistes_parent.map((p, i) => (<li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}><strong style={{ color: "var(--c-ink)" }}>{p.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{p.d}</span></li>))}
+            </ul>
+          </div>
+          <div style={card}>
+            <h3 style={h3style}>Côté ado · 5 actions</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.pistes_ado.map((p, i) => (<li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}><strong style={{ color: "var(--c-ink)" }}>{p.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{p.d}</span></li>))}
+            </ul>
+          </div>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>Impact sur l'orientation</h3>
+          {rich.impact_orientation.map((p, i) => (<p key={i} style={{ fontSize: 15, lineHeight: 1.65, color: "var(--c-ink-2)", marginBottom: i < rich.impact_orientation.length - 1 ? 12 : 0 }}>{p}</p>))}
+        </div>
+        <div style={card}>
+          <h3 style={h3style}>Ressources à explorer · 3</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+            {rich.ressources.map((r, i) => (<div key={i} style={{ background: accentSoft, borderRadius: 12, padding: 14 }}><div style={{ fontSize: 10.5, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>{r.type}</div><div style={{ fontSize: 14, fontWeight: 700, color: "var(--c-ink)", marginBottom: 4 }}>{r.title}</div>{r.author && <div style={{ fontSize: 12, color: "var(--c-muted)", marginBottom: 6 }}>{r.author}</div>}{r.host && <div style={{ fontSize: 12, color: "var(--c-muted)", marginBottom: 6 }}>{r.host}</div>}<p style={{ fontSize: 12.5, lineHeight: 1.5, color: "var(--c-ink-2)", margin: "0 0 8px" }}>{r.desc}</p>{r.url && <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, fontWeight: 600, color: accent, textDecoration: "none" }}>Ouvrir →</a>}</div>))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Results = ({ results, onRestart }) => {
   const { avgs, total, level, weakest, strongest, archetype } = results;
   const copy = LEVEL_COPY[level];
@@ -388,6 +648,7 @@ const TestApp = () => {
           {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="CAAS" accent="#00897B" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
           <EmailResultsActions testCode="CAAS" testName="Adaptabilité Carrière (CAAS)" accent="#00897B" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
+          <RichAnalysisSection rich={RICH_RESULTS[results.level]} accent="#00897B" accentSoft="rgba(0,137,123,0.12)" />
         </>
       )}
       {mode === "results" && results && <SaveResultsCallout />}

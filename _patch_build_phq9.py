@@ -229,6 +229,350 @@ const LEVEL_COPY = {
   },
 };
 
+/* RICH_RESULTS : contenu psychométrique étayé par niveau, baké dans le bundle.
+   Permet d'afficher une analyse fine directement sur la page de résultats,
+   sans appel LLM en runtime. */
+const RICH_RESULTS = {
+  minimal: {
+    headline: "Symptômes minimaux, le niveau attendu en bonne santé mentale",
+    decoding: [
+      "Un score sous 5 signifie que votre ado ne présente aucun signal dépressif cliniquement significatif sur les 14 derniers jours. C'est le niveau attendu chez un ado qui dort suffisamment, a des liens sociaux, et trouve du sens dans ses activités. Ne pas confondre avec « tout va bien à 100% » : un ado peut avoir un score minimal et traverser une période difficile, le PHQ-9 mesure surtout l'intensité et la durée des symptômes.",
+      "À retenir : la santé mentale n'est pas un état figé. Refaire le test dans 3 mois si vous percevez un changement (baisse d'énergie persistante, isolement, perte d'intérêt). La période la plus à risque pour l'apparition d'un premier épisode dépressif chez l'ado se situe entre 14 et 17 ans, particulièrement chez les filles.",
+    ],
+    forces: [
+      { t: "Régulation émotionnelle correcte", d: "Capacité à traverser les frustrations sans bascule durable." },
+      { t: "Ancrage du quotidien", d: "Les routines (sommeil, repas, école) fonctionnent globalement." },
+      { t: "Lien social préservé", d: "Au moins 1 à 2 personnes de confiance dans l'entourage proche." },
+      { t: "Plaisir préservé", d: "Activités qui font encore plaisir, énergie pour s'y engager." },
+      { t: "Vision du futur", d: "Capacité à se projeter à 3-6 mois sans angoisse paralysante." },
+    ],
+    vigilances: [
+      { t: "Période de transition", d: "Déménagement, rupture amicale, séparation parentale peuvent rapidement faire monter le score." },
+      { t: "Réseaux sociaux", d: "Au-delà de 3h/jour, corrélation avec hausse symptômes dépressifs (méta Twenge 2018)." },
+      { t: "Sommeil", d: "Moins de 7h/nuit régulières est un précurseur classique." },
+      { t: "Isolement progressif", d: "Désengagement des activités collectives, signal précoce." },
+      { t: "Histoire familiale", d: "Antécédents dépressifs parentaux doublent le risque, à surveiller." },
+    ],
+    portraits: [
+      { n: "L'équilibré", d: "Ado tranquille, alterne hauts et bas normaux. Sommeil régulier, ami(e)s stables, hobbies actifs." },
+      { n: "Le combattant traversant", d: "Vient de surmonter une période difficile (échec scolaire, rupture). Score bas car les ressources internes ont fonctionné." },
+      { n: "Le sereinement engagé", d: "Investi dans 2-3 projets (sport, art, école). Sens et structure protègent du mal-être." },
+    ],
+    pistes_parent: [
+      { t: "Maintenir le rituel hebdo", d: "1 moment ado-parent prévisible chaque semaine (resto, sport, ciné) sans téléphone." },
+      { t: "Observer sans surveiller", d: "Repérer les changements sur 2-3 semaines avant de questionner." },
+      { t: "Valider les hauts ET les bas", d: "« C'est ok d'aller mal une journée », sans dramatiser ni minimiser." },
+      { t: "Protéger le sommeil", d: "Téléphones hors chambre la nuit, règle non négociable jusqu'à 18 ans." },
+      { t: "Ne pas projeter ses propres angoisses", d: "Si vous-même êtes anxieux pour son avenir, traitez votre anxiété en parallèle." },
+    ],
+    pistes_ado: [
+      { t: "Bouger 3x/semaine", d: "30 min d'activité cardio fait baisser le risque dépressif autant qu'un antidépresseur léger." },
+      { t: "1 confident hors famille", d: "Identifier 1 adulte de confiance (prof, oncle, coach) à qui parler si besoin." },
+      { t: "Limiter scroll passif", d: "Plafond 90 min/jour Insta+TikTok+Snap combinés. Pas avant 9h, pas après 21h." },
+      { t: "1 projet long terme", d: "Sport, instrument, association : avoir 1 truc qui se construit sur 6+ mois." },
+      { t: "Journal de 3 lignes", d: "Le soir : 1 bonne chose, 1 difficulté, 1 chose pour demain. Effet anti-rumination prouvé." },
+    ],
+    impact_orientation: [
+      "Avec un score minimal, l'orientation peut se construire sereinement. L'énergie psychique est disponible pour explorer (RIASEC), tester des stages, faire ses choix Parcoursup sans biais lié à l'humeur. C'est la fenêtre idéale pour les choix engageants : prépa, filières sélectives, projets ambitieux. Le risque inverse : surinvestir scolaire pour éviter d'autres sujets (relation, identité, autonomie). Veiller à un équilibre vie/études dans cette zone.",
+    ],
+    ressources: [
+      { type: "Livre", title: "Sortir de la dépression et vaincre la déprime", author: "Jean Cottraux", desc: "Référence francophone TCC. Niveau accessible parents." },
+      { type: "Podcast", title: "Les Adultes de Demain", host: "Stéphanie d'Esclaibes", desc: "Épisodes courts sur santé mentale ado, ton bienveillant." },
+      { type: "Association", title: "Nightline France", url: "https://nightline.fr", desc: "Écoute par étudiants pour étudiants, gratuit, anonyme, soir+nuit." },
+    ],
+  },
+  mild: {
+    headline: "Symptômes légers, surveillance active sans alarme",
+    decoding: [
+      "Un score entre 5 et 9 indique des signaux dépressifs présents mais pas au seuil clinique. À l'adolescence, c'est extrêmement courant (jusqu'à 25% des 15-18 ans selon Santé Publique France 2023). La plupart du temps, ces fluctuations s'autorégulent en 2-4 semaines. La distinction-clé : durée et impact. Si ça dure plus de 3 semaines OU ça commence à toucher les notes, le sommeil, les amis, on bascule vers le modéré.",
+      "Ce niveau n'est pas un diagnostic, c'est un signal de vigilance. Le faux pas le plus fréquent des parents : soit dramatiser (« va voir un psy ! ») et braquer l'ado, soit minimiser (« t'as juste besoin de bouger ») et passer à côté d'une vraie souffrance. La bonne posture : ouvrir la conversation sans presser, refaire le test dans 4 semaines, ajuster en fonction.",
+    ],
+    forces: [
+      { t: "Conscience de soi", d: "Capacité à reconnaître son état, étape préalable au changement." },
+      { t: "Demande implicite", d: "Avoir fait le test EST une demande d'aide, à valoriser." },
+      { t: "Réserves fonctionnelles", d: "L'école, les amis, le quotidien tiennent encore globalement." },
+      { t: "Marge d'action", d: "À ce niveau, les interventions non médicamenteuses suffisent souvent." },
+      { t: "Pas de comorbidité grave", d: "Si pas d'idées noires (item 9 = 0), pas d'urgence." },
+    ],
+    vigilances: [
+      { t: "Durée > 3 semaines", d: "Si les symptômes persistent au-delà, consulter sans attendre." },
+      { t: "Impact scolaire net", d: "Chute de notes inexpliquée, absences répétées = consulter." },
+      { t: "Isolement croissant", d: "Désengagement social progressif, signal d'aggravation." },
+      { t: "Comorbidité anxiété", d: "Si le test GAD-7 est aussi positif, le risque de bascule modéré est plus élevé." },
+      { t: "Pic du dimanche soir", d: "Anxiété/tristesse récurrente avant l'école = signal à explorer." },
+    ],
+    portraits: [
+      { n: "Le surchargé silencieux", d: "Pression scolaire/parentale forte, dort mal, dit « ça va » par défaut. Souvent en Terminale ou hypokhâgne." },
+      { n: "Le post-rupture", d: "Rupture amicale ou amoureuse récente. Score monte 4-8 semaines, redescend si entourage bienveillant." },
+      { n: "L'identité en chantier", d: "Questionnements sur orientation sexuelle, genre, vocation. Anxiété + tristesse mêlées." },
+    ],
+    pistes_parent: [
+      { t: "Ouvrir, ne pas interroger", d: "« J'ai l'impression que tu es ailleurs ces temps-ci, tu veux qu'on en parle ? » plutôt que « qu'est-ce qui se passe ? »." },
+      { t: "Proposer le médecin traitant", d: "Pas le psy d'emblée, le MT comme première porte. Moins stigmatisant." },
+      { t: "Réduire la pression scolaire 4 semaines", d: "Annoncer explicitement : « les notes ne sont pas la priorité ce mois-ci »." },
+      { t: "Vérifier le sommeil", d: "Demander combien d'heures réelles, pas l'horaire de coucher. Viser 8h minimum." },
+      { t: "Surveiller sans espionner", d: "Repas en famille 4x/semaine. Refus de manger ensemble = signal." },
+    ],
+    pistes_ado: [
+      { t: "Refaire le test dans 30 jours", d: "Bookmarker la page, refaire le PHQ-9 dans 4 semaines pour mesurer l'évolution." },
+      { t: "Parler à 1 personne cette semaine", d: "Ami, prof, infirmier scolaire, médecin. Verbaliser réduit déjà l'intensité." },
+      { t: "Sport 3x cette semaine", d: "30 min suffisent. Marche rapide compte. Effet mesurable dès 7 jours." },
+      { t: "Couper réseaux 2h/jour minimum", d: "Idéalement matin (réveil) et soir (avant dodo). Pour casser le cycle de comparaison." },
+      { t: "Fil Santé Jeunes si seul", d: "0 800 235 236, gratuit, anonyme, 9h-23h. Pas pour les urgences uniquement." },
+    ],
+    impact_orientation: [
+      "Un score léger n'empêche pas Parcoursup, mais demande de la prudence sur les choix les plus engageants. Éviter les filières où l'isolement est la norme la première année (prépa parisienne en internat, médecine sans groupe d'amis sur place) si le score ne redescend pas. Privilégier les formations avec encadrement (BUT, BTS avec promo restreinte, écoles post-bac avec parrainage) qui offrent un filet social naturel. Si le score persiste, le médecin traitant peut faire un certificat pour aménagement Parcoursup (priorité, choix géographique).",
+    ],
+    ressources: [
+      { type: "Livre", title: "L'adolescence pour les nuls", author: "Michel Fize", desc: "Pour parents qui veulent comprendre sans jargon clinique." },
+      { type: "Podcast", title: "Émotions", host: "Louie Media (Cyrielle Bedu)", desc: "Épisodes sur tristesse, perte, ado. Format intime, valide les émotions." },
+      { type: "Association", title: "Fil Santé Jeunes", url: "https://www.filsantejeunes.com", desc: "0 800 235 236, 9h-23h. Chat anonyme, articles ados-friendly." },
+    ],
+  },
+  moderate: {
+    headline: "Dépression modérée, consultation recommandée cette semaine",
+    decoding: [
+      "Un score entre 10 et 14 atteint le seuil clinique du PHQ-9. C'est le moment où la médecine générale internationale recommande une évaluation par un professionnel. Important à comprendre : « modérée » ne veut pas dire « légère ». C'est le niveau qui touche concrètement les études, le sommeil, les relations, et qui, sans suivi, évolue vers le sévère dans 30 à 50% des cas en 6 mois. C'est aussi le niveau qui répond le mieux au traitement précoce, avec un excellent pronostic.",
+      "À ce score, la psychothérapie (TCC en première intention selon les recommandations HAS 2014 mises à jour 2022) suffit dans 60-70% des cas, sans médicament. Le médecin traitant peut prescrire les premières séances (remboursées via Mon Soutien Psy : 12 séances/an, 50€/séance prise en charge à 60% par la Sécu, le reste par la mutuelle). Le piège classique : attendre que « ça passe » et laisser s'installer un épisode qui aurait pu être traité en 2-3 mois.",
+    ],
+    forces: [
+      { t: "Score fiable", d: "Le PHQ-9 a une excellente fiabilité à ce niveau, ce n'est pas un faux positif." },
+      { t: "Réversibilité élevée", d: "Avec un suivi adapté, retour à la baseline en 2-4 mois pour la majorité." },
+      { t: "Demande implicite", d: "L'ado a accepté de faire le test, marque d'ouverture à parler." },
+      { t: "Pas (encore) d'urgence", d: "Sauf item 9 positif, on a le temps d'organiser une prise en charge structurée." },
+      { t: "Outils éprouvés", d: "TCC, activation comportementale : protocoles bien standardisés, formateurs nombreux." },
+    ],
+    vigilances: [
+      { t: "Item 9 positif", d: "Si idées de se faire du mal présentes même 1 jour, appel 3114 immédiat." },
+      { t: "Décrochage scolaire", d: "L'absentéisme silencieux est le signal d'aggravation le plus fiable." },
+      { t: "Isolement total", d: "Plus aucun contact ami choisi = risque de bascule sévère." },
+      { t: "Comorbidité anxiété", d: "Si GAD-7 aussi modéré, ne pas négliger, c'est le profil le plus chronicisant." },
+      { t: "Auto-médication", d: "Cannabis, alcool, écrans excessifs sont des stratégies d'évitement qui aggravent." },
+    ],
+    portraits: [
+      { n: "L'épuisé invisible", d: "Tient en façade au lycée, s'effondre à la maison. Notes correctes, mais plus aucun plaisir. Souvent en Première ou Terminale." },
+      { n: "Le replié post-trauma", d: "Évènement récent (deuil, harcèlement, agression). Symptômes installés depuis 1-3 mois. Risque PTSD associé." },
+      { n: "Le chronique négligé", d: "Symptômes présents depuis 6+ mois, mais jamais nommés. Parents en avaient fait « son caractère »." },
+    ],
+    pistes_parent: [
+      { t: "RDV médecin traitant cette semaine", d: "Pas attendre la prochaine visite. Appel ou télémédecine si pas de créneau rapide." },
+      { t: "Demander Mon Soutien Psy", d: "Le MT prescrit, l'ado accède à 12 séances/an chez psychologue conventionné. Sans avance de frais possible." },
+      { t: "Aménagement scolaire", d: "Lettre du MT au lycée pour assouplir présence, devoirs. Préserver l'engagement scolaire sans pression." },
+      { t: "Pas de menace, pas de chantage", d: "« Si tu n'y vas pas, je confisque ton tel » est l'erreur classique. Co-construire le rendez-vous." },
+      { t: "Suivi parental aussi", d: "Voir un psy soi-même 1-2 séances pour apprendre la posture juste, ne pas porter seul." },
+    ],
+    pistes_ado: [
+      { t: "Doctolib MT cette semaine", d: "20 min suffisent. Le MT n'est pas là pour juger, il oriente." },
+      { t: "Pas attendre que ça passe", d: "À ce niveau, sans aide, 1 chance sur 2 que ça empire en 6 mois. Avec aide, retour normal en 2-4 mois." },
+      { t: "1 routine non négociable", d: "Sommeil 22h30-7h, ou 1 sport 2x/semaine, ou 1 repas dehors avec ami. Choisir UN truc à protéger." },
+      { t: "Limiter cannabis + alcool", d: "À ce niveau, ils aggravent toujours. Pas de substance, période non négociable." },
+      { t: "3114 si idée noire même fugace", d: "Confidentiel, ne déclenche rien d'institutionnel. Juste un humain à l'écoute." },
+    ],
+    impact_orientation: [
+      "Un score modéré non traité impacte Parcoursup directement : choix faits par défaut, sous-estimation de ses capacités, évitement des filières exigeantes par crainte plutôt que par envie réelle. Recommandation : décaler les choix engageants de 6 mois si possible (année de césure, BTS court, alternance) le temps que le traitement fasse effet. Un certificat médical permet de cocher l'aménagement Parcoursup (priorité géographique, prise en compte handicap psychique). Aussi : éviter de choisir une filière « parce qu'il faut bien faire quelque chose » dans cet état, le risque de réorientation est élevé.",
+    ],
+    ressources: [
+      { type: "Livre", title: "La dépression chez l'adolescent", author: "Patrick Delaroche", desc: "Pédopsy reconnu. Pour parents qui veulent comprendre les enjeux développementaux." },
+      { type: "Podcast", title: "Quoi de Meuf", host: "Nouvelles Écoutes", desc: "Épisodes sur santé mentale ado, regards féministes, ressources concrètes." },
+      { type: "Association", title: "Mon Soutien Psy", url: "https://monsoutienpsy.sante.gouv.fr", desc: "Dispositif officiel : 12 séances/an chez psy conventionné, prescription MT." },
+    ],
+  },
+  moderate_severe: {
+    headline: "Dépression modérément sévère, intervention spécialisée urgente",
+    decoding: [
+      "Un score entre 15 et 19 indique un niveau dépressif qui altère significativement le fonctionnement quotidien. À ce stade, l'évaluation par un pédopsychiatre ou un psychologue clinicien spécialisé adolescents devient nécessaire, pas seulement utile. Les TCC restent efficaces mais peuvent nécessiter d'être combinées à un suivi médicamenteux selon le tableau clinique (notamment si le sommeil est très perturbé ou si l'épisode dure depuis 3+ mois). Le pronostic reste bon avec une prise en charge structurée, mais le retard de traitement est le facteur de chronicisation #1.",
+      "Concrètement : l'ado à ce niveau a probablement déjà des conséquences scolaires (chute des notes, absentéisme), sociales (perte d'amis, rupture amoureuse, conflits famille), et physiques (sommeil dégradé, perte ou prise de poids, fatigue chronique). Il peut y avoir des idées noires intermittentes, même sans plan d'acte. La parole « je ne sers à rien » ou « tout serait plus simple si je n'étais pas là » doit toujours être prise au sérieux, jamais minimisée.",
+    ],
+    forces: [
+      { t: "Cadre de soins clair", d: "À ce niveau, les recommandations (HAS, AAP) sont nettes : pédopsychiatrie ou psy clinicien." },
+      { t: "Dispositifs publics actifs", d: "CMP, CMPP, hôpital de jour ado, MDA : maillage français existe, accès gratuit." },
+      { t: "Réponse au traitement", d: "70-80% rémission à 6 mois avec TCC + suivi régulier, médicament si besoin." },
+      { t: "Famille mobilisable", d: "Vous avez fait faire le test = votre rôle de filet de sécurité fonctionne." },
+      { t: "Réseau d'urgence accessible", d: "3114, urgences pédopsy 15, Fil Santé Jeunes : ressources 24/7." },
+    ],
+    vigilances: [
+      { t: "Risque suicidaire à explorer", d: "Demander explicitement à l'ado s'il pense à se faire du mal. Question non taboue, recommandée." },
+      { t: "Auto-mutilation discrète", d: "Vérifier bras, cuisses. Cicatrices fines, brûlures de cigarette = consulter ce jour." },
+      { t: "Abandon scolaire imminent", d: "Si déjà 2 semaines d'absence, alerter assistante sociale du lycée pour cadre soutien." },
+      { t: "Substances psychoactives", d: "Cannabis quotidien, alcoolisations massives : facteur aggravant majeur." },
+      { t: "Isolement total écran", d: "Si seule interaction = jeux vidéo en ligne, signal de désengagement." },
+    ],
+    portraits: [
+      { n: "L'effondrement Terminale", d: "Performances chute brutalement après tenue de façade. Souvent autour des bulletins du 1er ou 2e trimestre." },
+      { n: "Le post-harcèlement", d: "Harcèlement scolaire ou cyber sur 6+ mois. Repli, anxiété sociale massive, méfiance généralisée." },
+      { n: "L'épisode majeur familial", d: "Divorce conflictuel, deuil, maladie parent. Pas de soutien adulte stable au quotidien." },
+    ],
+    pistes_parent: [
+      { t: "Pédopsy ou psy clinicien sous 7 jours", d: "Si liste d'attente longue, demander au MT une consultation en urgence. CMP = gratuit." },
+      { t: "Lettre au lycée formelle", d: "Médecin scolaire, CPE : demander un PAI (Projet d'Accueil Individualisé)." },
+      { t: "Sécuriser le domicile", d: "Médicaments hors de portée, armes (si présentes) verrouillées, alcool fermé." },
+      { t: "Ne pas rester seul(e) parent", d: "Voir un psy pour vous, ou groupe parents (UNAFAM, Espace Parents)." },
+      { t: "Plan en cas d'aggravation", d: "Discuter avec l'ado, par écrit, quoi faire si crise (qui appeler, où aller)." },
+    ],
+    pistes_ado: [
+      { t: "Tu peux dire non aux séances", d: "Mais teste 3 psy différents avant de conclure que ça ne marche pas. Le « match » thérapeute est crucial." },
+      { t: "Le 3114 n'est pas que pour le pire", d: "Tu peux appeler pour parler, même sans projet d'acte. C'est fait pour ça." },
+      { t: "Maintenir 1 activité hors maison", d: "Sport, asso, job d'été : 1 contexte non-école où tu existes autrement." },
+      { t: "Cannabis quotidien = stop net", d: "À ce niveau, c'est un aggravateur connu. En parler au médecin sans honte." },
+      { t: "Si idée d'acte, demander à un adulte de ne pas te laisser seul ce soir", d: "Pas une faiblesse, une stratégie qui marche. Présence humaine = protection." },
+    ],
+    impact_orientation: [
+      "À ce score, reporter Parcoursup d'un an est souvent la meilleure décision. Une année de césure (formalisée via le portail Parcoursup) permet de soigner sans pression supplémentaire, puis de choisir en pleine capacité. Alternative : commencer une formation courte et concrète (BTS, BUT en alternance) qui apporte structure, revenu, et possibilité d'arrêt sans grand impact. Éviter les filières où la décompensation a un coût social fort (prépa, médecine, écoles d'art exigeantes). Le médecin peut faire un certificat pour reconnaissance handicap psychique transitoire à la MDPH, qui ouvre des droits Parcoursup spécifiques.",
+    ],
+    ressources: [
+      { type: "Livre", title: "Mon ado, ma bataille", author: "Stéphanie Hahusseau", desc: "Psychiatre. Pour parents en première ligne d'une crise dépressive ado." },
+      { type: "Podcast", title: "InPower par Louise Aubery", host: "Louise Aubery", desc: "Épisode dépression jeune adulte. Témoignages et stratégies de remontée." },
+      { type: "Association", title: "Maison des Adolescents (MDA)", url: "https://anmda.fr", desc: "Lieu d'écoute multidisciplinaire dans chaque département. Gratuit, sans rdv, ado et famille." },
+    ],
+  },
+  severe: {
+    headline: "Dépression sévère, prise en charge cette semaine, urgence si besoin",
+    decoding: [
+      "Un score de 20 ou plus correspond à une dépression sévère. À ce stade, le risque d'idées suicidaires et de passage à l'acte est significativement élevé (jusqu'à 30% de tentatives dans l'année sans prise en charge selon Kennard 2009). La prise en charge doit être pédopsychiatrique, parfois hospitalière de jour, parfois avec traitement médicamenteux. Le bon réflexe : ne pas attendre un rendez-vous classique, passer par les urgences pédopsy ou le CMP en demande de consultation rapide.",
+      "Important pour les parents : ce n'est ni votre faute, ni le caractère de votre ado. C'est une maladie qui se soigne, comme un diabète ou une fracture. Le traitement efficace existe et a un excellent pronostic à 6-12 mois (rémission complète pour la majorité), mais le délai d'accès au soin est le facteur pronostique #1. Chaque semaine sans suivi double quasi-mécaniquement le risque de chronicisation.",
+    ],
+    forces: [
+      { t: "Cadre clair, ressources accessibles", d: "À ce niveau, le système de soin sait quoi faire. Pédopsy, CMP, hospitalisation jour." },
+      { t: "Traitements efficaces", d: "TCC + ISRS combinés : 80% de rémission à 12 mois (étude TADS 2007)." },
+      { t: "Réseau de soutien activable", d: "Vous, la famille élargie, le lycée, le médecin : tous peuvent s'organiser." },
+      { t: "Acte de soin = acte d'amour", d: "Aller au rdv malgré la résistance de l'ado est la bonne décision long-terme." },
+      { t: "Réversibilité quasi-totale", d: "Avec traitement, retour à une vie normale dans la grande majorité des cas." },
+    ],
+    vigilances: [
+      { t: "Risque suicidaire élevé", d: "Item 9 ≥ 1 ou parole « je veux mourir » : passer aux urgences pédopsy ce jour." },
+      { t: "Auto-mutilation active", d: "Coupures récentes visibles : consulter en urgence, ne pas attendre." },
+      { t: "Pas de manger / ne dort plus", d: "Désorganisation physique majeure = hospitalisation jour à envisager." },
+      { t: "Délire ou hallucinations", d: "Dépression sévère avec symptômes psychotiques = pédopsy en urgence." },
+      { t: "Abandon total scolaire ET social", d: "Rester en chambre 7j/7 + plus aucune sortie : signal de gravité majeure." },
+    ],
+    portraits: [
+      { n: "L'effondrement total", d: "Ne sort plus de la chambre. Mange mal. Dort mal. Pleure souvent. Souvent post-événement majeur." },
+      { n: "Le silencieux à risque", d: "Pas démonstratif, mais score sévère au PHQ-9 et idées noires confirmées. Le profil le plus dangereux car invisible." },
+      { n: "Le post-tentative", d: "A déjà fait une tentative ou avoue avoir tenté seul. Risque récidive très élevé les 6 mois suivants." },
+    ],
+    pistes_parent: [
+      { t: "Pédopsy ou urgences ce jour", d: "Pas demain. CMP en demande urgente, ou urgences pédopsy d'un CHU. Médecin traitant peut faire un courrier." },
+      { t: "Présence physique cette semaine", d: "Pas seul(e) à la maison plus de 2h. Reprogrammer agenda parents si besoin." },
+      { t: "Sécuriser absolument", d: "Médicaments, armes, cordes, ceintures : tout hors d'accès. Sans dramatiser mais sans négocier." },
+      { t: "Pas de jugement, pas de pression", d: "« On va traverser ça ensemble » plutôt que « secoue-toi ». L'effort moral est impossible à ce niveau." },
+      { t: "Soutien parental indispensable", d: "Voir psy soi-même cette semaine, parler à 1 ami de confiance. La charge est immense, vous n'êtes pas obligé(e) de la porter seul(e)." },
+    ],
+    pistes_ado: [
+      { t: "Tu n'es pas faible, tu es malade", d: "La dépression sévère est une maladie. Comme une grippe, sauf qu'elle touche le cerveau. Elle se soigne." },
+      { t: "Tiens jusqu'au rdv", d: "Un jour à la fois. Si trop dur dans la nuit : 3114, gratuit, anonyme, immédiat." },
+      { t: "Tu n'es pas seul(e)", d: "1 ado sur 8 traverse ce que tu traverses. La majorité s'en sort complètement avec aide." },
+      { t: "Accepte 1 personne près de toi cette semaine", d: "Un parent, un ami, un proche : pas seul plus de quelques heures." },
+      { t: "Si tu sens que ce soir ne passera pas, dis-le", d: "Aux parents, au 3114, à un ami. Demander = protéger ta vie. Pas de honte, jamais." },
+    ],
+    impact_orientation: [
+      "À ce score, suspendre Parcoursup est légitime et recommandé. Aucune filière ne mérite que la santé soit sacrifiée. Année de césure formalisée, retour à la formation l'année suivante en pleine capacité. Si la scolarité actuelle est trop lourde, le médecin peut prescrire un aménagement (cours à domicile via CNED réglementé, hospitalisation jour avec scolarité intégrée, redoublement en lycée plus calme). La reconnaissance handicap psychique transitoire (MDPH) ouvre des droits durables sans stigmate pérenne. Priorité absolue : soin. L'orientation suit, jamais l'inverse.",
+    ],
+    ressources: [
+      { type: "Livre", title: "L'enfer du dimanche soir, sortir de la dépression", author: "Christophe André", desc: "Psychiatre. Pour ado et parent en parallèle. Bienveillant, validant, concret." },
+      { type: "Podcast", title: "Métamorphose, Anne Ghesquière", host: "Anne Ghesquière", desc: "Épisodes spécifiques dépression sévère, témoignages de rémission, espoir factuel." },
+      { type: "Numéro vital", title: "3114, prévention du suicide", url: "https://3114.fr", desc: "Gratuit, anonyme, 24h/24. Pas que pour les urgences absolues. Pour parler maintenant." },
+    ],
+  },
+};
+
+const RichAnalysisSection = ({ rich, accent, accentSoft }) => {
+  if (!rich) return null;
+  const card = { background: "white", borderRadius: 18, padding: 22, border: "1px solid var(--c-line)" };
+  const h3style = { fontSize: 16, marginBottom: 14, color: accent, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700 };
+  return (
+    <section style={{ paddingTop: 50, paddingBottom: 50, background: "var(--c-cream-light)" }}>
+      <div className="shell" style={{ maxWidth: 920 }}>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <span className="eyebrow"><span className="dot"></span>Analyse approfondie</span>
+          <h2 style={{ marginTop: 10, fontSize: 28 }}>{rich.headline}</h2>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>Décodage du score</h3>
+          {rich.decoding.map((p, i) => (
+            <p key={i} style={{ fontSize: 15, lineHeight: 1.65, color: "var(--c-ink-2)", marginBottom: i < rich.decoding.length - 1 ? 12 : 0 }}>{p}</p>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+          <div style={card}>
+            <h3 style={h3style}>Forces typiques · 5</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.forces.map((f, i) => (
+                <li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}>
+                  <strong style={{ color: "var(--c-ink)" }}>{f.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{f.d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div style={card}>
+            <h3 style={{ ...h3style, color: "#C62828" }}>Points de vigilance · 5</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.vigilances.map((v, i) => (
+                <li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}>
+                  <strong style={{ color: "var(--c-ink)" }}>{v.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{v.d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>3 profils typiques à ce niveau</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+            {rich.portraits.map((p, i) => (
+              <div key={i} style={{ background: accentSoft, borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: accent, marginBottom: 6 }}>{p.n}</div>
+                <p style={{ fontSize: 13, lineHeight: 1.5, color: "var(--c-ink-2)", margin: 0 }}>{p.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+          <div style={card}>
+            <h3 style={h3style}>Côté parent · 5 actions</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.pistes_parent.map((p, i) => (
+                <li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}>
+                  <strong style={{ color: "var(--c-ink)" }}>{p.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{p.d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div style={card}>
+            <h3 style={h3style}>Côté ado · 5 actions</h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+              {rich.pistes_ado.map((p, i) => (
+                <li key={i} style={{ fontSize: 13.5, lineHeight: 1.55 }}>
+                  <strong style={{ color: "var(--c-ink)" }}>{p.t}.</strong> <span style={{ color: "var(--c-muted)" }}>{p.d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div style={{ ...card, marginBottom: 18 }}>
+          <h3 style={h3style}>Impact sur l'orientation</h3>
+          {rich.impact_orientation.map((p, i) => (
+            <p key={i} style={{ fontSize: 15, lineHeight: 1.65, color: "var(--c-ink-2)", marginBottom: i < rich.impact_orientation.length - 1 ? 12 : 0 }}>{p}</p>
+          ))}
+        </div>
+        <div style={card}>
+          <h3 style={h3style}>Ressources à explorer · 3</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+            {rich.ressources.map((r, i) => (
+              <div key={i} style={{ background: accentSoft, borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 10.5, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>{r.type}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--c-ink)", marginBottom: 4 }}>{r.title}</div>
+                {r.author && <div style={{ fontSize: 12, color: "var(--c-muted)", marginBottom: 6 }}>{r.author}</div>}
+                {r.host && <div style={{ fontSize: 12, color: "var(--c-muted)", marginBottom: 6 }}>{r.host}</div>}
+                <p style={{ fontSize: 12.5, lineHeight: 1.5, color: "var(--c-ink-2)", margin: "0 0 8px" }}>{r.desc}</p>
+                {r.url && <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, fontWeight: 600, color: accent, textDecoration: "none" }}>Ouvrir →</a>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Results = ({ results, onRestart }) => {
   const { phqScore, level, levelLabel, consultFlag, safetyAlert } = results;
   const copy = LEVEL_COPY[level];
@@ -413,6 +757,7 @@ const TestApp = () => {
           {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="PHQ9" accent="#5C6BC0" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
           <EmailResultsActions testCode="PHQ9" testName="Dépression (PHQ-9)" accent="#5C6BC0" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
+          <RichAnalysisSection rich={RICH_RESULTS[results.level]} accent="#5C6BC0" accentSoft="rgba(92,107,192,0.12)" />
         </>
       )}
       <Footer />
