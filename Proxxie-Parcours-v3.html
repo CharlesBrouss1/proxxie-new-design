@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proxxie · Parcours v3 (preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --c-blue: #487AFF;
+  --c-blue-deep: #1320CE;
+  --c-blue-soft: #B0D0F7;
+  --c-blue-tint: #E8F0FF;
+  --c-orange: #FD6936;
+  --c-cream: #EEE6D9;
+  --c-cream-light: #F7F2E9;
+  --c-yellow: #F5EB3F;
+  --c-ink: #0A0E2C;
+  --c-ink-2: #2A2F4F;
+  --c-muted: #6B6F8C;
+  --c-line: #E6E2D6;
+  --c-white: #FFFFFF;
+  --c-green: #22A06B;
+  --c-green-tint: rgba(34,160,107,.12);
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-2xl: 44px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 14, 44, 0.06);
+  --shadow-md: 0 8px 28px -8px rgba(19, 32, 206, 0.18);
+  --shadow-lg: 0 24px 60px -16px rgba(19, 32, 206, 0.28);
+
+  /* Charte: Goldplay (display) + Museo (num), substituts Google: Mulish + Fraunces */
+  --font-display: "Mulish", "Goldplay", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  --font-num: "Fraunces", "Museo", Georgia, serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--c-ink);
+  background: var(--c-cream-light);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; color: var(--c-ink); }
+h1 { font-size: 30px; line-height: 1.15; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 17px; line-height: 1.25; }
+h4 { font-size: 14px; line-height: 1.3; font-weight: 600; }
+p { margin: 0; line-height: 1.55; color: var(--c-ink-2); }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+ul { list-style: none; }
+
+.shell { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.muted { color: var(--c-muted); }
+.num { font-family: var(--font-num); font-weight: 500; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-muted);
+}
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--c-orange); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 9px; border-radius: 99px;
+  background: var(--c-blue-tint); color: var(--c-blue-deep);
+}
+.chip--ok { background: var(--c-green-tint); color: var(--c-green); }
+.chip--warn { background: rgba(253,105,54,.14); color: var(--c-orange); }
+.chip--neutral { background: rgba(10,14,44,.06); color: var(--c-ink-2); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  padding: 11px 18px; border-radius: var(--r-md);
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s;
+}
+.btn--primary { background: var(--c-blue-deep); color: var(--c-white); }
+.btn--primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn--secondary { background: var(--c-white); color: var(--c-ink); border: 1px solid var(--c-line); }
+.btn--secondary:hover { border-color: var(--c-blue); color: var(--c-blue-deep); }
+.btn--accent { background: var(--c-orange); color: var(--c-white); }
+.btn--accent:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(253,105,54,.35); }
+.btn--small { padding: 7px 12px; font-size: 12.5px; border-radius: 10px; }
+.btn--lg { padding: 14px 22px; font-size: 14.5px; border-radius: var(--r-md); }
+.btn--block { width: 100%; }
+
+/* App header */
+.app-header { background: var(--c-cream-light); border-bottom: 1px solid var(--c-line); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(247,242,233,.88); }
+body.is-prototype .app-header { top: 42px; }
+.app-header__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.app-header__left { display: flex; align-items: center; gap: 22px; }
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 18px; letter-spacing: -0.015em; color: var(--c-ink);
+}
+.logo__mark { display: block; flex-shrink: 0; }
+.logo__wordmark { line-height: 1; }
+.app-header__sep { width: 1px; height: 22px; background: rgba(10,14,44,.12); }
+.nav { display: flex; gap: 4px; font-size: 13.5px; font-weight: 600; }
+.nav a { color: var(--c-muted); padding: 8px 12px; border-radius: 8px; transition: color .15s, background .15s; }
+.nav a.is-active { color: var(--c-ink); background: var(--c-white); box-shadow: var(--shadow-sm); }
+.nav a:hover:not(.is-active) { color: var(--c-ink-2); background: rgba(255,255,255,.5); }
+.app-header__right { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--c-ink-2);
+  transition: background .15s ease, color .15s ease;
+}
+.icon-btn svg { width: 18px; height: 18px; display: block; }
+.icon-btn:hover { background: var(--c-white); color: var(--c-blue-deep); }
+.icon-btn:focus-visible { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+.avatar { width: 34px; height: 34px; border-radius: 99px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-blue-deep) 100%); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; }
+.avatar:focus-visible { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+
+/* Generic inline icon (drop-in replacement pour emoji) */
+.icn {
+  width: 1em; height: 1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+  color: currentColor;
+}
+.icn--lg { width: 1.25em; height: 1.25em; }
+
+/* Bottom nav mobile */
+.bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--c-line);
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  justify-content: space-around;
+}
+.bottom-nav a {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 11px; font-weight: 600; color: var(--c-muted);
+  padding: 6px 10px; min-height: 44px; min-width: 60px;
+  border-radius: 10px;
+}
+.bottom-nav a svg { width: 20px; height: 20px; }
+.bottom-nav a[aria-current="page"] { color: var(--c-blue-deep); }
+
+/* Responsive header (calé Homepage) */
+@media (max-width: 1024px) {
+  .shell { padding: 0 24px; }
+}
+@media (max-width: 860px) {
+  .app-header__inner { min-height: 56px; height: auto; }
+  .app-header .nav { display: none; }
+  .nav a, .icon-btn, .avatar, .child-switch__btn { min-height: 44px; }
+  body { padding-bottom: 84px; }
+  .bottom-nav { display: flex; }
+}
+@media (max-width: 520px) {
+  .shell { padding: 0 16px; }
+  .app-header__left { gap: 12px; }
+  .app-header__sep { display: none; }
+}
+.child-switch { position: relative; }
+.child-switch__btn { display: inline-flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px; border-radius: 99px; background: var(--c-white); border: 1px solid var(--c-line); font-size: 13px; cursor: pointer; }
+.child-switch__avatar { width: 24px; height: 24px; border-radius: 99px; background: linear-gradient(135deg, #FD6936, #F5EB3F); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10.5px; }
+.child-switch__name { font-weight: 600; }
+.child-switch__chev { color: var(--c-muted); font-size: 11px; }
+.xp-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 5px; border-radius: 99px; background: var(--c-ink); color: var(--c-yellow); font-size: 12px; font-weight: 700; }
+.xp-pill__lvl { width: 22px; height: 22px; border-radius: 99px; background: var(--c-yellow); color: var(--c-ink); display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; }
+
+/* Greet sections + role toggle */
+.section { margin-top: 30px; }
+.section__head { margin-bottom: 14px; }
+.section__head h2 { margin-top: 4px; }
+.section__head p { font-size: 13px; color: var(--c-muted); margin-top: 4px; max-width: 640px; }
+
+.role-toggle {
+  display: inline-flex; padding: 4px; gap: 2px;
+  background: var(--c-white); border: 1px solid var(--c-line); border-radius: 99px;
+  margin-top: 18px;
+}
+.role-toggle button {
+  font-family: var(--font-body); font-weight: 600; font-size: 12.5px;
+  padding: 7px 14px; border-radius: 99px; color: var(--c-muted);
+}
+.role-toggle button.is-active { background: var(--c-ink); color: var(--c-white); }
+
+/* Role-specific hiding */
+.parcours-view[data-role="parent"] .only-enfant { display: none; }
+.parcours-view[data-role="enfant"] .only-parent { display: none; }
+
+/* ============================================================ */
+/* PARCOURS v3 · HERO + NOW + PHASES + MISSIONS                 */
+/* ============================================================ */
+
+/* HERO ------------------------------------------------------- */
+.parc-hero {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.5fr auto;
+  gap: 40px;
+  align-items: center;
+  padding: 34px 40px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(245,235,63,.18) 0%, transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(253,105,54,.16) 0%, transparent 55%),
+    linear-gradient(135deg, #0F1ABA 0%, var(--c-blue-deep) 55%, #2438DE 100%);
+  color: var(--c-white);
+  position: relative;
+  overflow: hidden;
+}
+.parc-hero__main { position: relative; z-index: 2; min-width: 0; }
+.parc-hero__main .eyebrow { color: rgba(255,255,255,.72); }
+.parc-hero__main .eyebrow .dot { background: var(--c-yellow); }
+.parc-hero__main h1 { color: var(--c-white); margin-top: 12px; font-size: 34px; line-height: 1.08; letter-spacing: -0.015em; }
+.parc-hero__main h1 .parc-hero__highlight { color: var(--c-yellow); font-family: var(--font-num); font-weight: 500; font-style: italic; }
+.parc-hero__main p { color: rgba(255,255,255,.78); margin-top: 14px; max-width: 540px; font-size: 14.5px; line-height: 1.55; }
+.parc-hero .role-toggle { margin-top: 22px; background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18); }
+.parc-hero .role-toggle button { color: rgba(255,255,255,.78); }
+.parc-hero .role-toggle button.is-active { background: var(--c-white); color: var(--c-ink); }
+
+.parc-hero__progress {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 230px; align-items: stretch;
+}
+.parc-ring { position: relative; width: 180px; height: 180px; align-self: center; }
+.parc-ring svg { width: 100%; height: 100%; }
+.parc-ring__center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--font-num); text-align: center;
+}
+.parc-ring__center strong { font-size: 44px; font-weight: 600; line-height: 1; color: var(--c-white); }
+.parc-ring__center strong small { font-size: 18px; font-weight: 500; color: rgba(255,255,255,.55); margin-left: 2px; }
+.parc-ring__center span { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.72); font-weight: 700; font-family: var(--font-body); margin-top: 8px; }
+
+.parc-weekly {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: var(--r-md);
+  padding: 14px 18px;
+  display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4px;
+}
+.parc-weekly__label { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.72); grid-column: 1 / -1; margin-bottom: 6px; }
+.parc-weekly strong { font-family: var(--font-num); font-size: 30px; font-weight: 600; line-height: 1; color: var(--c-white); }
+.parc-weekly strong em { font-style: normal; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.5); margin-left: 2px; }
+.parc-weekly__sub { font-size: 12px; color: rgba(255,255,255,.7); padding-bottom: 4px; }
+.parc-weekly__dots { grid-column: 1 / -1; display: flex; gap: 6px; margin-top: 10px; }
+.parc-weekly__dots span { flex: 1; height: 6px; border-radius: 99px; background: rgba(255,255,255,.18); }
+.parc-weekly__dots span.is-done { background: linear-gradient(90deg, var(--c-yellow), var(--c-orange)); }
+
+@media (max-width: 880px) {
+  .parc-hero { grid-template-columns: 1fr; padding: 26px 24px; gap: 24px; }
+  .parc-hero__main h1 { font-size: 26px; }
+  .parc-hero__progress { flex-direction: row; align-items: center; }
+  .parc-ring { width: 130px; height: 130px; }
+  .parc-ring__center strong { font-size: 32px; }
+  .parc-weekly { flex: 1; }
+}
+@media (max-width: 560px) {
+  .parc-hero__progress { flex-direction: column; }
+}
+
+/* NOW CARD (child) ------------------------------------------ */
+.parc-now {
+  margin-top: 26px;
+  padding: 34px 38px 30px;
+  border-radius: var(--r-xl);
+  background: linear-gradient(135deg, #FD6936 0%, #F5EB3F 100%);
+  color: var(--c-ink);
+  display: grid;
+  grid-template-columns: 1.7fr auto;
+  gap: 32px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 22px 50px -24px rgba(253,105,54,.55);
+}
+.parc-now__halo { position: absolute; top: -100px; right: -70px; width: 340px; height: 340px; border-radius: 99px; background: rgba(255,255,255,.22); }
+.parc-now__halo--2 { top: auto; bottom: -130px; right: 32%; width: 280px; height: 280px; background: rgba(19,32,206,.14); }
+.parc-now__body { position: relative; z-index: 2; }
+.parc-now__kicker {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-ink); background: var(--c-white); padding: 7px 14px; border-radius: 99px;
+  box-shadow: 0 6px 14px rgba(10,14,44,.10);
+}
+.parc-now h2 { font-size: 36px; line-height: 1.08; margin-top: 16px; color: var(--c-ink); letter-spacing: -0.02em; }
+.parc-now p { color: var(--c-ink-2); margin-top: 12px; max-width: 560px; font-size: 14.5px; line-height: 1.55; }
+.parc-now__meta { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.parc-now__meta span { font-size: 12.5px; font-weight: 600; color: var(--c-ink-2); display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,255,255,.55); border-radius: 99px; }
+.parc-now__meta span strong { color: var(--c-blue-deep); font-weight: 800; }
+.parc-now__cta { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
+.parc-now__cta .btn--accent { background: var(--c-ink); color: var(--c-white); padding: 16px 26px; font-size: 15.5px; border-radius: var(--r-md); }
+.parc-now__cta .btn--accent:hover { background: var(--c-blue-deep); transform: translateY(-1px); box-shadow: 0 14px 28px rgba(10,14,44,.30); }
+.parc-now__cta small { font-size: 11.5px; color: var(--c-ink-2); text-align: center; }
+@media (max-width: 800px) {
+  .parc-now { grid-template-columns: 1fr; padding: 26px 24px; }
+  .parc-now h2 { font-size: 26px; }
+  .parc-now__cta { min-width: 0; }
+}
+
+/* PHASES (child) -------------------------------------------- */
+.parc-phases { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+.parc-phase {
+  background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.parc-phase--done { background: linear-gradient(180deg, rgba(34,160,107,.05) 0%, var(--c-white) 70%); border-color: rgba(34,160,107,.22); }
+.parc-phase--current { border-color: var(--c-orange); box-shadow: 0 18px 38px -22px rgba(253,105,54,.40); }
+.parc-phase--locked { background: #FAF7EF; border-style: dashed; }
+.parc-phase__head { display: flex; align-items: center; gap: 16px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.parc-phase__head > div { flex: 1; min-width: 0; }
+.parc-phase__head small { display: block; font-size: 11px; font-weight: 700; color: var(--c-muted); letter-spacing: .10em; text-transform: uppercase; margin-bottom: 3px; }
+.parc-phase__head h3 { font-size: 18px; font-family: var(--font-display); }
+.parc-phase--locked .parc-phase__head h3 { color: var(--c-muted); }
+.parc-phase__pill {
+  width: 40px; height: 40px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 700; font-size: 15px;
+  background: var(--c-green); color: var(--c-white);
+  flex-shrink: 0;
+}
+.parc-phase--locked .parc-phase__pill { background: rgba(10,14,44,.06); color: var(--c-muted); }
+.parc-phase__pill--current { background: var(--c-orange); color: var(--c-white); box-shadow: 0 0 0 6px rgba(253,105,54,.16); }
+.parc-phase__meta { font-size: 12px; color: var(--c-muted); font-weight: 700; white-space: nowrap; }
+.parc-phase--done .parc-phase__meta { color: var(--c-green); }
+.parc-phase--current .parc-phase__meta { color: var(--c-orange); }
+.parc-phase__chev { color: var(--c-muted); font-size: 14px; transition: transform .2s; }
+.parc-phase.is-collapsed .parc-phase__chev { transform: rotate(-90deg); }
+.parc-phase__body { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+.parc-phase.is-collapsed .parc-phase__body { display: none; }
+
+/* MODULES (child) ------------------------------------------- */
+.parc-module {
+  display: grid; grid-template-columns: 38px 1fr auto auto;
+  gap: 14px; align-items: center;
+  padding: 12px 16px;
+  background: var(--c-white); border: 1px solid var(--c-line); border-radius: 12px;
+  text-decoration: none; color: var(--c-ink);
+  transition: transform .12s, border-color .15s, box-shadow .15s, background .15s;
+}
+.parc-module:hover { border-color: var(--c-blue); transform: translateY(-1px); }
+.parc-module__icon { width: 38px; height: 38px; border-radius: 10px; background: var(--c-cream-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.parc-module__name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.parc-module__name em { font-style: normal; color: var(--c-muted); font-weight: 500; }
+.parc-module__date { font-size: 11.5px; color: var(--c-muted); font-family: var(--font-num); font-weight: 500; white-space: nowrap; }
+.parc-module__check { width: 24px; height: 24px; border-radius: 99px; background: var(--c-green); color: var(--c-white); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+.parc-module__check--parent { background: linear-gradient(135deg, var(--c-blue), var(--c-blue-deep)); font-size: 10.5px; }
+.parc-module__lock { font-size: 12px; color: var(--c-muted); font-weight: 600; }
+.parc-module__cta { font-size: 12.5px; font-weight: 800; color: var(--c-white); background: var(--c-orange); padding: 7px 14px; border-radius: 99px; white-space: nowrap; }
+.parc-module--done { background: rgba(34,160,107,.04); border-color: rgba(34,160,107,.16); }
+.parc-module--done .parc-module__icon { background: rgba(34,160,107,.10); }
+.parc-module--done .parc-module__name { color: var(--c-ink-2); }
+.parc-module--current { background: linear-gradient(180deg, #FFF7E9 0%, #FFFFFF 80%); border-color: var(--c-orange); box-shadow: 0 10px 26px -14px rgba(253,105,54,.40); }
+.parc-module--current .parc-module__icon { background: rgba(253,105,54,.14); }
+.parc-module--current .parc-module__name em { color: var(--c-orange); font-weight: 700; }
+.parc-module--parent { background: rgba(72,122,255,.05); border-color: rgba(72,122,255,.22); }
+.parc-module--parent .parc-module__icon { background: rgba(72,122,255,.14); }
+.parc-module--parent .parc-module__name em { color: var(--c-blue-deep); font-weight: 700; }
+.parc-module--locked { background: #FAF7EF; border-style: dashed; }
+.parc-module--locked .parc-module__icon { background: rgba(10,14,44,.05); opacity: .6; }
+.parc-module--locked .parc-module__name { color: var(--c-muted); }
+.parc-module--locked:hover { transform: none; border-color: var(--c-line); }
+
+/* COACH GATE between phases (child) ------------------------- */
+.parc-gate {
+  display: grid; grid-template-columns: 60px 1fr auto;
+  gap: 18px; align-items: center;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(253,105,54,.10), rgba(245,235,63,.12));
+  border: 1.5px solid rgba(253,105,54,.32);
+  border-radius: var(--r-lg);
+  margin: 4px 0;
+}
+.parc-gate__av { width: 60px; height: 60px; border-radius: 99px; background: linear-gradient(135deg, var(--c-orange), var(--c-yellow)); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 24px; flex-shrink: 0; }
+.parc-gate__body { min-width: 0; }
+.parc-gate__kicker { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c-orange); margin-bottom: 2px; }
+.parc-gate__body h3 { font-size: 17px; }
+.parc-gate__body p { font-size: 13px; color: var(--c-ink-2); margin-top: 4px; line-height: 1.5; }
+.parc-gate__lock { font-size: 12px; color: var(--c-muted); font-weight: 700; white-space: nowrap; padding: 9px 14px; background: var(--c-white); border-radius: 99px; }
+@media (max-width: 720px) {
+  .parc-gate { grid-template-columns: 60px 1fr; }
+  .parc-gate__lock { grid-column: 1 / -1; justify-self: flex-start; }
+}
+
+/* PARENT : RDV strip ---------------------------------------- */
+.parc-rdv-strip {
+  margin-top: 26px;
+  display: grid; grid-template-columns: 56px 1fr auto;
+  gap: 18px; align-items: center;
+  padding: 16px 22px;
+  background: linear-gradient(135deg, rgba(253,105,54,.10), rgba(245,235,63,.12));
+  border: 1.5px solid rgba(253,105,54,.30);
+  border-radius: var(--r-lg);
+}
+.parc-rdv-strip__av { width: 56px; height: 56px; border-radius: 99px; background: linear-gradient(135deg, var(--c-orange), var(--c-yellow)); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 22px; flex-shrink: 0; }
+.parc-rdv-strip__kicker { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c-orange); margin-bottom: 2px; }
+.parc-rdv-strip__body h3 { font-size: 17px; }
+.parc-rdv-strip__body p { font-size: 13px; color: var(--c-ink-2); margin-top: 4px; }
+@media (max-width: 720px) {
+  .parc-rdv-strip { grid-template-columns: 56px 1fr; }
+  .parc-rdv-strip .btn { grid-column: 1 / -1; justify-self: flex-start; }
+}
+
+/* PARENT : 3 MISSIONS --------------------------------------- */
+.parc-missions { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 16px; margin-top: 16px; align-items: stretch; }
+@media (max-width: 1000px) {
+  .parc-missions { grid-template-columns: 1fr 1fr; }
+  .parc-missions .parc-mission--docs { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .parc-missions { grid-template-columns: 1fr; }
+  .parc-missions .parc-mission--docs { grid-column: auto; }
+}
+.parc-mission { background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-lg); padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+.parc-mission > header { display: flex; align-items: center; justify-content: space-between; }
+.parc-mission__num { width: 28px; height: 28px; border-radius: 99px; background: var(--c-ink); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-num); font-weight: 700; font-size: 13px; }
+.parc-mission h3 { font-size: 17px; line-height: 1.25; }
+.parc-mission > p { font-size: 13px; color: var(--c-muted); line-height: 1.5; }
+
+/* Docs */
+.parc-docs { display: flex; flex-direction: column; gap: 6px; }
+.parc-docs__item { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; background: var(--c-cream-light); border: 1px solid transparent; border-radius: 10px; }
+.parc-docs__item.is-done { background: rgba(34,160,107,.06); }
+.parc-docs__item.is-todo { background: var(--c-white); border-color: var(--c-orange); border-style: dashed; }
+.parc-docs__item.is-optional { background: var(--c-white); border-color: var(--c-line); border-style: dashed; }
+.parc-docs__icon { font-size: 17px; }
+.parc-docs__item strong { display: block; font-size: 13px; font-weight: 700; color: var(--c-ink); }
+.parc-docs__item small { display: block; font-size: 11.5px; color: var(--c-muted); margin-top: 1px; }
+.parc-docs__add { font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: var(--c-orange); color: var(--c-white); white-space: nowrap; }
+.parc-docs__add:hover { background: var(--c-blue-deep); }
+.parc-docs__item.is-optional .parc-docs__add { background: var(--c-ink); }
+.parc-drop { padding: 14px; border: 1.5px dashed var(--c-line); border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 12.5px; color: var(--c-muted); background: var(--c-cream-light); transition: border-color .15s, background .15s, color .15s; }
+.parc-drop:hover { border-color: var(--c-blue); color: var(--c-ink-2); }
+
+/* Article */
+.parc-article__cover { height: 130px; border-radius: 14px; background: linear-gradient(135deg, var(--c-blue-deep), var(--c-blue) 80%); position: relative; overflow: hidden; }
+.parc-article__cover::before { content: ""; position: absolute; top: -40px; right: -30px; width: 180px; height: 180px; border-radius: 99px; background: rgba(245,235,63,.32); }
+.parc-article__cover::after { content: "<svg class="icn" aria-hidden="true"><use href="#icon-chat"/></svg>"; position: absolute; bottom: 12px; left: 20px; font-size: 44px; filter: drop-shadow(0 4px 12px rgba(0,0,0,.18)); }
+.parc-article__tag { position: absolute; top: 12px; left: 14px; background: rgba(255,255,255,.94); color: var(--c-ink); font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+.parc-article__body { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.parc-article__body small { font-size: 10.5px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--c-orange); }
+.parc-article__body h3 { font-size: 18px; line-height: 1.22; }
+.parc-article__body p { font-size: 13px; color: var(--c-muted); line-height: 1.5; }
+.parc-article__body .btn { margin-top: 6px; align-self: flex-start; }
+.parc-article__foot { margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--c-line); display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--c-muted); }
+.parc-article__foot a:hover { color: var(--c-blue-deep); }
+
+/* Tests list */
+.parc-test { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; background: linear-gradient(135deg, #FFFCEC, #FFFFFF 70%); border: 1.5px solid var(--c-yellow); border-radius: 12px; }
+.parc-test__star { width: 32px; height: 32px; border-radius: 99px; background: var(--c-yellow); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+.parc-test__body small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--c-orange); margin-bottom: 2px; }
+.parc-test__body strong { display: block; font-size: 14px; font-weight: 700; color: var(--c-ink); }
+.parc-test__body span.muted { font-size: 11.5px; }
+.parc-tests-list { display: flex; flex-direction: column; margin-top: 4px; }
+.parc-tests-list li { display: flex; align-items: center; justify-content: space-between; padding: 9px 4px; border-bottom: 1px solid var(--c-line); font-size: 12.5px; font-weight: 600; }
+.parc-tests-list li:last-child { border-bottom: 0; }
+.parc-tests-list li small { color: var(--c-muted); margin-left: 4px; font-size: 11px; font-weight: 500; }
+.parc-tests-list li a { color: var(--c-blue-deep); font-weight: 700; font-size: 12px; }
+.parc-tests-list li a:hover { color: var(--c-orange); }
+.parc-tests-list__more { justify-content: flex-end !important; padding-top: 12px !important; border-bottom: 0 !important; }
+
+/* PARENT : MIRROR ------------------------------------------- */
+.parc-mirror { margin-top: 16px; background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-lg); padding: 10px; display: flex; flex-direction: column; }
+.parc-mirror__step { display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; align-items: center; padding: 12px 16px; border-radius: 10px; position: relative; }
+.parc-mirror__step + .parc-mirror__step::before { content: ""; position: absolute; top: -4px; left: 33px; width: 2px; height: 8px; background: var(--c-line); }
+.parc-mirror__step.is-done + .parc-mirror__step.is-done::before { background: var(--c-green); }
+.parc-mirror__step.is-done + .parc-mirror__step.is-current::before { background: linear-gradient(180deg, var(--c-green), var(--c-orange)); }
+.parc-mirror__dot { width: 32px; height: 32px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-family: var(--font-num); font-weight: 700; font-size: 14px; background: var(--c-cream-light); color: var(--c-muted); border: 2px solid var(--c-line); }
+.parc-mirror__step.is-done .parc-mirror__dot { background: var(--c-green); color: var(--c-white); border-color: var(--c-green); }
+.parc-mirror__step.is-current { background: linear-gradient(90deg, rgba(253,105,54,.10) 0%, transparent 100%); }
+.parc-mirror__step.is-current .parc-mirror__dot { background: var(--c-orange); color: var(--c-white); border-color: var(--c-orange); box-shadow: 0 0 0 5px rgba(253,105,54,.18); }
+.parc-mirror__step strong { font-size: 14px; font-weight: 700; }
+.parc-mirror__step.is-locked strong { color: var(--c-muted); }
+.parc-mirror__step small { display: block; font-size: 11.5px; color: var(--c-muted); margin-top: 2px; }
+.parc-mirror__here { font-size: 10.5px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--c-white); background: var(--c-orange); padding: 5px 10px; border-radius: 99px; white-space: nowrap; }
+
+/* Preview banner */
+.preview-banner {
+  background: var(--c-ink); color: var(--c-white);
+  padding: 12px 28px; font-size: 12.5px; display: flex; justify-content: space-between; align-items: center;
+}
+.preview-banner strong { color: var(--c-yellow); font-weight: 700; letter-spacing: .04em; }
+.preview-banner a { color: rgba(255,255,255,.7); text-decoration: underline; font-size: 12px; }
+
+/* Footer */
+.footer { margin-top: 60px; border-top: 1px solid var(--c-line); padding: 22px 0 32px; font-size: 12px; color: var(--c-muted); }
+.footer__inner { display: flex; justify-content: space-between; align-items: center; }
+.footer__links { display: flex; gap: 16px; }
+</style>
+</head>
+<body class="is-prototype">
+
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/>
+    </symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7v.5"/><circle cx="12" cy="17.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2h-4v-7H10v7H5a2 2 0 0 1-2-2z"/>
+    </symbol>
+    <symbol id="icon-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M6 17v-3a4 4 0 0 1 4-4h4a4 4 0 0 0 4-4"/>
+    </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>
+    </symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h7M8 11h7"/>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>
+    </symbol>
+    <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 3h4v3a2 2 0 1 0 0 4v3h-3a2 2 0 1 1-4 0H4v-4h3a2 2 0 1 0 0-4H4V3h6z"/>
+    </symbol>
+    <symbol id="icon-lock-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>
+    </symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+    </symbol>
+    <symbol id="icon-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 13l3-9h12l3 9v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1 2h6l1-2h5"/>
+    </symbol>
+    <symbol id="icon-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.8.8 1.5 1.8 1.5 3V15h5v-.5c0-1.2.7-2.2 1.5-3A6 6 0 0 0 12 2z"/>
+    </symbol>
+    <symbol id="icon-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6v5l5 10a3 3 0 0 1-3 4H7a3 3 0 0 1-3-4l5-10z"/><path d="M7 13h10"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+    </symbol>
+    <symbol id="icon-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a8 8 0 0 1-12 6.9L4 20l1.1-5A8 8 0 1 1 21 12z"/>
+    </symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4l6 6-10 10H4v-6z"/><path d="M13 5l6 6"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l2.7 5.5 6 .9-4.4 4.2 1 6L12 17l-5.4 2.6 1-6L3.3 9.4l6-.9z"/>
+    </symbol>
+    <symbol id="icon-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11l4-4 3 1 3-3 4 3 4-2v9l-3 2-4-3-3 3-3-1-3 2z"/>
+    </symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+    </symbol>
+    <symbol id="icon-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11v5a8 8 0 0 0 12 0v-5"/>
+    </symbol>
+    <symbol id="icon-sprout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22V10"/><path d="M12 10a6 6 0 0 0-6-6H3a6 6 0 0 0 6 6z"/><path d="M12 10a6 6 0 0 1 6-6h3a6 6 0 0 1-6 6z"/>
+    </symbol>
+    <symbol id="icon-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11l-9 9a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/>
+    </symbol>
+    <symbol id="icon-mirror" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="3" width="12" height="18" rx="6"/><path d="M10 7c0 2 4 2 4 5"/>
+    </symbol>
+    <symbol id="icon-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2L4 14h7l-1 8 9-12h-7z"/>
+    </symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/>
+    </symbol>
+    <symbol id="icon-scales" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v17M5 21h14M7 8l-3 6a3 3 0 0 0 6 0zM17 6l-3 6a3 3 0 0 0 6 0z"/><path d="M4 6l8-2 8 2"/>
+    </symbol>
+    <symbol id="icon-hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12M6 21h12M7 3v3a5 5 0 0 0 10 0V3M7 21v-3a5 5 0 0 1 10 0v3"/>
+    </symbol>
+    <symbol id="icon-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l10 18H2z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="preview-banner">
+  <span><strong>PREVIEW · Parcours v3</strong> · changements proposés pour l'onglet "Parcours" (vue parent + vue enfant)</span>
+  <span>basculer ci-dessous ↓</span>
+</div>
+
+<div class="view parcours-view" data-role="parent" id="view-parcours">
+
+  <header class="app-header">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+        <span class="app-header__sep"></span>
+
+        <div class="child-switch only-parent">
+          <button class="child-switch__btn" type="button" aria-haspopup="listbox" aria-label="Changer d'enfant">
+            <span class="child-switch__avatar">L</span>
+            <span class="child-switch__name">Louise</span>
+            <span class="child-switch__chev">▾</span>
+          </button>
+        </div>
+
+        <nav class="nav" style="margin-left: 10px;" aria-label="Navigation principale">
+          <a href="#">Tableau de bord</a>
+          <a href="#" class="is-active" aria-current="page">Parcours</a>
+          <a href="#">Documents</a>
+          <a href="#">Ressources</a>
+        </nav>
+      </div>
+      <div class="app-header__right">
+        <span class="xp-pill only-enfant"><span class="xp-pill__lvl">3</span> 480 XP</span>
+        <button class="icon-btn" type="button" aria-label="Notifications"><svg aria-hidden="true"><use href="#icon-bell"/></svg></button>
+        <button class="icon-btn only-parent" type="button" data-help="true" aria-label="Aide"><svg aria-hidden="true"><use href="#icon-help"/></svg></button>
+        <button class="avatar only-parent" type="button" aria-label="Compte de Julie Bernard">JB</button>
+        <button class="avatar only-enfant" type="button" style="background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));" aria-label="Compte de Louise Bernard">L</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell parcours-view" data-role="parent" id="parcours-view-wrap" style="padding-bottom: 80px; padding-top: 24px;">
+
+    <!-- HERO : progression + role toggle -->
+    <section class="parc-hero">
+      <div class="parc-hero__main">
+        <span class="eyebrow">
+          <span class="dot"></span>
+          <span class="only-parent">Suivi · Louise Bernard</span>
+          <span class="only-enfant">Mon parcours d'orientation</span>
+        </span>
+        <h1 class="only-parent">Louise est à mi-parcours. <span class="parc-hero__highlight">3 façons</span> de la faire avancer.</h1>
+        <h1 class="only-enfant">Salut Louise · <span class="parc-hero__highlight">une activité t'attend.</span></h1>
+        <p class="only-parent">Téléversez des documents, lisez l'article de la semaine et passez les tests à sa place. Charles intervient à l'étape&nbsp;5.</p>
+        <p class="only-enfant">Tu es à l'étape&nbsp;4 sur&nbsp;7. Continue à ton rythme · environ 8&nbsp;min par activité.</p>
+
+        <div class="role-toggle" role="tablist" aria-label="Basculer parent/enfant">
+          <button type="button" data-role="parent" class="is-active">Vue parent</button>
+          <button type="button" data-role="enfant">Vue enfant</button>
+        </div>
+      </div>
+
+      <aside class="parc-hero__progress">
+        <div class="parc-ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="parcRingGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#F5EB3F"/>
+                <stop offset="100%" stop-color="#FD6936"/>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#parcRingGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="140.5" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="parc-ring__center">
+            <strong>57<small>%</small></strong>
+            <span>4 / 7 étapes</span>
+          </div>
+        </div>
+
+        <div class="parc-weekly">
+          <span class="parc-weekly__label">
+            <span class="only-parent">Vos actions cette semaine</span>
+            <span class="only-enfant">Cette semaine</span>
+          </span>
+          <strong>2<em> / 3</em></strong>
+          <span class="parc-weekly__sub">activités</span>
+          <div class="parc-weekly__dots">
+            <span class="is-done"></span>
+            <span class="is-done"></span>
+            <span></span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ============ PARENT ============ -->
+    <div class="only-parent">
+
+      <div class="parc-rdv-strip">
+        <div class="parc-rdv-strip__av">C</div>
+        <div class="parc-rdv-strip__body">
+          <span class="parc-rdv-strip__kicker">Prochain jalon · étape 5</span>
+          <h3>RDV avec Charles · jeudi 5 juin · 18 h</h3>
+          <p>Il manque <strong>1 test</strong> à Louise pour débloquer ce créneau. Vous pouvez le passer pour elle.</p>
+        </div>
+        <button class="btn btn--accent btn--small">Voir le test →</button>
+      </div>
+
+      <div class="section">
+        <div class="section__head">
+          <span class="eyebrow"><span class="dot"></span>Vos missions cette semaine</span>
+          <h2>3 façons de l'accompagner</h2>
+        </div>
+
+        <div class="parc-missions">
+
+          <article class="parc-mission parc-mission--docs">
+            <header>
+              <span class="parc-mission__num">1</span>
+              <span class="chip">2 / 4 fournis</span>
+            </header>
+            <h3>Téléverser les documents</h3>
+            <p>Bulletins, rapport de stage, attestations. Plus Charles en a, plus le rapport de Louise est précis.</p>
+
+            <ul class="parc-docs">
+              <li class="parc-docs__item is-done">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></span>
+                <div><strong>Bulletins scolaires</strong><small>3 trimestres · ajoutés il y a 3 sem.</small></div>
+                <span class="chip chip--ok">● Fait</span>
+              </li>
+              <li class="parc-docs__item is-done">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg></span>
+                <div><strong>Questionnaire contexte familial</strong><small>14 questions · 17 min</small></div>
+                <span class="chip chip--ok">● Fait</span>
+              </li>
+              <li class="parc-docs__item is-todo">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-clip"/></svg></span>
+                <div><strong>Rapport de stage 3<sup>e</sup></strong><small>Recommandé · PDF, photo ou texte libre</small></div>
+                <button class="parc-docs__add">+ Ajouter</button>
+              </li>
+              <li class="parc-docs__item is-optional">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-clip"/></svg></span>
+                <div><strong>Attestation langue / engagement</strong><small>Optionnel · enrichit le rapport</small></div>
+                <button class="parc-docs__add">+ Ajouter</button>
+              </li>
+            </ul>
+
+            <div class="parc-drop">
+              <span>Glissez-déposez ici, ou</span>
+              <button class="btn btn--secondary btn--small">Choisir un fichier</button>
+            </div>
+          </article>
+
+          <article class="parc-mission parc-mission--article">
+            <header>
+              <span class="parc-mission__num">2</span>
+              <span class="chip chip--warn">Nouveau · lundi</span>
+            </header>
+            <div class="parc-article__cover">
+              <span class="parc-article__tag">Lecture · 7 min</span>
+            </div>
+            <div class="parc-article__body">
+              <small>Semaine 23 · ado &amp; orientation</small>
+              <h3>Parler d'orientation sans braquer son ado.</h3>
+              <p>5 phrases qui marchent (et 3 qui font claquer la porte). 12 ans de pratique avec des familles.</p>
+              <button class="btn btn--primary btn--small">Lire l'article →</button>
+            </div>
+            <footer class="parc-article__foot">
+              <span><svg class="icn" aria-hidden="true"><use href="#icon-inbox"/></svg> Reçu chaque lundi</span>
+              <a href="#">Archives →</a>
+            </footer>
+          </article>
+
+          <article class="parc-mission parc-mission--tests">
+            <header>
+              <span class="parc-mission__num">3</span>
+              <span class="chip chip--warn">2 / 8 faits</span>
+            </header>
+            <h3>Passer des tests à sa place</h3>
+            <p>Jusqu'à 8 tests sont passables par vous. Vos réponses restent écrasables si Louise refait le test.</p>
+
+            <div class="parc-test">
+              <span class="parc-test__star"><svg class="icn" aria-hidden="true"><use href="#icon-star"/></svg></span>
+              <div class="parc-test__body">
+                <small>Suggéré · 8 min</small>
+                <strong>Valeurs au travail</strong>
+                <span class="muted">Débloque le RDV avec Charles.</span>
+              </div>
+              <button class="btn btn--accent btn--small">Commencer</button>
+            </div>
+
+            <ul class="parc-tests-list">
+              <li><span>Style d'apprentissage <small>· 8 min</small></span> <span class="chip chip--ok">● Fait</span></li>
+              <li><span>Préférences relationnelles <small>· 8 min</small></span> <span class="chip chip--ok">● Fait</span></li>
+              <li><span>Raisonnement abstrait <small>· 10 min</small></span> <a href="#">Passer →</a></li>
+              <li><span>Tolérance à l'ambiguïté <small>· 5 min</small></span> <a href="#">Passer →</a></li>
+              <li class="parc-tests-list__more"><a href="#">+ 4 autres tests dispo →</a></li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section__head">
+          <span class="eyebrow"><span class="dot"></span>Suivi du parcours</span>
+          <h2>Où en est Louise</h2>
+          <p>4 étapes sur 7. Charles intervient à l'étape 5, après les tests complémentaires.</p>
+        </div>
+
+        <div class="parc-mirror">
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div><strong>Bulletins &amp; contexte familial</strong><small>Fait · sem. 1 · 2 documents ajoutés</small></div>
+            <span class="muted">il y a 3 sem.</span>
+          </div>
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div><strong>Test Big Five (OCEAN-X)</strong><small>Passé par Louise · trait dominant : Ouverture</small></div>
+            <span class="muted">15 mars</span>
+          </div>
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div><strong>Tests d'autonomie · RIASEC + relationnel</strong><small>2 / 3 passés par Louise · 1 par vous</small></div>
+            <span class="muted">il y a 3 j</span>
+          </div>
+          <div class="parc-mirror__step is-current">
+            <span class="parc-mirror__dot">4</span>
+            <div><strong>Tests complémentaires · vous êtes ici</strong><small>3 / 11 passés · il faut 1 de plus pour débloquer le RDV</small></div>
+            <span class="parc-mirror__here">en cours</span>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">5</span>
+            <div><strong>RDV avec Charles · 45 min visio</strong><small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> 1 test à passer pour débloquer · créneau réservé jeudi 5 juin</small></div>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">6</span>
+            <div><strong>Rapport final · 30 pages PDF</strong><small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Généré automatiquement après le RDV</small></div>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">7</span>
+            <div><strong>Stratégie Parcoursup</strong><small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Après le rapport · liste de vœux argumentée + brouillons de lettres</small></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ ENFANT ============ -->
+    <section class="parc-now only-enfant">
+      <span class="parc-now__halo"></span>
+      <span class="parc-now__halo parc-now__halo--2"></span>
+      <div class="parc-now__body">
+        <span class="parc-now__kicker"><svg class="icn" aria-hidden="true"><use href="#icon-bolt"/></svg> À faire maintenant</span>
+        <h2>Test des valeurs au travail</h2>
+        <p>10 questions · 8 min. Ce que tu cherches vraiment dans un futur métier : impact, autonomie, sécurité… Tes réponses guident les pistes qu'on te proposera.</p>
+        <div class="parc-now__meta">
+          <span><strong>+80 XP</strong></span>
+          <span><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 8 min</span>
+          <span><svg class="icn" aria-hidden="true"><use href="#icon-lock-open"/></svg> Débloque le RDV</span>
+        </div>
+      </div>
+      <div class="parc-now__cta">
+        <button class="btn btn--accent btn--lg btn--block">Commencer →</button>
+        <small>Mets en pause à tout moment, on garde tes réponses.</small>
+      </div>
+    </section>
+
+    <section class="parc-phases only-enfant">
+
+      <article class="parc-phase parc-phase--done is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill">✓</span>
+          <div><small>Phase 1 · 3 activités</small><h3>Avant de te lancer</h3></div>
+          <span class="parc-phase__meta">Complété il y a 3 sem.</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Bulletins scolaires</span>
+            <span class="parc-module__date">22 déc.</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-mirror"/></svg></span>
+            <span class="parc-module__name">Contexte familial &amp; intentions</span>
+            <span class="parc-module__date">26 déc.</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-star"/></svg></span>
+            <span class="parc-module__name">Test Big Five <em>· obligatoire · OCEAN-X</em></span>
+            <span class="parc-module__date">15 mars</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="parc-phase parc-phase--current">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill parc-phase__pill--current">4</span>
+          <div><small>Phase 2 · 3 / 11 activités</small><h3>Affiner ton profil</h3></div>
+          <span class="parc-phase__meta">En cours · +150 XP gagnés</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-target"/></svg></span>
+            <span class="parc-module__name">Centres d'intérêt RIASEC</span>
+            <span class="parc-module__date">il y a 12 j</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-handshake"/></svg></span>
+            <span class="parc-module__name">Préférences relationnelles</span>
+            <span class="parc-module__date">il y a 3 j</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--parent" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-chart"/></svg></span>
+            <span class="parc-module__name">Style d'apprentissage <em>· passé par maman</em></span>
+            <span class="parc-module__date">à valider</span>
+            <span class="parc-module__check parc-module__check--parent">M</span>
+          </a>
+          <a class="parc-module parc-module--current" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-scales"/></svg></span>
+            <span class="parc-module__name">Valeurs au travail <em>· à faire maintenant</em></span>
+            <span class="parc-module__date">8 min</span>
+            <span class="parc-module__cta">Commencer →</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-puzzle"/></svg></span>
+            <span class="parc-module__name">Raisonnement abstrait</span>
+            <span class="parc-module__date">10 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Aptitudes verbales</span>
+            <span class="parc-module__date">7 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-sprout"/></svg></span>
+            <span class="parc-module__name">Motivation intrinsèque</span>
+            <span class="parc-module__date">5 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-hourglass"/></svg></span>
+            <span class="parc-module__name">Rapport au temps</span>
+            <span class="parc-module__date">4 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="parc-gate">
+        <div class="parc-gate__av">C</div>
+        <div class="parc-gate__body">
+          <span class="parc-gate__kicker">Phase 3 · gate Charles</span>
+          <h3>Rendez-vous avec Charles · 45 min visio</h3>
+          <p>Plus que <strong>1 test</strong> avant de pouvoir réserver. Charles arrive avec ton profil pré-lu et vous explorez les pistes ensemble.</p>
+        </div>
+        <span class="parc-gate__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> 1 test à passer</span>
+      </article>
+
+      <article class="parc-phase parc-phase--locked is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          <div><small>Phase 4 · livrable</small><h3>Ton rapport d'orientation</h3></div>
+          <span class="parc-phase__meta">Verrouillé · après le RDV</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Rapport final · 30 pages PDF</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-cap"/></svg></span>
+            <span class="parc-module__name">Métiers compatibles &amp; débouchés</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+        </div>
+      </article>
+
+      <article class="parc-phase parc-phase--locked is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          <div><small>Phase 5 · mise en action</small><h3>Stratégie Parcoursup</h3></div>
+          <span class="parc-phase__meta">Verrouillé · après le rapport</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg></span>
+            <span class="parc-module__name">Liste de vœux argumentée</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-mail"/></svg></span>
+            <span class="parc-module__name">Brouillons de lettres de motivation</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-calendar"/></svg></span>
+            <span class="parc-module__name">Calendrier des deadlines</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · preview Parcours v3</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Role toggle (parent / enfant)
+document.querySelectorAll('.role-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const role = btn.getAttribute('data-role');
+    document.querySelectorAll('.role-toggle button').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-role') === role));
+    const view = document.getElementById('view-parcours');
+    if (view) view.setAttribute('data-role', role);
+    const innerWrap = document.getElementById('parcours-view-wrap');
+    if (innerWrap) innerWrap.setAttribute('data-role', role);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// Phase collapse / expand
+document.querySelectorAll('.parc-phase__head').forEach(head => {
+  head.addEventListener('click', () => {
+    const phase = head.closest('.parc-phase');
+    if (phase) phase.classList.toggle('is-collapsed');
+  });
+});
+</script>
+
+<!-- Bottom nav mobile (visible <= 860px) -->
+<nav class="bottom-nav" aria-label="Navigation mobile">
+  <a href="#" data-target="home">
+    <svg aria-hidden="true"><use href="#icon-home"/></svg>
+    Tableau
+  </a>
+  <a href="#" data-target="route" aria-current="page">
+    <svg aria-hidden="true"><use href="#icon-route"/></svg>
+    Parcours
+  </a>
+  <a href="#" data-target="file">
+    <svg aria-hidden="true"><use href="#icon-file"/></svg>
+    Documents
+  </a>
+  <a href="#" data-target="book">
+    <svg aria-hidden="true"><use href="#icon-book"/></svg>
+    Ressources
+  </a>
+</nav>
+
+</body>
+</html>
