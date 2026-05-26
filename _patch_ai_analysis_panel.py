@@ -43,6 +43,7 @@ TARGETS = [
     "Proxxie Test PHQ9.html",
     "Proxxie Test Grit.html",
     "Proxxie Test CAAS.html",
+    "Proxxie Test BRIEF.html",
     "test-riasec.html",
     "test-pcm.html",
     "test-mbti.html",
@@ -57,6 +58,7 @@ TARGETS = [
     "test-phq9.html",
     "test-grit.html",
     "test-caas.html",
+    "test-brief.html",
 ]
 
 BEGIN_DEF = "/* PROXXIE_AI_ANALYSIS_DEF_BEGIN */"
