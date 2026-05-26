@@ -87,7 +87,8 @@ const _proxxieMiniMarkdown = (md) => {
 };
 
 const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentSoft }) => {
-  const [state, setState] = React.useState("idle"); // idle, loading, streaming, done, error, gated
+  const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState("idle"); // idle, loading, streaming, done, error
   const [content, setContent] = React.useState("");
   const [error, setError] = React.useState(null);
   const [remaining, setRemaining] = React.useState(PROXXIE_AI_QUOTA);
@@ -99,12 +100,24 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
     } catch (e) { /* localStorage indisponible */ }
   }, []);
 
-  const isApiConfigured = PROXXIE_AI_API_URL && !PROXXIE_AI_API_URL.includes("__API_URL__");
+  // Bloque le scroll body quand la modale est ouverte
+  React.useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [open]);
 
-  const handleRequest = async () => {
-    if (remaining <= 0) { setState("gated"); return; }
+  // L'API est considérée configurée si l'URL est définie et commence par https://
+  const isApiConfigured = PROXXIE_AI_API_URL && PROXXIE_AI_API_URL.indexOf("https://") === 0;
+  const isGated = remaining <= 0;
+
+  const requestAnalysis = async () => {
+    setOpen(true);
+    if (isGated) return;
     if (!isApiConfigured) {
-      setError("API non configurée. Le backend Vercel doit être déployé avant que cette fonction soit active. Voir README de proxxie-ai-analysis.");
+      setError("API non configurée. Le backend Vercel doit être déployé avant que cette fonction soit active.");
       setState("error");
       return;
     }
@@ -122,7 +135,6 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
         throw new Error("API a renvoyé " + resp.status + " : " + errText.slice(0, 200));
       }
       if (!resp.body) throw new Error("Pas de stream renvoyé par l'API");
-
       setState("streaming");
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
@@ -134,7 +146,6 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
         setContent(acc);
       }
       setState("done");
-      // Décrémenter le quota (une seule fois après succès)
       try {
         const used = parseInt(window.localStorage.getItem(PROXXIE_AI_COUNT_KEY) || "0", 10);
         window.localStorage.setItem(PROXXIE_AI_COUNT_KEY, String(used + 1));
@@ -148,114 +159,195 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
     }
   };
 
-  // Skip rendu si déjà connecté ET déjà eu son analyse (cas où le user revient sur la page)
-  if (typeof _proxxieIsConnected === "function" && _proxxieIsConnected() && state === "idle" && remaining < PROXXIE_AI_QUOTA) {
-    // L'utilisateur connecté ne devrait pas être gated · on lui laisse toujours le bouton
-    // mais on ne montre pas de compteur (sera ajusté quand backend auth en place)
-  }
+  const closeModal = () => {
+    // On ne ferme PAS pendant le streaming pour éviter de perdre l'analyse en cours
+    if (state === "streaming" || state === "loading") return;
+    setOpen(false);
+  };
 
   return (
-    <section style={{ paddingTop: 30, paddingBottom: 50 }}>
-      <div className="shell" style={{ maxWidth: 820 }}>
-        <div style={{
-          background: "linear-gradient(160deg, " + accent + ", #0A0E2C)",
-          color: "white", borderRadius: 24, padding: "32px 28px",
-          boxShadow: "0 18px 40px -16px " + accent + "55",
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 16 }}>
-            <div>
+    <>
+      {/* === Section CTA dans la page === */}
+      <section style={{ paddingTop: 30, paddingBottom: 50 }}>
+        <div className="shell" style={{ maxWidth: 820 }}>
+          <div style={{
+            background: "linear-gradient(160deg, " + accent + ", #0A0E2C)",
+            color: "white", borderRadius: 24, padding: "30px 28px",
+            boxShadow: "0 18px 40px -16px " + accent + "55",
+            display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24, flexWrap: "wrap",
+          }}>
+            <div style={{ flex: "1 1 320px", minWidth: 240 }}>
               <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.88, marginBottom: 8 }}>
-                ⚡ Analyse IA personnalisée
+                ⚡ Aller plus loin
               </div>
-              <h2 style={{ color: "white", fontSize: 24, lineHeight: 1.3, margin: 0 }}>
-                Une lecture fine de ton profil exact, générée à la demande.
+              <h2 style={{ color: "white", fontSize: 22, lineHeight: 1.3, margin: 0 }}>
+                Une analyse IA personnalisée de ton profil exact.
               </h2>
-            </div>
-            {state !== "streaming" && state !== "done" && (
-              <span style={{ background: "rgba(245,235,63,.18)", color: "#F5EB3F", padding: "5px 11px", borderRadius: 99, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
-                {remaining}/{PROXXIE_AI_QUOTA} gratuites
-              </span>
-            )}
-          </div>
-
-          {state === "idle" && (
-            <>
-              <p style={{ fontSize: 14.5, opacity: 0.9, lineHeight: 1.55, marginBottom: 18 }}>
-                On envoie tes réponses à GPT-4 (anonymisées, jamais stockées) et tu reçois une analyse de 8 sections, structurée et actionnable, en 10 secondes.
+              <p style={{ fontSize: 14, opacity: 0.85, lineHeight: 1.55, marginTop: 10, marginBottom: 0 }}>
+                8 sections structurées, générées en 10 sec à partir de tes réponses.
               </p>
-              <button onClick={handleRequest} disabled={remaining <= 0} style={{
-                background: remaining > 0 ? "#FD6936" : "#666", color: "white", border: "none",
-                padding: "14px 26px", borderRadius: 99, fontWeight: 700, fontSize: 15,
-                cursor: remaining > 0 ? "pointer" : "not-allowed",
-                boxShadow: remaining > 0 ? "0 14px 32px -10px rgba(253,105,54,.7)" : "none",
-                display: "inline-flex", alignItems: "center", gap: 8,
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
+              <button onClick={requestAnalysis} style={{
+                background: "#FD6936", color: "white", border: "none",
+                padding: "14px 24px", borderRadius: 99, fontWeight: 700, fontSize: 15,
+                cursor: "pointer", boxShadow: "0 14px 32px -10px rgba(253,105,54,.7)",
+                display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
               }}>
-                {remaining > 0 ? "Générer mon analyse approfondie →" : "Créer un compte pour continuer"}
+                Personnalisation de mes résultats →
               </button>
-              <div style={{ marginTop: 12, fontSize: 12, opacity: 0.65 }}>
-                Aucune carte bancaire · données anonymes · ~10 sec
-              </div>
-            </>
-          )}
-
-          {state === "loading" && (
-            <div style={{ padding: "24px 0", textAlign: "center" }}>
-              <div style={{ display: "inline-block", width: 28, height: 28, border: "3px solid rgba(255,255,255,.3)", borderTopColor: "white", borderRadius: "50%", animation: "proxxie-spin 0.7s linear infinite" }}></div>
-              <style>{`@keyframes proxxie-spin { to { transform: rotate(360deg); } }`}</style>
-              <div style={{ marginTop: 14, fontSize: 13.5, opacity: 0.85 }}>Connexion à l'IA...</div>
-            </div>
-          )}
-
-          {(state === "streaming" || state === "done") && content && (
-            <div style={{
-              background: "rgba(255,255,255,.97)", color: "#0A0E2C",
-              borderRadius: 16, padding: "22px 24px", fontSize: 14.5, lineHeight: 1.6,
-            }}>
-              {state === "streaming" && (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: accent, marginBottom: 14, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: accent, animation: "proxxie-pulse 1s infinite" }}></div>
-                  <style>{`@keyframes proxxie-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }`}</style>
-                  En cours d'analyse...
-                </div>
-              )}
-              <div dangerouslySetInnerHTML={{ __html: _proxxieMiniMarkdown(content) }} />
-              {state === "done" && (
-                <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid rgba(10,14,44,.1)", fontSize: 12, color: "#6B6F8C" }}>
-                  Cette analyse a été générée par GPT-4 à partir de tes résultats. Elle n'a pas valeur diagnostique. Pour creuser, prends RDV avec un coach Proxxie ou un professionnel adapté.
-                </div>
-              )}
-            </div>
-          )}
-
-          {state === "error" && (
-            <div style={{
-              background: "rgba(255,255,255,.97)", color: "#C62828",
-              borderRadius: 16, padding: "22px 24px", fontSize: 14, lineHeight: 1.55,
-            }}>
-              <strong>L'analyse n'a pas pu aboutir.</strong>
-              <div style={{ marginTop: 8, color: "#0A0E2C" }}>{error}</div>
-              <button onClick={handleRequest} style={{
-                marginTop: 14, background: "transparent", border: "1.5px solid " + accent,
-                color: accent, padding: "8px 16px", borderRadius: 99, fontWeight: 600, cursor: "pointer",
-              }}>Réessayer</button>
-            </div>
-          )}
-
-          {state === "gated" && (
-            <div style={{ background: "rgba(255,255,255,.1)", borderRadius: 14, padding: 20 }}>
-              <h3 style={{ color: "white", fontSize: 18, marginBottom: 10 }}>Tu as utilisé tes 3 analyses gratuites.</h3>
-              <p style={{ fontSize: 14, opacity: 0.9, lineHeight: 1.55, marginBottom: 16 }}>
-                Crée un compte gratuit pour continuer à générer des analyses sur tous tes tests, retrouver l'historique, et activer le Mode parent.
-              </p>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <a href="connexion.html?signup=1" style={{ background: "#FD6936", color: "white", padding: "12px 22px", borderRadius: 99, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Créer mon compte gratuit</a>
-                <a href="connexion.html" style={{ background: "transparent", color: "white", border: "1.5px solid rgba(255,255,255,.4)", padding: "12px 22px", borderRadius: 99, fontWeight: 600, fontSize: 14, textDecoration: "none" }}>J'ai déjà un compte</a>
+              <div style={{ fontSize: 11.5, opacity: 0.7 }}>
+                {isGated ? "Compte requis" : `${remaining}/${PROXXIE_AI_QUOTA} gratuites · sans inscription`}
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* === Modale plein écran === */}
+      {open && (
+        <div onClick={closeModal} style={{
+          position: "fixed", inset: 0, zIndex: 99998,
+          background: "rgba(10,14,44,.55)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+          display: "grid", placeItems: "center", padding: 16,
+          animation: "proxxie-fade-in 0.25s ease-out",
+        }}>
+          <style>{`
+            @keyframes proxxie-fade-in { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes proxxie-modal-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes proxxie-spin { to { transform: rotate(360deg); } }
+            @keyframes proxxie-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+          `}</style>
+          <div onClick={(e) => e.stopPropagation()} style={{
+            background: "white", borderRadius: 24,
+            maxWidth: 760, width: "100%", maxHeight: "92vh",
+            display: "flex", flexDirection: "column",
+            boxShadow: "0 32px 80px -16px rgba(10,14,44,.4)",
+            animation: "proxxie-modal-up 0.3s ease-out",
+            overflow: "hidden",
+          }}>
+            {/* Header modale */}
+            <div style={{
+              padding: "20px 24px", borderBottom: "1px solid var(--c-line)",
+              background: "linear-gradient(160deg, " + accent + ", #0A0E2C)", color: "white",
+              display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16,
+            }}>
+              <div>
+                <div style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.85, marginBottom: 4 }}>
+                  ⚡ Analyse personnalisée · {testName}
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700 }}>
+                  {state === "loading" ? "Connexion à l'IA..." :
+                   state === "streaming" ? "En cours de génération..." :
+                   state === "done" ? "Ton analyse complète" :
+                   state === "error" ? "Oups, un problème" :
+                   "Personnalisation de tes résultats"}
+                </div>
+              </div>
+              <button onClick={closeModal} disabled={state === "streaming" || state === "loading"} style={{
+                background: "rgba(255,255,255,.18)", border: "none", color: "white",
+                width: 36, height: 36, borderRadius: "50%", cursor: (state === "streaming" || state === "loading") ? "not-allowed" : "pointer",
+                fontSize: 18, opacity: (state === "streaming" || state === "loading") ? 0.4 : 1,
+                display: "grid", placeItems: "center", lineHeight: 1, flexShrink: 0,
+              }} aria-label="Fermer">
+                ✕
+              </button>
+            </div>
+
+            {/* Body modale (scrollable) */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px" }}>
+              {isGated && state === "idle" && (
+                <div style={{ textAlign: "center", padding: "20px 0 30px" }}>
+                  <h3 style={{ fontSize: 22, marginBottom: 12 }}>Tu as utilisé tes 3 analyses gratuites.</h3>
+                  <p style={{ fontSize: 15, color: "var(--c-ink-2)", lineHeight: 1.55, marginBottom: 24, maxWidth: 480, marginInline: "auto" }}>
+                    Crée un compte gratuit pour continuer à générer des analyses sur tous tes tests, retrouver l'historique, et activer le Mode parent.
+                  </p>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+                    <a href="connexion.html?signup=1" style={{ background: "#FD6936", color: "white", padding: "12px 22px", borderRadius: 99, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Créer mon compte gratuit</a>
+                    <a href="connexion.html" style={{ background: "transparent", color: "var(--c-ink)", border: "1.5px solid var(--c-line)", padding: "12px 22px", borderRadius: 99, fontWeight: 600, fontSize: 14, textDecoration: "none" }}>J'ai déjà un compte</a>
+                  </div>
+                </div>
+              )}
+
+              {state === "loading" && (
+                <div style={{ padding: "60px 0", textAlign: "center" }}>
+                  <div style={{ display: "inline-block", width: 36, height: 36, border: "3px solid var(--c-cream)", borderTopColor: accent, borderRadius: "50%", animation: "proxxie-spin 0.7s linear infinite" }}></div>
+                  <div style={{ marginTop: 16, fontSize: 14, color: "var(--c-muted)" }}>L'IA analyse tes résultats...</div>
+                </div>
+              )}
+
+              {(state === "streaming" || state === "done") && (
+                <div style={{ fontSize: 14.5, lineHeight: 1.6, color: "var(--c-ink)" }}>
+                  {state === "streaming" && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11.5, color: accent, marginBottom: 16, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: accent, animation: "proxxie-pulse 1s infinite" }}></div>
+                      Génération en cours
+                    </div>
+                  )}
+                  <div dangerouslySetInnerHTML={{ __html: _proxxieMiniMarkdown(content) }} />
+
+                  {state === "done" && (
+                    <>
+                      <div style={{ marginTop: 24, padding: "16px 18px", background: "var(--c-cream-light)", borderRadius: 12, borderLeft: "3px solid " + accent, fontSize: 12.5, color: "var(--c-muted)", lineHeight: 1.55 }}>
+                        Cette analyse a été générée par IA à partir de tes résultats. Elle n'a pas valeur diagnostique. Le contexte familial, scolaire, émotionnel échappe forcément à un test, c'est pour ça que les humains comptent encore.
+                      </div>
+
+                      {/* CTA final · prendre RDV avec Charles */}
+                      <div style={{
+                        marginTop: 24, padding: "28px 26px", borderRadius: 18,
+                        background: "linear-gradient(160deg, " + accent + ", #0A0E2C)", color: "white",
+                        textAlign: "center",
+                      }}>
+                        <div style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.85, marginBottom: 10 }}>
+                          🎯 Aller au-delà de l'analyse
+                        </div>
+                        <h3 style={{ color: "white", fontSize: 22, lineHeight: 1.3, margin: "0 0 12px" }}>
+                          Pour creuser ce que cette analyse ouvre, parle-en à Charles.
+                        </h3>
+                        <p style={{ fontSize: 14.5, opacity: 0.9, lineHeight: 1.55, marginBottom: 22, maxWidth: 480, marginInline: "auto" }}>
+                          30 min, gratuit, en visio. On part de tes résultats, on cartographie ce qui compte pour la suite (orientation, Parcoursup, parcours alternatifs), on identifie 2-3 actions concrètes pour les semaines à venir.
+                        </p>
+                        <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" style={{
+                          background: "#FD6936", color: "white", padding: "14px 28px", borderRadius: 99,
+                          fontWeight: 700, fontSize: 15, textDecoration: "none",
+                          display: "inline-flex", alignItems: "center", gap: 10,
+                          boxShadow: "0 14px 32px -10px rgba(253,105,54,.7)",
+                        }}>
+                          Prendre 30 min avec Charles
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                        </a>
+                        <div style={{ marginTop: 14, fontSize: 12, opacity: 0.7 }}>
+                          Gratuit · aucune carte bancaire · créneau sous 7 jours
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {state === "error" && (
+                <div style={{ padding: "20px 0" }}>
+                  <div style={{ background: "#FFEBEE", borderLeft: "3px solid #C62828", color: "#0A0E2C", padding: "16px 18px", borderRadius: 10, fontSize: 14, lineHeight: 1.55 }}>
+                    <strong style={{ color: "#C62828" }}>L'analyse n'a pas pu aboutir.</strong>
+                    <div style={{ marginTop: 8 }}>{error}</div>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 18, justifyContent: "center" }}>
+                    <button onClick={requestAnalysis} style={{
+                      background: accent, border: "none", color: "white",
+                      padding: "10px 20px", borderRadius: 99, fontWeight: 600, cursor: "pointer", fontSize: 14,
+                    }}>Réessayer</button>
+                    <button onClick={() => setOpen(false)} style={{
+                      background: "transparent", border: "1.5px solid var(--c-line)", color: "var(--c-ink)",
+                      padding: "10px 20px", borderRadius: 99, fontWeight: 600, cursor: "pointer", fontSize: 14,
+                    }}>Fermer</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 """ + END_DEF + "\n\nconst TestApp = () => {"
