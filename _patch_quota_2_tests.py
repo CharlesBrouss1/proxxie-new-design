@@ -77,14 +77,12 @@ TESTCARD_NEW_CTA = '        Démarrer <Icon.arrow style={{ width: 14, height: 14
 # Badge "Inscription" sur la carte : on garde le bloc {t.requiresAuth && (...)}
 # mais comme requiresAuth devient false partout, il ne s'affiche plus jamais. Pas besoin de toucher.
 
-BEGIN_BANNER = "/* PROXXIE_QUOTA_BANNER_BEGIN */"
-END_BANNER   = "/* PROXXIE_QUOTA_BANNER_END */"
-
-# Banner d'info quota · injecté dans le TestsGrid après CategoryHeader Cat 1
-# Format simple : une ligne discrète au-dessus de la grille
-# Ancre : juste avant le premier `{TESTS_ORIENTATION.map((t) =>`
-QUOTA_BANNER_JSX = BEGIN_BANNER + r'''
-        <div style={{
+# Banner d'info quota · injecté dans le TestsGrid juste avant la map des tests.
+# IMPORTANT : pas de sentinelles JSX `/* */` ici, babel-standalone in-browser les
+# rend comme texte visible. On détecte l'idempotence par la présence d'une string
+# unique du banner.
+QUOTA_BANNER_MARKER = "2 tests gratuits sans inscription"
+QUOTA_BANNER_JSX = r'''        <div style={{
           maxWidth: 720, margin: "0 auto 28px", padding: "12px 18px",
           background: "rgba(245,235,63,0.18)", border: "1px solid rgba(245,235,63,0.4)",
           borderRadius: 12, fontSize: 13.5, color: "#0A0E2C", lineHeight: 1.5,
@@ -93,7 +91,6 @@ QUOTA_BANNER_JSX = BEGIN_BANNER + r'''
           <span style={{ fontSize: 16 }}>🎁</span>
           <span><strong>2 tests gratuits sans inscription.</strong> Au-delà, créer un compte (toujours gratuit) pour passer les autres.</span>
         </div>
-        ''' + END_BANNER + r'''
         '''
 
 ANCHOR_BANNER = '{TESTS_ORIENTATION.map('
@@ -108,7 +105,8 @@ def patch_src(src: str) -> tuple[str, list[str]]:
     changes = []
     # 0. Cleanup d'idempotence
     src = strip_between(src, BEGIN_HELPER, END_HELPER)
-    src = strip_between(src, BEGIN_BANNER, END_BANNER)
+    # Cleanup banner v1 (variante avec sentinelles JSX qui se rendaient comme texte)
+    src = strip_between(src, "/* PROXXIE_QUOTA_BANNER_BEGIN */", "/* PROXXIE_QUOTA_BANNER_END */")
 
     # 1. Tous les requiresAuth: true → false
     n_flips = src.count('requiresAuth: true')
@@ -139,15 +137,14 @@ def patch_src(src: str) -> tuple[str, list[str]]:
         src = src.replace(TESTCARD_OLD_CTA, TESTCARD_NEW_CTA, 1)
         changes.append("TestCard CTA simplifié")
 
-    # 5. Banner info quota
-    if ANCHOR_BANNER in src:
-        # On veut insérer le banner AVANT la première occurrence de {TESTS_ORIENTATION.map(
-        # Mais juste avant le `{` (donc avant le `        {TESTS_ORIENTATION.map(`)
-        # Plus simple : trouver la ligne, insérer juste avant
+    # 5. Banner info quota (idempotent par détection de présence)
+    if QUOTA_BANNER_MARKER in src:
+        # Déjà inséré · skip
+        changes.append("banner déjà présent")
+    elif ANCHOR_BANNER in src:
+        # Insère le banner juste avant la ligne `{TESTS_ORIENTATION.map(`
         idx = src.find(ANCHOR_BANNER)
-        # Reculer pour trouver l'indentation
         line_start = src.rfind('\n', 0, idx) + 1
-        # Insérer banner avant la ligne
         src = src[:line_start] + QUOTA_BANNER_JSX + src[line_start:]
         changes.append("+ banner info 2 tests gratuits")
     else:
