@@ -22,10 +22,8 @@ REPO = pathlib.Path(__file__).parent
 ASSET_UUID_PREFIX = "61feca88"
 
 # === CONFIGURATION · à changer après déploiement Vercel ===
-# Placeholder qui pointe nulle part. Le composant détecte ça et affiche un message
-# « API non configurée ». Une fois Vercel déployé, remplacer par ton URL réelle :
-#   API_URL = "https://proxxie-ai-analysis.vercel.app/api/test-analysis"
-API_URL = "https://proxxie-ai-analysis.vercel.app/api/test-analysis"
+# URL du backend Vercel déployé (proxxie-ai-edge.vercel.app, alias propre)
+API_URL = "https://proxxie-ai-edge.vercel.app/api/test-analysis"
 QUOTA_FREE = 3  # nombre d'analyses gratuites avant gate signup
 # =========================================================
 
