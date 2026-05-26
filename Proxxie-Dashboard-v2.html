@@ -1,0 +1,3248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proxxie · Tableau de bord v3 (Parent + Enfant)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --c-blue: #487AFF;
+  --c-blue-deep: #1320CE;
+  --c-blue-soft: #B0D0F7;
+  --c-blue-tint: #E8F0FF;
+  --c-orange: #FD6936;
+  --c-cream: #EEE6D9;
+  --c-cream-light: #F7F2E9;
+  --c-yellow: #F5EB3F;
+  --c-ink: #0A0E2C;
+  --c-ink-2: #2A2F4F;
+  --c-muted: #6B6F8C;
+  --c-line: #E6E2D6;
+  --c-white: #FFFFFF;
+  --c-green: #22A06B;
+  --c-green-tint: rgba(34,160,107,.12);
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-2xl: 44px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 14, 44, 0.06);
+  --shadow-md: 0 8px 28px -8px rgba(19, 32, 206, 0.18);
+  --shadow-lg: 0 24px 60px -16px rgba(19, 32, 206, 0.28);
+
+  /* Charte: Goldplay (display) + Museo (num), substituts Google: Mulish + Fraunces */
+  --font-display: "Mulish", "Goldplay", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  --font-num: "Fraunces", "Museo", Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--c-ink);
+  background: var(--c-cream-light);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; margin: 0; color: var(--c-ink); }
+h1 { font-size: 30px; line-height: 1.15; font-weight: 700; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 17px; line-height: 1.25; }
+h4 { font-size: 14px; line-height: 1.3; font-weight: 600; }
+p { margin: 0; line-height: 1.55; color: var(--c-ink-2); }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: 0; background: none; padding: 0; color: inherit; }
+
+.shell { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.muted { color: var(--c-muted); }
+.num { font-family: var(--font-num); font-weight: 500; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-muted);
+}
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--c-orange); }
+.eyebrow--accent { color: var(--c-orange); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 9px; border-radius: 99px;
+  background: var(--c-blue-tint); color: var(--c-blue-deep);
+}
+.chip--ok { background: var(--c-green-tint); color: var(--c-green); }
+.chip--warn { background: rgba(253,105,54,.14); color: var(--c-orange); }
+.chip--neutral { background: rgba(10,14,44,.06); color: var(--c-ink-2); }
+.chip--solid { background: var(--c-ink); color: var(--c-white); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  padding: 11px 18px; border-radius: var(--r-md);
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s;
+}
+.btn--primary { background: var(--c-blue-deep); color: var(--c-white); }
+.btn--primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn--secondary { background: var(--c-white); color: var(--c-ink); border: 1px solid var(--c-line); }
+.btn--secondary:hover { border-color: var(--c-blue); color: var(--c-blue-deep); }
+.btn--ghost { background: transparent; color: var(--c-ink-2); }
+.btn--ghost:hover { color: var(--c-blue-deep); }
+.btn--accent { background: var(--c-orange); color: var(--c-white); }
+.btn--accent:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(253,105,54,.35); }
+.btn--small { padding: 7px 12px; font-size: 12.5px; border-radius: 10px; }
+.btn--lg { padding: 14px 22px; font-size: 14.5px; border-radius: var(--r-md); }
+.btn--block { width: 100%; }
+
+.card {
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: 24px;
+}
+
+/* ========================================================== */
+/* VIEW SWITCHER                                               */
+/* ========================================================== */
+.view-switch {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--c-ink);
+  color: var(--c-white);
+}
+.view-switch__inner {
+  max-width: 1180px; margin: 0 auto; padding: 9px 28px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.view-switch__label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-right: 4px; }
+.view-switch__btn {
+  font-family: var(--font-body); font-weight: 600; font-size: 12.5px;
+  padding: 7px 12px; border-radius: 99px;
+  background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); transition: background .15s, color .15s;
+}
+.view-switch__btn.is-active { background: var(--c-white); color: var(--c-ink); }
+.view-switch__btn:hover:not(.is-active) { color: var(--c-white); }
+.view-switch__spacer { flex: 1; }
+.view-switch__note { font-size: 11.5px; color: rgba(255,255,255,.55); }
+
+/* ========================================================== */
+/* APP HEADER (slim)                                           */
+/* ========================================================== */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(247,242,233,.92);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(10,14,44,0.06);
+}
+body.is-prototype .app-header { top: 42px; }
+.app-header__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.app-header__left { display: flex; align-items: center; gap: 22px; }
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 18px; letter-spacing: -0.015em; color: var(--c-ink);
+}
+.logo__mark { display: block; flex-shrink: 0; }
+.logo__wordmark { line-height: 1; }
+.app-header__sep { width: 1px; height: 22px; background: rgba(10,14,44,.12); }
+
+.nav { display: flex; gap: 4px; font-size: 13.5px; font-weight: 600; }
+.nav a { color: var(--c-muted); padding: 8px 12px; border-radius: 8px; transition: color .15s, background .15s; }
+.nav a.is-active { color: var(--c-ink); background: var(--c-white); box-shadow: var(--shadow-sm); }
+.nav a:hover:not(.is-active) { color: var(--c-ink-2); background: rgba(255,255,255,.5); }
+
+.app-header__right { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--c-ink-2);
+  transition: background .15s ease, color .15s ease;
+}
+.icon-btn svg { width: 18px; height: 18px; display: block; }
+.icon-btn:hover { background: var(--c-white); color: var(--c-blue-deep); }
+.icon-btn:focus-visible { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+.avatar { width: 34px; height: 34px; border-radius: 99px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-blue-deep) 100%); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; }
+.avatar:focus-visible { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+
+/* Sync warning on child switch */
+.child-switch__sync-warn {
+  width: 8px; height: 8px; border-radius: 99px;
+  background: var(--c-orange);
+  margin-left: 4px;
+  display: inline-block; flex-shrink: 0;
+}
+
+/* Bottom nav mobile */
+.bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--c-line);
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  justify-content: space-around;
+}
+.bottom-nav a {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 11px; font-weight: 600; color: var(--c-muted);
+  padding: 6px 10px; min-height: 44px; min-width: 60px;
+  border-radius: 10px;
+}
+.bottom-nav a svg { width: 20px; height: 20px; }
+.bottom-nav a[aria-current="page"] { color: var(--c-blue-deep); }
+
+/* Responsive header (calé sur la Homepage) */
+@media (max-width: 1024px) {
+  .shell { padding: 0 24px; }
+}
+@media (max-width: 860px) {
+  .app-header__inner { min-height: 56px; height: auto; }
+  .app-header .nav { display: none; }
+  .app-header .icon-btn[data-help="true"] { display: none; }
+  .nav a, .icon-btn, .avatar, .child-switch__btn { min-height: 44px; }
+  main.shell { padding-bottom: 84px !important; }
+  .bottom-nav { display: flex; }
+  body:has(#view-auth.is-active) .bottom-nav { display: none; }
+}
+@media (max-width: 520px) {
+  .shell { padding: 0 16px; }
+  .app-header__left { gap: 12px; }
+  .app-header__sep { display: none; }
+}
+
+/* Child selector */
+.child-switch { position: relative; }
+.child-switch__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 10px 5px 5px; border-radius: 99px;
+  background: var(--c-white); border: 1px solid var(--c-line);
+  font-size: 13px;
+}
+.child-switch__btn:hover { border-color: var(--c-blue); }
+.child-switch__avatar { width: 24px; height: 24px; border-radius: 99px; background: linear-gradient(135deg, #FD6936, #F5EB3F); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10.5px; }
+.child-switch__name { font-weight: 600; }
+.child-switch__chev { color: var(--c-muted); font-size: 11px; }
+
+.dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0;
+  min-width: 280px; background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  padding: 6px; display: none;
+}
+.dropdown.is-open { display: block; }
+.dropdown__item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; cursor: pointer; font-size: 13px; }
+.dropdown__item:hover { background: var(--c-cream-light); }
+.dropdown__item.is-current { background: var(--c-blue-tint); }
+.dropdown__item small { display: block; color: var(--c-muted); font-weight: 500; font-size: 11.5px; }
+.dropdown__sep { height: 1px; background: var(--c-line); margin: 6px 4px; }
+
+/* ========================================================== */
+/* GREET (sober hero replacement)                              */
+/* ========================================================== */
+.greet { padding: 38px 0 18px; }
+.greet h1 { margin-bottom: 8px; }
+.greet p { color: var(--c-muted); font-size: 14px; max-width: 580px; }
+
+/* ========================================================== */
+/* INFO STRIP (compact child characteristics)                  */
+/* ========================================================== */
+.info-strip {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px;
+  padding: 14px 18px; background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  font-size: 13px;
+}
+.info-strip__avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));
+  color: var(--c-white); font-weight: 700; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.info-strip__name { font-weight: 700; color: var(--c-ink); }
+.info-strip__item { color: var(--c-ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.info-strip__item small { color: var(--c-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+.info-strip__sep { width: 1px; height: 16px; background: var(--c-line); }
+.info-strip__edit { margin-left: auto; font-size: 12.5px; font-weight: 600; color: var(--c-blue-deep); cursor: pointer; }
+.info-strip__edit:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .info-strip__sep { display: none; }
+  .info-strip__edit { margin-left: 0; }
+}
+
+/* ========================================================== */
+/* SECTION HEADER (eyebrow + title above each section)         */
+/* ========================================================== */
+.section { margin-top: 28px; }
+.section__head { margin-bottom: 12px; padding-left: 4px; }
+.section__head h2 { font-size: 18px; margin-top: 4px; }
+.section__head p { font-size: 13px; color: var(--c-muted); margin-top: 4px; }
+
+/* ========================================================== */
+/* FOCUS CARD : the ONE thing to do                            */
+/* ========================================================== */
+.focus-card {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center;
+  padding: 26px 28px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  position: relative; overflow: hidden;
+}
+.focus-card::before {
+  content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--c-orange), var(--c-yellow));
+}
+.focus-card__icon {
+  width: 60px; height: 60px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--c-blue-tint), #fff);
+  border: 1px solid var(--c-line);
+  display: flex; align-items: center; justify-content: center; font-size: 26px;
+  flex-shrink: 0;
+}
+.focus-card__body { min-width: 0; }
+.focus-card__meta { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+.focus-card__type { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-orange); }
+.focus-card h2 { font-size: 20px; }
+.focus-card p { font-size: 13.5px; margin-top: 6px; max-width: 600px; }
+.focus-card__actions { display: flex; gap: 10px; flex-direction: column; flex-shrink: 0; }
+@media (max-width: 800px) {
+  .focus-card { grid-template-columns: 1fr; gap: 16px; padding: 22px; }
+  .focus-card__actions { flex-direction: row; flex-wrap: wrap; }
+}
+
+/* ========================================================== */
+/* ARTICLE ROW (optional reading)                              */
+/* ========================================================== */
+.article-row {
+  display: grid; grid-template-columns: 200px 1fr; gap: 22px; align-items: center;
+  padding: 18px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+}
+.weekly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .weekly-grid { grid-template-columns: 1fr; } }
+.weekly-grid .article-row { grid-template-columns: 1fr; gap: 14px; height: 100%; }
+.weekly-grid .article-row__cover { display: none; }
+.weekly-grid .article-row--test { background: linear-gradient(135deg, #fff5ec 0%, #fff 65%); border-color: rgba(253,105,54,.20); }
+.article-row__cover {
+  width: 200px; height: 130px; border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--c-blue-tint), var(--c-blue-soft));
+  position: relative; overflow: hidden;
+}
+.article-row__cover svg { position: absolute; right: -10px; top: -8px; opacity: .85; }
+.article-row__body { min-width: 0; }
+.article-row__tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px; border-radius: 99px; background: var(--c-cream); color: var(--c-ink-2); }
+.article-row h3 { font-size: 18px; margin-top: 8px; line-height: 1.25; }
+.article-row p { font-size: 13px; margin-top: 6px; }
+.article-row__foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.article-row__time { font-size: 12px; color: var(--c-muted); font-weight: 500; }
+@media (max-width: 760px) {
+  .article-row { grid-template-columns: 1fr; }
+  .article-row__cover { width: 100%; }
+}
+
+/* ========================================================== */
+/* PROGRESS STRIP                                              */
+/* ========================================================== */
+.progress-strip {
+  padding: 22px 24px;
+  background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+}
+.progress-strip__head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; }
+.progress-strip__title { display: flex; align-items: center; gap: 14px; }
+.progress-strip__pct {
+  font-family: var(--font-num); font-size: 26px; font-weight: 600; color: var(--c-blue-deep);
+  line-height: 1;
+}
+.progress-strip__title h3 { font-size: 17px; }
+.progress-strip__title small { color: var(--c-muted); font-size: 12.5px; }
+
+/* compact frise */
+.steps-mini { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.step-mini { position: relative; padding: 10px 6px 8px; border-radius: 8px; background: var(--c-cream-light); text-align: center; transition: background .15s; }
+.step-mini--done { background: var(--c-green-tint); }
+.step-mini--current { background: var(--c-white); box-shadow: 0 0 0 2px var(--c-orange) inset; }
+.step-mini--locked { opacity: .5; }
+.step-mini__num { font-family: var(--font-num); font-size: 13px; font-weight: 600; color: var(--c-ink-2); }
+.step-mini--done .step-mini__num { color: var(--c-green); }
+.step-mini--current .step-mini__num { color: var(--c-orange); }
+.step-mini__label { font-size: 10.5px; font-weight: 600; color: var(--c-ink-2); margin-top: 4px; line-height: 1.25; }
+.step-mini--done .step-mini__label { color: var(--c-green); }
+.step-mini--current .step-mini__label { color: var(--c-orange); }
+
+/* ========================================================== */
+/* DOCS LIGHT                                                  */
+/* ========================================================== */
+.docs-light { padding: 22px 24px; background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-lg); }
+.docs-light__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.docs-light__head h3 { font-size: 17px; }
+
+.dropzone-mini {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: var(--r-md);
+  border: 1.5px dashed var(--c-blue-soft);
+  background: linear-gradient(180deg, #F8FBFF 0%, #FFFFFF 100%);
+  cursor: pointer; transition: border-color .15s, background .15s;
+}
+.dropzone-mini:hover { border-color: var(--c-blue); background: var(--c-blue-tint); }
+.dropzone-mini__icon { width: 36px; height: 36px; border-radius: 99px; background: var(--c-white); border: 1px solid var(--c-blue-soft); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--c-blue-deep); flex-shrink: 0; }
+.dropzone-mini__text { flex: 1; }
+.dropzone-mini__text strong { display: block; font-size: 13.5px; font-weight: 700; }
+.dropzone-mini__text span { display: block; font-size: 11.5px; color: var(--c-muted); margin-top: 2px; }
+
+.docs-recent { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; }
+.docs-recent__item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 99px; background: var(--c-cream-light); border: 1px solid var(--c-line); color: var(--c-ink-2); }
+.docs-recent__item:hover { border-color: var(--c-blue); color: var(--c-blue-deep); }
+.docs-recent__icon { font-size: 12px; }
+
+/* ========================================================== */
+/* OUTCOMES MINI (3 thumbnail cards with locks)                */
+/* ========================================================== */
+.outcomes-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 900px) { .outcomes-mini { grid-template-columns: 1fr; } }
+.outcome-mini {
+  padding: 18px 18px 16px;
+  background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  position: relative;
+  transition: border-color .15s, transform .15s;
+}
+.outcome-mini:hover { border-color: var(--c-blue-soft); transform: translateY(-1px); }
+.outcome-mini__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.outcome-mini__icon { width: 32px; height: 32px; border-radius: 9px; background: var(--c-blue-tint); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.outcome-mini h4 { font-size: 14px; font-weight: 700; }
+.outcome-mini p { font-size: 12.5px; color: var(--c-muted); margin-top: 4px; line-height: 1.4; }
+.outcome-mini__cta { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--c-blue-deep); margin-top: 10px; }
+
+/* ========================================================== */
+/* ENFANT-only : XP bar + push                                 */
+/* ========================================================== */
+.xp-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 6px; border-radius: 99px;
+  background: linear-gradient(90deg, rgba(245,235,63,.25), rgba(253,105,54,.18));
+  border: 1px solid rgba(245,235,63,.5);
+  font-size: 12.5px; font-weight: 700; color: var(--c-ink);
+}
+.xp-pill__lvl { width: 22px; height: 22px; border-radius: 99px; background: linear-gradient(135deg, var(--c-yellow), var(--c-orange)); color: var(--c-ink); font-weight: 800; font-size: 11.5px; display: flex; align-items: center; justify-content: center; }
+
+.focus-card--enfant::before { background: linear-gradient(180deg, var(--c-blue), var(--c-blue-deep)); }
+
+/* ========================================================== */
+/* PARCOURS PAGE                                               */
+/* ========================================================== */
+.role-toggle {
+  display: inline-flex; padding: 4px; gap: 2px;
+  background: var(--c-white); border: 1px solid var(--c-line); border-radius: 99px;
+  margin-top: 18px;
+}
+.role-toggle button {
+  font-family: var(--font-body); font-weight: 600; font-size: 12.5px;
+  padding: 7px 14px; border-radius: 99px; color: var(--c-muted);
+}
+.role-toggle button.is-active { background: var(--c-ink); color: var(--c-white); }
+
+.parcours-overview {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 16px;
+  margin-top: 24px;
+}
+@media (max-width: 800px) { .parcours-overview { grid-template-columns: 1fr; } }
+.po-card { padding: 20px 22px; background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-lg); }
+.po-card--accent {
+  background: linear-gradient(135deg, var(--c-blue-deep), var(--c-blue));
+  color: var(--c-white); border-color: transparent; position: relative; overflow: hidden;
+}
+.po-card--accent::before {
+  content: ""; position: absolute; top: -40px; right: -30px;
+  width: 160px; height: 160px; border-radius: 99px; background: rgba(245,235,63,.18);
+}
+.po-card--accent h3 { color: var(--c-white); }
+.po-card--accent p { color: rgba(255,255,255,.78); }
+.po-card__big { font-family: var(--font-num); font-size: 38px; font-weight: 600; line-height: 1; position: relative; }
+.po-card__big small { font-size: 18px; font-weight: 500; color: rgba(255,255,255,.6); margin-left: 2px; }
+.po-card__big-dark { color: var(--c-blue-deep); }
+.po-card__big-dark small { color: var(--c-muted); }
+.po-card__label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .8; margin-top: 8px; display: block; }
+.po-bar { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; margin-top: 12px; overflow: hidden; position: relative; }
+.po-bar__fill { height: 100%; background: linear-gradient(90deg, var(--c-yellow), var(--c-orange)); border-radius: 99px; }
+.po-card h3 { font-size: 16px; }
+.po-card p { font-size: 13px; margin-top: 4px; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 64px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 22px; top: 26px; bottom: 30px; width: 2px;
+  background: linear-gradient(180deg, var(--c-green) 0%, var(--c-green) 50%, var(--c-orange) 50%, var(--c-orange) 65%, var(--c-line) 65%);
+}
+.step-row { position: relative; margin-bottom: 16px; }
+.step-row__num {
+  position: absolute; left: -64px; top: 6px;
+  width: 46px; height: 46px; border-radius: 99px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 600; font-size: 18px;
+  background: var(--c-white); border: 2px solid var(--c-line); color: var(--c-muted);
+  z-index: 2;
+}
+.step-row__num--done { background: var(--c-green); color: var(--c-white); border-color: var(--c-green); }
+.step-row__num--current {
+  background: var(--c-orange); color: var(--c-white); border-color: var(--c-orange);
+  box-shadow: 0 0 0 6px rgba(253,105,54,.18);
+}
+.step-row__num--locked { background: var(--c-cream-light); color: var(--c-muted); border-style: dashed; }
+
+.step-card {
+  padding: 20px 24px;
+  background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  transition: border-color .15s;
+}
+.step-card--done { background: rgba(34,160,107,.04); border-color: rgba(34,160,107,.18); }
+.step-card--current {
+  border-color: var(--c-orange);
+  box-shadow: 0 14px 32px -14px rgba(253,105,54,.25);
+}
+.step-card--locked { background: var(--c-cream-light); border-style: dashed; opacity: .85; }
+
+.step-card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+.step-card__head h3 { font-size: 17px; }
+.step-card__head small { display: block; font-size: 11px; color: var(--c-muted); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+.step-card__status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px; flex-shrink: 0; }
+.step-card__status--done { background: var(--c-green-tint); color: var(--c-green); }
+.step-card__status--current { background: rgba(253,105,54,.14); color: var(--c-orange); }
+.step-card__status--locked { background: rgba(10,14,44,.05); color: var(--c-muted); }
+.step-card__body { font-size: 13.5px; color: var(--c-ink-2); line-height: 1.55; margin-top: 8px; }
+.step-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+/* Done step compact summary */
+.step-summary {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  margin-top: 10px; padding: 10px 14px; background: var(--c-white); border: 1px solid rgba(34,160,107,.18);
+  border-radius: 10px;
+}
+.step-summary__item { font-size: 12.5px; color: var(--c-ink-2); }
+.step-summary__item small { display: block; font-size: 10.5px; color: var(--c-muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-bottom: 2px; }
+
+/* Parent banner inside step 4 */
+.step-banner {
+  display: flex; gap: 12px; align-items: center;
+  padding: 12px 14px; border-radius: 10px;
+  background: var(--c-blue-tint); border: 1px dashed var(--c-blue);
+  margin: 14px 0;
+}
+.step-banner__icon { width: 30px; height: 30px; border-radius: 8px; background: var(--c-white); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.step-banner__text { flex: 1; font-size: 12.5px; color: var(--c-ink-2); line-height: 1.45; }
+.step-banner__text strong { color: var(--c-ink); font-weight: 700; }
+
+/* Tests inline grid (step 4) */
+.tests-inline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+@media (max-width: 900px) { .tests-inline { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .tests-inline { grid-template-columns: 1fr; } }
+.test-inline {
+  position: relative; padding: 12px 14px; border-radius: 12px;
+  background: var(--c-white); border: 1px solid var(--c-line);
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  cursor: pointer;
+}
+.test-inline:hover { transform: translateY(-1px); border-color: var(--c-blue); box-shadow: 0 6px 16px -8px rgba(72,122,255,.25); }
+.test-inline--suggested { background: linear-gradient(180deg, #FFFCEC 0%, #FFFFFF 70%); border-color: var(--c-yellow); }
+.test-inline--done { background: rgba(34,160,107,.04); border-color: rgba(34,160,107,.20); }
+.test-inline--parent { background: rgba(253,105,54,.04); border-color: rgba(253,105,54,.22); }
+.test-inline__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.test-inline__icon { width: 26px; height: 26px; border-radius: 7px; background: var(--c-blue-tint); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.test-inline--done .test-inline__icon { background: var(--c-green-tint); }
+.test-inline__title { font-size: 13px; font-weight: 700; line-height: 1.25; margin-top: 4px; }
+.test-inline__desc { font-size: 11.5px; color: var(--c-muted); margin-top: 2px; line-height: 1.4; }
+.test-inline__foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--c-line); }
+.test-inline__time { font-size: 11px; color: var(--c-muted); font-weight: 600; }
+.test-inline__cta { font-size: 11.5px; font-weight: 700; color: var(--c-blue-deep); }
+.test-inline__cta--done { color: var(--c-green); }
+.test-inline__cta--parent { color: var(--c-orange); }
+.test-inline__badge { position: absolute; top: -7px; left: 12px; background: var(--c-yellow); color: var(--c-ink); font-size: 9.5px; font-weight: 800; letter-spacing: .04em; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; }
+
+/* ========================================================== */
+/* RESULTS PANEL + COMPARISON VIEW (step 4 of Parcours)        */
+/* ========================================================== */
+.results-panel {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: linear-gradient(180deg, var(--c-blue-tint) 0%, #FFFFFF 100%);
+  border: 1px solid var(--c-blue-soft);
+  border-radius: var(--r-md);
+}
+.results-panel__head { margin-bottom: 14px; }
+.results-panel__head h4 { font-size: 14px; font-weight: 700; }
+.results-panel__head p { font-size: 12px; color: var(--c-muted); margin-top: 4px; }
+
+.result-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto auto;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.result-row:last-of-type { margin-bottom: 0; }
+.result-row--comparable {
+  background: linear-gradient(180deg, var(--c-blue-tint) 0%, #FFFFFF 60%);
+  border-color: var(--c-blue);
+  box-shadow: 0 6px 16px -8px rgba(72,122,255,.22);
+}
+.result-row__icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: var(--c-cream-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.result-row--comparable .result-row__icon { background: var(--c-blue-tint); }
+.result-row__body { min-width: 0; }
+.result-row__name { font-size: 13.5px; font-weight: 700; color: var(--c-ink); }
+.result-row__meta { font-size: 11.5px; color: var(--c-muted); margin-top: 2px; }
+.result-row__avatars { display: inline-flex; align-items: center; padding-right: 2px; }
+.result-row__mini-avatar {
+  width: 22px; height: 22px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--c-white); font-weight: 700; font-size: 10.5px;
+  border: 2px solid var(--c-white);
+  margin-left: -6px;
+}
+.result-row__mini-avatar:first-child { margin-left: 0; }
+.result-row__mini-avatar--p { background: linear-gradient(135deg, var(--c-blue), var(--c-blue-deep)); }
+.result-row__mini-avatar--c { background: linear-gradient(135deg, var(--c-orange), var(--c-yellow)); }
+
+.result-row__cta {
+  font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 8px;
+  background: var(--c-cream-light); color: var(--c-ink-2);
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.result-row__cta:hover { background: var(--c-ink); color: var(--c-white); }
+.result-row__cta--primary { background: var(--c-blue-deep); color: var(--c-white); }
+.result-row__cta--primary:hover { background: var(--c-ink); }
+
+@media (max-width: 760px) {
+  .result-row { grid-template-columns: 36px 1fr; }
+  .result-row__avatars, .result-row__cta { grid-column: 2 / -1; justify-self: flex-start; }
+}
+
+/* Comparison view */
+.compare-view {
+  margin-top: 12px;
+  padding: 22px 24px;
+  background: var(--c-white);
+  border: 1.5px solid var(--c-blue);
+  border-radius: var(--r-md);
+  box-shadow: 0 12px 28px -14px rgba(72,122,255,.30);
+}
+.compare-view__head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 14px; margin-bottom: 18px; padding-bottom: 14px;
+  border-bottom: 1px dashed var(--c-line); flex-wrap: wrap;
+}
+.compare-view__title { font-size: 15px; font-weight: 700; }
+.compare-view__sub { font-size: 12px; color: var(--c-muted); margin-top: 4px; }
+.compare-view__alignment { text-align: right; }
+.compare-view__alignment-val { font-family: var(--font-num); font-size: 32px; font-weight: 600; color: var(--c-blue-deep); line-height: 1; }
+.compare-view__alignment-val small { font-size: 15px; color: var(--c-muted); font-weight: 500; }
+.compare-view__alignment-lbl { font-size: 10.5px; color: var(--c-muted); letter-spacing: .1em; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+
+.compare-dims { display: flex; flex-direction: column; gap: 16px; }
+.compare-dim {
+  display: grid; grid-template-columns: 200px 1fr 120px;
+  gap: 18px; align-items: center;
+}
+.compare-dim__name { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.compare-dim__name small { display: block; color: var(--c-muted); font-size: 11px; font-weight: 500; margin-top: 3px; }
+
+.compare-bars { display: flex; flex-direction: column; gap: 6px; }
+.compare-bar-row { display: grid; grid-template-columns: 22px 1fr 44px; gap: 10px; align-items: center; }
+.compare-bar-avatar { width: 22px; height: 22px; border-radius: 99px; display: flex; align-items: center; justify-content: center; color: var(--c-white); font-weight: 700; font-size: 10.5px; flex-shrink: 0; }
+.compare-bar-avatar--p { background: linear-gradient(135deg, var(--c-blue), var(--c-blue-deep)); }
+.compare-bar-avatar--c { background: linear-gradient(135deg, var(--c-orange), var(--c-yellow)); }
+.compare-bar-track { height: 8px; background: var(--c-cream); border-radius: 99px; overflow: hidden; }
+.compare-bar-fill { height: 100%; border-radius: 99px; transition: width .4s; }
+.compare-bar-fill--p { background: var(--c-blue); }
+.compare-bar-fill--c { background: var(--c-orange); }
+.compare-bar-value { font-family: var(--font-num); font-size: 12.5px; font-weight: 600; color: var(--c-ink); text-align: right; }
+
+.compare-dim__status {
+  font-size: 11px; font-weight: 700; padding: 5px 10px;
+  border-radius: 99px; white-space: nowrap; text-align: center;
+}
+.compare-dim__status--aligned { background: var(--c-green-tint); color: var(--c-green); }
+.compare-dim__status--small { background: rgba(245,235,63,.25); color: #8a6d00; }
+.compare-dim__status--divergent { background: rgba(253,105,54,.14); color: var(--c-orange); }
+
+.compare-insight {
+  margin-top: 18px;
+  padding: 13px 16px;
+  background: var(--c-blue-tint);
+  border-radius: var(--r-md);
+  font-size: 12.5px;
+  color: var(--c-ink-2);
+  line-height: 1.5;
+}
+.compare-insight strong { color: var(--c-ink); display: block; margin-bottom: 4px; }
+
+@media (max-width: 760px) {
+  .compare-dim { grid-template-columns: 1fr; gap: 10px; }
+  .compare-view__alignment-val { font-size: 26px; }
+}
+
+.tests-filters { display: flex; gap: 6px; margin: 14px 0 6px; flex-wrap: wrap; }
+.filter {
+  font-size: 11.5px; font-weight: 600; padding: 5px 10px; border-radius: 99px;
+  background: var(--c-cream); color: var(--c-ink-2);
+}
+.filter.is-active { background: var(--c-ink); color: var(--c-white); }
+.filter--count { background: rgba(10,14,44,.08); padding: 0 6px; border-radius: 99px; margin-left: 6px; font-size: 10px; }
+.filter.is-active .filter--count { background: rgba(255,255,255,.18); }
+
+/* role-specific hiding inside parcours */
+.parcours-view[data-role="parent"] .only-enfant { display: none; }
+.parcours-view[data-role="enfant"] .only-parent { display: none; }
+
+/* ============================================================ */
+/* PARCOURS v3 · HERO + NOW + PHASES + MISSIONS                 */
+/* ============================================================ */
+
+/* HERO ------------------------------------------------------- */
+.parc-hero {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.5fr auto;
+  gap: 40px;
+  align-items: center;
+  padding: 34px 40px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(245,235,63,.18) 0%, transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(253,105,54,.16) 0%, transparent 55%),
+    linear-gradient(135deg, #0F1ABA 0%, var(--c-blue-deep) 55%, #2438DE 100%);
+  color: var(--c-white);
+  position: relative;
+  overflow: hidden;
+}
+.parc-hero__main { position: relative; z-index: 2; min-width: 0; }
+.parc-hero__main .eyebrow { color: rgba(255,255,255,.72); }
+.parc-hero__main .eyebrow .dot { background: var(--c-yellow); }
+.parc-hero__main h1 { color: var(--c-white); margin-top: 12px; font-size: 34px; line-height: 1.08; letter-spacing: -0.015em; }
+.parc-hero__main h1 .parc-hero__highlight { color: var(--c-yellow); font-family: var(--font-num); font-weight: 500; font-style: italic; }
+.parc-hero__main p { color: rgba(255,255,255,.78); margin-top: 14px; max-width: 540px; font-size: 14.5px; line-height: 1.55; }
+.parc-hero .role-toggle { margin-top: 22px; background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18); }
+.parc-hero .role-toggle button { color: rgba(255,255,255,.78); }
+.parc-hero .role-toggle button.is-active { background: var(--c-white); color: var(--c-ink); }
+
+.parc-hero__progress {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 230px; align-items: stretch;
+}
+.parc-ring {
+  position: relative;
+  width: 180px; height: 180px;
+  align-self: center;
+}
+.parc-ring svg { width: 100%; height: 100%; }
+.parc-ring__center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--font-num); text-align: center;
+}
+.parc-ring__center strong { font-size: 44px; font-weight: 600; line-height: 1; color: var(--c-white); }
+.parc-ring__center strong small { font-size: 18px; font-weight: 500; color: rgba(255,255,255,.55); margin-left: 2px; }
+.parc-ring__center span { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.72); font-weight: 700; font-family: var(--font-body); margin-top: 8px; }
+
+.parc-weekly {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: var(--r-md);
+  padding: 14px 18px;
+  display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4px;
+}
+.parc-weekly__label { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.72); grid-column: 1 / -1; margin-bottom: 6px; }
+.parc-weekly strong { font-family: var(--font-num); font-size: 30px; font-weight: 600; line-height: 1; color: var(--c-white); }
+.parc-weekly strong em { font-style: normal; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.5); margin-left: 2px; }
+.parc-weekly__sub { font-size: 12px; color: rgba(255,255,255,.7); padding-bottom: 4px; }
+.parc-weekly__dots { grid-column: 1 / -1; display: flex; gap: 6px; margin-top: 10px; }
+.parc-weekly__dots span { flex: 1; height: 6px; border-radius: 99px; background: rgba(255,255,255,.18); }
+.parc-weekly__dots span.is-done { background: linear-gradient(90deg, var(--c-yellow), var(--c-orange)); }
+
+@media (max-width: 880px) {
+  .parc-hero { grid-template-columns: 1fr; padding: 26px 24px; gap: 24px; }
+  .parc-hero__main h1 { font-size: 26px; }
+  .parc-hero__progress { flex-direction: row; align-items: center; }
+  .parc-ring { width: 130px; height: 130px; }
+  .parc-ring__center strong { font-size: 32px; }
+  .parc-weekly { flex: 1; }
+}
+@media (max-width: 560px) {
+  .parc-hero__progress { flex-direction: column; }
+}
+
+/* NOW CARD (child) ------------------------------------------ */
+.parc-now {
+  margin-top: 26px;
+  padding: 34px 38px 30px;
+  border-radius: var(--r-xl);
+  background: linear-gradient(135deg, #FD6936 0%, #F5EB3F 100%);
+  color: var(--c-ink);
+  display: grid;
+  grid-template-columns: 1.7fr auto;
+  gap: 32px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 22px 50px -24px rgba(253,105,54,.55);
+}
+.parc-now__halo { position: absolute; top: -100px; right: -70px; width: 340px; height: 340px; border-radius: 99px; background: rgba(255,255,255,.22); }
+.parc-now__halo--2 { top: auto; bottom: -130px; right: 32%; width: 280px; height: 280px; background: rgba(19,32,206,.14); }
+.parc-now__body { position: relative; z-index: 2; }
+.parc-now__kicker {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-ink); background: var(--c-white); padding: 7px 14px; border-radius: 99px;
+  box-shadow: 0 6px 14px rgba(10,14,44,.10);
+}
+.parc-now h2 { font-size: 36px; line-height: 1.08; margin-top: 16px; color: var(--c-ink); letter-spacing: -0.02em; }
+.parc-now p { color: var(--c-ink-2); margin-top: 12px; max-width: 560px; font-size: 14.5px; line-height: 1.55; }
+.parc-now__meta { display: flex; gap: 18px; margin-top: 18px; flex-wrap: wrap; }
+.parc-now__meta span { font-size: 12.5px; font-weight: 600; color: var(--c-ink-2); display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,255,255,.55); border-radius: 99px; }
+.parc-now__meta span strong { color: var(--c-blue-deep); font-weight: 800; }
+.parc-now__cta { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
+.parc-now__cta .btn--accent { background: var(--c-ink); color: var(--c-white); padding: 16px 26px; font-size: 15.5px; border-radius: var(--r-md); }
+.parc-now__cta .btn--accent:hover { background: var(--c-blue-deep); transform: translateY(-1px); box-shadow: 0 14px 28px rgba(10,14,44,.30); }
+.parc-now__cta small { font-size: 11.5px; color: var(--c-ink-2); text-align: center; }
+@media (max-width: 800px) {
+  .parc-now { grid-template-columns: 1fr; padding: 26px 24px; }
+  .parc-now h2 { font-size: 26px; }
+  .parc-now__cta { min-width: 0; }
+}
+
+/* PHASES (child) -------------------------------------------- */
+.parc-phases { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+.parc-phase {
+  background: var(--c-white); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.parc-phase--done {
+  background: linear-gradient(180deg, rgba(34,160,107,.05) 0%, var(--c-white) 70%);
+  border-color: rgba(34,160,107,.22);
+}
+.parc-phase--current {
+  border-color: var(--c-orange);
+  box-shadow: 0 18px 38px -22px rgba(253,105,54,.40);
+}
+.parc-phase--locked { background: #FAF7EF; border-style: dashed; }
+
+.parc-phase__head {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px; cursor: pointer; user-select: none;
+}
+.parc-phase__head > div { flex: 1; min-width: 0; }
+.parc-phase__head small {
+  display: block;
+  font-size: 11px; font-weight: 700; color: var(--c-muted);
+  letter-spacing: .10em; text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.parc-phase__head h3 { font-size: 18px; font-family: var(--font-display); }
+.parc-phase--locked .parc-phase__head h3 { color: var(--c-muted); }
+.parc-phase__pill {
+  width: 40px; height: 40px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 700; font-size: 15px;
+  background: var(--c-green); color: var(--c-white);
+  flex-shrink: 0;
+}
+.parc-phase--locked .parc-phase__pill { background: rgba(10,14,44,.06); color: var(--c-muted); }
+.parc-phase__pill--current {
+  background: var(--c-orange); color: var(--c-white);
+  box-shadow: 0 0 0 6px rgba(253,105,54,.16);
+}
+.parc-phase__meta { font-size: 12px; color: var(--c-muted); font-weight: 700; font-family: var(--font-body); white-space: nowrap; }
+.parc-phase--done .parc-phase__meta { color: var(--c-green); }
+.parc-phase--current .parc-phase__meta { color: var(--c-orange); }
+.parc-phase__chev { color: var(--c-muted); font-size: 14px; transition: transform .2s; }
+.parc-phase.is-collapsed .parc-phase__chev { transform: rotate(-90deg); }
+.parc-phase__body { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+.parc-phase.is-collapsed .parc-phase__body { display: none; }
+
+/* MODULES (child) ------------------------------------------- */
+.parc-module {
+  display: grid; grid-template-columns: 38px 1fr auto auto;
+  gap: 14px; align-items: center;
+  padding: 12px 16px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  text-decoration: none; color: var(--c-ink);
+  transition: transform .12s, border-color .15s, box-shadow .15s, background .15s;
+}
+.parc-module:hover { border-color: var(--c-blue); transform: translateY(-1px); }
+.parc-module__icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--c-cream-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.parc-module__name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.parc-module__name em { font-style: normal; color: var(--c-muted); font-weight: 500; }
+.parc-module__date { font-size: 11.5px; color: var(--c-muted); font-family: var(--font-num); font-weight: 500; white-space: nowrap; }
+.parc-module__check {
+  width: 24px; height: 24px; border-radius: 99px;
+  background: var(--c-green); color: var(--c-white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+}
+.parc-module__check--parent { background: linear-gradient(135deg, var(--c-blue), var(--c-blue-deep)); font-size: 10.5px; }
+.parc-module__lock { font-size: 12px; color: var(--c-muted); font-weight: 600; }
+.parc-module__cta { font-size: 12.5px; font-weight: 800; color: var(--c-white); background: var(--c-orange); padding: 7px 14px; border-radius: 99px; white-space: nowrap; }
+.parc-module--done { background: rgba(34,160,107,.04); border-color: rgba(34,160,107,.16); }
+.parc-module--done .parc-module__icon { background: rgba(34,160,107,.10); }
+.parc-module--done .parc-module__name { color: var(--c-ink-2); }
+.parc-module--current {
+  background: linear-gradient(180deg, #FFF7E9 0%, #FFFFFF 80%);
+  border-color: var(--c-orange);
+  box-shadow: 0 10px 26px -14px rgba(253,105,54,.40);
+}
+.parc-module--current .parc-module__icon { background: rgba(253,105,54,.14); }
+.parc-module--current .parc-module__name em { color: var(--c-orange); font-weight: 700; }
+.parc-module--parent { background: rgba(72,122,255,.05); border-color: rgba(72,122,255,.22); }
+.parc-module--parent .parc-module__icon { background: rgba(72,122,255,.14); }
+.parc-module--parent .parc-module__name em { color: var(--c-blue-deep); font-weight: 700; }
+.parc-module--locked { background: #FAF7EF; border-style: dashed; }
+.parc-module--locked .parc-module__icon { background: rgba(10,14,44,.05); opacity: .6; }
+.parc-module--locked .parc-module__name { color: var(--c-muted); }
+.parc-module--locked:hover { transform: none; border-color: var(--c-line); }
+
+/* COACH GATE between phases (child) ------------------------- */
+.parc-gate {
+  display: grid; grid-template-columns: 60px 1fr auto;
+  gap: 18px; align-items: center;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(253,105,54,.10), rgba(245,235,63,.12));
+  border: 1.5px solid rgba(253,105,54,.32);
+  border-radius: var(--r-lg);
+  margin: 4px 0;
+}
+.parc-gate__av {
+  width: 60px; height: 60px; border-radius: 99px;
+  background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));
+  color: var(--c-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 24px;
+  flex-shrink: 0;
+}
+.parc-gate__body { min-width: 0; }
+.parc-gate__kicker {
+  display: block;
+  font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-orange);
+  margin-bottom: 2px;
+}
+.parc-gate__body h3 { font-size: 17px; }
+.parc-gate__body p { font-size: 13px; color: var(--c-ink-2); margin-top: 4px; line-height: 1.5; }
+.parc-gate__lock {
+  font-size: 12px; color: var(--c-muted); font-weight: 700;
+  white-space: nowrap; padding: 9px 14px;
+  background: var(--c-white); border-radius: 99px;
+}
+@media (max-width: 720px) {
+  .parc-gate { grid-template-columns: 60px 1fr; }
+  .parc-gate__lock { grid-column: 1 / -1; justify-self: flex-start; }
+}
+
+/* PARENT : RDV strip ---------------------------------------- */
+.parc-rdv-strip {
+  margin-top: 26px;
+  display: grid; grid-template-columns: 56px 1fr auto;
+  gap: 18px; align-items: center;
+  padding: 16px 22px;
+  background: linear-gradient(135deg, rgba(253,105,54,.10), rgba(245,235,63,.12));
+  border: 1.5px solid rgba(253,105,54,.30);
+  border-radius: var(--r-lg);
+}
+.parc-rdv-strip__av {
+  width: 56px; height: 56px; border-radius: 99px;
+  background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));
+  color: var(--c-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 22px;
+  flex-shrink: 0;
+}
+.parc-rdv-strip__kicker { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c-orange); margin-bottom: 2px; }
+.parc-rdv-strip__body h3 { font-size: 17px; }
+.parc-rdv-strip__body p { font-size: 13px; color: var(--c-ink-2); margin-top: 4px; }
+@media (max-width: 720px) {
+  .parc-rdv-strip { grid-template-columns: 56px 1fr; }
+  .parc-rdv-strip .btn { grid-column: 1 / -1; justify-self: flex-start; }
+}
+
+/* PARENT : 3 MISSIONS --------------------------------------- */
+.parc-missions {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+  align-items: stretch;
+}
+@media (max-width: 1000px) {
+  .parc-missions { grid-template-columns: 1fr 1fr; }
+  .parc-missions .parc-mission--docs { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .parc-missions { grid-template-columns: 1fr; }
+  .parc-missions .parc-mission--docs { grid-column: auto; }
+}
+
+.parc-mission {
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.parc-mission > header { display: flex; align-items: center; justify-content: space-between; }
+.parc-mission__num {
+  width: 28px; height: 28px; border-radius: 99px;
+  background: var(--c-ink); color: var(--c-white);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 700; font-size: 13px;
+}
+.parc-mission h3 { font-size: 17px; line-height: 1.25; }
+.parc-mission > p { font-size: 13px; color: var(--c-muted); line-height: 1.5; }
+
+/* Docs list */
+.parc-docs { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.parc-docs__item {
+  display: grid; grid-template-columns: 28px 1fr auto;
+  gap: 12px; align-items: center;
+  padding: 10px 12px;
+  background: var(--c-cream-light);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+.parc-docs__item.is-done { background: rgba(34,160,107,.06); }
+.parc-docs__item.is-todo { background: var(--c-white); border-color: var(--c-orange); border-style: dashed; }
+.parc-docs__item.is-optional { background: var(--c-white); border-color: var(--c-line); border-style: dashed; }
+.parc-docs__icon { font-size: 17px; }
+.parc-docs__item strong { display: block; font-size: 13px; font-weight: 700; color: var(--c-ink); }
+.parc-docs__item small { display: block; font-size: 11.5px; color: var(--c-muted); margin-top: 1px; }
+.parc-docs__add {
+  font-size: 11.5px; font-weight: 700;
+  padding: 6px 12px; border-radius: 8px;
+  background: var(--c-orange); color: var(--c-white);
+  white-space: nowrap;
+}
+.parc-docs__add:hover { background: var(--c-blue-deep); }
+.parc-docs__item.is-optional .parc-docs__add { background: var(--c-ink); }
+.parc-drop {
+  padding: 14px;
+  border: 1.5px dashed var(--c-line);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 12.5px; color: var(--c-muted);
+  background: var(--c-cream-light);
+  transition: border-color .15s, background .15s, color .15s;
+}
+.parc-drop:hover { border-color: var(--c-blue); color: var(--c-ink-2); }
+
+/* Article */
+.parc-article__cover {
+  height: 130px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--c-blue-deep), var(--c-blue) 80%);
+  position: relative;
+  overflow: hidden;
+}
+.parc-article__cover::before {
+  content: ""; position: absolute; top: -40px; right: -30px;
+  width: 180px; height: 180px; border-radius: 99px; background: rgba(245,235,63,.32);
+}
+.parc-article__cover::after {
+  content: "<svg class="icn" aria-hidden="true"><use href="#icon-chat"/></svg>"; position: absolute; bottom: 12px; left: 20px; font-size: 44px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.18));
+}
+.parc-article__tag {
+  position: absolute; top: 12px; left: 14px;
+  background: rgba(255,255,255,.94); color: var(--c-ink);
+  font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 99px;
+}
+.parc-article__body { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.parc-article__body small { font-size: 10.5px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--c-orange); }
+.parc-article__body h3 { font-size: 18px; line-height: 1.22; }
+.parc-article__body p { font-size: 13px; color: var(--c-muted); line-height: 1.5; }
+.parc-article__body .btn { margin-top: 6px; align-self: flex-start; }
+.parc-article__foot {
+  margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--c-line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11.5px; color: var(--c-muted);
+}
+.parc-article__foot a:hover { color: var(--c-blue-deep); }
+
+/* Tests list */
+.parc-test {
+  display: grid; grid-template-columns: 36px 1fr auto;
+  gap: 12px; align-items: center;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #FFFCEC, #FFFFFF 70%);
+  border: 1.5px solid var(--c-yellow);
+  border-radius: 12px;
+}
+.parc-test__star {
+  width: 32px; height: 32px; border-radius: 99px;
+  background: var(--c-yellow); color: var(--c-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+}
+.parc-test__body small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--c-orange); margin-bottom: 2px; }
+.parc-test__body strong { display: block; font-size: 14px; font-weight: 700; color: var(--c-ink); }
+.parc-test__body span.muted { font-size: 11.5px; }
+.parc-tests-list { list-style: none; display: flex; flex-direction: column; margin-top: 4px; }
+.parc-tests-list li {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--c-line);
+  font-size: 12.5px; font-weight: 600;
+}
+.parc-tests-list li:last-child { border-bottom: 0; }
+.parc-tests-list li small { color: var(--c-muted); margin-left: 4px; font-size: 11px; font-weight: 500; }
+.parc-tests-list li a { color: var(--c-blue-deep); font-weight: 700; font-size: 12px; }
+.parc-tests-list li a:hover { color: var(--c-orange); }
+.parc-tests-list__more { justify-content: flex-end !important; padding-top: 12px !important; border-bottom: 0 !important; }
+
+/* PARENT : MIRROR ------------------------------------------- */
+.parc-mirror {
+  margin-top: 16px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: 10px;
+  display: flex; flex-direction: column;
+}
+.parc-mirror__step {
+  display: grid; grid-template-columns: 36px 1fr auto;
+  gap: 14px; align-items: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  position: relative;
+}
+.parc-mirror__step + .parc-mirror__step::before {
+  content: ""; position: absolute;
+  top: -4px; left: 33px;
+  width: 2px; height: 8px;
+  background: var(--c-line);
+}
+.parc-mirror__step.is-done + .parc-mirror__step.is-done::before { background: var(--c-green); }
+.parc-mirror__step.is-done + .parc-mirror__step.is-current::before { background: linear-gradient(180deg, var(--c-green), var(--c-orange)); }
+.parc-mirror__dot {
+  width: 32px; height: 32px; border-radius: 99px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 700; font-size: 14px;
+  background: var(--c-cream-light); color: var(--c-muted);
+  border: 2px solid var(--c-line);
+}
+.parc-mirror__step.is-done .parc-mirror__dot { background: var(--c-green); color: var(--c-white); border-color: var(--c-green); }
+.parc-mirror__step.is-current { background: linear-gradient(90deg, rgba(253,105,54,.10) 0%, transparent 100%); }
+.parc-mirror__step.is-current .parc-mirror__dot {
+  background: var(--c-orange); color: var(--c-white); border-color: var(--c-orange);
+  box-shadow: 0 0 0 5px rgba(253,105,54,.18);
+}
+.parc-mirror__step strong { font-size: 14px; font-weight: 700; }
+.parc-mirror__step.is-locked strong { color: var(--c-muted); }
+.parc-mirror__step small { display: block; font-size: 11.5px; color: var(--c-muted); margin-top: 2px; }
+.parc-mirror__step .parc-mirror__here {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase;
+  color: var(--c-white); background: var(--c-orange);
+  padding: 5px 10px; border-radius: 99px; white-space: nowrap;
+}
+
+/* ========================================================== */
+/* REPORT TEASER (locked result preview)                       */
+/* ========================================================== */
+.report-teaser {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: 28px;
+  padding: 26px 32px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.report-teaser::before {
+  content: "";
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 240px; height: 240px;
+  border-radius: 99px;
+  background: radial-gradient(circle, rgba(72,122,255,.08) 0%, transparent 70%);
+}
+
+.report-teaser__visual {
+  position: relative;
+  width: 160px;
+  height: 200px;
+  flex-shrink: 0;
+}
+.report-teaser__page {
+  position: absolute;
+  width: 120px;
+  height: 160px;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px -4px rgba(10,14,44,.18);
+}
+.report-teaser__page--back {
+  top: 0; left: 35px;
+  background: var(--c-cream-light);
+  border: 1px solid var(--c-line);
+  transform: rotate(5deg);
+}
+.report-teaser__page--mid {
+  top: 12px; left: 22px;
+  background: #FBFAF6;
+  border: 1px solid var(--c-line);
+  transform: rotate(-3deg);
+}
+.report-teaser__page--front {
+  top: 22px; left: 8px;
+  background: linear-gradient(155deg, var(--c-blue-deep) 0%, var(--c-blue) 100%);
+  color: var(--c-white);
+  padding: 14px 12px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.report-teaser__page--front::before {
+  content: "";
+  position: absolute; top: 0; right: 0;
+  width: 50px; height: 50px; border-radius: 99px;
+  background: rgba(245,235,63,.25);
+  transform: translate(20px, -20px);
+}
+.report-teaser__page-eyebrow { font-size: 8.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; opacity: .75; }
+.report-teaser__page-name { font-family: var(--font-num); font-weight: 600; font-size: 13px; line-height: 1.1; margin-top: 6px; position: relative; }
+.report-teaser__page-meta { font-size: 8.5px; opacity: .7; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.report-teaser__page-bars { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.report-teaser__page-bar { height: 3px; background: rgba(255,255,255,.25); border-radius: 99px; }
+.report-teaser__page-bar:nth-child(2) { width: 70%; }
+.report-teaser__page-bar:nth-child(3) { width: 50%; }
+
+.report-teaser__lock {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  width: 40px; height: 40px;
+  border-radius: 99px;
+  background: var(--c-ink);
+  color: var(--c-yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  z-index: 5;
+  box-shadow: 0 8px 18px -4px rgba(10,14,44,.35);
+}
+
+.report-teaser__body { position: relative; min-width: 0; }
+.report-teaser__body h2 { font-size: 22px; margin-top: 6px; line-height: 1.2; }
+.report-teaser__body p { font-size: 13.5px; margin-top: 10px; max-width: 460px; }
+.report-teaser__chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .03em;
+  padding: 5px 11px; border-radius: 99px;
+  background: rgba(253,105,54,.10);
+  color: var(--c-orange);
+  margin-top: 10px;
+}
+.report-teaser__list {
+  display: flex; flex-wrap: wrap; gap: 8px 14px;
+  margin-top: 12px;
+  font-size: 12px; color: var(--c-ink-2); font-weight: 600;
+}
+.report-teaser__list span { display: inline-flex; align-items: center; gap: 6px; }
+.report-teaser__list span::before { content: "✓"; color: var(--c-green); font-weight: 800; }
+
+.report-teaser__cta { position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 190px; }
+
+@media (max-width: 900px) {
+  .report-teaser { grid-template-columns: 1fr; padding: 24px; }
+  .report-teaser__visual { margin: 0 auto; }
+  .report-teaser__cta { min-width: 0; }
+}
+
+/* ========================================================== */
+/* GAUGES (motivation block, parent dashboard)                 */
+/* ========================================================== */
+.gauges {
+  margin-top: 18px;
+  padding: 24px 28px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+}
+.gauge-global {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--c-line);
+}
+.gauge-global__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.gauge-global__pct {
+  font-family: var(--font-num); font-size: 48px; font-weight: 600;
+  color: var(--c-blue-deep); line-height: 1;
+}
+.gauge-global__pct small { font-size: 20px; color: var(--c-muted); margin-left: 2px; font-weight: 500; }
+.gauge-global__label { text-align: right; }
+.gauge-global__label strong { display: block; font-size: 14px; font-weight: 700; color: var(--c-ink); }
+.gauge-global__label small { display: block; font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+.gauge-global__bar { height: 10px; background: var(--c-cream); border-radius: 99px; overflow: hidden; position: relative; }
+.gauge-global__fill { height: 100%; background: linear-gradient(90deg, var(--c-blue) 0%, var(--c-orange) 100%); border-radius: 99px; transition: width .4s ease; }
+
+.gauges-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.gauge-mini--locked { opacity: .72; background: var(--c-cream); }
+.gauge-mini--locked .gauge-mini__count { color: var(--c-muted); }
+.gauge-mini--locked .gauge-mini__nudge { color: var(--c-muted); font-style: italic; }
+@media (max-width: 800px) { .gauges-mini { grid-template-columns: 1fr; } }
+.gauge-mini {
+  display: block;
+  padding: 16px 18px;
+  background: var(--c-cream-light);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  transition: border-color .15s, transform .15s, background .15s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.gauge-mini:hover { border-color: var(--c-blue); transform: translateY(-1px); background: var(--c-white); }
+.gauge-mini__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.gauge-mini__icon { width: 30px; height: 30px; border-radius: 8px; background: var(--c-white); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.gauge-mini__count { font-family: var(--font-num); font-weight: 600; font-size: 16px; color: var(--c-ink); }
+.gauge-mini__count small { color: var(--c-muted); font-weight: 500; }
+.gauge-mini h4 { font-size: 13.5px; font-weight: 700; margin-bottom: 8px; }
+.gauge-mini__bar { height: 6px; background: rgba(10,14,44,.07); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
+.gauge-mini__fill { height: 100%; border-radius: 99px; transition: width .3s ease; }
+.gauge-mini__fill--blue { background: var(--c-blue); }
+.gauge-mini__fill--orange { background: var(--c-orange); }
+.gauge-mini__fill--gradient { background: linear-gradient(90deg, var(--c-blue), var(--c-orange)); }
+.gauge-mini__nudge { font-size: 11.5px; color: var(--c-blue-deep); font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+.gauge-mini__nudge-arrow { opacity: .7; }
+
+/* ========================================================== */
+/* PARENT-ONLY : RDV push + 3 actions                          */
+/* ========================================================== */
+.rdv-push {
+  margin-top: 28px;
+  padding: 32px 36px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, #FD6936 0%, #F5EB3F 100%);
+  color: var(--c-ink);
+  display: grid;
+  grid-template-columns: 1.6fr auto;
+  gap: 28px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.rdv-push::before {
+  content: ""; position: absolute; top: -80px; right: -50px;
+  width: 280px; height: 280px; border-radius: 99px; background: rgba(255,255,255,.20);
+}
+.rdv-push::after {
+  content: ""; position: absolute; bottom: -40px; right: 200px;
+  width: 110px; height: 110px; border-radius: 99px; background: rgba(19,32,206,.20);
+}
+.rdv-push__body { position: relative; z-index: 2; }
+.rdv-push__eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-ink); background: rgba(255,255,255,.45); padding: 5px 11px; border-radius: 99px;
+}
+.rdv-push h2 { font-size: 30px; color: var(--c-ink); margin-top: 14px; line-height: 1.15; }
+.rdv-push p { color: var(--c-ink-2); margin-top: 10px; max-width: 520px; font-size: 14px; }
+.rdv-push__cta { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 12px; min-width: 230px; }
+.rdv-push__cta small { font-size: 12px; color: var(--c-ink-2); text-align: center; }
+.rdv-push__cta small strong { color: var(--c-ink); font-weight: 700; }
+.rdv-push .btn--accent { background: var(--c-ink); color: var(--c-white); }
+.rdv-push .btn--accent:hover { background: var(--c-blue-deep); }
+@media (max-width: 800px) {
+  .rdv-push { grid-template-columns: 1fr; padding: 24px; }
+  .rdv-push__cta { min-width: 0; }
+}
+
+.parent-steps__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+@media (max-width: 800px) { .parent-steps__grid { grid-template-columns: 1fr; } }
+.parent-step {
+  padding: 22px 22px 20px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color .15s, transform .15s;
+}
+.parent-step:hover { border-color: var(--c-blue); transform: translateY(-2px); }
+.parent-step--done { background: rgba(34,160,107,.04); border-color: rgba(34,160,107,.20); }
+.parent-step__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.parent-step__num {
+  width: 32px; height: 32px; border-radius: 99px;
+  background: var(--c-blue-tint);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-num); font-weight: 600; font-size: 15px;
+  color: var(--c-blue-deep);
+}
+.parent-step--done .parent-step__num { background: var(--c-green); color: var(--c-white); border: none; }
+.parent-step h4 { font-size: 15.5px; line-height: 1.3; }
+.parent-step p { font-size: 12.5px; color: var(--c-muted); line-height: 1.45; }
+.parent-step__cta { margin-top: auto; padding-top: 8px; align-self: flex-start; }
+
+/* ========================================================== */
+/* DOCUMENTS PAGE                                              */
+/* ========================================================== */
+.dropzone-big {
+  margin-top: 24px;
+  padding: 36px 32px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--c-blue-tint) 0%, var(--c-white) 100%);
+  border: 2px dashed var(--c-blue-soft);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .15s;
+}
+.dropzone-big:hover { border-color: var(--c-blue); transform: translateY(-1px); }
+.dropzone-big__icon {
+  width: 56px; height: 56px;
+  border-radius: 99px;
+  background: var(--c-white);
+  border: 1px solid var(--c-blue-soft);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 24px; color: var(--c-blue-deep);
+  margin-bottom: 14px;
+}
+.dropzone-big h2 { font-size: 22px; }
+.dropzone-big p { margin-top: 6px; font-size: 13.5px; }
+.dropzone-big__hint { font-size: 11.5px; color: var(--c-muted); margin-top: 4px; }
+.dropzone-big .btn { margin-top: 18px; }
+
+.docs-hint {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: rgba(245,235,63,.10);
+  border: 1px dashed rgba(245,235,63,.6);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  color: var(--c-ink-2);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.docs-hint__icon { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+.docs-hint strong { color: var(--c-ink); font-weight: 700; }
+.docs-hint a { color: var(--c-blue-deep); font-weight: 600; }
+.docs-hint a:hover { text-decoration: underline; }
+
+.docs-meta {
+  margin-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; flex-wrap: wrap;
+}
+.docs-meta__stats { font-size: 14px; }
+.docs-meta__stats strong { font-weight: 700; }
+.docs-meta__filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.docs-table {
+  margin-top: 14px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.doc-line {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto auto;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--c-line);
+  align-items: center;
+  transition: background .15s;
+}
+.doc-line:last-child { border-bottom: none; }
+.doc-line:hover { background: var(--c-cream-light); }
+.doc-line__icon {
+  width: 40px; height: 40px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.doc-line__icon--pdf { background: rgba(253,105,54,.12); color: var(--c-orange); }
+.doc-line__icon--img { background: rgba(72,122,255,.12); color: var(--c-blue-deep); }
+.doc-line__icon--doc { background: var(--c-green-tint); color: var(--c-green); }
+.doc-line__icon--audio { background: rgba(176,208,247,.4); color: var(--c-blue-deep); }
+.doc-line__body { min-width: 0; }
+.doc-line__title { font-size: 14px; font-weight: 600; color: var(--c-ink); line-height: 1.3; }
+.doc-line__meta { font-size: 11.5px; color: var(--c-muted); margin-top: 3px; }
+.doc-line__size { font-size: 12px; color: var(--c-muted); font-weight: 500; white-space: nowrap; }
+.doc-line__share {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 99px;
+}
+.doc-line__share--charles { background: rgba(34,160,107,.12); color: var(--c-green); }
+.doc-line__share--private { background: rgba(10,14,44,.06); color: var(--c-muted); }
+.doc-line__share--family { background: var(--c-blue-tint); color: var(--c-blue-deep); }
+.doc-line__menu {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-muted); cursor: pointer;
+}
+.doc-line__menu:hover { background: var(--c-cream); color: var(--c-ink); }
+
+@media (max-width: 700px) {
+  .doc-line { grid-template-columns: 40px 1fr auto; }
+  .doc-line__share, .doc-line__size { display: none; }
+}
+
+/* ========================================================== */
+/* AUTH SECTION (kept from v2, light tweaks)                   */
+/* ========================================================== */
+.auth-section { background: var(--c-ink); color: var(--c-white); padding: 56px 0; }
+.auth-section h2 { color: var(--c-white); font-size: 28px; }
+.auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px; }
+@media (max-width: 900px) { .auth-grid { grid-template-columns: 1fr; } }
+.auth-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-lg); padding: 24px; color: var(--c-white); }
+.auth-card h3 { color: var(--c-white); font-size: 17px; }
+.auth-card p { color: rgba(255,255,255,.65); font-size: 13px; margin-top: 8px; }
+.auth-card__step { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--c-yellow); font-weight: 700; margin-bottom: 12px; }
+.auth-card__step-num { width: 22px; height: 22px; border-radius: 99px; background: var(--c-yellow); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; letter-spacing: 0; }
+.auth-card__code { display: flex; gap: 6px; margin-top: 14px; }
+.auth-card__code-cell { width: 36px; height: 44px; border-radius: 8px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; font-family: var(--font-num); font-weight: 600; font-size: 19px; }
+.auth-card__roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.auth-role { padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); cursor: pointer; transition: border-color .15s, background .15s; text-align: left; color: var(--c-white); }
+.auth-role:hover, .auth-role.is-selected { border-color: var(--c-yellow); background: rgba(245,235,63,.08); }
+.auth-role__icon { font-size: 22px; display: inline-flex; align-items: center; justify-content: center; }
+.auth-role__icon svg { width: 28px; height: 28px; color: var(--c-blue-deep); }
+
+/* Generic inline icon (drop-in replacement pour emoji) */
+.icn {
+  width: 1em; height: 1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+  color: currentColor;
+}
+.icn--lg { width: 1.25em; height: 1.25em; }
+.auth-role strong { display: block; font-size: 14px; font-weight: 700; margin-top: 6px; color: var(--c-white); }
+.auth-role small { display: block; color: rgba(255,255,255,.6); font-size: 11.5px; margin-top: 2px; line-height: 1.3; }
+
+/* ========================================================== */
+/* FOOTER                                                      */
+/* ========================================================== */
+.footer { padding: 50px 0; color: var(--c-muted); font-size: 12px; }
+.footer__inner { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.footer__links { display: flex; gap: 18px; }
+.footer__links a:hover { color: var(--c-blue-deep); }
+
+.view { display: none; }
+.view.is-active { display: block; }
+</style>
+</head>
+<body class="is-prototype">
+
+<!-- ICON SPRITE (SVG defs réutilisable via <use href="#icon-…">) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/>
+    </symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7v.5"/><circle cx="12" cy="17.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2h-4v-7H10v7H5a2 2 0 0 1-2-2z"/>
+    </symbol>
+    <symbol id="icon-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M6 17v-3a4 4 0 0 1 4-4h4a4 4 0 0 0 4-4"/>
+    </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>
+    </symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h7M8 11h7"/>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>
+    </symbol>
+    <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 3h4v3a2 2 0 1 0 0 4v3h-3a2 2 0 1 1-4 0H4v-4h3a2 2 0 1 0 0-4H4V3h6z"/>
+    </symbol>
+    <symbol id="icon-lock-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>
+    </symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+    </symbol>
+    <symbol id="icon-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 13l3-9h12l3 9v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1 2h6l1-2h5"/>
+    </symbol>
+    <symbol id="icon-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.8.8 1.5 1.8 1.5 3V15h5v-.5c0-1.2.7-2.2 1.5-3A6 6 0 0 0 12 2z"/>
+    </symbol>
+    <symbol id="icon-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6v5l5 10a3 3 0 0 1-3 4H7a3 3 0 0 1-3-4l5-10z"/><path d="M7 13h10"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+    </symbol>
+    <symbol id="icon-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a8 8 0 0 1-12 6.9L4 20l1.1-5A8 8 0 1 1 21 12z"/>
+    </symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4l6 6-10 10H4v-6z"/><path d="M13 5l6 6"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l2.7 5.5 6 .9-4.4 4.2 1 6L12 17l-5.4 2.6 1-6L3.3 9.4l6-.9z"/>
+    </symbol>
+    <symbol id="icon-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11l4-4 3 1 3-3 4 3 4-2v9l-3 2-4-3-3 3-3-1-3 2z"/>
+    </symbol>
+    <symbol id="icon-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 9h16M4 15h16M10 3l-2 18M16 3l-2 18"/>
+    </symbol>
+    <symbol id="icon-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>
+    </symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+    </symbol>
+    <symbol id="icon-news" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="14" height="14" rx="2"/><path d="M17 9h3v8a2 2 0 0 1-2 2H7"/><path d="M6 9h6M6 13h6M6 17h4"/>
+    </symbol>
+    <symbol id="icon-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11v5a8 8 0 0 0 12 0v-5"/>
+    </symbol>
+    <symbol id="icon-sprout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22V10"/><path d="M12 10a6 6 0 0 0-6-6H3a6 6 0 0 0 6 6z"/><path d="M12 10a6 6 0 0 1 6-6h3a6 6 0 0 1-6 6z"/>
+    </symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>
+    </symbol>
+    <symbol id="icon-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11l-9 9a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/>
+    </symbol>
+    <symbol id="icon-mirror" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="3" width="12" height="18" rx="6"/><path d="M10 7c0 2 4 2 4 5"/>
+    </symbol>
+    <symbol id="icon-build" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21V8l8 4V8l9 5v8H3z"/><path d="M3 21h18"/>
+    </symbol>
+    <symbol id="icon-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2L4 14h7l-1 8 9-12h-7z"/>
+    </symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/>
+    </symbol>
+    <symbol id="icon-scales" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v17M5 21h14M7 8l-3 6a3 3 0 0 0 6 0zM17 6l-3 6a3 3 0 0 0 6 0z"/><path d="M4 6l8-2 8 2"/>
+    </symbol>
+    <symbol id="icon-hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12M6 21h12M7 3v3a5 5 0 0 0 10 0V3M7 21v-3a5 5 0 0 1 10 0v3"/>
+    </symbol>
+    <symbol id="icon-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l10 18H2z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12l5 5L20 6"/>
+    </symbol>
+    <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- VIEW SWITCHER -->
+<div class="view-switch">
+  <div class="view-switch__inner">
+    <span class="view-switch__label">Maquette · Vue</span>
+    <button class="view-switch__btn is-active" data-view="parent">Dashboard parent</button>
+    <button class="view-switch__btn" data-view="enfant">Dashboard enfant</button>
+    <button class="view-switch__btn" data-view="parcours">Onglet Parcours</button>
+    <button class="view-switch__btn" data-view="documents">Onglet Documents</button>
+    <button class="view-switch__btn" data-view="auth">Création de compte &amp; liaison</button>
+    <div class="view-switch__spacer"></div>
+    <span class="view-switch__note">v3 · allégé, 1 focus par scroll</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- VIEW : PARENT                                                -->
+<!-- ============================================================ -->
+<div class="view is-active" id="view-parent">
+
+  <header class="app-header">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+        <span class="app-header__sep"></span>
+
+        <div class="child-switch">
+          <button class="child-switch__btn" id="cs-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer d'enfant">
+            <span class="child-switch__avatar">L</span>
+            <span class="child-switch__name">Louise</span>
+            <span class="child-switch__chev">▾</span>
+          </button>
+          <div class="dropdown" id="cs-drop">
+            <div class="dropdown__item is-current">
+              <span class="child-switch__avatar">L</span>
+              <div><strong>Louise</strong><small>1ʳᵉ générale · Carnot · synchronisé</small></div>
+            </div>
+            <div class="dropdown__item">
+              <span class="child-switch__avatar" style="background: linear-gradient(135deg,#487AFF,#1320CE)">T</span>
+              <div><strong>Tom</strong><small>Terminale · Henri-IV · synchronisé</small></div>
+            </div>
+            <div class="dropdown__sep"></div>
+            <div class="dropdown__item" style="color: var(--c-blue-deep); font-weight: 600;">+ Ajouter un enfant</div>
+          </div>
+        </div>
+
+        <nav class="nav" style="margin-left: 10px;" aria-label="Navigation principale">
+          <a href="#" class="is-active" aria-current="page" data-go="parent">Tableau de bord</a>
+          <a href="#" data-go="parcours">Parcours</a>
+          <a href="#" data-go="documents">Documents</a>
+          <a href="#">Ressources</a>
+        </nav>
+      </div>
+      <div class="app-header__right">
+        <button class="icon-btn" type="button" aria-label="Notifications"><svg aria-hidden="true"><use href="#icon-bell"/></svg></button>
+        <button class="icon-btn" type="button" data-help="true" aria-label="Aide"><svg aria-hidden="true"><use href="#icon-help"/></svg></button>
+        <button class="avatar" type="button" aria-label="Compte de Julie Bernard">JB</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" style="padding-bottom: 40px;">
+
+    <!-- GREET sobre -->
+    <section class="greet">
+      <h1>Bonjour Julie.</h1>
+      <p>Louise est à mi-parcours. Voici ce que vous pouvez faire cette semaine.</p>
+    </section>
+
+    <!-- INFO STRIP -->
+    <div class="info-strip">
+      <span class="info-strip__avatar">L</span>
+      <span class="info-strip__name">Louise · 17 ans</span>
+      <span class="info-strip__sep"></span>
+      <span class="info-strip__item"><small>Classe</small> 1ʳᵉ générale</span>
+      <span class="info-strip__sep"></span>
+      <span class="info-strip__item"><small>Lycée</small> Carnot, Paris 17</span>
+      <span class="info-strip__sep"></span>
+      <span class="info-strip__item"><small>Spé</small> Maths · SVT · NSI</span>
+      <span class="info-strip__sep"></span>
+      <span class="info-strip__item"><small>Filière visée</small> Ingénierie / Santé</span>
+      <a href="#" class="info-strip__edit"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg> Modifier</a>
+    </div>
+
+    <!-- SECTION 1 : RDV push (la seule chose qui compte) -->
+    <div class="rdv-push" style="margin-top: 28px;">
+      <div class="rdv-push__body">
+        <span class="rdv-push__eyebrow"><svg class="icn" aria-hidden="true"><use href="#icon-target"/></svg> L'étape qui débloque tout</span>
+        <h2>Réservez le rendez-vous avec Charles.</h2>
+        <p>30 min en visio. À la fin, le rapport de Louise est généré et vous accédez aux métiers compatibles, formations Parcoursup et plan d'action 12 mois.</p>
+      </div>
+      <div class="rdv-push__cta">
+        <button class="btn btn--accent btn--lg btn--block">Voir les créneaux dispo</button>
+        <small>Prochain : <strong>jeudi 5 juin · 18 h</strong></small>
+      </div>
+    </div>
+
+    <!-- (ancien gros .report-teaser supprimé · doublon CTA avec le RDV push
+         juste au-dessus. Le rapport est désormais une mini-carte verrouillée
+         dans .gauges-mini ci-dessous, et le détail/exemple vit dans /rapport.) -->
+
+    <!-- GAUGES : motiver les actions -->
+    <div class="gauges">
+
+      <!-- Jauge globale -->
+      <div class="gauge-global">
+        <span class="eyebrow"><span class="dot"></span>Préparation du dossier de Louise</span>
+        <div class="gauge-global__head">
+          <span class="gauge-global__pct">48<small>%</small></span>
+          <div class="gauge-global__label">
+            <strong>11 actions sur 23</strong>
+            <small>Plus le dossier est complet, plus le rapport est précis</small>
+          </div>
+        </div>
+        <div class="gauge-global__bar"><div class="gauge-global__fill" style="width: 48%;"></div></div>
+      </div>
+
+      <!-- 3 mini-jauges -->
+      <div class="gauges-mini">
+
+        <a href="#" data-go="documents" class="gauge-mini">
+          <div class="gauge-mini__head">
+            <div class="gauge-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+            <span class="gauge-mini__count">5<small>/8</small></span>
+          </div>
+          <h4>Documents uploadés</h4>
+          <div class="gauge-mini__bar"><div class="gauge-mini__fill gauge-mini__fill--blue" style="width: 62%;"></div></div>
+          <div class="gauge-mini__nudge"><span>+ 3 documents manquants</span><span class="gauge-mini__nudge-arrow">→</span></div>
+        </a>
+
+        <a href="#" data-go="parcours" class="gauge-mini">
+          <div class="gauge-mini__head">
+            <div class="gauge-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-flask"/></svg></div>
+            <span class="gauge-mini__count">3<small>/11</small></span>
+          </div>
+          <h4>Tests passés (vous ou Louise)</h4>
+          <div class="gauge-mini__bar"><div class="gauge-mini__fill gauge-mini__fill--orange" style="width: 27%;"></div></div>
+          <div class="gauge-mini__nudge"><span>1 comparable · suivant : Valeurs au travail</span><span class="gauge-mini__nudge-arrow">→</span></div>
+        </a>
+
+        <a href="#" data-go="parcours" data-role="enfant" class="gauge-mini">
+          <div class="gauge-mini__head">
+            <div class="gauge-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-cap"/></svg></div>
+            <span class="gauge-mini__count">4<small>/7</small></span>
+          </div>
+          <h4>Parcours d'orientation de Louise</h4>
+          <div class="gauge-mini__bar"><div class="gauge-mini__fill gauge-mini__fill--gradient" style="width: 57%;"></div></div>
+          <div class="gauge-mini__nudge"><span>Étape : test "Valeurs au travail"</span><span class="gauge-mini__nudge-arrow">→</span></div>
+        </a>
+
+        <a href="#" data-go="rapport" class="gauge-mini gauge-mini--locked" aria-disabled="true" title="Verrouillé · débloqué après le RDV avec Charles">
+          <div class="gauge-mini__head">
+            <div class="gauge-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+            <span class="gauge-mini__count"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </div>
+          <h4>Rapport d'orientation de Louise</h4>
+          <div class="gauge-mini__bar"><div class="gauge-mini__fill gauge-mini__fill--gradient" style="width: 0%;"></div></div>
+          <div class="gauge-mini__nudge"><span>Débloqué après le RDV avec Charles</span><span class="gauge-mini__nudge-arrow">→</span></div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- SECTION 2 : Article + Test de la semaine (2 colonnes) -->
+    <section class="section">
+      <div class="section__head">
+        <span class="eyebrow"><span class="dot"></span>Cette semaine sur Proxxie</span>
+        <h2>L'article et le test à passer · semaine 22</h2>
+      </div>
+      <div class="weekly-grid">
+
+        <div class="article-row">
+          <div class="article-row__body">
+            <span class="article-row__tag"><svg class="icn" aria-hidden="true"><use href="#icon-news"/></svg> Article · Guide de l'orientation</span>
+            <h3>Spécialités en première : 3 erreurs que les parents font (et comment les éviter)</h3>
+            <p>Le bon arbitrage entre Maths, SVT, NSI dépend moins du métier visé que de la cohérence post-bac. Ce qu'il faut regarder avant le 15 juin.</p>
+            <div class="article-row__foot">
+              <button class="btn btn--secondary btn--small">Lire l'article →</button>
+              <span class="article-row__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 6 min</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-row article-row--test">
+          <div class="article-row__body">
+            <span class="article-row__tag"><svg class="icn" aria-hidden="true"><use href="#icon-flask"/></svg> Test de la semaine · pour tous</span>
+            <h3>RIASEC · découvrez vos 6 grands intérêts professionnels</h3>
+            <p>Le test fondateur de Holland · 6 dimensions (Réaliste, Investigateur, Artistique, Social, Entreprenant, Conventionnel). Passez-le vous, faites-le passer à Louise · plus vous croisez les regards, plus le rapport est précis.</p>
+            <div class="article-row__foot">
+              <a href="Proxxie Test RIASEC.html" class="btn btn--accent btn--small">Passer le RIASEC →</a>
+              <span class="article-row__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 8 min</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · OVH Roubaix · données chiffrées</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- VIEW : ENFANT                                                -->
+<!-- ============================================================ -->
+<div class="view" id="view-enfant">
+
+  <header class="app-header">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+        <span class="app-header__sep"></span>
+        <nav class="nav" aria-label="Navigation principale">
+          <a href="#" class="is-active" aria-current="page" data-go="enfant">Tableau de bord</a>
+          <a href="#" data-go="parcours" data-role="enfant">Parcours</a>
+          <a href="#">Documents</a>
+          <a href="#">Ressources</a>
+        </nav>
+      </div>
+      <div class="app-header__right">
+        <span class="xp-pill"><span class="xp-pill__lvl">3</span> 480 XP</span>
+        <button class="icon-btn" type="button" aria-label="Notifications"><svg aria-hidden="true"><use href="#icon-bell"/></svg></button>
+        <button class="avatar" type="button" style="background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));" aria-label="Compte de Louise Bernard">L</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" style="padding-bottom: 40px;">
+
+    <!-- GREET sobre -->
+    <section class="greet">
+      <h1>Salut Louise.</h1>
+      <p>Tu en es à 4 étapes sur 7. Une action te suffit cette semaine pour avancer.</p>
+    </section>
+
+    <!-- SECTION 1 : Reprendre le parcours -->
+    <section class="section">
+      <div class="section__head">
+        <span class="eyebrow eyebrow--accent"><span class="dot"></span>Reprends là où tu t'es arrêtée</span>
+        <h2>Ton prochain test : Valeurs au travail</h2>
+      </div>
+      <div class="focus-card focus-card--enfant">
+        <div class="focus-card__icon"><svg class="icn" aria-hidden="true"><use href="#icon-scales"/></svg></div>
+        <div class="focus-card__body">
+          <div class="focus-card__meta">
+            <span class="focus-card__type" style="color: var(--c-blue-deep);">Test suggéré · 8 min · +80 XP</span>
+            <span class="chip">5/12 tests passés</span>
+          </div>
+          <h2>Découvre ce qui compte vraiment pour toi</h2>
+          <p>Ce test creuse tes valeurs au travail (autonomie, impact, sécurité…). Tes réponses pèseront sur les métiers qu'on te proposera à la fin du parcours.</p>
+        </div>
+        <div class="focus-card__actions">
+          <button class="btn btn--accent btn--lg">Commencer le test</button>
+          <button class="btn btn--ghost btn--small">Plus tard</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 : Article -->
+    <section class="section">
+      <div class="section__head">
+        <span class="eyebrow"><span class="dot"></span>Pour toi cette semaine</span>
+        <h2>Choisir tes spés en première</h2>
+      </div>
+      <div class="article-row">
+        <div class="article-row__cover">
+          <svg width="200" height="160" viewBox="0 0 200 160" fill="none">
+            <circle cx="160" cy="40" r="44" fill="#FD6936" opacity=".5"/>
+            <path d="M30 130 L80 70 L120 110 L180 50" stroke="#1320CE" stroke-width="6" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="article-row__body">
+          <span class="article-row__tag">Guide · 1ʳᵉ générale</span>
+          <h3>La méthode des 3 cercles pour choisir tes spécialités</h3>
+          <p>Ce que tu kiffes, ce dans quoi tu es bonne, ce qui ouvre des portes. Trois cercles à croiser, avec un exemple concret.</p>
+          <div class="article-row__foot">
+            <button class="btn btn--secondary btn--small">Lire l'article →</button>
+            <span class="article-row__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 5 min · +20 XP</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 : Avancement -->
+    <section class="section">
+      <div class="section__head">
+        <span class="eyebrow"><span class="dot"></span>Ton parcours</span>
+        <h2>4 étapes sur 7 complétées</h2>
+      </div>
+      <div class="progress-strip">
+        <div class="progress-strip__head">
+          <div class="progress-strip__title">
+            <span class="progress-strip__pct">57<small style="font-size: 14px; color: var(--c-muted);">%</small></span>
+            <div>
+              <h3>Tu es à mi-chemin</h3>
+              <small>Plus que 3 étapes pour débloquer ton rapport et tes métiers</small>
+            </div>
+          </div>
+          <a href="#" class="btn btn--secondary btn--small">Voir le parcours complet →</a>
+        </div>
+        <div class="steps-mini">
+          <div class="step-mini step-mini--done"><div class="step-mini__num">1</div><div class="step-mini__label">Bulletins</div></div>
+          <div class="step-mini step-mini--done"><div class="step-mini__num">2</div><div class="step-mini__label">Contexte</div></div>
+          <div class="step-mini step-mini--done"><div class="step-mini__num">3</div><div class="step-mini__label">Big Five</div></div>
+          <div class="step-mini step-mini--done"><div class="step-mini__num">4</div><div class="step-mini__label">Intérêts</div></div>
+          <div class="step-mini step-mini--current"><div class="step-mini__num">5</div><div class="step-mini__label">Valeurs</div></div>
+          <div class="step-mini step-mini--locked"><div class="step-mini__num">6</div><div class="step-mini__label">RDV Charles</div></div>
+          <div class="step-mini step-mini--locked"><div class="step-mini__num">7</div><div class="step-mini__label">Rapport</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 : Docs light -->
+    <section class="section">
+      <div class="docs-light">
+        <div class="docs-light__head">
+          <div>
+            <span class="eyebrow"><span class="dot"></span>Tes documents</span>
+            <h3 style="margin-top: 6px;">Tu choisis ce que tu partages</h3>
+          </div>
+          <a href="#" class="btn btn--ghost btn--small">Tout voir →</a>
+        </div>
+
+        <div class="dropzone-mini">
+          <div class="dropzone-mini__icon">⬆</div>
+          <div class="dropzone-mini__text">
+            <strong>Ajoute un document</strong>
+            <span>Bulletin, attestation, lettre · PDF/JPG/PNG · 20 Mo max</span>
+          </div>
+          <button class="btn btn--secondary btn--small">Parcourir</button>
+        </div>
+
+        <div class="docs-recent">
+          <a class="docs-recent__item"><span class="docs-recent__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></span> Bulletin T2 (par ta mère)</a>
+          <a class="docs-recent__item"><span class="docs-recent__icon"><svg class="icn" aria-hidden="true"><use href="#icon-image"/></svg></span> Cambridge B2 First</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 : Outcomes mini -->
+    <section class="section">
+      <div class="section__head">
+        <span class="eyebrow"><span class="dot"></span>Ce que tu débloqueras</span>
+        <h2>À la fin de ton parcours</h2>
+      </div>
+      <div class="outcomes-mini">
+        <div class="outcome-mini">
+          <div class="outcome-mini__head"><div class="outcome-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-target"/></svg></div><span class="chip chip--neutral"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Bientôt</span></div>
+          <h4>Tes métiers</h4>
+          <p>Une sélection de métiers calculée à partir de ton profil et de tes tests.</p>
+          <a href="#" class="outcome-mini__cta">Continuer le parcours →</a>
+        </div>
+        <div class="outcome-mini">
+          <div class="outcome-mini__head"><div class="outcome-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-cap"/></svg></div><span class="chip chip--neutral"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Bientôt</span></div>
+          <h4>Tes écoles &amp; formations</h4>
+          <p>Compatibilité Parcoursup et débouchés réels par formation.</p>
+          <a href="#" class="outcome-mini__cta">Continuer le parcours →</a>
+        </div>
+        <div class="outcome-mini">
+          <div class="outcome-mini__head"><div class="outcome-mini__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div><span class="chip chip--warn">Exemple</span></div>
+          <h4>Ton rapport</h4>
+          <p>30 pages personnalisées : ton profil, tes métiers, ton plan d'action.</p>
+          <a href="#" class="outcome-mini__cta">Voir un exemple →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · OVH Roubaix · données chiffrées</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- VIEW : PARCOURS                                              -->
+<!-- ============================================================ -->
+<div class="view parcours-view" data-role="parent" id="view-parcours">
+
+  <header class="app-header">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+        <span class="app-header__sep"></span>
+
+        <div class="child-switch only-parent">
+          <button class="child-switch__btn" type="button" aria-haspopup="listbox" aria-label="Changer d'enfant">
+            <span class="child-switch__avatar">L</span>
+            <span class="child-switch__name">Louise</span>
+            <span class="child-switch__chev">▾</span>
+          </button>
+        </div>
+
+        <nav class="nav" style="margin-left: 10px;" aria-label="Navigation principale">
+          <a href="#" data-go="dash-from-parcours">Tableau de bord</a>
+          <a href="#" class="is-active" aria-current="page">Parcours</a>
+          <a href="#" data-go="documents">Documents</a>
+          <a href="#">Ressources</a>
+        </nav>
+      </div>
+      <div class="app-header__right">
+        <span class="xp-pill only-enfant"><span class="xp-pill__lvl">3</span> 480 XP</span>
+        <button class="icon-btn" type="button" aria-label="Notifications"><svg aria-hidden="true"><use href="#icon-bell"/></svg></button>
+        <button class="icon-btn only-parent" type="button" data-help="true" aria-label="Aide"><svg aria-hidden="true"><use href="#icon-help"/></svg></button>
+        <button class="avatar only-parent" type="button" aria-label="Compte de Julie Bernard">JB</button>
+        <button class="avatar only-enfant" type="button" style="background: linear-gradient(135deg, var(--c-orange), var(--c-yellow));" aria-label="Compte de Louise Bernard">L</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell parcours-view" data-role="parent" id="parcours-view-wrap" style="padding-bottom: 60px;">
+
+    <!-- HERO : progression + role toggle -->
+    <section class="parc-hero">
+      <div class="parc-hero__main">
+        <span class="eyebrow">
+          <span class="dot"></span>
+          <span class="only-parent">Suivi · Louise Bernard</span>
+          <span class="only-enfant">Mon parcours d'orientation</span>
+        </span>
+        <h1 class="only-parent">Louise est à mi-parcours. <span class="parc-hero__highlight">3 façons</span> de la faire avancer.</h1>
+        <h1 class="only-enfant">Salut Louise · <span class="parc-hero__highlight">une activité t'attend.</span></h1>
+        <p class="only-parent">Téléversez des documents, lisez l'article de la semaine et passez les tests à sa place. Charles intervient à l'étape&nbsp;5.</p>
+        <p class="only-enfant">Tu es à l'étape&nbsp;4 sur&nbsp;7. Continue à ton rythme · environ 8&nbsp;min par activité.</p>
+
+        <!-- Role toggle (review tool, à retirer en prod) -->
+        <div class="role-toggle" role="tablist" aria-label="Basculer parent/enfant">
+          <button type="button" data-role="parent" class="is-active">Vue parent</button>
+          <button type="button" data-role="enfant">Vue enfant</button>
+        </div>
+      </div>
+
+      <aside class="parc-hero__progress">
+        <div class="parc-ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="parcRingGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#F5EB3F"/>
+                <stop offset="100%" stop-color="#FD6936"/>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#parcRingGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="140.5" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="parc-ring__center">
+            <strong>57<small>%</small></strong>
+            <span>4 / 7 étapes</span>
+          </div>
+        </div>
+
+        <div class="parc-weekly">
+          <span class="parc-weekly__label">
+            <span class="only-parent">Vos actions cette semaine</span>
+            <span class="only-enfant">Cette semaine</span>
+          </span>
+          <strong>2<em> / 3</em></strong>
+          <span class="parc-weekly__sub">activités</span>
+          <div class="parc-weekly__dots">
+            <span class="is-done"></span>
+            <span class="is-done"></span>
+            <span></span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ============ PARENT : RDV strip + 3 missions + mirror ============ -->
+    <div class="only-parent">
+
+      <!-- RDV strip : reminder of next milestone -->
+      <div class="parc-rdv-strip">
+        <div class="parc-rdv-strip__av">C</div>
+        <div class="parc-rdv-strip__body">
+          <span class="parc-rdv-strip__kicker">Prochain jalon · étape 5</span>
+          <h3>RDV avec Charles · jeudi 5 juin · 18 h</h3>
+          <p>Il manque <strong>1 test</strong> à Louise pour débloquer ce créneau. Vous pouvez le passer pour elle.</p>
+        </div>
+        <button class="btn btn--accent btn--small">Voir le test →</button>
+      </div>
+
+      <!-- 3 MISSIONS -->
+      <div class="section">
+        <div class="section__head">
+          <span class="eyebrow"><span class="dot"></span>Vos missions cette semaine</span>
+          <h2>3 façons de l'accompagner</h2>
+        </div>
+
+        <div class="parc-missions">
+
+          <!-- MISSION 1 : Documents -->
+          <article class="parc-mission parc-mission--docs">
+            <header>
+              <span class="parc-mission__num">1</span>
+              <span class="chip">2 / 4 fournis</span>
+            </header>
+            <h3>Téléverser les documents</h3>
+            <p>Bulletins, rapport de stage, attestations. Plus Charles en a, plus le rapport de Louise est précis.</p>
+
+            <ul class="parc-docs">
+              <li class="parc-docs__item is-done">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></span>
+                <div><strong>Bulletins scolaires</strong><small>3 trimestres · ajoutés il y a 3 sem.</small></div>
+                <span class="chip chip--ok">● Fait</span>
+              </li>
+              <li class="parc-docs__item is-done">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg></span>
+                <div><strong>Questionnaire contexte familial</strong><small>14 questions · 17 min</small></div>
+                <span class="chip chip--ok">● Fait</span>
+              </li>
+              <li class="parc-docs__item is-todo">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-clip"/></svg></span>
+                <div><strong>Rapport de stage 3<sup>e</sup></strong><small>Recommandé · PDF, photo ou texte libre</small></div>
+                <button class="parc-docs__add">+ Ajouter</button>
+              </li>
+              <li class="parc-docs__item is-optional">
+                <span class="parc-docs__icon"><svg class="icn" aria-hidden="true"><use href="#icon-clip"/></svg></span>
+                <div><strong>Attestation langue / engagement</strong><small>Optionnel · enrichit le rapport</small></div>
+                <button class="parc-docs__add">+ Ajouter</button>
+              </li>
+            </ul>
+
+            <div class="parc-drop">
+              <span>Glissez-déposez ici, ou</span>
+              <button class="btn btn--secondary btn--small">Choisir un fichier</button>
+            </div>
+          </article>
+
+          <!-- MISSION 2 : Article de la semaine -->
+          <article class="parc-mission parc-mission--article">
+            <header>
+              <span class="parc-mission__num">2</span>
+              <span class="chip chip--warn">Nouveau · lundi</span>
+            </header>
+            <div class="parc-article__cover">
+              <span class="parc-article__tag">Lecture · 7 min</span>
+            </div>
+            <div class="parc-article__body">
+              <small>Semaine 23 · ado &amp; orientation</small>
+              <h3>Parler d'orientation sans braquer son ado.</h3>
+              <p>5 phrases qui marchent (et 3 qui font claquer la porte). 12 ans de pratique avec des familles.</p>
+              <button class="btn btn--primary btn--small">Lire l'article →</button>
+            </div>
+            <footer class="parc-article__foot">
+              <span><svg class="icn" aria-hidden="true"><use href="#icon-inbox"/></svg> Reçu chaque lundi</span>
+              <a href="#">Archives →</a>
+            </footer>
+          </article>
+
+          <!-- MISSION 3 : Tests à sa place -->
+          <article class="parc-mission parc-mission--tests">
+            <header>
+              <span class="parc-mission__num">3</span>
+              <span class="chip chip--warn">2 / 8 faits</span>
+            </header>
+            <h3>Passer des tests à sa place</h3>
+            <p>Jusqu'à 8 tests sont passables par vous. Vos réponses restent écrasables si Louise refait le test.</p>
+
+            <div class="parc-test">
+              <span class="parc-test__star"><svg class="icn" aria-hidden="true"><use href="#icon-star"/></svg></span>
+              <div class="parc-test__body">
+                <small>Suggéré · 8 min</small>
+                <strong>Valeurs au travail</strong>
+                <span class="muted">Débloque le RDV avec Charles.</span>
+              </div>
+              <button class="btn btn--accent btn--small">Commencer</button>
+            </div>
+
+            <ul class="parc-tests-list">
+              <li><span>Style d'apprentissage <small>· 8 min</small></span> <span class="chip chip--ok">● Fait</span></li>
+              <li><span>Préférences relationnelles <small>· 8 min</small></span> <span class="chip chip--ok">● Fait</span></li>
+              <li><span>Raisonnement abstrait <small>· 10 min</small></span> <a href="#">Passer →</a></li>
+              <li><span>Tolérance à l'ambiguïté <small>· 5 min</small></span> <a href="#">Passer →</a></li>
+              <li class="parc-tests-list__more"><a href="#">+ 4 autres tests dispo →</a></li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- MIRROR : suivi du parcours -->
+      <div class="section">
+        <div class="section__head">
+          <span class="eyebrow"><span class="dot"></span>Suivi du parcours</span>
+          <h2>Où en est Louise</h2>
+          <p>4 étapes sur 7. Charles intervient à l'étape 5, après les tests complémentaires.</p>
+        </div>
+
+        <div class="parc-mirror">
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div>
+              <strong>Bulletins &amp; contexte familial</strong>
+              <small>Fait · sem. 1 · 2 documents ajoutés</small>
+            </div>
+            <span class="muted">il y a 3 sem.</span>
+          </div>
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div>
+              <strong>Test Big Five (OCEAN-X)</strong>
+              <small>Passé par Louise · trait dominant : Ouverture</small>
+            </div>
+            <span class="muted">15 mars</span>
+          </div>
+          <div class="parc-mirror__step is-done">
+            <span class="parc-mirror__dot">✓</span>
+            <div>
+              <strong>Tests d'autonomie · RIASEC + relationnel</strong>
+              <small>2 / 3 passés par Louise · 1 par vous</small>
+            </div>
+            <span class="muted">il y a 3 j</span>
+          </div>
+          <div class="parc-mirror__step is-current">
+            <span class="parc-mirror__dot">4</span>
+            <div>
+              <strong>Tests complémentaires · vous êtes ici</strong>
+              <small>3 / 11 passés · il faut 1 de plus pour débloquer le RDV</small>
+            </div>
+            <span class="parc-mirror__here">en cours</span>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">5</span>
+            <div>
+              <strong>RDV avec Charles · 45 min visio</strong>
+              <small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> 1 test à passer pour débloquer · créneau réservé jeudi 5 juin</small>
+            </div>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">6</span>
+            <div>
+              <strong>Rapport final · 30 pages PDF</strong>
+              <small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Généré automatiquement après le RDV</small>
+            </div>
+          </div>
+          <div class="parc-mirror__step is-locked">
+            <span class="parc-mirror__dot">7</span>
+            <div>
+              <strong>Stratégie Parcoursup</strong>
+              <small><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Après le rapport · liste de vœux argumentée + brouillons de lettres</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ ENFANT : NOW card + phased timeline ============ -->
+    <!-- NOW CARD : the activity to do right now -->
+    <section class="parc-now only-enfant">
+      <span class="parc-now__halo"></span>
+      <span class="parc-now__halo parc-now__halo--2"></span>
+      <div class="parc-now__body">
+        <span class="parc-now__kicker"><svg class="icn" aria-hidden="true"><use href="#icon-bolt"/></svg> À faire maintenant</span>
+        <h2>Test des valeurs au travail</h2>
+        <p>10 questions · 8 min. Ce que tu cherches vraiment dans un futur métier : impact, autonomie, sécurité… Tes réponses guident les pistes qu'on te proposera.</p>
+        <div class="parc-now__meta">
+          <span><strong>+80 XP</strong></span>
+          <span><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 8 min</span>
+          <span><svg class="icn" aria-hidden="true"><use href="#icon-lock-open"/></svg> Débloque le RDV</span>
+        </div>
+      </div>
+      <div class="parc-now__cta">
+        <button class="btn btn--accent btn--lg btn--block">Commencer →</button>
+        <small>Mets en pause à tout moment, on garde tes réponses.</small>
+      </div>
+    </section>
+
+    <!-- PHASES (vue enfant uniquement) -->
+    <section class="parc-phases only-enfant">
+
+      <!-- PHASE 1 : DONE (collapsed by default) -->
+      <article class="parc-phase parc-phase--done is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill">✓</span>
+          <div>
+            <small>Phase 1 · 3 activités</small>
+            <h3>Avant de te lancer</h3>
+          </div>
+          <span class="parc-phase__meta">Complété il y a 3 sem.</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Bulletins scolaires</span>
+            <span class="parc-module__date">22 déc.</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-mirror"/></svg></span>
+            <span class="parc-module__name">Contexte familial &amp; intentions</span>
+            <span class="parc-module__date">26 déc.</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-star"/></svg></span>
+            <span class="parc-module__name">Test Big Five <em>· obligatoire · OCEAN-X</em></span>
+            <span class="parc-module__date">15 mars</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- PHASE 2 : CURRENT (open) -->
+      <article class="parc-phase parc-phase--current">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill parc-phase__pill--current">4</span>
+          <div>
+            <small>Phase 2 · 3 / 11 activités</small>
+            <h3>Affiner ton profil</h3>
+          </div>
+          <span class="parc-phase__meta">En cours · +150 XP gagnés</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-target"/></svg></span>
+            <span class="parc-module__name">Centres d'intérêt RIASEC</span>
+            <span class="parc-module__date">il y a 12 j</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--done" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-handshake"/></svg></span>
+            <span class="parc-module__name">Préférences relationnelles</span>
+            <span class="parc-module__date">il y a 3 j</span>
+            <span class="parc-module__check">✓</span>
+          </a>
+          <a class="parc-module parc-module--parent" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-chart"/></svg></span>
+            <span class="parc-module__name">Style d'apprentissage <em>· passé par maman</em></span>
+            <span class="parc-module__date">à valider</span>
+            <span class="parc-module__check parc-module__check--parent">M</span>
+          </a>
+
+          <!-- The CURRENT activity, mirrored from NOW card -->
+          <a class="parc-module parc-module--current" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-scales"/></svg></span>
+            <span class="parc-module__name">Valeurs au travail <em>· à faire maintenant</em></span>
+            <span class="parc-module__date">8 min</span>
+            <span class="parc-module__cta">Commencer →</span>
+          </a>
+
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-puzzle"/></svg></span>
+            <span class="parc-module__name">Raisonnement abstrait</span>
+            <span class="parc-module__date">10 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Aptitudes verbales</span>
+            <span class="parc-module__date">7 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-sprout"/></svg></span>
+            <span class="parc-module__name">Motivation intrinsèque</span>
+            <span class="parc-module__date">5 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-hourglass"/></svg></span>
+            <span class="parc-module__name">Rapport au temps</span>
+            <span class="parc-module__date">4 min</span>
+            <span class="parc-module__lock">à débloquer</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- COACH GATE between phases -->
+      <article class="parc-gate">
+        <div class="parc-gate__av">C</div>
+        <div class="parc-gate__body">
+          <span class="parc-gate__kicker">Phase 3 · gate Charles</span>
+          <h3>Rendez-vous avec Charles · 45 min visio</h3>
+          <p>Plus que <strong>1 test</strong> avant de pouvoir réserver. Charles arrive avec ton profil pré-lu et vous explorez les pistes ensemble.</p>
+        </div>
+        <span class="parc-gate__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> 1 test à passer</span>
+      </article>
+
+      <!-- PHASE 4 : LOCKED -->
+      <article class="parc-phase parc-phase--locked is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          <div>
+            <small>Phase 4 · livrable</small>
+            <h3>Ton rapport d'orientation</h3>
+          </div>
+          <span class="parc-phase__meta">Verrouillé · après le RDV</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></span>
+            <span class="parc-module__name">Rapport final · 30 pages PDF</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-cap"/></svg></span>
+            <span class="parc-module__name">Métiers compatibles &amp; débouchés</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+        </div>
+      </article>
+
+      <!-- PHASE 5 : LOCKED -->
+      <article class="parc-phase parc-phase--locked is-collapsed">
+        <header class="parc-phase__head">
+          <span class="parc-phase__pill"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          <div>
+            <small>Phase 5 · mise en action</small>
+            <h3>Stratégie Parcoursup</h3>
+          </div>
+          <span class="parc-phase__meta">Verrouillé · après le rapport</span>
+          <span class="parc-phase__chev">▾</span>
+        </header>
+        <div class="parc-phase__body">
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg></span>
+            <span class="parc-module__name">Liste de vœux argumentée</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-mail"/></svg></span>
+            <span class="parc-module__name">Brouillons de lettres de motivation</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+          <a class="parc-module parc-module--locked" href="#">
+            <span class="parc-module__icon"><svg class="icn" aria-hidden="true"><use href="#icon-calendar"/></svg></span>
+            <span class="parc-module__name">Calendrier des deadlines</span>
+            <span class="parc-module__date">—</span>
+            <span class="parc-module__lock"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></span>
+          </a>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Old timeline kept as fallback (hidden in v3) -->
+    <div class="timeline only-enfant" hidden>
+
+      <!-- STEP 1 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--done">✓</div>
+        <div class="step-card step-card--done">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 1 · Fondations</small>
+              <h3>Bulletins scolaires</h3>
+            </div>
+            <span class="step-card__status step-card__status--done">● Complété</span>
+          </div>
+          <div class="step-summary">
+            <div class="step-summary__item"><small>Trimestres déposés</small>3 / 3</div>
+            <div class="step-summary__item"><small>Catégorisation</small>Automatique</div>
+            <div class="step-summary__item"><small>Partage Charles</small>Oui</div>
+            <div class="step-summary__item"><small>Dernière action</small>Il y a 3 sem.</div>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--ghost btn--small">Voir les documents →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--done">✓</div>
+        <div class="step-card step-card--done">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 2 · Fondations</small>
+              <h3>Contexte familial &amp; intentions</h3>
+            </div>
+            <span class="step-card__status step-card__status--done">● Complété</span>
+          </div>
+          <div class="step-summary">
+            <div class="step-summary__item"><small>Questions répondues</small>14 / 14</div>
+            <div class="step-summary__item"><small>Durée réelle</small>17 min</div>
+            <div class="step-summary__item"><small>Profil détecté</small>Curieuse / Méthodique</div>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--ghost btn--small only-parent">Modifier mes réponses</button>
+            <button class="btn btn--ghost btn--small only-enfant">Modifier mes réponses</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--done">✓</div>
+        <div class="step-card step-card--done">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 3 · Profil de personnalité</small>
+              <h3>Test Big Five (OCEAN-X) <span class="chip chip--neutral" style="margin-left: 6px;">Obligatoire</span></h3>
+            </div>
+            <span class="step-card__status step-card__status--done">● Complété · +120 XP</span>
+          </div>
+          <div class="step-summary">
+            <div class="step-summary__item"><small>Trait dominant</small>Ouverture (88 %)</div>
+            <div class="step-summary__item"><small>Second trait</small>Agréabilité (81 %)</div>
+            <div class="step-summary__item"><small>Passé par</small><span class="only-parent">Louise (15 mars)</span><span class="only-enfant">Toi (15 mars)</span></div>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--secondary btn--small">Voir le profil détaillé</button>
+            <button class="btn btn--ghost btn--small">Refaire le test (écrasera les réponses)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 : CURRENT, expanded with the 11 tests grid -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--current">4</div>
+        <div class="step-card step-card--current">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 4 · Profil enrichi · en cours</small>
+              <h3 class="only-parent">11 tests complémentaires · plus vous en passez, plus le rapport est précis</h3>
+              <h3 class="only-enfant">11 tests complémentaires · plus tu en passes, plus ton rapport est précis</h3>
+            </div>
+            <span class="step-card__status step-card__status--current">● 3 / 11 passés</span>
+          </div>
+
+          <div class="step-card__body">
+            <p class="only-parent">Chaque test ajoute une couche au profil de Louise. Le rapport final s'affine à mesure que les réponses arrivent. <strong>3 tests suffisent pour débloquer le RDV avec Charles ; au-delà, c'est du bonus de précision.</strong></p>
+            <p class="only-enfant">Chaque test ajoute une couche à ton profil. À 3 tests, tu débloques le RDV avec Charles. Au-delà, ton rapport gagne en précision (et toi en XP).</p>
+          </div>
+
+          <!-- Parent-only banner -->
+          <div class="step-banner only-parent">
+            <div class="step-banner__icon"><svg class="icn" aria-hidden="true"><use href="#icon-user"/></svg></div>
+            <div class="step-banner__text">
+              <strong>Vous pouvez passer jusqu'à 8 tests à la place de Louise</strong> sans rendez-vous. Vos réponses sont marquées "saisies par le parent" et restent écrasables quand elle refait le test.
+            </div>
+          </div>
+
+
+          <div class="tests-filters">
+            <button class="filter is-active">Tous <span class="filter--count">11</span></button>
+            <button class="filter">À passer <span class="filter--count">8</span></button>
+            <button class="filter">Passés <span class="filter--count">3</span></button>
+            <button class="filter">Comparables <span class="filter--count">1</span></button>
+            <button class="filter only-parent">Passés par vous <span class="filter--count">2</span></button>
+            <button class="filter only-enfant">Passés par ma mère <span class="filter--count">2</span></button>
+          </div>
+
+          <div class="tests-inline">
+
+            <!-- 2 done -->
+            <div class="test-inline test-inline--done">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-target"/></svg></div><span class="chip chip--ok">● Passé</span></div>
+              <div class="test-inline__title">Centres d'intérêt RIASEC</div>
+              <div class="test-inline__desc">Domaines professionnels (Holland).</div>
+              <div class="test-inline__foot"><span class="test-inline__time">+60 XP</span><span class="test-inline__cta test-inline__cta--done">Voir →</span></div>
+            </div>
+            <div class="test-inline test-inline--parent">
+              <div class="test-inline__head">
+                <div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-chart"/></svg></div>
+                <span class="chip chip--warn only-parent">● Passé par vous</span>
+                <span class="chip chip--warn only-enfant">● Passé par ta mère</span>
+              </div>
+              <div class="test-inline__title">Style d'apprentissage</div>
+              <div class="test-inline__desc only-parent">Vos réponses peuvent être écrasées par Louise.</div>
+              <div class="test-inline__desc only-enfant">Refais-le pour écraser ses réponses.</div>
+              <div class="test-inline__foot">
+                <span class="test-inline__time">+50 XP</span>
+                <span class="test-inline__cta test-inline__cta--parent only-parent">Voir / écraser →</span>
+                <span class="test-inline__cta test-inline__cta--parent only-enfant">Refaire →</span>
+              </div>
+            </div>
+
+            <!-- Suggested -->
+            <div class="test-inline test-inline--suggested">
+              <span class="test-inline__badge"><svg class="icn" aria-hidden="true"><use href="#icon-star"/></svg> Suggéré</span>
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-scales"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Valeurs au travail</div>
+              <div class="test-inline__desc">Ce qui compte vraiment pour le métier futur.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 8 min · +80 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+
+            <!-- Other tests -->
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-puzzle"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Raisonnement abstrait</div>
+              <div class="test-inline__desc">Matrices logiques, format adaptatif.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 10 min · +70 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-book"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Aptitudes verbales</div>
+              <div class="test-inline__desc">Vocabulaire, compréhension, raisonnement.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 7 min · +60 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-hash"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Raisonnement numérique</div>
+              <div class="test-inline__desc">Logique quantitative.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 9 min · +70 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-sprout"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Motivation intrinsèque</div>
+              <div class="test-inline__desc">Ce qui pousse à l'effort sur la durée.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 5 min · +50 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline test-inline--done">
+              <div class="test-inline__head">
+                <div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-handshake"/></svg></div>
+                <span class="chip chip--ok">● Passé</span>
+              </div>
+              <div class="test-inline__title">Préférences relationnelles</div>
+              <div class="test-inline__desc">Travail seul·e ou en équipe ? Tu as répondu il y a 3 j.</div>
+              <div class="test-inline__foot"><span class="test-inline__time">+ 50 XP gagnés</span><span class="test-inline__cta test-inline__cta--done">Voir mes résultats →</span></div>
+            </div>
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-build"/></svg>️</div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Tolérance à l'ambiguïté</div>
+              <div class="test-inline__desc">Capacité à avancer sans tout savoir.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 5 min · +50 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-hourglass"/></svg></div><span class="chip">À passer</span></div>
+              <div class="test-inline__title">Rapport au temps</div>
+              <div class="test-inline__desc">Planification vs spontanéité.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 4 min · +40 XP</span><span class="test-inline__cta">Passer →</span></div>
+            </div>
+            <div class="test-inline" style="opacity: .55;">
+              <div class="test-inline__head"><div class="test-inline__icon"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg></div><span class="chip chip--neutral">RDV requis</span></div>
+              <div class="test-inline__title">Projection 5 ans</div>
+              <div class="test-inline__desc">Test approfondi, débloqué après le RDV.</div>
+              <div class="test-inline__foot"><span class="test-inline__time"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> 15 min</span><span class="test-inline__cta" style="color: var(--c-muted);">Verrouillé</span></div>
+            </div>
+          </div>
+
+          <div class="step-card__actions">
+            <button class="btn btn--primary only-parent">Faire passer "Valeurs au travail"</button>
+            <button class="btn btn--accent only-enfant">Commencer "Valeurs au travail"</button>
+            <button class="btn btn--ghost btn--small only-parent">Lui rappeler par email</button>
+            <button class="btn btn--ghost btn--small only-enfant">Voir mes XP &amp; badges</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--locked">5</div>
+        <div class="step-card step-card--locked">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 5 · Synthèse humaine</small>
+              <h3>Rendez-vous avec Charles (45 min en visio)</h3>
+            </div>
+            <span class="step-card__status step-card__status--locked"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> 1 test à passer pour débloquer</span>
+          </div>
+          <div class="step-card__body">
+            <p>Charles arrive avec le profil pré-lu. La session sert à challenger les pistes, lever les angles morts, et fixer les axes du rapport. <span class="only-parent">Vous pouvez assister à la session si Louise le souhaite (option à activer 24 h avant).</span><span class="only-enfant">Tu peux inviter ta mère ou rester en tête-à-tête avec Charles.</span></p>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--secondary btn--small">Voir les créneaux disponibles</button>
+            <button class="btn btn--ghost btn--small">Comment se passe une session →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--locked">6</div>
+        <div class="step-card step-card--locked">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 6 · Livrable</small>
+              <h3>Rapport final (30 pages PDF)</h3>
+            </div>
+            <span class="step-card__status step-card__status--locked"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Généré après le RDV</span>
+          </div>
+          <div class="step-card__body">
+            <p>Profil consolidé, métiers compatibles avec score, formations Parcoursup adaptées, plan d'action 12 mois. Le rapport est privé par défaut, partageable sur lien sécurisé expirable.</p>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--secondary btn--small">Voir un rapport exemple (PDF)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step-row">
+        <div class="step-row__num step-row__num--locked">7</div>
+        <div class="step-card step-card--locked">
+          <div class="step-card__head">
+            <div>
+              <small>Étape 7 · Mise en action</small>
+              <h3>Stratégie Parcoursup</h3>
+            </div>
+            <span class="step-card__status step-card__status--locked"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Disponible après le rapport</span>
+          </div>
+          <div class="step-card__body">
+            <p>Liste de vœux argumentée (formation, ville, sélectivité, plan B), brouillons de lettres de motivation à personnaliser, calendrier des deadlines.</p>
+          </div>
+          <div class="step-card__actions">
+            <button class="btn btn--secondary btn--small">Voir un exemple de stratégie</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · OVH Roubaix · données chiffrées</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- VIEW : DOCUMENTS (parent)                                    -->
+<!-- ============================================================ -->
+<div class="view" id="view-documents">
+
+  <header class="app-header">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+        <span class="app-header__sep"></span>
+
+        <div class="child-switch">
+          <button class="child-switch__btn" type="button" aria-haspopup="listbox" aria-label="Changer d'enfant">
+            <span class="child-switch__avatar">L</span>
+            <span class="child-switch__name">Louise</span>
+            <span class="child-switch__chev">▾</span>
+          </button>
+        </div>
+
+        <nav class="nav" style="margin-left: 10px;" aria-label="Navigation principale">
+          <a href="#" data-go="parent">Tableau de bord</a>
+          <a href="#" data-go="parcours">Parcours</a>
+          <a href="#" class="is-active" aria-current="page">Documents</a>
+          <a href="#">Ressources</a>
+        </nav>
+      </div>
+      <div class="app-header__right">
+        <button class="icon-btn" type="button" aria-label="Notifications"><svg aria-hidden="true"><use href="#icon-bell"/></svg></button>
+        <button class="icon-btn" type="button" data-help="true" aria-label="Aide"><svg aria-hidden="true"><use href="#icon-help"/></svg></button>
+        <button class="avatar" type="button" aria-label="Compte de Julie Bernard">JB</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" style="padding-bottom: 60px;">
+
+    <!-- GREET -->
+    <section class="greet">
+      <span class="eyebrow"><span class="dot"></span>Documents · Louise Bernard</span>
+      <h1 style="margin-top: 10px;">Le dossier de Louise.</h1>
+      <p>Tout ce qui concerne son orientation. Vous choisissez ce que vous partagez avec Charles, document par document.</p>
+    </section>
+
+    <!-- DROPZONE PRIMAIRE -->
+    <div class="dropzone-big">
+      <div class="dropzone-big__icon">⬆</div>
+      <h2>Ajouter un document</h2>
+      <p>Glissez un fichier ici, ou cliquez pour parcourir.</p>
+      <p class="dropzone-big__hint">PDF, JPG, PNG, MP3 · 20 Mo max · catégorisation automatique · chiffré (OVH Roubaix)</p>
+      <button class="btn btn--primary">Parcourir mes fichiers</button>
+    </div>
+
+    <!-- HINT : que faut-il ajouter ensuite -->
+    <div class="docs-hint">
+      <span class="docs-hint__icon"><svg class="icn" aria-hidden="true"><use href="#icon-bulb"/></svg></span>
+      <div>
+        <strong>Documents qui aideraient Charles à préparer le RDV :</strong> emploi du temps de Louise, projets personnels (clubs, associations, sport), attestations linguistiques, recommandations de profs. <a href="#">Voir tous les types →</a>
+      </div>
+    </div>
+
+    <!-- META + FILTRES -->
+    <div class="docs-meta">
+      <div class="docs-meta__stats">
+        <strong>8 documents</strong> <span class="muted">· 5 partagés avec Charles · 3 privés</span>
+      </div>
+      <div class="docs-meta__filters">
+        <button class="filter is-active">Tous <span class="filter--count">8</span></button>
+        <button class="filter">Bulletins <span class="filter--count">3</span></button>
+        <button class="filter">Lettres &amp; motivations <span class="filter--count">1</span></button>
+        <button class="filter">Attestations <span class="filter--count">2</span></button>
+        <button class="filter">Projets <span class="filter--count">1</span></button>
+        <button class="filter">Autres <span class="filter--count">1</span></button>
+      </div>
+    </div>
+
+    <!-- TABLE DES DOCUMENTS -->
+    <div class="docs-table">
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--pdf"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Bulletin trimestre 3 — 1ʳᵉ générale.pdf</div>
+          <div class="doc-line__meta">Bulletin · ajouté par vous il y a 4 j</div>
+        </div>
+        <span class="doc-line__share doc-line__share--charles">● Charles</span>
+        <span class="doc-line__size">412 Ko</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--pdf"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Projet personnel — Robotique club.pdf</div>
+          <div class="doc-line__meta">Projet · ajouté par Louise il y a 5 j</div>
+        </div>
+        <span class="doc-line__share doc-line__share--charles">● Charles</span>
+        <span class="doc-line__size">2,1 Mo</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--doc"><svg class="icn" aria-hidden="true"><use href="#icon-edit"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Lettre de motivation — stage labo INSERM.docx</div>
+          <div class="doc-line__meta">Lettre · ajouté par Louise il y a 1 sem.</div>
+        </div>
+        <span class="doc-line__share doc-line__share--private">● Privé</span>
+        <span class="doc-line__size">38 Ko</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--img"><svg class="icn" aria-hidden="true"><use href="#icon-image"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Diplôme Cambridge B2 First.jpg</div>
+          <div class="doc-line__meta">Attestation · ajouté par vous il y a 2 sem.</div>
+        </div>
+        <span class="doc-line__share doc-line__share--charles">● Charles</span>
+        <span class="doc-line__size">1,2 Mo</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--img"><svg class="icn" aria-hidden="true"><use href="#icon-image"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Certificat module Coursera — Machine Learning.png</div>
+          <div class="doc-line__meta">Attestation · ajouté par Louise il y a 2 sem.</div>
+        </div>
+        <span class="doc-line__share doc-line__share--family">● Famille</span>
+        <span class="doc-line__size">680 Ko</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--pdf"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Bulletin trimestre 2 — 1ʳᵉ générale.pdf</div>
+          <div class="doc-line__meta">Bulletin · ajouté par vous il y a 3 sem.</div>
+        </div>
+        <span class="doc-line__share doc-line__share--charles">● Charles</span>
+        <span class="doc-line__size">408 Ko</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--pdf"><svg class="icn" aria-hidden="true"><use href="#icon-file"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Bulletin trimestre 1 — 1ʳᵉ générale.pdf</div>
+          <div class="doc-line__meta">Bulletin · ajouté par vous il y a 3 sem.</div>
+        </div>
+        <span class="doc-line__share doc-line__share--charles">● Charles</span>
+        <span class="doc-line__size">395 Ko</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+      <div class="doc-line">
+        <div class="doc-line__icon doc-line__icon--audio"><svg class="icn" aria-hidden="true"><use href="#icon-mic"/></svg></div>
+        <div class="doc-line__body">
+          <div class="doc-line__title">Évaluation orale anglais — bac blanc.mp3</div>
+          <div class="doc-line__meta">Autre · ajouté par Louise il y a 6 j</div>
+        </div>
+        <span class="doc-line__share doc-line__share--private">● Privé</span>
+        <span class="doc-line__size">4,8 Mo</span>
+        <button class="doc-line__menu" title="Actions">⋯</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · OVH Roubaix · données chiffrées</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- VIEW : AUTH                                                  -->
+<!-- ============================================================ -->
+<div class="view" id="view-auth">
+
+  <header class="app-header" style="background: var(--c-cream-light);">
+    <div class="shell app-header__inner">
+      <div class="app-header__left">
+        <a class="logo" href="#" aria-label="Proxxie · Accueil"><svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo__wordmark">Proxxie</span></a>
+      </div>
+      <div class="app-header__right">
+        <a class="muted" href="#">Déjà un compte ? <strong style="color: var(--c-blue-deep);">Se connecter</strong></a>
+      </div>
+    </div>
+  </header>
+
+  <section class="shell" style="padding-top: 48px;">
+    <div style="text-align: center; max-width: 640px; margin: 0 auto;">
+      <span class="eyebrow" style="justify-content: center;"><span class="dot"></span>Création de compte</span>
+      <h1 style="margin-top: 12px;">Un parent et un enfant, deux comptes, une seule histoire d'orientation.</h1>
+      <p style="margin-top: 14px; font-size: 14px; color: var(--c-muted);">Chaque membre de la famille a son espace. Les comptes se connectent par un code à 6 caractères. Aucun partage n'est automatique : vous décidez ce qui circule.</p>
+    </div>
+  </section>
+
+  <section class="auth-section" style="margin-top: 40px;">
+    <div class="shell">
+      <div class="auth-grid">
+        <div class="auth-card">
+          <span class="auth-card__step"><span class="auth-card__step-num">1</span>Choisir son rôle</span>
+          <h3>Vous créez le compte pour qui ?</h3>
+          <p>Le rôle détermine l'interface (suivi vs parcours) et les permissions par défaut.</p>
+          <div class="auth-card__roles">
+            <button class="auth-role is-selected">
+              <div class="auth-role__icon"><svg class="icn" aria-hidden="true"><use href="#icon-user"/></svg></div>
+              <strong>Je suis parent</strong>
+              <small>Je suis l'orientation de mon ado. Je peux gérer plusieurs enfants.</small>
+            </button>
+            <button class="auth-role">
+              <div class="auth-role__icon"><svg class="icn" aria-hidden="true"><use href="#icon-cap"/></svg></div>
+              <strong>Je suis lycéen·ne</strong>
+              <small>Je crée mon compte. Mes parents peuvent ensuite me rejoindre.</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-card">
+          <span class="auth-card__step"><span class="auth-card__step-num">2</span>Renseigner les bases</span>
+          <h3>Quelques infos sur votre ado</h3>
+          <p>3 questions pour adapter le contenu : classe, lycée, spécialités. Vous pourrez compléter plus tard.</p>
+          <div style="display: grid; gap: 10px; margin-top: 14px;">
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); font-size: 13px;">
+              <span style="opacity: .55; font-size: 11px;">Classe</span><br>
+              <strong>Première générale</strong>
+            </div>
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); font-size: 13px;">
+              <span style="opacity: .55; font-size: 11px;">Spécialités</span><br>
+              <strong>Maths · SVT · NSI</strong>
+            </div>
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); font-size: 13px;">
+              <span style="opacity: .55; font-size: 11px;">Lycée</span><br>
+              <strong>Carnot, Paris 17</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-card" style="background: linear-gradient(180deg, rgba(245,235,63,.06), rgba(245,235,63,.02)); border-color: rgba(245,235,63,.20);">
+          <span class="auth-card__step"><span class="auth-card__step-num">3</span>Lier votre ado (optionnel)</span>
+          <h3>Donnez ce code à Louise.</h3>
+          <p>Elle l'entre à la création de son compte. Elle accepte la liaison en 1 clic.</p>
+          <div class="auth-card__code">
+            <div class="auth-card__code-cell">7</div>
+            <div class="auth-card__code-cell">K</div>
+            <div class="auth-card__code-cell">M</div>
+            <div class="auth-card__code-cell">3</div>
+            <div class="auth-card__code-cell">9</div>
+            <div class="auth-card__code-cell">P</div>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 14px;">
+            <button class="btn btn--accent btn--small">Copier le code</button>
+            <button class="btn btn--small" style="background: rgba(255,255,255,.08); color: white; border: 1px solid rgba(255,255,255,.16);">Envoyer par SMS</button>
+          </div>
+          <p style="font-size: 11.5px; color: rgba(255,255,255,.55); margin-top: 14px;"><svg class="icn" aria-hidden="true"><use href="#icon-clock"/></svg> Code valable 7 jours · vous pouvez le régénérer à tout moment.</p>
+        </div>
+      </div>
+
+      <div class="auth-card" style="margin-top: 24px;">
+        <span class="auth-card__step"><span class="auth-card__step-num">4</span>Règles de partage par défaut</span>
+        <h3>Ce que vous voyez automatiquement de Louise (et inversement).</h3>
+        <p>Vous pourrez tout ajuster ensuite, document par document, test par test.</p>
+        <div class="auth-grid" style="margin-top: 18px;">
+          <div style="padding: 16px; background: rgba(255,255,255,.04); border-radius: 12px; border: 1px solid rgba(255,255,255,.08);">
+            <strong style="font-size: 13px; color: var(--c-white);"><svg class="icn" aria-hidden="true"><use href="#icon-check-circle"/></svg> Partagé par défaut</strong>
+            <ul style="padding-left: 18px; margin-top: 8px; color: rgba(255,255,255,.7); font-size: 12.5px; line-height: 1.7;">
+              <li>Caractéristiques scolaires</li>
+              <li>Avancement du parcours</li>
+              <li>Article de la semaine</li>
+              <li>Bulletins scolaires</li>
+            </ul>
+          </div>
+          <div style="padding: 16px; background: rgba(255,255,255,.04); border-radius: 12px; border: 1px solid rgba(255,255,255,.08);">
+            <strong style="font-size: 13px; color: var(--c-white);"><svg class="icn" aria-hidden="true"><use href="#icon-warn"/></svg> Partagé sur demande</strong>
+            <ul style="padding-left: 18px; margin-top: 8px; color: rgba(255,255,255,.7); font-size: 12.5px; line-height: 1.7;">
+              <li>Résultats détaillés des tests</li>
+              <li>Notes personnelles</li>
+              <li>Lettres de motivation</li>
+              <li>Rapport final</li>
+            </ul>
+          </div>
+          <div style="padding: 16px; background: rgba(255,255,255,.04); border-radius: 12px; border: 1px solid rgba(255,255,255,.08);">
+            <strong style="font-size: 13px; color: var(--c-white);"><svg class="icn" aria-hidden="true"><use href="#icon-lock"/></svg> Jamais partagé</strong>
+            <ul style="padding-left: 18px; margin-top: 8px; color: rgba(255,255,255,.7); font-size: 12.5px; line-height: 1.7;">
+              <li>Brouillons</li>
+              <li>Messages avec Charles</li>
+              <li>Documents marqués "privé"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 40px 0 0;">
+        <button class="btn btn--accent" style="padding: 14px 28px; font-size: 15px;">Créer mon compte parent</button>
+        <p style="color: rgba(255,255,255,.45); font-size: 12px; margin-top: 12px;">En continuant, vous acceptez les <a style="color: var(--c-yellow);" href="#">CGU</a> et la <a style="color: var(--c-yellow);" href="#">politique RGPD</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="background: var(--c-ink); color: rgba(255,255,255,.5); padding: 30px 0 50px;">
+    <div class="shell footer__inner">
+      <div>© Proxxie 2026 · OVH Roubaix · données chiffrées</div>
+      <div class="footer__links">
+        <a href="#">RGPD</a><a href="#">Conditions</a><a href="#">Aide</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function switchView(viewName) {
+  document.querySelectorAll('.view-switch__btn').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-view') === viewName));
+  document.querySelectorAll('.view').forEach(view => view.classList.remove('is-active'));
+  const target = document.getElementById('view-' + viewName);
+  if (target) target.classList.add('is-active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+document.querySelectorAll('.view-switch__btn').forEach(btn => {
+  btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+});
+
+// In-product nav links that should jump to another view
+document.querySelectorAll('[data-go]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    let target = link.getAttribute('data-go');
+
+    // "Parcours" link from a dashboard: set role first then jump
+    const desiredRole = link.getAttribute('data-role');
+    if (target === 'parcours' && desiredRole) {
+      const view = document.getElementById('view-parcours');
+      if (view) view.setAttribute('data-role', desiredRole);
+      const innerWrap = document.getElementById('parcours-view-wrap');
+      if (innerWrap) innerWrap.setAttribute('data-role', desiredRole);
+      document.querySelectorAll('.role-toggle button').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-role') === desiredRole));
+    }
+
+    // "Tableau de bord" from inside Parcours: go to whichever dashboard matches current role
+    if (target === 'dash-from-parcours') {
+      const view = document.getElementById('view-parcours');
+      const role = view ? view.getAttribute('data-role') : 'parent';
+      target = role === 'enfant' ? 'enfant' : 'parent';
+    }
+
+    switchView(target);
+  });
+});
+
+const csBtn = document.getElementById('cs-btn');
+const csDrop = document.getElementById('cs-drop');
+if (csBtn && csDrop) {
+  const syncCs = () => csBtn.setAttribute('aria-expanded', csDrop.classList.contains('is-open') ? 'true' : 'false');
+  csBtn.addEventListener('click', (e) => { e.stopPropagation(); csDrop.classList.toggle('is-open'); syncCs(); });
+  document.addEventListener('click', (e) => { if (!csDrop.contains(e.target)) { csDrop.classList.remove('is-open'); syncCs(); } });
+}
+
+document.querySelectorAll('.auth-role').forEach(r => {
+  r.addEventListener('click', () => {
+    r.parentElement.querySelectorAll('.auth-role').forEach(x => x.classList.remove('is-selected'));
+    r.classList.add('is-selected');
+  });
+});
+
+// Parcours role toggle (parent/enfant)
+document.querySelectorAll('.role-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const role = btn.getAttribute('data-role');
+    document.querySelectorAll('.role-toggle button').forEach(b => b.classList.toggle('is-active', b === btn));
+    const view = document.getElementById('view-parcours');
+    if (view) view.setAttribute('data-role', role);
+    const innerWrap = document.getElementById('parcours-view-wrap');
+    if (innerWrap) innerWrap.setAttribute('data-role', role);
+  });
+});
+
+// Parcours phase collapse/expand
+document.querySelectorAll('.parc-phase__head').forEach(head => {
+  head.addEventListener('click', () => {
+    const phase = head.closest('.parc-phase');
+    if (phase) phase.classList.toggle('is-collapsed');
+  });
+});
+
+// Bottom-nav aria-current sync (mobile)
+function syncBottomNav(viewName) {
+  const map = { parent: 'home', enfant: 'home', parcours: 'route', documents: 'file' };
+  const key = map[viewName];
+  document.querySelectorAll('.bottom-nav a').forEach(a => {
+    if (a.getAttribute('data-target') === key) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+}
+document.querySelectorAll('.view-switch__btn').forEach(btn => {
+  btn.addEventListener('click', () => syncBottomNav(btn.getAttribute('data-view')));
+});
+syncBottomNav('parent');
+</script>
+
+<!-- Bottom nav mobile (visible <= 860px) -->
+<nav class="bottom-nav" aria-label="Navigation mobile">
+  <a href="#" data-target="home" aria-current="page" data-go="parent">
+    <svg aria-hidden="true"><use href="#icon-home"/></svg>
+    Tableau
+  </a>
+  <a href="#" data-target="route" data-go="parcours">
+    <svg aria-hidden="true"><use href="#icon-route"/></svg>
+    Parcours
+  </a>
+  <a href="#" data-target="file" data-go="documents">
+    <svg aria-hidden="true"><use href="#icon-file"/></svg>
+    Documents
+  </a>
+  <a href="#" data-target="book">
+    <svg aria-hidden="true"><use href="#icon-book"/></svg>
+    Ressources
+  </a>
+</nav>
+
+</body>
+</html>
