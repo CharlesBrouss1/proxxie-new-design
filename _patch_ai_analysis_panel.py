@@ -88,6 +88,113 @@ const _proxxieMiniMarkdown = (md) => {
     .split(/\n\n+/).map(p => p.trim().startsWith('<') ? p : '<p style="margin:0 0 12px;line-height:1.6">' + p + '</p>').join('\n');
 };
 
+const PROXXIE_DISCOVERY_STEPS = [
+  { label: "On relit tes réponses, une à une.", icon: "📖" },
+  { label: "On repère les motifs récurrents.", icon: "🔍" },
+  { label: "On compare avec les profils typiques.", icon: "🧩" },
+  { label: "On identifie tes forces.", icon: "✨" },
+  { label: "On rédige ton portrait.", icon: "✍️" },
+  { label: "On prépare tes pistes concrètes.", icon: "🎯" },
+];
+
+const ProxxieDiscoveryAnimation = ({ accent, testName }) => {
+  const [stepIdx, setStepIdx] = React.useState(0);
+  const [progress, setProgress] = React.useState(2); // start tiny so bar is visible
+
+  React.useEffect(() => {
+    // Progress monte de 2% à 92% en ~18 sec (smooth)
+    // Les 8% restants se déclenchent quand le streaming arrive (côté parent state)
+    const totalMs = 18000;
+    const target = 92;
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const ratio = Math.min(1, elapsed / totalMs);
+      // Easing : cubic-out pour ralentir vers la fin (sentiment d'attente "presque fini")
+      const eased = 1 - Math.pow(1 - ratio, 3);
+      setProgress(2 + (target - 2) * eased);
+      if (ratio >= 1) clearInterval(interval);
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  React.useEffect(() => {
+    // Rotation des steps : un nouveau toutes les 2.8 sec
+    const interval = setInterval(() => {
+      setStepIdx((i) => Math.min(i + 1, PROXXIE_DISCOVERY_STEPS.length - 1));
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentStep = PROXXIE_DISCOVERY_STEPS[stepIdx];
+
+  return (
+    <div style={{ padding: "44px 8px 32px", textAlign: "center", maxWidth: 480, margin: "0 auto" }}>
+      <style>{`
+        @keyframes proxxie-shimmer { 0% { background-position: -200px 0; } 100% { background-position: calc(100% + 200px) 0; } }
+        @keyframes proxxie-step-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes proxxie-icon-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+      `}</style>
+
+      {/* Eyebrow contexte */}
+      <div style={{ fontSize: 12.5, color: "var(--c-muted, #6B6F8C)", marginBottom: 24, letterSpacing: "0.02em" }}>
+        On découvre ton profil <strong style={{ color: accent, fontWeight: 600 }}>{testName}</strong>
+      </div>
+
+      {/* Icône step animée */}
+      <div
+        key={"icon-" + stepIdx}
+        style={{
+          fontSize: 36, marginBottom: 14,
+          animation: "proxxie-icon-bounce 1.6s ease-in-out infinite",
+          display: "inline-block",
+        }}
+      >
+        {currentStep.icon}
+      </div>
+
+      {/* Step label · animation in à chaque changement */}
+      <div
+        key={"label-" + stepIdx}
+        style={{
+          fontSize: 16, fontWeight: 600, color: "var(--c-ink, #0A0E2C)", marginBottom: 24, minHeight: 24,
+          animation: "proxxie-step-in 0.4s ease-out",
+          fontFamily: "var(--font-display, Goldplay, Mulish, serif)", letterSpacing: "-0.01em",
+        }}
+      >
+        {currentStep.label}
+      </div>
+
+      {/* Progress bar · accent color avec shimmer effect */}
+      <div style={{
+        width: "100%", height: 8, borderRadius: 99,
+        background: "var(--c-cream-light, #FAF6EE)",
+        border: "1px solid rgba(10,14,44,.05)",
+        overflow: "hidden", marginBottom: 12,
+      }}>
+        <div style={{
+          width: progress + "%", height: "100%",
+          background: "linear-gradient(90deg, " + accent + ", " + accent + ", " + accent + "cc, " + accent + ")",
+          backgroundSize: "400px 100%",
+          borderRadius: 99,
+          transition: "width 0.4s cubic-bezier(.2,.8,.2,1)",
+          animation: "proxxie-shimmer 1.8s linear infinite",
+        }} />
+      </div>
+
+      {/* Compteur · sous le bar */}
+      <div style={{ fontSize: 12, color: "var(--c-muted, #6B6F8C)", fontFamily: "var(--font-num, ui-monospace, monospace)" }}>
+        {Math.round(progress)}%
+      </div>
+
+      {/* Tip discret en bas */}
+      <div style={{ marginTop: 28, fontSize: 12, color: "var(--c-muted, #6B6F8C)", lineHeight: 1.5, opacity: 0.7 }}>
+        Chaque profil est unique. On prend 15-20 secondes pour bien faire les choses.
+      </div>
+    </div>
+  );
+};
+
 const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentSoft }) => {
   const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState("idle"); // idle, loading, streaming, done, error
@@ -284,16 +391,7 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
                 </div>
               )}
 
-              {state === "loading" && (
-                <div style={{ padding: "60px 0", textAlign: "center" }}>
-                  <div style={{ display: "inline-flex", gap: 6, marginBottom: 14 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: accent, animation: "proxxie-dots 1.4s infinite", animationDelay: "0s" }}></span>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: accent, animation: "proxxie-dots 1.4s infinite", animationDelay: "0.2s" }}></span>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: accent, animation: "proxxie-dots 1.4s infinite", animationDelay: "0.4s" }}></span>
-                  </div>
-                  <div style={{ fontSize: 14, color: "var(--c-muted, #6B6F8C)" }}>On lit ton profil...</div>
-                </div>
-              )}
+              {state === "loading" && <ProxxieDiscoveryAnimation accent={accent} testName={testName} />}
 
               {(state === "streaming" || state === "done") && (
                 <div style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--c-ink, #0A0E2C)" }}>
