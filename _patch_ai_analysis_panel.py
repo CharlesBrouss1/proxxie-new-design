@@ -276,46 +276,65 @@ const AIAnalysisPanel = ({ testCode, testName, summary, answers, accent, accentS
 
   return (
     <>
-      {/* === Section CTA · carte crème "post-it" signée, pas un bandeau AI === */}
-      <section style={{ paddingTop: 30, paddingBottom: 50 }}>
-        <div className="shell" style={{ maxWidth: 820 }}>
+      {/* === Section CTA unifiée · Charles primaire + AI en lien texte secondaire ===
+          Hiérarchie stricte : 1 décision claire (RDV Charles), tout le reste démoté.
+          Le signup a été retiré de cette page (il vit dans le quota banner et le modal AI). */}
+      <section style={{ paddingTop: 30, paddingBottom: 60 }}>
+        <div className="shell" style={{ maxWidth: 760 }}>
           <div style={{
-            background: "var(--c-cream-light, #FAF6EE)",
+            background: "white",
             border: "1px solid var(--c-line, rgba(10,14,44,.08))",
-            borderRadius: 20, padding: "28px 28px",
-            position: "relative",
+            borderRadius: 22, padding: "36px 34px 30px",
+            boxShadow: "0 18px 40px -24px rgba(10,14,44,.12)",
+            textAlign: "center",
           }}>
-            {/* Petit liseré accent à gauche, comme une note coachée */}
+            <div style={{ fontSize: 12.5, fontWeight: 600, color: accent, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 14 }}>
+              Et maintenant ?
+            </div>
+            <h2 style={{ color: "var(--c-ink, #0A0E2C)", fontSize: 26, lineHeight: 1.25, margin: "0 0 10px", fontFamily: "var(--font-display, Goldplay, Mulish, serif)", letterSpacing: "-0.015em", fontWeight: 600 }}>
+              Tes résultats racontent une histoire.<br/>On t'aide à la comprendre.
+            </h2>
+            <p style={{ fontSize: 15, color: "var(--c-ink-2, #2A2F4F)", lineHeight: 1.55, margin: "0 auto 26px", maxWidth: 520 }}>
+              30 minutes en visio avec Charles, fondateur de Proxxie. On part de ta lecture, on identifie 2 ou 3 actions concrètes pour la suite.
+            </p>
+
+            {/* CTA PRIMAIRE · le seul gros bouton de la page */}
+            <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" style={{
+              background: "#FD6936", color: "white",
+              padding: "15px 30px", borderRadius: 99, fontWeight: 700, fontSize: 15.5,
+              textDecoration: "none",
+              display: "inline-flex", alignItems: "center", gap: 9,
+              boxShadow: "0 14px 32px -10px rgba(253,105,54,.55)",
+              fontFamily: "inherit",
+            }}>
+              Réserver 30 min avec Charles
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <div style={{ marginTop: 11, fontSize: 12.5, color: "var(--c-muted, #6B6F8C)" }}>
+              Gratuit, sans engagement, créneaux sous 7 jours
+            </div>
+
+            {/* Séparateur subtil */}
             <div style={{
-              position: "absolute", top: 24, bottom: 24, left: 0,
-              width: 3, borderRadius: 3, background: accent,
+              maxWidth: 320, margin: "30px auto 18px",
+              borderTop: "1px solid var(--c-line, rgba(10,14,44,.08))",
             }} />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 28, flexWrap: "wrap", paddingLeft: 14 }}>
-              <div style={{ flex: "1 1 360px", minWidth: 260 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: accent, marginBottom: 8 }}>
-                  Une lecture personnalisée de ton profil
-                </div>
-                <h2 style={{ color: "var(--c-ink, #0A0E2C)", fontSize: 24, lineHeight: 1.25, margin: 0, fontFamily: "var(--font-display, Goldplay, Mulish, serif)", letterSpacing: "-0.015em" }}>
-                  On a regardé tes réponses pour toi.
-                </h2>
-                <p style={{ fontSize: 15, color: "var(--c-ink-2, #2A2F4F)", lineHeight: 1.55, marginTop: 10, marginBottom: 0 }}>
-                  Tes forces, ce sur quoi rester vigilant, des pistes concrètes côté parent et côté ado, et l'impact sur ton orientation. Lecture en une page.
-                </p>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
-                <button onClick={requestAnalysis} style={{
-                  background: "#FD6936", color: "white", border: "none",
-                  padding: "13px 22px", borderRadius: 99, fontWeight: 600, fontSize: 14.5,
-                  cursor: "pointer", boxShadow: "0 12px 28px -10px rgba(253,105,54,.6)",
-                  display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
-                  fontFamily: "inherit",
-                }}>
-                  Lire ma lecture personnalisée →
-                </button>
-                <div style={{ fontSize: 12, color: "var(--c-muted, #6B6F8C)" }}>
-                  {isGated ? "Connecte-toi pour continuer" : (remaining === PROXXIE_AI_QUOTA ? "Gratuit, sans inscription" : `Encore ${remaining} sur ${PROXXIE_AI_QUOTA} avant inscription`)}
-                </div>
-              </div>
+
+            {/* SECONDAIRE · lien texte AI · pas un bouton, pas un CTA */}
+            <div style={{ fontSize: 14, color: "var(--c-muted, #6B6F8C)", lineHeight: 1.6 }}>
+              Tu préfères creuser seul ?{" "}
+              <button onClick={requestAnalysis} style={{
+                background: "none", border: "none", padding: 0,
+                color: accent, fontWeight: 600, fontSize: "inherit",
+                cursor: "pointer", textDecoration: "underline",
+                textUnderlineOffset: 3, fontFamily: "inherit",
+              }}>
+                Ouvrir une lecture détaillée
+              </button>
+              {" "}
+              <span style={{ color: "var(--c-muted, #6B6F8C)", fontSize: 12 }}>
+                · {isGated ? "Connecte-toi" : (remaining === PROXXIE_AI_QUOTA ? "écrit pour toi" : `${remaining}/${PROXXIE_AI_QUOTA} restant`)}
+              </span>
             </div>
           </div>
         </div>

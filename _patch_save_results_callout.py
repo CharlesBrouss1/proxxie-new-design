@@ -183,32 +183,35 @@ def cleanup_orphan_empty_jsx_blocks(src: str) -> str:
 
 
 def patch_src(src: str) -> tuple[str, list[str]]:
+    """DÉSACTIVÉ (Charles, mai 2026) : le SaveResultsCallout n'a plus sa place
+    sur la page de résultats. La hiérarchie est : CTA Charles primaire +
+    AI en lien texte. Le signup vit maintenant uniquement dans le quota
+    banner (après 2 tests passés) et dans le modal AI (après lecture).
+
+    Ce patch fait juste le cleanup : strip toutes les anciennes versions
+    du composant + du render, sans réinjection.
+    """
     changes = []
     # 1. Idempotence DEF : strip BEGIN..END entre sentinelles (JS context, OK)
+    before_def = len(src)
     src = strip_between(src, BEGIN_DEF, END_DEF)
+    if len(src) != before_def:
+        changes.append("− SaveResultsCallout def supprimée")
 
-    # 2. Idempotence RENDER : cleanup de TOUTES les variantes de sentinelles
-    # historiques (chacune était rendue comme texte par babel-standalone)
-    # avant de re-supprimer la ligne du render lui-même.
+    # 2. Cleanup de TOUTES les variantes de sentinelles render historiques
     src = strip_between(src, "{null /* PROXXIE_SAVE_CALLOUT_REN_BEGIN */}", "{null /* PROXXIE_SAVE_CALLOUT_REN_END */}")
     src = strip_between(src, "{/* PROXXIE_SAVE_CALLOUT_REN_BEGIN */}", "{/* PROXXIE_SAVE_CALLOUT_REN_END */}")
     src = strip_between(src, "/* PROXXIE_SAVE_CALLOUT_REN_BEGIN */", "/* PROXXIE_SAVE_CALLOUT_REN_END */")
-    # Strip aussi la ligne RENDER_PRESENCE_MARKER si elle existe déjà
+    # Strip aussi la ligne RENDER_PRESENCE_MARKER si elle existe
+    before_render = len(src)
     src = re.sub(r'\n[ \t]+' + re.escape(RENDER_PRESENCE_MARKER) + r'[^\n]*', '', src)
+    if len(src) != before_render:
+        changes.append("− render <SaveResultsCallout/> supprimé")
     # Nettoie d'éventuels `{}` orphelins
     src = cleanup_orphan_empty_jsx_blocks(src)
 
-    # 3. Injection définition (avant TestApp)
-    if ANCHOR_DEF not in src:
-        return src, ["WARN ANCHOR_DEF introuvable"]
-    src = src.replace(ANCHOR_DEF, COMPONENT_JSX, 1)
-    changes.append("+ composant SaveResultsCallout")
-
-    # 4. Injection render (avant <Footer />)
-    if ANCHOR_REN_OLD not in src:
-        return src, changes + ["WARN ANCHOR_REN_OLD introuvable"]
-    src = src.replace(ANCHOR_REN_OLD, ANCHOR_REN_NEW, 1)
-    changes.append("+ render <SaveResultsCallout/> avant <Footer/>")
+    if not changes:
+        changes.append("rien à nettoyer (déjà absent)")
     return src, changes
 
 
