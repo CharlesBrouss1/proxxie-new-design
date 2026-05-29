@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proxxie · Profil élève (exemple) + Parcours d'inscription</title>
+<meta name="description" content="Exemple de profil élève Proxxie : personnalité, capacités intellectuelles et résultats scolaires réunis dans un système de connaissances. Puis parcours d'inscription guidé." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --c-blue: #487AFF;
+  --c-blue-deep: #1320CE;
+  --c-blue-soft: #B0D0F7;
+  --c-blue-tint: #E8F0FF;
+  --c-orange: #FD6936;
+  --c-cream: #EEE6D9;
+  --c-cream-light: #F7F2E9;
+  --c-yellow: #F5EB3F;
+  --c-ink: #0A0E2C;
+  --c-ink-2: #2A2F4F;
+  --c-muted: #6B6F8C;
+  --c-line: #E6E2D6;
+  --c-white: #FFFFFF;
+  --c-green: #22A06B;
+  --c-green-tint: rgba(34,160,107,.12);
+  --c-purple: #7C5CFF;
+  --c-purple-tint: rgba(124,92,255,.12);
+
+  /* Obsidian-like graph surface */
+  --g-bg: #14152A;
+  --g-bg-2: #1B1D38;
+  --g-line: rgba(176,208,247,.16);
+  --g-text: #C9CEF2;
+  --g-muted: #8089B8;
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-2xl: 44px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 14, 44, 0.06);
+  --shadow-md: 0 8px 28px -8px rgba(19, 32, 206, 0.18);
+  --shadow-lg: 0 24px 60px -16px rgba(19, 32, 206, 0.28);
+
+  --font-display: "Mulish", "Goldplay", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  --font-num: "Fraunces", "Museo", Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--c-ink);
+  background: var(--c-cream-light);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; margin: 0; color: var(--c-ink); }
+h1 { font-size: 30px; line-height: 1.15; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 17px; line-height: 1.25; }
+h4 { font-size: 14px; line-height: 1.3; font-weight: 600; }
+p { margin: 0; line-height: 1.55; color: var(--c-ink-2); }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: 0; background: none; padding: 0; color: inherit; }
+
+.shell { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.muted { color: var(--c-muted); }
+.num { font-family: var(--font-num); font-weight: 500; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-muted);
+}
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--c-orange); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 9px; border-radius: 99px;
+  background: var(--c-blue-tint); color: var(--c-blue-deep);
+}
+.chip--ok { background: var(--c-green-tint); color: var(--c-green); }
+.chip--warn { background: rgba(253,105,54,.14); color: var(--c-orange); }
+.chip--neutral { background: rgba(10,14,44,.06); color: var(--c-ink-2); }
+.chip--purple { background: var(--c-purple-tint); color: var(--c-purple); }
+.chip--solid { background: var(--c-ink); color: var(--c-white); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  padding: 11px 18px; border-radius: var(--r-md);
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s;
+}
+.btn--primary { background: var(--c-blue-deep); color: var(--c-white); }
+.btn--primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn--secondary { background: var(--c-white); color: var(--c-ink); border: 1px solid var(--c-line); }
+.btn--secondary:hover { border-color: var(--c-blue); color: var(--c-blue-deep); }
+.btn--ghost { background: transparent; color: var(--c-ink-2); }
+.btn--ghost:hover { color: var(--c-blue-deep); }
+.btn--accent { background: var(--c-orange); color: var(--c-white); }
+.btn--accent:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(253,105,54,.35); }
+.btn--small { padding: 7px 12px; font-size: 12.5px; border-radius: 10px; }
+.btn--lg { padding: 15px 26px; font-size: 15px; border-radius: var(--r-md); }
+.btn--block { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.card {
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: 24px;
+}
+
+/* ============================ DEMO BANNER ============================ */
+.demo-bar {
+  position: sticky; top: 0; z-index: 120;
+  background: var(--c-ink); color: var(--c-white);
+}
+.demo-bar__inner {
+  max-width: 1240px; margin: 0 auto; padding: 9px 28px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  font-size: 12.5px;
+}
+.demo-bar strong { font-weight: 700; }
+.demo-bar .demo-pulse {
+  width: 7px; height: 7px; border-radius: 99px; background: var(--c-yellow);
+  box-shadow: 0 0 0 0 rgba(245,235,63,.6); animation: pulse 2.2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(245,235,63,.55); }
+  70% { box-shadow: 0 0 0 9px rgba(245,235,63,0); }
+  100% { box-shadow: 0 0 0 0 rgba(245,235,63,0); }
+}
+.demo-bar__spacer { margin-left: auto; }
+.demo-bar .btn--accent { padding: 7px 14px; font-size: 12.5px; border-radius: 10px; }
+
+/* ============================ HEADER ============================ */
+.app-header {
+  position: sticky; top: 40px; z-index: 90;
+  background: rgba(247,242,233,.86);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(10,14,44,0.06);
+}
+.app-header__inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+.app-header__left { display: flex; align-items: center; gap: 18px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.015em; color: var(--c-ink); }
+.app-header__sep { width: 1px; height: 22px; background: rgba(10,14,44,.12); }
+.nav { display: flex; gap: 4px; font-size: 13.5px; font-weight: 600; }
+.nav a { color: var(--c-muted); padding: 8px 12px; border-radius: 8px; transition: color .15s, background .15s; }
+.nav a.is-active { color: var(--c-ink); background: var(--c-white); box-shadow: var(--shadow-sm); }
+.nav a:hover:not(.is-active) { color: var(--c-ink-2); background: rgba(255,255,255,.5); }
+.app-header__right { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 34px; height: 34px; border-radius: 99px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-blue-deep) 100%); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; }
+
+/* ============================ HERO / IDENTITY ============================ */
+.page { padding: 30px 0 90px; }
+.id-card {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center;
+  background: linear-gradient(135deg, #10164A 0%, #1320CE 58%, #2a39e0 100%);
+  color: var(--c-white); border-radius: var(--r-xl); padding: 28px 30px;
+  position: relative; overflow: hidden;
+}
+.id-card::after {
+  content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(253,105,54,.4), transparent 70%); filter: blur(4px);
+}
+.id-portrait {
+  width: 92px; height: 92px; border-radius: 26px; flex-shrink: 0;
+  background: linear-gradient(140deg, #F5EB3F, #FD6936);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 34px; color: #10164A;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+.id-main h1 { color: var(--c-white); font-size: 28px; }
+.id-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; color: var(--c-blue-soft); font-size: 13px; }
+.id-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.id-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.id-tag { font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: rgba(255,255,255,.12); color: #fff; }
+.id-tag::before { content: "#"; opacity: .6; }
+.id-side { position: relative; z-index: 2; text-align: right; }
+.id-score { font-family: var(--font-num); font-size: 50px; font-weight: 600; line-height: 1; }
+.id-score small { display: block; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--c-blue-soft); margin-top: 6px; }
+
+/* ============================ TAB BAR ============================ */
+.tabbar { display: flex; gap: 6px; margin: 26px 0 22px; flex-wrap: wrap; }
+.tab {
+  font-size: 13.5px; font-weight: 600; color: var(--c-muted);
+  padding: 9px 16px; border-radius: 99px; border: 1px solid transparent;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: var(--c-ink-2); }
+.tab.is-active { color: var(--c-ink); background: var(--c-white); border-color: var(--c-line); box-shadow: var(--shadow-sm); }
+.tab .tcount { font-size: 11px; font-weight: 700; background: rgba(10,14,44,.07); padding: 1px 7px; border-radius: 99px; color: var(--c-ink-2); }
+.tab.is-active .tcount { background: var(--c-blue-tint); color: var(--c-blue-deep); }
+
+.panel { display: none; animation: fade .3s ease; }
+.panel.is-active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ============================ GRID HELPERS ============================ */
+.grid { display: grid; gap: 18px; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-2-1 { grid-template-columns: 1.6fr 1fr; }
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-head h3 { display: flex; align-items: center; gap: 9px; }
+
+/* KPI cards */
+.kpi { display: flex; flex-direction: column; gap: 6px; }
+.kpi .label { font-size: 12px; font-weight: 600; color: var(--c-muted); }
+.kpi .value { font-family: var(--font-num); font-size: 32px; font-weight: 600; color: var(--c-ink); }
+.kpi .delta { font-size: 12px; font-weight: 600; }
+.kpi .delta.up { color: var(--c-green); }
+
+/* Radar */
+.radar-wrap { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.radar-legend { display: flex; flex-direction: column; gap: 10px; min-width: 180px; }
+.radar-legend li { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; }
+.radar-legend .lk { display: flex; align-items: center; gap: 8px; color: var(--c-ink-2); font-weight: 600; }
+.radar-legend .dotc { width: 9px; height: 9px; border-radius: 99px; }
+.radar-legend .lv { font-family: var(--font-num); font-weight: 600; color: var(--c-ink); }
+ul { margin: 0; padding: 0; }
+
+/* Bars */
+.bar-row { display: grid; grid-template-columns: 130px 1fr 42px; align-items: center; gap: 12px; padding: 7px 0; }
+.bar-row .bl { font-size: 13px; font-weight: 600; color: var(--c-ink-2); }
+.bar-track { height: 9px; border-radius: 99px; background: rgba(10,14,44,.07); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--c-blue), var(--c-blue-deep)); }
+.bar-val { font-family: var(--font-num); font-weight: 600; font-size: 14px; text-align: right; }
+
+/* Subject grid (school) */
+.subj { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: var(--c-white); }
+.subj .sn { font-weight: 600; font-size: 13.5px; }
+.subj .sg { font-family: var(--font-num); font-weight: 600; font-size: 20px; }
+.subj .sg small { font-size: 12px; color: var(--c-muted); font-family: var(--font-body); }
+.g-high { color: var(--c-green); }
+.g-mid { color: var(--c-blue-deep); }
+.g-low { color: var(--c-orange); }
+
+/* Test cards */
+.test-card { display: flex; flex-direction: column; gap: 12px; }
+.test-card .th { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.test-card .ticon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.test-card .res { font-family: var(--font-num); font-weight: 600; font-size: 20px; color: var(--c-ink); }
+.test-card p { font-size: 13px; }
+.test-card .tfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; padding-top: 12px; border-top: 1px dashed var(--c-line); }
+
+/* Matrix 2x2 */
+.matrix {
+  position: relative; aspect-ratio: 1/1; border-radius: var(--r-lg);
+  background:
+    linear-gradient(rgba(72,122,255,.04), rgba(72,122,255,.04)),
+    repeating-linear-gradient(0deg, transparent, transparent 24%, rgba(10,14,44,.05) 25%),
+    repeating-linear-gradient(90deg, transparent, transparent 24%, rgba(10,14,44,.05) 25%);
+  border: 1px solid var(--c-line); overflow: hidden;
+}
+.matrix .axis-x, .matrix .axis-y { position: absolute; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-muted); }
+.matrix .axis-x.l { left: 10px; bottom: 8px; }
+.matrix .axis-x.r { right: 10px; bottom: 8px; }
+.matrix .axis-y.t { left: 50%; top: 8px; transform: translateX(-50%); }
+.matrix .axis-y.b { left: 50%; bottom: 8px; transform: translateX(-50%); }
+.matrix .cross-x { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(10,14,44,.14); }
+.matrix .cross-y { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(10,14,44,.14); }
+.dot-item {
+  position: absolute; transform: translate(-50%,-50%);
+  display: flex; align-items: center; gap: 6px;
+  background: var(--c-white); border: 1px solid var(--c-line); box-shadow: var(--shadow-sm);
+  padding: 4px 9px 4px 6px; border-radius: 99px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
+}
+.dot-item .pt { width: 8px; height: 8px; border-radius: 99px; }
+
+/* ============================ OBSIDIAN GRAPH ============================ */
+.obsidian {
+  background: var(--g-bg); border: 1px solid #2a2d52; border-radius: var(--r-xl);
+  overflow: hidden; color: var(--g-text);
+  display: grid; grid-template-columns: 1fr 300px;
+}
+.obs-graph { position: relative; min-height: 460px; background:
+  radial-gradient(circle at 50% 45%, #1c1f3e 0%, var(--g-bg) 70%); }
+.obs-graph svg { display: block; width: 100%; height: 100%; position: absolute; inset: 0; }
+.obs-graph__head { position: absolute; top: 16px; left: 18px; z-index: 3; }
+.obs-graph__head .eyebrow { color: var(--g-muted); }
+.obs-graph__head h3 { color: #fff; margin-top: 4px; }
+.obs-node { cursor: pointer; }
+.obs-node text { font-family: var(--font-body); fill: var(--g-text); font-size: 11px; font-weight: 600; }
+.obs-node circle { transition: r .15s ease, fill .15s; }
+.obs-node:hover circle { fill: var(--c-orange); }
+.obs-legend { position: absolute; bottom: 14px; left: 18px; display: flex; gap: 14px; z-index: 3; font-size: 11px; color: var(--g-muted); }
+.obs-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.obs-legend i { width: 9px; height: 9px; border-radius: 99px; display: inline-block; }
+
+.obs-side { background: var(--g-bg-2); border-left: 1px solid #2a2d52; padding: 18px; overflow-y: auto; max-height: 520px; }
+.obs-side h4 { color: #fff; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+.note {
+  background: rgba(255,255,255,.03); border: 1px solid #2a2d52; border-radius: var(--r-md);
+  padding: 13px 14px; margin-top: 12px;
+}
+.note .nt { color: #fff; font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 7px; }
+.note p { color: var(--g-muted); font-size: 12px; margin-top: 5px; }
+.note .links { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.wikilink { font-size: 11px; color: var(--c-blue-soft); background: rgba(72,122,255,.14); padding: 2px 7px; border-radius: 6px; }
+.wikilink::before { content: "[["; opacity: .5; }
+.wikilink::after { content: "]]"; opacity: .5; }
+.note .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.tag-pill { font-size: 10.5px; color: var(--c-yellow); }
+.tag-pill::before { content: "#"; }
+
+/* ============================ MODAL / WIZARD ============================ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: rgba(10,14,44,.55); backdrop-filter: blur(4px);
+  align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto;
+}
+.modal-overlay.is-open { display: flex; animation: fade .25s ease; }
+.wiz {
+  width: 100%; max-width: 720px; background: var(--c-white);
+  border-radius: var(--r-xl); box-shadow: var(--shadow-lg); overflow: hidden;
+  margin: auto;
+}
+.wiz__top { padding: 20px 28px 0; }
+.wiz__bar { display: flex; align-items: center; justify-content: space-between; }
+.wiz__close { width: 34px; height: 34px; border-radius: 99px; background: rgba(10,14,44,.05); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--c-ink-2); }
+.wiz__close:hover { background: rgba(10,14,44,.1); }
+.wiz__steps { display: flex; gap: 6px; margin: 18px 0 4px; }
+.wiz__steps .seg { flex: 1; height: 5px; border-radius: 99px; background: rgba(10,14,44,.08); overflow: hidden; }
+.wiz__steps .seg .fillseg { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--c-blue), var(--c-blue-deep)); transition: width .35s ease; }
+.wiz__steps .seg.done .fillseg { width: 100%; }
+.wiz__steps .seg.current .fillseg { width: 100%; background: var(--c-orange); }
+.wiz__stepmeta { font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-muted); margin-top: 12px; }
+
+.wiz__body { padding: 14px 28px 8px; min-height: 320px; }
+.step { display: none; animation: fade .3s ease; }
+.step.is-active { display: block; }
+.step h2 { font-size: 22px; }
+.step > p.lead { margin-top: 8px; color: var(--c-muted); font-size: 14px; }
+
+.field { margin-top: 16px; }
+.field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--c-ink-2); margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+  width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--c-ink);
+  padding: 12px 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: var(--c-cream-light);
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--c-blue); background: #fff; box-shadow: 0 0 0 3px rgba(72,122,255,.14); }
+.field .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.choice {
+  border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 14px; background: var(--c-cream-light);
+  display: flex; gap: 12px; align-items: flex-start; cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.choice:hover { border-color: var(--c-blue-soft); }
+.choice.is-sel { border-color: var(--c-blue-deep); background: #fff; box-shadow: 0 0 0 3px rgba(72,122,255,.14); }
+.choice .cico { font-size: 22px; line-height: 1; }
+.choice .ct { font-weight: 700; font-size: 13.5px; }
+.choice .cd { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+.choice .ck { margin-left: auto; width: 20px; height: 20px; border-radius: 99px; border: 2px solid var(--c-line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; }
+.choice.is-sel .ck { background: var(--c-blue-deep); border-color: var(--c-blue-deep); }
+
+/* Dropzone */
+.dropzone {
+  margin-top: 16px; border: 2px dashed var(--c-blue-soft); border-radius: var(--r-lg);
+  padding: 30px 20px; text-align: center; background: var(--c-blue-tint); transition: background .15s, border-color .15s;
+}
+.dropzone.drag { background: #fff; border-color: var(--c-blue-deep); }
+.dropzone .dzi { font-size: 30px; }
+.dropzone h4 { margin-top: 8px; font-size: 15px; }
+.dropzone p { font-size: 12.5px; color: var(--c-muted); margin-top: 4px; }
+.dropzone .browse { color: var(--c-blue-deep); font-weight: 700; text-decoration: underline; }
+.filelist { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.fileitem { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: #fff; font-size: 13px; }
+.fileitem .fi { width: 30px; height: 30px; border-radius: 8px; background: var(--c-green-tint); color: var(--c-green); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.fileitem .fn { font-weight: 600; }
+.fileitem .fs { color: var(--c-muted); font-size: 11.5px; }
+.fileitem .fx { margin-left: auto; color: var(--c-muted); width: 26px; height: 26px; border-radius: 99px; }
+.fileitem .fx:hover { background: rgba(10,14,44,.06); color: var(--c-ink); }
+.doc-hint { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.doc-hint .chip { cursor: default; }
+
+/* Reco tests */
+.reco { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 14px; margin-top: 10px; background: var(--c-cream-light); }
+.reco .rico { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.reco .rt { font-weight: 700; font-size: 14px; }
+.reco .rd { font-size: 12.5px; color: var(--c-muted); margin-top: 2px; }
+.reco .rmeta { display: flex; gap: 8px; margin-top: 8px; }
+.reco .radd { margin-left: auto; }
+
+/* Calendly */
+.cal-embed { margin-top: 14px; border: 1px solid var(--c-line); border-radius: var(--r-lg); overflow: hidden; min-height: 560px; background: var(--c-cream-light); }
+.calendly-inline-widget { min-height: 580px; }
+
+/* Recap / done */
+.recap { margin-top: 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); overflow: hidden; }
+.recap .rr { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--c-line); font-size: 13px; }
+.recap .rr:last-child { border-bottom: 0; }
+.recap .rr .rk { color: var(--c-muted); width: 120px; flex-shrink: 0; font-weight: 600; }
+.recap .rr .rv { font-weight: 600; color: var(--c-ink); }
+.success-mark { width: 64px; height: 64px; border-radius: 99px; background: var(--c-green-tint); color: var(--c-green); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 14px; }
+
+.wiz__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 28px 24px; border-top: 1px solid var(--c-line); margin-top: 8px;
+}
+
+/* ============================ FINAL CTA ============================ */
+.cta-final {
+  margin-top: 40px; border-radius: var(--r-2xl); padding: 44px;
+  background: linear-gradient(135deg, #FD6936 0%, #ff8a5f 100%); color: #fff;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  position: relative; overflow: hidden;
+}
+.cta-final h2 { color: #fff; font-size: 26px; max-width: 560px; }
+.cta-final p { color: rgba(255,255,255,.9); margin-top: 8px; max-width: 520px; }
+.cta-final .btn--secondary { background: #fff; border-color: #fff; }
+
+footer { padding: 40px 0 60px; color: var(--c-muted); font-size: 12.5px; text-align: center; }
+
+/* ============================ RESPONSIVE ============================ */
+@media (max-width: 960px) {
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-2-1 { grid-template-columns: 1fr; }
+  .obsidian { grid-template-columns: 1fr; }
+  .obs-side { border-left: 0; border-top: 1px solid #2a2d52; max-height: none; }
+  .nav { display: none; }
+}
+@media (max-width: 680px) {
+  .shell { padding: 0 18px; }
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .id-card { grid-template-columns: auto 1fr; }
+  .id-side { grid-column: 1 / -1; text-align: left; }
+  .field .row, .choice-grid { grid-template-columns: 1fr; }
+  .cta-final { padding: 30px; }
+  .wiz__body { padding: 14px 18px 8px; }
+  .wiz__foot, .wiz__top { padding-left: 18px; padding-right: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== DEMO BANNER ===================== -->
+<div class="demo-bar">
+  <div class="demo-bar__inner">
+    <span class="demo-pulse"></span>
+    <span><strong>Exemple de profil</strong> — voici à quoi ressemble le tableau de bord d'un élève une fois le parcours complété.</span>
+    <span class="demo-bar__spacer"></span>
+    <button class="btn btn--accent" data-open-wizard>Démarrer maintenant →</button>
+  </div>
+</div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="app-header">
+  <div class="shell app-header__inner">
+    <div class="app-header__left">
+      <a class="logo" href="index.html" aria-label="Proxxie · Accueil">
+        <svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="logo__wordmark">Proxxie</span>
+      </a>
+      <div class="app-header__sep"></div>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#" class="is-active">Profil élève</a>
+        <a href="tests.html">Tests</a>
+        <a href="ressources.html">Ressources</a>
+        <a href="rapport.html">Rapport</a>
+      </nav>
+    </div>
+    <div class="app-header__right">
+      <button class="btn btn--accent btn--small" data-open-wizard>Démarrer mon parcours</button>
+      <span class="avatar" title="Compte parent">CM</span>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="shell">
+
+    <!-- ===================== IDENTITY CARD ===================== -->
+    <section class="id-card">
+      <div class="id-portrait">LM</div>
+      <div class="id-main">
+        <span class="chip chip--warn" style="margin-bottom:8px;">Profil exemple</span>
+        <h1>Louise Martin</h1>
+        <div class="id-meta">
+          <span>🎂 15 ans</span>
+          <span>🏫 Classe de 2nde</span>
+          <span>📍 Lycée Victor Hugo</span>
+          <span>🗓️ Bilan du 12 mai 2026</span>
+        </div>
+        <div class="id-tags">
+          <span class="id-tag">curiosité</span>
+          <span class="id-tag">créativité</span>
+          <span class="id-tag">investigatrice</span>
+          <span class="id-tag">sensibilité</span>
+          <span class="id-tag">autonomie</span>
+          <span class="id-tag">haut-potentiel</span>
+        </div>
+      </div>
+      <div class="id-side">
+        <div class="id-score">132<small>QI total estimé</small></div>
+      </div>
+    </section>
+
+    <!-- ===================== TABS ===================== -->
+    <nav class="tabbar" role="tablist">
+      <button class="tab is-active" data-tab="overview" role="tab">🧭 Vue d'ensemble</button>
+      <button class="tab" data-tab="graph" role="tab">🕸️ Carte de connaissances</button>
+      <button class="tab" data-tab="tests" role="tab">🧪 Tests <span class="tcount">6</span></button>
+      <button class="tab" data-tab="school" role="tab">📚 École</button>
+      <button class="tab" data-tab="profile" role="tab">🧬 Profil & matrices</button>
+    </nav>
+
+    <!-- ============ PANEL: OVERVIEW ============ -->
+    <section class="panel is-active" data-panel="overview">
+      <div class="grid grid-3" style="margin-bottom:18px;">
+        <div class="card kpi"><span class="label">Tests complétés</span><span class="value">6<span style="font-size:15px;color:var(--c-muted);">/9</span></span><span class="delta up">+2 cette semaine</span></div>
+        <div class="card kpi"><span class="label">Moyenne générale</span><span class="value">15,5<span style="font-size:15px;color:var(--c-muted);">/20</span></span><span class="delta up">▲ 0,8 vs trimestre&nbsp;1</span></div>
+        <div class="card kpi"><span class="label">Persévérance (Grit)</span><span class="value">4,1<span style="font-size:15px;color:var(--c-muted);">/5</span></span><span class="delta up">Au-dessus de la moyenne</span></div>
+      </div>
+
+      <div class="grid grid-2-1">
+        <!-- Synthèse -->
+        <div class="card">
+          <div class="section-head"><h3>🧩 Synthèse du profil</h3><span class="chip chip--purple">Généré par Proxxie</span></div>
+          <p>Louise présente un <strong>profil à haut potentiel à dominante investigatrice et artistique</strong>. Sa curiosité intellectuelle et sa sensibilité esthétique sont ses deux moteurs principaux. Elle apprend vite, aime comprendre « le pourquoi » des choses, et a besoin d'autonomie pour s'épanouir.</p>
+          <p style="margin-top:12px;">Côté scolaire, ses résultats sont solides et homogènes, avec des pics en <strong>Anglais, Arts plastiques et SVT</strong>. L'EPS et les mathématiques sont des zones de moindre aisance, sans difficulté réelle. Son enjeu n'est pas le niveau, mais de <strong>donner du sens</strong> à ses apprentissages pour rester engagée.</p>
+          <div class="grid grid-3" style="margin-top:18px;gap:12px;">
+            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
+              <div class="eyebrow" style="color:var(--c-green);"><span class="dot" style="background:var(--c-green);"></span>Forces</div>
+              <p style="font-size:12.5px;margin-top:8px;">Curiosité · raisonnement verbal · créativité · empathie</p>
+            </div>
+            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
+              <div class="eyebrow" style="color:var(--c-orange);"><span class="dot"></span>Vigilance</div>
+              <p style="font-size:12.5px;margin-top:8px;">Perfectionnisme · gestion du stress avant épreuves</p>
+            </div>
+            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
+              <div class="eyebrow" style="color:var(--c-blue-deep);"><span class="dot" style="background:var(--c-blue-deep);"></span>Pistes</div>
+              <p style="font-size:12.5px;margin-top:8px;">Sciences du vivant · design · métiers créatifs</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Five Radar -->
+        <div class="card">
+          <div class="section-head"><h3>🧬 Personnalité</h3><span class="chip chip--neutral">Big Five</span></div>
+          <div class="radar-wrap">
+            <svg id="radarBig" width="220" height="220" viewBox="0 0 220 220" aria-label="Radar de personnalité"></svg>
+            <ul class="radar-legend" id="radarLegend"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prochaine étape -->
+      <div class="card" style="margin-top:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#E8F0FF,#fff);">
+        <div style="font-size:32px;">🎯</div>
+        <div style="flex:1;min-width:220px;">
+          <h3>Prochaine étape recommandée</h3>
+          <p style="margin-top:4px;font-size:13px;">Compléter le <strong>test RIASEC approfondi</strong> puis prendre rendez-vous avec un coach pour construire le plan d'orientation de Louise.</p>
+        </div>
+        <button class="btn btn--primary" data-open-wizard>Lancer le parcours</button>
+      </div>
+    </section>
+
+    <!-- ============ PANEL: OBSIDIAN GRAPH ============ -->
+    <section class="panel" data-panel="graph">
+      <div class="section-head">
+        <h3>🕸️ Carte de connaissances de l'élève</h3>
+        <span class="chip chip--neutral">Vue type Obsidian · cliquez sur un nœud</span>
+      </div>
+      <div class="obsidian">
+        <div class="obs-graph">
+          <div class="obs-graph__head">
+            <div class="eyebrow"><span class="dot"></span>Knowledge graph</div>
+            <h3>Louise Martin</h3>
+          </div>
+          <svg id="graphSvg" viewBox="0 0 760 480" preserveAspectRatio="xMidYMid meet" aria-label="Graphe de connaissances"></svg>
+          <div class="obs-legend">
+            <span><i style="background:#FD6936;"></i>Élève</span>
+            <span><i style="background:#7C5CFF;"></i>Dimension</span>
+            <span><i style="background:#487AFF;"></i>Donnée / note</span>
+          </div>
+        </div>
+        <aside class="obs-side" id="obsSide">
+          <h4>📝 Notes liées</h4>
+          <div class="note">
+            <div class="nt">🔬 Curiosité scientifique</div>
+            <p>Pose beaucoup de questions en SVT, mène ses propres « mini-expériences ». Moteur d'engagement n°1.</p>
+            <div class="links"><span class="wikilink">SVT 17/20</span><span class="wikilink">RIASEC · Investigateur</span></div>
+            <div class="tags"><span class="tag-pill">curiosité</span><span class="tag-pill">sciences</span></div>
+          </div>
+          <div class="note">
+            <div class="nt">🎨 Sensibilité artistique</div>
+            <p>Excelle en arts plastiques, vocabulaire riche, perçoit les nuances. À nourrir comme voie possible.</p>
+            <div class="links"><span class="wikilink">Arts 19/20</span><span class="wikilink">MBTI · INFP</span></div>
+            <div class="tags"><span class="tag-pill">créativité</span><span class="tag-pill">sensibilité</span></div>
+          </div>
+          <div class="note">
+            <div class="nt">🧭 Besoin d'autonomie</div>
+            <p>Apprend mieux seule, supporte mal la pression de groupe. Préfère choisir ses sujets.</p>
+            <div class="links"><span class="wikilink">Valeurs · Autonomie</span><span class="wikilink">Big Five · Ouverture</span></div>
+            <div class="tags"><span class="tag-pill">autonomie</span><span class="tag-pill">INFP</span></div>
+          </div>
+          <div class="note">
+            <div class="nt">⚡ Point de vigilance</div>
+            <p>Perfectionnisme : stress avant les évaluations. Travailler la gestion du trac et le droit à l'erreur.</p>
+            <div class="links"><span class="wikilink">Grit 4.1</span><span class="wikilink">Anxiété · modérée</span></div>
+            <div class="tags"><span class="tag-pill">perfectionnisme</span><span class="tag-pill">stress</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ PANEL: TESTS ============ -->
+    <section class="panel" data-panel="tests">
+      <div class="section-head"><h3>🧪 Tests passés & résultats</h3><span class="chip chip--ok">6 complétés</span></div>
+      <div class="grid grid-3" id="testGrid"></div>
+    </section>
+
+    <!-- ============ PANEL: SCHOOL ============ -->
+    <section class="panel" data-panel="school">
+      <div class="grid grid-2-1">
+        <div class="card">
+          <div class="section-head"><h3>📚 Résultats scolaires</h3><span class="chip chip--neutral">2nde · Trimestre 2</span></div>
+          <div class="grid grid-3" id="subjGrid" style="gap:10px;"></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><h3>📈 Capacités intellectuelles</h3><span class="chip chip--purple">Indices type WISC‑V</span></div>
+          <div id="iqBars"></div>
+          <p class="muted" style="font-size:12px;margin-top:12px;">Indices standardisés (moyenne = 100). Profil hétérogène avec une compréhension verbale très élevée.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PANEL: PROFILE & MATRICES ============ -->
+    <section class="panel" data-panel="profile">
+      <div class="grid grid-2-1">
+        <div class="card">
+          <div class="section-head"><h3>🎯 Matrice Forces × Intérêts</h3><span class="chip chip--neutral">Positionnement</span></div>
+          <div class="matrix" id="matrix">
+            <span class="axis-x l">Faible intérêt</span>
+            <span class="axis-x r">Fort intérêt</span>
+            <span class="axis-y t">Force élevée ↑</span>
+            <span class="axis-y b">↓ Force à développer</span>
+            <span class="cross-x"></span><span class="cross-y"></span>
+          </div>
+          <p class="muted" style="font-size:12px;margin-top:12px;">En haut à droite : les domaines à cultiver en priorité (force + intérêt alignés).</p>
+        </div>
+        <div class="card">
+          <div class="section-head"><h3>🧭 Intérêts RIASEC</h3><span class="chip chip--neutral">Holland</span></div>
+          <div class="radar-wrap">
+            <svg id="radarRiasec" width="210" height="210" viewBox="0 0 210 210" aria-label="Radar RIASEC"></svg>
+            <ul class="radar-legend" id="riasecLegend"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:18px;">
+        <div class="card">
+          <div class="section-head"><h3>💎 Valeurs prioritaires</h3></div>
+          <div id="valuesBars"></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><h3>🧠 Type de personnalité</h3><span class="chip chip--purple">MBTI</span></div>
+          <div style="display:flex;align-items:center;gap:18px;">
+            <div style="font-family:var(--font-num);font-size:48px;font-weight:600;color:var(--c-blue-deep);">INFP</div>
+            <div>
+              <strong>« Le Médiateur »</strong>
+              <p style="font-size:12.5px;margin-top:4px;">Idéaliste, créative et guidée par ses valeurs. Cherche du sens et l'harmonie. Imaginative et profondément empathique.</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;">
+            <span class="chip chip--neutral">Introversion 64%</span>
+            <span class="chip chip--neutral">Intuition 78%</span>
+            <span class="chip chip--neutral">Sentiment 71%</span>
+            <span class="chip chip--neutral">Perception 58%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FINAL CTA ===================== -->
+    <section class="cta-final">
+      <div>
+        <span class="chip chip--solid" style="margin-bottom:10px;">C'était un exemple</span>
+        <h2>Construisez le vrai profil de votre enfant</h2>
+        <p>Renseignez ses informations, ajoutez ses bulletins, choisissez les tests adaptés, puis réservez un échange avec Charles. Comptez 5 minutes.</p>
+      </div>
+      <button class="btn btn--secondary btn--lg" data-open-wizard>Démarrer maintenant →</button>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  Proxxie · Profil élève (données fictives à but de démonstration) — <a href="index.html" style="color:var(--c-blue-deep);font-weight:600;">Retour à l'accueil</a>
+</footer>
+
+<!-- ===================== WIZARD MODAL ===================== -->
+<div class="modal-overlay" id="wizardModal" role="dialog" aria-modal="true" aria-label="Parcours d'inscription">
+  <div class="wiz">
+    <div class="wiz__top">
+      <div class="wiz__bar">
+        <a class="logo" href="#" style="pointer-events:none;font-size:16px;">
+          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          Parcours d'inscription
+        </a>
+        <button class="wiz__close" id="wizClose" aria-label="Fermer">✕</button>
+      </div>
+      <div class="wiz__steps" id="wizSteps">
+        <div class="seg"><span class="fillseg"></span></div>
+        <div class="seg"><span class="fillseg"></span></div>
+        <div class="seg"><span class="fillseg"></span></div>
+        <div class="seg"><span class="fillseg"></span></div>
+        <div class="seg"><span class="fillseg"></span></div>
+      </div>
+      <div class="wiz__stepmeta" id="wizMeta">Étape 1 / 5 · L'enfant</div>
+    </div>
+
+    <div class="wiz__body">
+
+      <!-- STEP 1 : enfant -->
+      <div class="step is-active" data-step="0">
+        <h2>Parlons de votre enfant 👋</h2>
+        <p class="lead">Ces informations nous permettent de personnaliser les tests et le bilan.</p>
+        <div class="field">
+          <label for="f_prenom">Prénom de l'enfant</label>
+          <input id="f_prenom" type="text" placeholder="Ex. Louise" />
+        </div>
+        <div class="field">
+          <div class="row">
+            <div>
+              <label for="f_age">Âge</label>
+              <input id="f_age" type="number" min="5" max="25" placeholder="15" />
+            </div>
+            <div>
+              <label for="f_classe">Classe actuelle</label>
+              <select id="f_classe">
+                <option value="">Sélectionner…</option>
+                <option>CM2</option><option>6ème</option><option>5ème</option><option>4ème</option>
+                <option>3ème</option><option>2nde</option><option>1ère</option><option>Terminale</option>
+                <option>Études supérieures</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f_etab">Établissement (facultatif)</label>
+          <input id="f_etab" type="text" placeholder="Ex. Lycée Victor Hugo" />
+        </div>
+      </div>
+
+      <!-- STEP 2 : parent + objectif -->
+      <div class="step" data-step="1">
+        <h2>Et vous, le parent 🧑‍🍼</h2>
+        <p class="lead">Pour vous tenir informé·e et préparer l'échange avec Charles.</p>
+        <div class="field">
+          <div class="row">
+            <div><label for="p_prenom">Votre prénom</label><input id="p_prenom" type="text" placeholder="Camille" /></div>
+            <div><label for="p_email">Email</label><input id="p_email" type="email" placeholder="vous@email.com" /></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Qu'est-ce qui vous amène ? <span class="muted" style="font-weight:400;">(une ou plusieurs)</span></label>
+          <div class="choice-grid" data-multi>
+            <label class="choice"><span class="cico">🧭</span><span><span class="ct">Orientation</span><span class="cd">Choisir une voie, des études</span></span><span class="ck">✓</span></label>
+            <label class="choice"><span class="cico">🧠</span><span><span class="ct">Mieux le connaître</span><span class="cd">Personnalité, fonctionnement</span></span><span class="ck">✓</span></label>
+            <label class="choice"><span class="cico">📉</span><span><span class="ct">Décrochage / motivation</span><span class="cd">Remettre du sens</span></span><span class="ck">✓</span></label>
+            <label class="choice"><span class="cico">✨</span><span><span class="ct">Haut potentiel</span><span class="cd">Détecter, accompagner</span></span><span class="ck">✓</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 : documents -->
+      <div class="step" data-step="2">
+        <h2>Ajoutez ses documents 📎</h2>
+        <p class="lead">Bulletins, attestations, bilans… Tout ce qui aide à mieux comprendre votre enfant. (Optionnel mais recommandé.)</p>
+        <div class="dropzone" id="dropzone">
+          <div class="dzi">⬆️</div>
+          <h4>Glissez vos fichiers ici</h4>
+          <p>ou <span class="browse">parcourez votre ordinateur</span> · PDF, JPG, PNG — 10&nbsp;Mo max</p>
+          <input id="fileInput" type="file" multiple hidden accept=".pdf,.jpg,.jpeg,.png" />
+        </div>
+        <div class="doc-hint">
+          <span class="chip chip--neutral">📄 Bulletins de notes</span>
+          <span class="chip chip--neutral">📝 Bilan orthophonique</span>
+          <span class="chip chip--neutral">🏅 Attestations</span>
+          <span class="chip chip--neutral">🧩 Bilan psy / WISC</span>
+        </div>
+        <div class="filelist" id="fileList"></div>
+      </div>
+
+      <!-- STEP 4 : tests recommandés -->
+      <div class="step" data-step="3">
+        <h2>Tests recommandés 🧪</h2>
+        <p class="lead">Sélection adaptée au profil. Vous pourrez les passer à votre rythme depuis le tableau de bord.</p>
+        <div id="recoList"></div>
+      </div>
+
+      <!-- STEP 5 : RDV -->
+      <div class="step" data-step="4">
+        <h2>Réservez un échange avec Charles 📅</h2>
+        <p class="lead">30 minutes pour faire le point et définir le plan d'accompagnement de votre enfant.</p>
+        <div class="recap" id="recap"></div>
+        <div class="cal-embed">
+          <div class="calendly-inline-widget" data-url="https://calendly.com/proxxie?hide_gdpr_banner=1&primary_color=1320ce" style="min-width:320px;height:580px;"></div>
+        </div>
+      </div>
+
+      <!-- DONE -->
+      <div class="step" data-step="5">
+        <div style="text-align:center;padding:30px 10px;">
+          <div class="success-mark">✓</div>
+          <h2>C'est parti ! 🎉</h2>
+          <p class="lead" style="max-width:420px;margin:8px auto 0;">Le profil de votre enfant est en cours de création. Vous recevrez un email de confirmation et un rappel avant votre rendez-vous.</p>
+          <div class="recap" id="recapFinal" style="text-align:left;max-width:440px;margin:22px auto 0;"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="wiz__foot">
+      <button class="btn btn--ghost" id="wizBack" style="visibility:hidden;">← Retour</button>
+      <span class="muted" id="wizSkip" style="font-size:12.5px;cursor:pointer;">Passer cette étape</span>
+      <button class="btn btn--primary" id="wizNext">Continuer →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================ DATA ============================ */
+const BIG_FIVE = [
+  { k: "Ouverture", v: 92, c: "#7C5CFF" },
+  { k: "Conscience", v: 70, c: "#487AFF" },
+  { k: "Extraversion", v: 45, c: "#FD6936" },
+  { k: "Agréabilité", v: 80, c: "#22A06B" },
+  { k: "Stabilité émot.", v: 58, c: "#F5B700" },
+];
+const RIASEC = [
+  { k: "Investigateur", v: 90 },
+  { k: "Artistique", v: 85 },
+  { k: "Social", v: 62 },
+  { k: "Réaliste", v: 38 },
+  { k: "Entreprenant", v: 44 },
+  { k: "Conventionnel", v: 30 },
+];
+const TESTS = [
+  { ico: "🧭", bg:"rgba(72,122,255,.14)", col:"#1320CE", name: "RIASEC — Intérêts", res: "Investigateur · Artistique", note: "Profil IAS : sciences, recherche et expression créative.", date: "12 mai", status:"ok" },
+  { ico: "🧠", bg:"rgba(124,92,255,.14)", col:"#7C5CFF", name: "MBTI — Personnalité", res: "INFP « Le Médiateur »", note: "Idéaliste, créative, guidée par ses valeurs.", date: "10 mai", status:"ok" },
+  { ico: "✨", bg:"rgba(245,183,0,.18)", col:"#B07A00", name: "HPI — Potentiel", res: "QI total ≈ 132", note: "Haut potentiel, compréhension verbale très élevée.", date: "8 mai", status:"ok" },
+  { ico: "🔥", bg:"rgba(253,105,54,.14)", col:"#FD6936", name: "Grit — Persévérance", res: "4,1 / 5", note: "Engagement et constance au-dessus de la moyenne.", date: "5 mai", status:"ok" },
+  { ico: "💎", bg:"rgba(34,160,107,.14)", col:"#22A06B", name: "Valeurs", res: "Autonomie · Créativité", note: "Cherche du sens et la liberté d'explorer.", date: "3 mai", status:"ok" },
+  { ico: "🧗", bg:"rgba(72,122,255,.14)", col:"#1320CE", name: "CAAS — Adaptabilité", res: "Élevée", note: "Bonne capacité à se projeter et à s'adapter.", date: "1 mai", status:"ok" },
+];
+const SUBJECTS = [
+  { n: "Anglais", g: 18 }, { n: "Arts plast.", g: 19 }, { n: "SVT", g: 17 },
+  { n: "Français", g: 16 }, { n: "Histoire-Géo", g: 15 }, { n: "Physique", g: 14 },
+  { n: "Maths", g: 13 }, { n: "EPS", g: 12 }, { n: "Espagnol", g: 16 },
+];
+const IQ = [
+  { k: "Compréhension verbale", v: 138 },
+  { k: "Raisonnement perceptif", v: 125 },
+  { k: "Mémoire de travail", v: 119 },
+  { k: "Vitesse de traitement", v: 110 },
+];
+const VALUES = [
+  { k: "Autonomie", v: 95 }, { k: "Créativité", v: 88 },
+  { k: "Altruisme", v: 76 }, { k: "Accomplissement", v: 64 }, { k: "Sécurité", v: 40 },
+];
+const MATRIX_ITEMS = [
+  { n: "SVT", x: 82, y: 84, c: "#22A06B" },
+  { n: "Arts", x: 90, y: 90, c: "#7C5CFF" },
+  { n: "Anglais", x: 70, y: 88, c: "#487AFF" },
+  { n: "Écriture", x: 78, y: 72, c: "#FD6936" },
+  { n: "Maths", x: 35, y: 55, c: "#6B6F8C" },
+  { n: "EPS", x: 30, y: 28, c: "#6B6F8C" },
+  { n: "Histoire", x: 55, y: 64, c: "#487AFF" },
+];
+const RECO_TESTS = [
+  { ico:"🧭", bg:"rgba(72,122,255,.14)", col:"#1320CE", t:"RIASEC approfondi", d:"Affine les pistes d'orientation (15 min)", tag:"Prioritaire" },
+  { ico:"🧩", bg:"rgba(124,92,255,.14)", col:"#7C5CFF", t:"BRIEF — Fonctions exécutives", d:"Organisation, attention, planification (10 min)", tag:"Recommandé" },
+  { ico:"🔥", bg:"rgba(253,105,54,.14)", col:"#FD6936", t:"Grit — Persévérance", d:"Mesure l'engagement dans la durée (5 min)", tag:"Recommandé" },
+  { ico:"💎", bg:"rgba(34,160,107,.14)", col:"#22A06B", t:"Valeurs professionnelles", d:"Ce qui compte vraiment pour votre enfant (8 min)", tag:"Optionnel" },
+];
+
+/* ============================ TABS ============================ */
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("is-active"));
+    document.querySelectorAll(".panel").forEach(x => x.classList.remove("is-active"));
+    t.classList.add("is-active");
+    document.querySelector(`[data-panel="${t.dataset.tab}"]`).classList.add("is-active");
+  });
+});
+
+/* ============================ RADAR CHART ============================ */
+function drawRadar(svgId, data, opts={}) {
+  const svg = document.getElementById(svgId);
+  const size = +svg.getAttribute("width");
+  const cx = size/2, cy = size/2, R = size/2 - 26;
+  const N = data.length;
+  const NS = "http://www.w3.org/2000/svg";
+  const max = 100;
+  let html = "";
+  // rings
+  [0.25,0.5,0.75,1].forEach(r => {
+    let pts = [];
+    for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; pts.push((cx+Math.cos(a)*R*r)+","+(cy+Math.sin(a)*R*r)); }
+    html += `<polygon points="${pts.join(" ")}" fill="none" stroke="rgba(10,14,44,.08)" stroke-width="1"/>`;
+  });
+  // axes + labels
+  for (let i=0;i<N;i++){
+    const a=(Math.PI*2*i/N)-Math.PI/2;
+    const x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R;
+    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(10,14,44,.08)"/>`;
+    const lx=cx+Math.cos(a)*(R+14), ly=cy+Math.sin(a)*(R+14);
+    const anchor = Math.abs(Math.cos(a))<0.3 ? "middle" : (Math.cos(a)>0?"start":"end");
+    html += `<text x="${lx}" y="${ly+3}" text-anchor="${anchor}" font-size="9" font-weight="700" fill="#6B6F8C">${data[i].k.split(" ")[0]}</text>`;
+  }
+  // data polygon
+  let dpts=[];
+  for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; const rr=R*(data[i].v/max); dpts.push((cx+Math.cos(a)*rr)+","+(cy+Math.sin(a)*rr)); }
+  const color = opts.color || "#487AFF";
+  html += `<polygon points="${dpts.join(" ")}" fill="${color}33" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+  for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; const rr=R*(data[i].v/max); const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr; html += `<circle cx="${x}" cy="${y}" r="3" fill="${data[i].c||color}"/>`; }
+  svg.innerHTML = html;
+}
+drawRadar("radarBig", BIG_FIVE, { color:"#7C5CFF" });
+drawRadar("radarRiasec", RIASEC, { color:"#1320CE" });
+
+document.getElementById("radarLegend").innerHTML = BIG_FIVE.map(d =>
+  `<li><span class="lk"><span class="dotc" style="background:${d.c}"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
+document.getElementById("riasecLegend").innerHTML = RIASEC.slice(0,4).map(d =>
+  `<li><span class="lk"><span class="dotc" style="background:#1320CE"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
+
+/* ============================ TESTS ============================ */
+document.getElementById("testGrid").innerHTML = TESTS.map(t => `
+  <div class="card test-card">
+    <div class="th">
+      <span class="ticon" style="background:${t.bg};color:${t.col}">${t.ico}</span>
+      <span class="chip chip--ok">Complété</span>
+    </div>
+    <div><h4 style="font-size:14px;">${t.name}</h4><div class="res">${t.res}</div></div>
+    <p>${t.note}</p>
+    <div class="tfoot"><span class="muted" style="font-size:12px;">📅 ${t.date} 2026</span><a class="wikilink" style="color:var(--c-blue-deep);background:var(--c-blue-tint);">Voir le détail</a></div>
+  </div>`).join("");
+
+/* ============================ SCHOOL ============================ */
+document.getElementById("subjGrid").innerHTML = SUBJECTS.map(s => {
+  const cls = s.g>=16?"g-high":(s.g>=14?"g-mid":"g-low");
+  return `<div class="subj"><span class="sn">${s.n}</span><span class="sg ${cls}">${s.g}<small>/20</small></span></div>`;
+}).join("");
+
+document.getElementById("iqBars").innerHTML = IQ.map(d => {
+  const pct = Math.min(100, ((d.v-70)/(145-70))*100);
+  return `<div class="bar-row"><span class="bl">${d.k}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span class="bar-val">${d.v}</span></div>`;
+}).join("");
+
+document.getElementById("valuesBars").innerHTML = VALUES.map(d =>
+  `<div class="bar-row"><span class="bl">${d.k}</span><div class="bar-track"><div class="bar-fill" style="width:${d.v}%;background:linear-gradient(90deg,#22A06B,#1f7d55)"></div></div><span class="bar-val">${d.v}</span></div>`).join("");
+
+/* ============================ MATRIX ============================ */
+const mx = document.getElementById("matrix");
+MATRIX_ITEMS.forEach(it => {
+  const el = document.createElement("div");
+  el.className = "dot-item";
+  el.style.left = it.x + "%";
+  el.style.top = (100-it.y) + "%";
+  el.innerHTML = `<span class="pt" style="background:${it.c}"></span>${it.n}`;
+  mx.appendChild(el);
+});
+
+/* ============================ OBSIDIAN GRAPH ============================ */
+(function(){
+  const svg = document.getElementById("graphSvg");
+  const NS = "http://www.w3.org/2000/svg";
+  const nodes = [
+    { id:"louise", label:"Louise", x:380, y:240, r:30, type:"root" },
+    { id:"perso", label:"Personnalité", x:170, y:110, r:20, type:"dim" },
+    { id:"intel", label:"Intellect", x:600, y:110, r:20, type:"dim" },
+    { id:"ecole", label:"École", x:160, y:380, r:20, type:"dim" },
+    { id:"valeurs", label:"Valeurs", x:600, y:380, r:20, type:"dim" },
+    { id:"infp", label:"INFP", x:70, y:60, r:12, type:"leaf" },
+    { id:"big5", label:"Ouverture 92", x:120, y:200, r:12, type:"leaf" },
+    { id:"hpi", label:"QI 132", x:670, y:50, r:12, type:"leaf" },
+    { id:"verbal", label:"Verbal 138", x:710, y:180, r:12, type:"leaf" },
+    { id:"svt", label:"SVT 17", x:70, y:330, r:12, type:"leaf" },
+    { id:"arts", label:"Arts 19", x:120, y:450, r:12, type:"leaf" },
+    { id:"auto", label:"Autonomie", x:710, y:330, r:12, type:"leaf" },
+    { id:"creat", label:"Créativité", x:660, y:450, r:12, type:"leaf" },
+    { id:"riasec", label:"Investigateur", x:380, y:90, r:12, type:"leaf" },
+    { id:"grit", label:"Grit 4.1", x:380, y:400, r:12, type:"leaf" },
+  ];
+  const edges = [
+    ["louise","perso"],["louise","intel"],["louise","ecole"],["louise","valeurs"],
+    ["louise","riasec"],["louise","grit"],
+    ["perso","infp"],["perso","big5"],
+    ["intel","hpi"],["intel","verbal"],
+    ["ecole","svt"],["ecole","arts"],
+    ["valeurs","auto"],["valeurs","creat"],
+  ];
+  const byId = Object.fromEntries(nodes.map(n=>[n.id,n]));
+  const colors = { root:"#FD6936", dim:"#7C5CFF", leaf:"#487AFF" };
+  let html = "";
+  edges.forEach(([a,b])=>{ const A=byId[a],B=byId[b]; html += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="rgba(176,208,247,.18)" stroke-width="1.4"/>`; });
+  nodes.forEach(n=>{
+    const c = colors[n.type];
+    html += `<g class="obs-node" data-id="${n.id}">
+      <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${c}" fill-opacity="${n.type==='leaf'?0.85:1}"/>
+      <text x="${n.x}" y="${n.y + n.r + 13}" text-anchor="middle">${n.label}</text></g>`;
+  });
+  svg.innerHTML = html;
+})();
+
+/* ============================ WIZARD ============================ */
+const modal = document.getElementById("wizardModal");
+const steps = [...document.querySelectorAll(".step")];
+const segs = [...document.querySelectorAll("#wizSteps .seg")];
+const metaEl = document.getElementById("wizMeta");
+const backBtn = document.getElementById("wizBack");
+const nextBtn = document.getElementById("wizNext");
+const skipBtn = document.getElementById("wizSkip");
+const STEP_NAMES = ["L'enfant","Le parent","Documents","Tests","Rendez-vous","Terminé"];
+let cur = 0;
+let calendlyLoaded = false;
+
+function openWizard(){ modal.classList.add("is-open"); document.body.style.overflow="hidden"; render(); }
+function closeWizard(){ modal.classList.remove("is-open"); document.body.style.overflow=""; }
+document.querySelectorAll("[data-open-wizard]").forEach(b => b.addEventListener("click", openWizard));
+document.getElementById("wizClose").addEventListener("click", closeWizard);
+modal.addEventListener("click", e => { if(e.target===modal) closeWizard(); });
+document.addEventListener("keydown", e => { if(e.key==="Escape" && modal.classList.contains("is-open")) closeWizard(); });
+
+function render(){
+  steps.forEach((s,i)=> s.classList.toggle("is-active", i===cur));
+  segs.forEach((s,i)=>{ s.classList.remove("done","current"); if(i<cur) s.classList.add("done"); else if(i===cur) s.classList.add("current"); });
+  const total = STEP_NAMES.length - 1; // 5 real steps (0..4), 5 = done
+  if (cur < 5) { metaEl.textContent = `Étape ${cur+1} / 5 · ${STEP_NAMES[cur]}`; }
+  else { metaEl.textContent = "Inscription confirmée"; segs.forEach(s=>s.classList.add("done")); }
+
+  backBtn.style.visibility = (cur===0 || cur===5) ? "hidden" : "visible";
+  // skip available on optional steps: documents(2), tests(3)
+  skipBtn.style.display = (cur===2 || cur===3) ? "inline" : "none";
+
+  if (cur === 4) { nextBtn.textContent = "Confirmer l'inscription ✓"; loadCalendly(); fillRecap("recap"); }
+  else if (cur === 5) { nextBtn.textContent = "Aller au tableau de bord →"; skipBtn.style.display="none"; fillRecap("recapFinal"); }
+  else { nextBtn.textContent = "Continuer →"; }
+
+  modal.querySelector(".wiz").scrollIntoView({block:"nearest"});
+}
+
+backBtn.addEventListener("click", ()=>{ if(cur>0){ cur--; render(); } });
+skipBtn.addEventListener("click", ()=>{ if(cur<4){ cur++; render(); } });
+nextBtn.addEventListener("click", ()=>{
+  if (cur === 5) { closeWizard(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  if (!validateStep(cur)) return;
+  cur++; render();
+});
+
+function validateStep(i){
+  if (i===0){
+    const p = document.getElementById("f_prenom");
+    if(!p.value.trim()){ p.focus(); p.style.borderColor="var(--c-orange)"; return false; }
+    p.style.borderColor="";
+  }
+  if (i===1){
+    const e = document.getElementById("p_email");
+    if(!e.value.trim() || !/.+@.+\..+/.test(e.value)){ e.focus(); e.style.borderColor="var(--c-orange)"; return false; }
+    e.style.borderColor="";
+  }
+  return true;
+}
+
+/* multi-select choices */
+document.querySelectorAll("[data-multi] .choice").forEach(c=>{
+  c.addEventListener("click", ()=> c.classList.toggle("is-sel"));
+});
+
+/* recap builder */
+function fillRecap(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const prenom = document.getElementById("f_prenom").value.trim() || "—";
+  const age = document.getElementById("f_age").value || "—";
+  const classe = document.getElementById("f_classe").value || "—";
+  const email = document.getElementById("p_email").value.trim() || "—";
+  const motifs = [...document.querySelectorAll("[data-multi] .choice.is-sel .ct")].map(x=>x.textContent).join(", ") || "—";
+  const nbDocs = document.querySelectorAll("#fileList .fileitem").length;
+  const nbTests = document.querySelectorAll(".reco .radd.is-added").length;
+  el.innerHTML = `
+    <div class="rr"><span class="rk">Enfant</span><span class="rv">${prenom}${age!=="—"?", "+age+" ans":""}${classe!=="—"?" · "+classe:""}</span></div>
+    <div class="rr"><span class="rk">Contact</span><span class="rv">${email}</span></div>
+    <div class="rr"><span class="rk">Objectifs</span><span class="rv">${motifs}</span></div>
+    <div class="rr"><span class="rk">Documents</span><span class="rv">${nbDocs} fichier${nbDocs>1?"s":""} ajouté${nbDocs>1?"s":""}</span></div>
+    <div class="rr"><span class="rk">Tests choisis</span><span class="rv">${nbTests} test${nbTests>1?"s":""}</span></div>`;
+}
+
+/* Calendly lazy load */
+function loadCalendly(){
+  if (calendlyLoaded) return;
+  calendlyLoaded = true;
+  const link = document.createElement("link");
+  link.rel="stylesheet"; link.href="https://assets.calendly.com/assets/external/widget.css";
+  document.head.appendChild(link);
+  const s = document.createElement("script");
+  s.src="https://assets.calendly.com/assets/external/widget.js"; s.async=true;
+  document.body.appendChild(s);
+}
+
+/* ============================ FILE UPLOAD ============================ */
+const dz = document.getElementById("dropzone");
+const fileInput = document.getElementById("fileInput");
+const fileList = document.getElementById("fileList");
+function fmtSize(b){ return b>1048576 ? (b/1048576).toFixed(1)+" Mo" : Math.max(1,Math.round(b/1024))+" Ko"; }
+function addFiles(files){
+  [...files].forEach(f=>{
+    const row = document.createElement("div");
+    row.className="fileitem";
+    const ext = (f.name.split(".").pop()||"").toUpperCase();
+    row.innerHTML = `<span class="fi">📄</span><span><span class="fn">${f.name}</span><br><span class="fs">${ext} · ${fmtSize(f.size)}</span></span><button class="fx" aria-label="Retirer">✕</button>`;
+    row.querySelector(".fx").addEventListener("click", ()=> row.remove());
+    fileList.appendChild(row);
+  });
+}
+dz.addEventListener("click", ()=> fileInput.click());
+fileInput.addEventListener("change", e=> addFiles(e.target.files));
+["dragenter","dragover"].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add("drag"); }));
+["dragleave","drop"].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove("drag"); }));
+dz.addEventListener("drop", e=> addFiles(e.dataTransfer.files));
+
+/* ============================ RECO TESTS ============================ */
+document.getElementById("recoList").innerHTML = RECO_TESTS.map((r,i)=>{
+  const tagcls = r.tag==="Prioritaire"?"chip--warn":(r.tag==="Recommandé"?"chip--ok":"chip--neutral");
+  return `<div class="reco">
+    <span class="rico" style="background:${r.bg};color:${r.col}">${r.ico}</span>
+    <div style="flex:1;">
+      <div class="rt">${r.t}</div><div class="rd">${r.d}</div>
+      <div class="rmeta"><span class="chip ${tagcls}">${r.tag}</span></div>
+    </div>
+    <button class="btn btn--secondary btn--small radd ${i<3?'is-added':''}" data-reco>${i<3?'✓ Ajouté':'+ Ajouter'}</button>
+  </div>`;
+}).join("");
+document.querySelectorAll("[data-reco]").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    b.classList.toggle("is-added");
+    b.textContent = b.classList.contains("is-added") ? "✓ Ajouté" : "+ Ajouter";
+  });
+});
+</script>
+</body>
+</html>
