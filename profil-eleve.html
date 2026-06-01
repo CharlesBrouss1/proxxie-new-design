@@ -3,1153 +3,915 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Proxxie · Profil élève (exemple) + Parcours d'inscription</title>
-<meta name="description" content="Exemple de profil élève Proxxie : personnalité, capacités intellectuelles et résultats scolaires réunis dans un système de connaissances. Puis parcours d'inscription guidé." />
+<title>Proxxie · Profil élève — exemple (Knowledge OS)</title>
+<meta name="description" content="Le profil d'un élève comme un système de connaissances : personnalité, capacités et résultats reliés dans un graphe vivant. Exemple, puis parcours d'inscription guidé." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
 :root {
-  --c-blue: #487AFF;
-  --c-blue-deep: #1320CE;
-  --c-blue-soft: #B0D0F7;
-  --c-blue-tint: #E8F0FF;
-  --c-orange: #FD6936;
-  --c-cream: #EEE6D9;
-  --c-cream-light: #F7F2E9;
-  --c-yellow: #F5EB3F;
-  --c-ink: #0A0E2C;
-  --c-ink-2: #2A2F4F;
-  --c-muted: #6B6F8C;
-  --c-line: #E6E2D6;
-  --c-white: #FFFFFF;
-  --c-green: #22A06B;
-  --c-green-tint: rgba(34,160,107,.12);
-  --c-purple: #7C5CFF;
-  --c-purple-tint: rgba(124,92,255,.12);
+  /* Knowledge OS — dark indigo */
+  --bg:      #0B0D1C;
+  --bg-1:    #11142A;
+  --bg-2:    #171B36;
+  --bg-3:    #1E2342;
+  --line:    rgba(140,160,230,.12);
+  --line-2:  rgba(140,160,230,.22);
+  --text:    #E9ECFB;
+  --text-2:  #A7AFD6;
+  --text-3:  #6E769E;
 
-  /* Obsidian-like graph surface */
-  --g-bg: #14152A;
-  --g-bg-2: #1B1D38;
-  --g-line: rgba(176,208,247,.16);
-  --g-text: #C9CEF2;
-  --g-muted: #8089B8;
+  --blue:    #5B8CFF;
+  --blue-2:  #3A5BFF;
+  --orange:  #FF7A45;
+  --purple:  #9B7CFF;
+  --yellow:  #F5E45C;
+  --green:   #34D399;
+  --pink:    #FF6FB5;
 
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 22px;
-  --r-xl: 32px;
-  --r-2xl: 44px;
+  --glow-blue: 0 0 0 1px rgba(91,140,255,.4), 0 0 24px -4px rgba(91,140,255,.55);
+  --shadow: 0 24px 60px -20px rgba(0,0,0,.7);
 
-  --shadow-sm: 0 1px 2px rgba(10, 14, 44, 0.06);
-  --shadow-md: 0 8px 28px -8px rgba(19, 32, 206, 0.18);
-  --shadow-lg: 0 24px 60px -16px rgba(19, 32, 206, 0.28);
+  --font-ui:   "Mulish", system-ui, sans-serif;
+  --font-disp: "Fraunces", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  --font-display: "Mulish", "Goldplay", system-ui, sans-serif;
-  --font-body: "Montserrat", system-ui, sans-serif;
-  --font-num: "Fraunces", "Museo", Georgia, serif;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 26px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--c-ink);
-  background: var(--c-cream-light);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  font-family: var(--font-ui); font-size: 14px; color: var(--text);
+  background: var(--bg);
+  background-image:
+    radial-gradient(1100px 620px at 78% -8%, rgba(91,140,255,.14), transparent 60%),
+    radial-gradient(900px 520px at 6% 4%, rgba(155,124,255,.12), transparent 58%),
+    radial-gradient(circle at 50% 50%, rgba(140,160,230,.05) 1px, transparent 1px);
+  background-size: auto, auto, 26px 26px;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  min-height: 100vh;
 }
-h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; margin: 0; color: var(--c-ink); }
-h1 { font-size: 30px; line-height: 1.15; }
-h2 { font-size: 22px; line-height: 1.2; }
-h3 { font-size: 17px; line-height: 1.25; }
-h4 { font-size: 14px; line-height: 1.3; font-weight: 600; }
-p { margin: 0; line-height: 1.55; color: var(--c-ink-2); }
+h1,h2,h3,h4 { margin: 0; font-weight: 700; letter-spacing: -.01em; color: var(--text); }
+p { margin: 0; line-height: 1.6; color: var(--text-2); }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; border: 0; background: none; padding: 0; color: inherit; }
+ul { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
 
-.shell { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
-.muted { color: var(--c-muted); }
-.num { font-family: var(--font-num); font-weight: 500; }
+.mono { font-family: var(--font-mono); }
+.disp { font-family: var(--font-disp); }
+.num  { font-family: var(--font-disp); font-weight: 600; font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-3); }
 
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--c-muted);
-}
-.eyebrow .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--c-orange); }
+/* icons */
+.ic { width: 18px; height: 18px; display: inline-block; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+.ic--sm { width: 15px; height: 15px; }
+.ic--lg { width: 22px; height: 22px; }
 
-.chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-  padding: 4px 9px; border-radius: 99px;
-  background: var(--c-blue-tint); color: var(--c-blue-deep);
-}
-.chip--ok { background: var(--c-green-tint); color: var(--c-green); }
-.chip--warn { background: rgba(253,105,54,.14); color: var(--c-orange); }
-.chip--neutral { background: rgba(10,14,44,.06); color: var(--c-ink-2); }
-.chip--purple { background: var(--c-purple-tint); color: var(--c-purple); }
-.chip--solid { background: var(--c-ink); color: var(--c-white); }
+/* chips / tags */
+.tag { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--blue);
+  background: rgba(91,140,255,.12); border: 1px solid rgba(91,140,255,.22); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.tag::before { content: "#"; opacity: .55; }
+.tag--y { color: var(--yellow); background: rgba(245,228,92,.1); border-color: rgba(245,228,92,.22); }
+.tag--o { color: var(--orange); background: rgba(255,122,69,.1); border-color: rgba(255,122,69,.24); }
+.tag--p { color: var(--purple); background: rgba(155,124,255,.12); border-color: rgba(155,124,255,.26); }
+.tag--g { color: var(--green); background: rgba(52,211,153,.1); border-color: rgba(52,211,153,.24); }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--text-2); }
+.badge--live { color: var(--yellow); border-color: rgba(245,228,92,.3); }
+.badge--live .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--yellow); box-shadow: 0 0 0 0 rgba(245,228,92,.6); animation: pulse 2.2s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(245,228,92,.5);} 70%{box-shadow:0 0 0 7px rgba(245,228,92,0);} 100%{box-shadow:0 0 0 0 rgba(245,228,92,0);} }
 
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: var(--font-body); font-weight: 600; font-size: 14px;
-  padding: 11px 18px; border-radius: var(--r-md);
-  transition: transform .12s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s;
-}
-.btn--primary { background: var(--c-blue-deep); color: var(--c-white); }
-.btn--primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.btn--secondary { background: var(--c-white); color: var(--c-ink); border: 1px solid var(--c-line); }
-.btn--secondary:hover { border-color: var(--c-blue); color: var(--c-blue-deep); }
-.btn--ghost { background: transparent; color: var(--c-ink-2); }
-.btn--ghost:hover { color: var(--c-blue-deep); }
-.btn--accent { background: var(--c-orange); color: var(--c-white); }
-.btn--accent:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(253,105,54,.35); }
-.btn--small { padding: 7px 12px; font-size: 12.5px; border-radius: 10px; }
-.btn--lg { padding: 15px 26px; font-size: 15px; border-radius: var(--r-md); }
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 13.5px;
+  padding: 10px 16px; border-radius: var(--r-md); transition: transform .12s, box-shadow .18s, background .15s, border-color .15s, color .15s; }
+.btn--primary { background: linear-gradient(180deg, var(--blue), var(--blue-2)); color: #fff; box-shadow: var(--glow-blue); }
+.btn--primary:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(91,140,255,.6), 0 10px 30px -6px rgba(91,140,255,.7); }
+.btn--accent { background: linear-gradient(180deg, #ff8c5a, var(--orange)); color: #1a0d06; }
+.btn--accent:hover { transform: translateY(-1px); box-shadow: 0 10px 26px -6px rgba(255,122,69,.6); }
+.btn--ghost { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid var(--line-2); }
+.btn--ghost:hover { border-color: var(--blue); color: #fff; background: rgba(91,140,255,.1); }
+.btn--bare { color: var(--text-2); }
+.btn--bare:hover { color: var(--text); }
+.btn--sm { padding: 7px 12px; font-size: 12.5px; border-radius: 9px; }
+.btn--lg { padding: 14px 22px; font-size: 15px; }
 .btn--block { width: 100%; }
-.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
 
-.card {
-  background: var(--c-white);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-lg);
-  padding: 24px;
-}
+/* ============ TOP BAR (OS chrome) ============ */
+.topbar { position: sticky; top: 0; z-index: 80; height: 56px; display: flex; align-items: center; gap: 14px;
+  padding: 0 18px; background: rgba(11,13,28,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line); }
+.brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; }
+.brand .glyph { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: linear-gradient(140deg, var(--blue), var(--blue-2)); box-shadow: var(--glow-blue); }
+.breadcrumb { display: flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 12px; color: var(--text-3); }
+.breadcrumb b { color: var(--text-2); font-weight: 500; }
+.cmdk { margin-left: auto; display: inline-flex; align-items: center; gap: 9px; min-width: 230px; padding: 8px 12px;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; color: var(--text-3); font-size: 12.5px; }
+.cmdk kbd { margin-left: auto; font-family: var(--font-mono); font-size: 10.5px; padding: 2px 6px; border: 1px solid var(--line-2); border-radius: 5px; color: var(--text-2); }
+.topbar__right { display: flex; align-items: center; gap: 10px; }
 
-/* ============================ DEMO BANNER ============================ */
-.demo-bar {
-  position: sticky; top: 0; z-index: 120;
-  background: var(--c-ink); color: var(--c-white);
-}
-.demo-bar__inner {
-  max-width: 1240px; margin: 0 auto; padding: 9px 28px;
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  font-size: 12.5px;
-}
-.demo-bar strong { font-weight: 700; }
-.demo-bar .demo-pulse {
-  width: 7px; height: 7px; border-radius: 99px; background: var(--c-yellow);
-  box-shadow: 0 0 0 0 rgba(245,235,63,.6); animation: pulse 2.2s infinite;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(245,235,63,.55); }
-  70% { box-shadow: 0 0 0 9px rgba(245,235,63,0); }
-  100% { box-shadow: 0 0 0 0 rgba(245,235,63,0); }
-}
-.demo-bar__spacer { margin-left: auto; }
-.demo-bar .btn--accent { padding: 7px 14px; font-size: 12.5px; border-radius: 10px; }
+/* demo ribbon */
+.ribbon { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 9px 18px; font-size: 12.5px; color: var(--text-2);
+  background: linear-gradient(90deg, rgba(255,122,69,.10), rgba(155,124,255,.08)); border-bottom: 1px solid var(--line); }
+.ribbon b { color: var(--text); }
+.ribbon .sp { margin-left: auto; }
 
-/* ============================ HEADER ============================ */
-.app-header {
-  position: sticky; top: 40px; z-index: 90;
-  background: rgba(247,242,233,.86);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(10,14,44,0.06);
-}
-.app-header__inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
-.app-header__left { display: flex; align-items: center; gap: 18px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.015em; color: var(--c-ink); }
-.app-header__sep { width: 1px; height: 22px; background: rgba(10,14,44,.12); }
-.nav { display: flex; gap: 4px; font-size: 13.5px; font-weight: 600; }
-.nav a { color: var(--c-muted); padding: 8px 12px; border-radius: 8px; transition: color .15s, background .15s; }
-.nav a.is-active { color: var(--c-ink); background: var(--c-white); box-shadow: var(--shadow-sm); }
-.nav a:hover:not(.is-active) { color: var(--c-ink-2); background: rgba(255,255,255,.5); }
-.app-header__right { display: flex; align-items: center; gap: 10px; }
-.avatar { width: 34px; height: 34px; border-radius: 99px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-blue-deep) 100%); color: var(--c-white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; }
+/* ============ APP SHELL (3-pane) ============ */
+.shell { display: grid; grid-template-columns: 260px minmax(0,1fr) 320px; min-height: calc(100vh - 56px); }
+.pane { padding: 18px; }
+.pane--left  { border-right: 1px solid var(--line); background: rgba(17,20,42,.5); position: sticky; top: 56px; align-self: start; height: calc(100vh - 56px); overflow-y: auto; }
+.pane--main  { padding: 26px 30px 80px; }
+.pane--right { border-left: 1px solid var(--line); background: rgba(17,20,42,.5); position: sticky; top: 56px; align-self: start; height: calc(100vh - 56px); overflow-y: auto; }
 
-/* ============================ HERO / IDENTITY ============================ */
-.page { padding: 30px 0 90px; }
-.id-card {
-  display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center;
-  background: linear-gradient(135deg, #10164A 0%, #1320CE 58%, #2a39e0 100%);
-  color: var(--c-white); border-radius: var(--r-xl); padding: 28px 30px;
-  position: relative; overflow: hidden;
-}
-.id-card::after {
-  content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px;
-  background: radial-gradient(circle, rgba(253,105,54,.4), transparent 70%); filter: blur(4px);
-}
-.id-portrait {
-  width: 92px; height: 92px; border-radius: 26px; flex-shrink: 0;
-  background: linear-gradient(140deg, #F5EB3F, #FD6936);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 800; font-size: 34px; color: #10164A;
-  box-shadow: 0 12px 30px rgba(0,0,0,.25);
-}
-.id-main h1 { color: var(--c-white); font-size: 28px; }
-.id-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; color: var(--c-blue-soft); font-size: 13px; }
+.pane h5 { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 10px; display: flex; align-items: center; gap: 7px; }
+.pane h5 .ic { width: 13px; height: 13px; }
+
+/* vault file tree */
+.vault { margin-bottom: 22px; }
+.tree-group { margin-bottom: 4px; }
+.tree-folder { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-weight: 700; font-size: 12.5px; color: var(--text-2); border-radius: 7px; }
+.tree-folder .ic { color: var(--text-3); }
+.tree-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 6px 8px 6px 30px; font-size: 13px; color: var(--text-2); border-radius: 7px; transition: background .12s, color .12s; position: relative; }
+.tree-item .ic { color: var(--text-3); width: 14px; height: 14px; }
+.tree-item:hover { background: var(--bg-3); color: var(--text); }
+.tree-item.is-active { background: rgba(91,140,255,.14); color: #fff; }
+.tree-item.is-active::before { content: ""; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 3px; height: 15px; border-radius: 99px; background: var(--blue); }
+.tree-item .ext { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--text-3); }
+
+.tagcloud { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ============ MAIN CANVAS ============ */
+.note-head { margin-bottom: 22px; }
+.frontmatter { font-family: var(--font-mono); font-size: 12px; line-height: 1.85; color: var(--text-2);
+  background: var(--bg-1); border: 1px solid var(--line); border-left: 3px solid var(--purple); border-radius: 10px; padding: 14px 16px; margin-bottom: 18px; }
+.frontmatter .fm-rule { color: var(--text-3); }
+.frontmatter .k { color: var(--purple); }
+.frontmatter .v { color: var(--text); }
+.frontmatter .arr { color: var(--blue); }
+
+.identity { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+.identity .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); }
+.identity h1 { font-family: var(--font-disp); font-weight: 600; font-size: clamp(34px, 5vw, 52px); line-height: 1; margin-top: 8px; }
+.identity .profile-name { font-family: var(--font-disp); font-style: italic; font-weight: 500; font-size: clamp(20px,2.6vw,26px); color: var(--blue); margin-top: 10px; }
+.identity .lede { max-width: 560px; margin-top: 12px; font-size: 14.5px; }
+.id-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-family: var(--font-mono); font-size: 12px; color: var(--text-3); }
 .id-meta span { display: inline-flex; align-items: center; gap: 6px; }
-.id-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-.id-tag { font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: rgba(255,255,255,.12); color: #fff; }
-.id-tag::before { content: "#"; opacity: .6; }
-.id-side { position: relative; z-index: 2; text-align: right; }
-.id-score { font-family: var(--font-num); font-size: 50px; font-weight: 600; line-height: 1; }
-.id-score small { display: block; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--c-blue-soft); margin-top: 6px; }
 
-/* ============================ TAB BAR ============================ */
-.tabbar { display: flex; gap: 6px; margin: 26px 0 22px; flex-wrap: wrap; }
-.tab {
-  font-size: 13.5px; font-weight: 600; color: var(--c-muted);
-  padding: 9px 16px; border-radius: 99px; border: 1px solid transparent;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.tab:hover { color: var(--c-ink-2); }
-.tab.is-active { color: var(--c-ink); background: var(--c-white); border-color: var(--c-line); box-shadow: var(--shadow-sm); }
-.tab .tcount { font-size: 11px; font-weight: 700; background: rgba(10,14,44,.07); padding: 1px 7px; border-radius: 99px; color: var(--c-ink-2); }
-.tab.is-active .tcount { background: var(--c-blue-tint); color: var(--c-blue-deep); }
+/* panel/card base */
+.k-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; }
+.k-card + .k-card { margin-top: 18px; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+.card-head h3 { font-size: 16px; display: flex; align-items: center; gap: 9px; }
+.card-head h3 .ic { color: var(--blue); }
 
-.panel { display: none; animation: fade .3s ease; }
-.panel.is-active { display: block; }
-@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: repeat(3,1fr); }
 
-/* ============================ GRID HELPERS ============================ */
-.grid { display: grid; gap: 18px; }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-2-1 { grid-template-columns: 1.6fr 1fr; }
-.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.section-head h3 { display: flex; align-items: center; gap: 9px; }
+/* graph hero */
+.graph-card { padding: 0; overflow: hidden; position: relative; background:
+  radial-gradient(700px 420px at 60% 42%, rgba(91,140,255,.10), transparent 62%), var(--bg-1); }
+.graph-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
+.graph-stage { height: 440px; position: relative; }
+.graph-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.node { cursor: pointer; }
+.node text { font-family: var(--font-ui); font-size: 11px; font-weight: 600; fill: var(--text-2); }
+.node:hover text { fill: #fff; }
+.node circle { transition: filter .2s; }
+.node.is-active circle { stroke: #fff; stroke-width: 2; }
+.edge { transition: stroke .2s, stroke-width .2s; }
+.float { animation: float 9s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+.graph-legend { position: absolute; bottom: 14px; left: 18px; z-index: 3; display: flex; gap: 14px; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); }
+.graph-legend i { width: 8px; height: 8px; border-radius: 99px; display: inline-block; margin-right: 5px; }
+.graph-hint { position: absolute; bottom: 14px; right: 18px; z-index: 3; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); }
 
-/* KPI cards */
-.kpi { display: flex; flex-direction: column; gap: 6px; }
-.kpi .label { font-size: 12px; font-weight: 600; color: var(--c-muted); }
-.kpi .value { font-family: var(--font-num); font-size: 32px; font-weight: 600; color: var(--c-ink); }
-.kpi .delta { font-size: 12px; font-weight: 600; }
-.kpi .delta.up { color: var(--c-green); }
+/* notes (the swappable body) */
+.note-section { display: none; animation: rise .35s ease; }
+.note-section.is-active { display: block; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-/* Radar */
-.radar-wrap { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
-.radar-legend { display: flex; flex-direction: column; gap: 10px; min-width: 180px; }
-.radar-legend li { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; }
-.radar-legend .lk { display: flex; align-items: center; gap: 8px; color: var(--c-ink-2); font-weight: 600; }
-.radar-legend .dotc { width: 9px; height: 9px; border-radius: 99px; }
-.radar-legend .lv { font-family: var(--font-num); font-weight: 600; color: var(--c-ink); }
-ul { margin: 0; padding: 0; }
+/* metric */
+.metric { display: flex; flex-direction: column; gap: 4px; }
+.metric .ml { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
+.metric .mv { font-family: var(--font-disp); font-weight: 600; font-size: 30px; }
+.metric .md { font-size: 11.5px; color: var(--green); display: flex; align-items: center; gap: 5px; }
 
-/* Bars */
-.bar-row { display: grid; grid-template-columns: 130px 1fr 42px; align-items: center; gap: 12px; padding: 7px 0; }
-.bar-row .bl { font-size: 13px; font-weight: 600; color: var(--c-ink-2); }
-.bar-track { height: 9px; border-radius: 99px; background: rgba(10,14,44,.07); overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--c-blue), var(--c-blue-deep)); }
-.bar-val { font-family: var(--font-num); font-weight: 600; font-size: 14px; text-align: right; }
+/* radar */
+.radar-wrap { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.radar-legend li { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12.5px; padding: 3px 0; }
+.radar-legend .lk { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-weight: 600; }
+.radar-legend .dc { width: 9px; height: 9px; border-radius: 99px; }
+.radar-legend .lv { font-family: var(--font-disp); font-weight: 600; color: var(--text); }
 
-/* Subject grid (school) */
-.subj { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: var(--c-white); }
-.subj .sn { font-weight: 600; font-size: 13.5px; }
-.subj .sg { font-family: var(--font-num); font-weight: 600; font-size: 20px; }
-.subj .sg small { font-size: 12px; color: var(--c-muted); font-family: var(--font-body); }
-.g-high { color: var(--c-green); }
-.g-mid { color: var(--c-blue-deep); }
-.g-low { color: var(--c-orange); }
+/* bars */
+.bar { display: grid; grid-template-columns: 1fr 46px; gap: 6px 12px; align-items: center; padding: 8px 0; }
+.bar .bl { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.bar .bv { font-family: var(--font-disp); font-weight: 600; font-size: 16px; text-align: right; }
+.bar .track { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: rgba(140,160,230,.12); overflow: hidden; }
+.bar .fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--purple)); }
 
-/* Test cards */
-.test-card { display: flex; flex-direction: column; gap: 12px; }
-.test-card .th { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.test-card .ticon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.test-card .res { font-family: var(--font-num); font-weight: 600; font-size: 20px; color: var(--c-ink); }
-.test-card p { font-size: 13px; }
-.test-card .tfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; padding-top: 12px; border-top: 1px dashed var(--c-line); }
+/* subjects */
+.subj-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.subj { display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 11px; }
+.subj .sn { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.subj .sg { font-family: var(--font-disp); font-weight: 600; font-size: 19px; }
+.subj .sg small { font-family: var(--font-mono); font-size: 10px; color: var(--text-3); }
+.gh { color: var(--green); } .gm { color: var(--blue); } .gl { color: var(--orange); }
 
-/* Matrix 2x2 */
-.matrix {
-  position: relative; aspect-ratio: 1/1; border-radius: var(--r-lg);
-  background:
-    linear-gradient(rgba(72,122,255,.04), rgba(72,122,255,.04)),
-    repeating-linear-gradient(0deg, transparent, transparent 24%, rgba(10,14,44,.05) 25%),
-    repeating-linear-gradient(90deg, transparent, transparent 24%, rgba(10,14,44,.05) 25%);
-  border: 1px solid var(--c-line); overflow: hidden;
-}
-.matrix .axis-x, .matrix .axis-y { position: absolute; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-muted); }
-.matrix .axis-x.l { left: 10px; bottom: 8px; }
-.matrix .axis-x.r { right: 10px; bottom: 8px; }
-.matrix .axis-y.t { left: 50%; top: 8px; transform: translateX(-50%); }
-.matrix .axis-y.b { left: 50%; bottom: 8px; transform: translateX(-50%); }
-.matrix .cross-x { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(10,14,44,.14); }
-.matrix .cross-y { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(10,14,44,.14); }
-.dot-item {
-  position: absolute; transform: translate(-50%,-50%);
-  display: flex; align-items: center; gap: 6px;
-  background: var(--c-white); border: 1px solid var(--c-line); box-shadow: var(--shadow-sm);
-  padding: 4px 9px 4px 6px; border-radius: 99px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
-}
-.dot-item .pt { width: 8px; height: 8px; border-radius: 99px; }
+/* tests */
+.test { display: flex; gap: 13px; align-items: flex-start; padding: 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 13px; }
+.test .ti { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.test .tn { font-weight: 700; font-size: 13.5px; }
+.test .tr { font-family: var(--font-disp); font-weight: 600; font-size: 15px; color: var(--blue); margin-top: 1px; }
+.test p { font-size: 12px; margin-top: 5px; }
 
-/* ============================ OBSIDIAN GRAPH ============================ */
-.obsidian {
-  background: var(--g-bg); border: 1px solid #2a2d52; border-radius: var(--r-xl);
-  overflow: hidden; color: var(--g-text);
-  display: grid; grid-template-columns: 1fr 300px;
-}
-.obs-graph { position: relative; min-height: 460px; background:
-  radial-gradient(circle at 50% 45%, #1c1f3e 0%, var(--g-bg) 70%); }
-.obs-graph svg { display: block; width: 100%; height: 100%; position: absolute; inset: 0; }
-.obs-graph__head { position: absolute; top: 16px; left: 18px; z-index: 3; }
-.obs-graph__head .eyebrow { color: var(--g-muted); }
-.obs-graph__head h3 { color: #fff; margin-top: 4px; }
-.obs-node { cursor: pointer; }
-.obs-node text { font-family: var(--font-body); fill: var(--g-text); font-size: 11px; font-weight: 600; }
-.obs-node circle { transition: r .15s ease, fill .15s; }
-.obs-node:hover circle { fill: var(--c-orange); }
-.obs-legend { position: absolute; bottom: 14px; left: 18px; display: flex; gap: 14px; z-index: 3; font-size: 11px; color: var(--g-muted); }
-.obs-legend span { display: inline-flex; align-items: center; gap: 6px; }
-.obs-legend i { width: 9px; height: 9px; border-radius: 99px; display: inline-block; }
+/* matrix */
+.matrix { position: relative; aspect-ratio: 1/1; border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; background:
+  linear-gradient(rgba(91,140,255,.05), rgba(91,140,255,.05)),
+  repeating-linear-gradient(0deg, transparent 0 24%, rgba(140,160,230,.07) 24% 25%),
+  repeating-linear-gradient(90deg, transparent 0 24%, rgba(140,160,230,.07) 24% 25%), var(--bg-2); }
+.matrix .ax { position: absolute; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+.matrix .ax.bl { left: 9px; bottom: 8px; } .matrix .ax.br { right: 9px; bottom: 8px; }
+.matrix .ax.tc { left: 50%; top: 8px; transform: translateX(-50%); } .matrix .ax.bc { left: 50%; bottom: 8px; transform: translateX(-50%); }
+.matrix .cx { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line-2); }
+.matrix .cy { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--line-2); }
+.mdot { position: absolute; transform: translate(-50%,-50%); display: flex; align-items: center; gap: 6px;
+  background: var(--bg-3); border: 1px solid var(--line-2); padding: 4px 9px 4px 6px; border-radius: 99px; font-size: 11px; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+.mdot .p { width: 7px; height: 7px; border-radius: 99px; }
 
-.obs-side { background: var(--g-bg-2); border-left: 1px solid #2a2d52; padding: 18px; overflow-y: auto; max-height: 520px; }
-.obs-side h4 { color: #fff; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
-.note {
-  background: rgba(255,255,255,.03); border: 1px solid #2a2d52; border-radius: var(--r-md);
-  padding: 13px 14px; margin-top: 12px;
-}
-.note .nt { color: #fff; font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 7px; }
-.note p { color: var(--g-muted); font-size: 12px; margin-top: 5px; }
-.note .links { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
-.wikilink { font-size: 11px; color: var(--c-blue-soft); background: rgba(72,122,255,.14); padding: 2px 7px; border-radius: 6px; }
-.wikilink::before { content: "[["; opacity: .5; }
-.wikilink::after { content: "]]"; opacity: .5; }
-.note .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
-.tag-pill { font-size: 10.5px; color: var(--c-yellow); }
-.tag-pill::before { content: "#"; }
+/* MBTI */
+.mbti { display: flex; align-items: center; gap: 18px; }
+.mbti .type { font-family: var(--font-disp); font-weight: 600; font-size: 46px; color: var(--purple); line-height: 1; }
 
-/* ============================ MODAL / WIZARD ============================ */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 200; display: none;
-  background: rgba(10,14,44,.55); backdrop-filter: blur(4px);
-  align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto;
-}
-.modal-overlay.is-open { display: flex; animation: fade .25s ease; }
-.wiz {
-  width: 100%; max-width: 720px; background: var(--c-white);
-  border-radius: var(--r-xl); box-shadow: var(--shadow-lg); overflow: hidden;
-  margin: auto;
-}
-.wiz__top { padding: 20px 28px 0; }
+/* ============ RIGHT INSPECTOR ============ */
+.action-card { background: linear-gradient(160deg, rgba(255,122,69,.16), rgba(255,122,69,.04)); border: 1px solid rgba(255,122,69,.3); border-radius: var(--r-lg); padding: 18px; margin-bottom: 22px; }
+.action-card .ak { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); }
+.action-card h4 { font-size: 15.5px; margin: 8px 0 6px; }
+.action-card p { font-size: 12.5px; }
+.action-card .btn { margin-top: 14px; }
+
+.backlink { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; margin-bottom: 7px; font-size: 12.5px; color: var(--text-2); background: var(--bg-1); }
+.backlink .ic { color: var(--text-3); width: 14px; height: 14px; }
+.wikilink { color: var(--blue); font-weight: 600; }
+.wikilink::before { content: "[[ "; opacity: .4; } .wikilink::after { content: " ]]"; opacity: .4; }
+
+.note-snip { background: var(--bg-1); border: 1px solid var(--line); border-radius: 11px; padding: 13px; margin-bottom: 10px; }
+.note-snip .nt { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 7px; }
+.note-snip .nt .ic { width: 14px; height: 14px; }
+.note-snip p { font-size: 12px; margin-top: 5px; color: var(--text-3); }
+.note-snip .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+
+.statbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
+  padding: 8px 12px; border-top: 1px solid var(--line); position: sticky; bottom: 0; background: rgba(11,13,28,.8); backdrop-filter: blur(8px); }
+
+/* mobile nav (hidden desktop) */
+.mnav { display: none; }
+.mobile-cta { display: none; }
+
+/* ============ MODAL / WIZARD ============ */
+.overlay { position: fixed; inset: 0; z-index: 200; display: none; background: rgba(5,6,16,.74); backdrop-filter: blur(6px);
+  align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+.overlay.open { display: flex; animation: rise .25s ease; }
+.wiz { width: 100%; max-width: 720px; margin: auto; background: var(--bg-1); border: 1px solid var(--line-2); border-radius: var(--r-xl); box-shadow: var(--shadow); overflow: hidden; }
+.wiz__top { padding: 18px 26px 0; }
 .wiz__bar { display: flex; align-items: center; justify-content: space-between; }
-.wiz__close { width: 34px; height: 34px; border-radius: 99px; background: rgba(10,14,44,.05); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--c-ink-2); }
-.wiz__close:hover { background: rgba(10,14,44,.1); }
-.wiz__steps { display: flex; gap: 6px; margin: 18px 0 4px; }
-.wiz__steps .seg { flex: 1; height: 5px; border-radius: 99px; background: rgba(10,14,44,.08); overflow: hidden; }
-.wiz__steps .seg .fillseg { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--c-blue), var(--c-blue-deep)); transition: width .35s ease; }
-.wiz__steps .seg.done .fillseg { width: 100%; }
-.wiz__steps .seg.current .fillseg { width: 100%; background: var(--c-orange); }
-.wiz__stepmeta { font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-muted); margin-top: 12px; }
+.wiz__close { width: 34px; height: 34px; border-radius: 99px; background: var(--bg-3); display: grid; place-items: center; color: var(--text-2); }
+.wiz__close:hover { color: #fff; background: var(--line-2); }
+.segs { display: flex; gap: 6px; margin: 16px 0 8px; }
+.seg { flex: 1; height: 4px; border-radius: 99px; background: rgba(140,160,230,.14); overflow: hidden; }
+.seg > i { display: block; height: 100%; width: 0; background: var(--blue); transition: width .35s; }
+.seg.done > i { width: 100%; } .seg.cur > i { width: 100%; background: var(--orange); }
+.wiz__meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
 
-.wiz__body { padding: 14px 28px 8px; min-height: 320px; }
-.step { display: none; animation: fade .3s ease; }
+.wiz__body { padding: 16px 26px 6px; min-height: 320px; }
+.step { display: none; animation: rise .3s ease; }
 .step.is-active { display: block; }
-.step h2 { font-size: 22px; }
-.step > p.lead { margin-top: 8px; color: var(--c-muted); font-size: 14px; }
+.step h2 { font-family: var(--font-disp); font-weight: 600; font-size: 26px; }
+.step .lead { margin-top: 8px; color: var(--text-3); font-size: 13.5px; }
 
-.field { margin-top: 16px; }
-.field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--c-ink-2); margin-bottom: 6px; }
-.field input, .field select, .field textarea {
-  width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--c-ink);
-  padding: 12px 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: var(--c-cream-light);
-  transition: border-color .15s, box-shadow .15s, background .15s;
-}
-.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--c-blue); background: #fff; box-shadow: 0 0 0 3px rgba(72,122,255,.14); }
+.field { margin-top: 15px; }
+.field > label { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
+.field input, .field select, .field textarea { width: 100%; font-family: var(--font-ui); font-size: 14px; color: var(--text);
+  padding: 12px 13px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 10px; transition: border-color .15s, box-shadow .15s; }
+.field input::placeholder { color: var(--text-3); }
+.field input:focus, .field select:focus { outline: none; border-color: var(--blue); box-shadow: var(--glow-blue); }
 .field .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field select option { background: var(--bg-1); }
 
-.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-.choice {
-  border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 14px; background: var(--c-cream-light);
-  display: flex; gap: 12px; align-items: flex-start; cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s;
-}
-.choice:hover { border-color: var(--c-blue-soft); }
-.choice.is-sel { border-color: var(--c-blue-deep); background: #fff; box-shadow: 0 0 0 3px rgba(72,122,255,.14); }
-.choice .cico { font-size: 22px; line-height: 1; }
-.choice .ct { font-weight: 700; font-size: 13.5px; }
-.choice .cd { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
-.choice .ck { margin-left: auto; width: 20px; height: 20px; border-radius: 99px; border: 2px solid var(--c-line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; }
-.choice.is-sel .ck { background: var(--c-blue-deep); border-color: var(--c-blue-deep); }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.choice { display: flex; gap: 11px; align-items: flex-start; padding: 13px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 11px; cursor: pointer; transition: border-color .15s, background .15s; }
+.choice:hover { border-color: var(--blue); }
+.choice.sel { border-color: var(--blue); background: rgba(91,140,255,.1); box-shadow: var(--glow-blue); }
+.choice .ci { color: var(--blue); }
+.choice .ct { font-weight: 700; font-size: 13px; }
+.choice .cd { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+.choice .ck { margin-left: auto; width: 19px; height: 19px; border-radius: 99px; border: 2px solid var(--line-2); display: grid; place-items: center; color: #fff; flex-shrink: 0; }
+.choice .ck .ic { width: 11px; height: 11px; opacity: 0; }
+.choice.sel .ck { background: var(--blue); border-color: var(--blue); } .choice.sel .ck .ic { opacity: 1; }
 
-/* Dropzone */
-.dropzone {
-  margin-top: 16px; border: 2px dashed var(--c-blue-soft); border-radius: var(--r-lg);
-  padding: 30px 20px; text-align: center; background: var(--c-blue-tint); transition: background .15s, border-color .15s;
-}
-.dropzone.drag { background: #fff; border-color: var(--c-blue-deep); }
-.dropzone .dzi { font-size: 30px; }
-.dropzone h4 { margin-top: 8px; font-size: 15px; }
-.dropzone p { font-size: 12.5px; color: var(--c-muted); margin-top: 4px; }
-.dropzone .browse { color: var(--c-blue-deep); font-weight: 700; text-decoration: underline; }
-.filelist { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-.fileitem { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--c-line); border-radius: var(--r-md); background: #fff; font-size: 13px; }
-.fileitem .fi { width: 30px; height: 30px; border-radius: 8px; background: var(--c-green-tint); color: var(--c-green); display: flex; align-items: center; justify-content: center; font-size: 14px; }
-.fileitem .fn { font-weight: 600; }
-.fileitem .fs { color: var(--c-muted); font-size: 11.5px; }
-.fileitem .fx { margin-left: auto; color: var(--c-muted); width: 26px; height: 26px; border-radius: 99px; }
-.fileitem .fx:hover { background: rgba(10,14,44,.06); color: var(--c-ink); }
-.doc-hint { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.doc-hint .chip { cursor: default; }
+/* who answers toggle */
+.toggle2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.toggle2 .opt { text-align: center; padding: 14px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 11px; cursor: pointer; }
+.toggle2 .opt.sel { border-color: var(--blue); background: rgba(91,140,255,.1); }
+.toggle2 .opt .ic { color: var(--blue); margin-bottom: 6px; }
+.toggle2 .opt b { display: block; font-size: 13px; }
+.toggle2 .opt span { font-size: 11.5px; color: var(--text-3); }
+.note-inline { display: flex; gap: 9px; align-items: flex-start; margin-top: 12px; padding: 11px 13px; background: rgba(155,124,255,.08); border: 1px solid rgba(155,124,255,.24); border-radius: 10px; font-size: 12.5px; color: var(--text-2); }
+.note-inline .ic { color: var(--purple); margin-top: 1px; }
 
-/* Reco tests */
-.reco { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 14px; margin-top: 10px; background: var(--c-cream-light); }
-.reco .rico { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.reco .rt { font-weight: 700; font-size: 14px; }
-.reco .rd { font-size: 12.5px; color: var(--c-muted); margin-top: 2px; }
-.reco .rmeta { display: flex; gap: 8px; margin-top: 8px; }
-.reco .radd { margin-left: auto; }
+/* dropzone */
+.dz { margin-top: 14px; border: 1.5px dashed var(--line-2); border-radius: var(--r-lg); padding: 28px 18px; text-align: center; background: var(--bg-2); transition: border-color .15s, background .15s; }
+.dz.drag { border-color: var(--blue); background: rgba(91,140,255,.08); }
+.dz .ic { color: var(--blue); }
+.dz h4 { margin-top: 8px; font-size: 15px; }
+.dz p { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+.dz .browse { color: var(--blue); font-weight: 700; text-decoration: underline; }
+.dochints { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.flist { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.fitem { display: flex; align-items: center; gap: 11px; padding: 10px 12px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+.fitem .fi { width: 30px; height: 30px; border-radius: 8px; background: rgba(52,211,153,.14); color: var(--green); display: grid; place-items: center; }
+.fitem .fn { font-weight: 600; } .fitem .fs { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); }
+.fitem .fx { margin-left: auto; color: var(--text-3); width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; }
+.fitem .fx:hover { color: #fff; background: var(--line-2); }
 
-/* Calendly */
-.cal-embed { margin-top: 14px; border: 1px solid var(--c-line); border-radius: var(--r-lg); overflow: hidden; min-height: 560px; background: var(--c-cream-light); }
-.calendly-inline-widget { min-height: 580px; }
+/* reco */
+.reco { display: flex; gap: 12px; align-items: flex-start; padding: 13px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; margin-top: 10px; }
+.reco .ri { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.reco .rt { font-weight: 700; font-size: 13.5px; } .reco .rd { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.reco .radd { margin-left: auto; align-self: center; }
 
-/* Recap / done */
-.recap { margin-top: 14px; border: 1px solid var(--c-line); border-radius: var(--r-md); overflow: hidden; }
-.recap .rr { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--c-line); font-size: 13px; }
+/* coach reassurance */
+.coach { display: flex; gap: 16px; align-items: center; padding: 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r-lg); }
+.coach img { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; flex-shrink: 0; }
+.coach .cn { font-weight: 700; font-size: 15px; } .coach .cr { font-size: 12px; color: var(--orange); font-family: var(--font-mono); }
+.coach p { font-size: 12.5px; margin-top: 6px; }
+.gets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.get { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; color: var(--text-2); }
+.get .ic { color: var(--green); margin-top: 1px; }
+
+.cal-embed { margin-top: 14px; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: #fff; }
+.calendly-inline-widget { min-height: 600px; }
+
+.consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; font-size: 12px; color: var(--text-3); }
+.consent input { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--blue); }
+.consent a { color: var(--blue); text-decoration: underline; }
+
+.recap { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 14px; }
+.recap .rr { display: flex; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
 .recap .rr:last-child { border-bottom: 0; }
-.recap .rr .rk { color: var(--c-muted); width: 120px; flex-shrink: 0; font-weight: 600; }
-.recap .rr .rv { font-weight: 600; color: var(--c-ink); }
-.success-mark { width: 64px; height: 64px; border-radius: 99px; background: var(--c-green-tint); color: var(--c-green); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 14px; }
+.recap .rk { color: var(--text-3); width: 120px; flex-shrink: 0; font-family: var(--font-mono); font-size: 11.5px; }
+.recap .rv { font-weight: 600; color: var(--text); }
+.smark { width: 60px; height: 60px; border-radius: 99px; background: rgba(52,211,153,.15); color: var(--green); display: grid; place-items: center; margin: 0 auto 14px; }
 
-.wiz__foot {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 16px 28px 24px; border-top: 1px solid var(--c-line); margin-top: 8px;
-}
+.wiz__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 26px 22px; border-top: 1px solid var(--line); margin-top: 6px; }
 
-/* ============================ FINAL CTA ============================ */
-.cta-final {
-  margin-top: 40px; border-radius: var(--r-2xl); padding: 44px;
-  background: linear-gradient(135deg, #FD6936 0%, #ff8a5f 100%); color: #fff;
-  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-  position: relative; overflow: hidden;
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1080px) {
+  .shell { grid-template-columns: 1fr; }
+  .pane--left, .pane--right { position: static; height: auto; border: 0; border-bottom: 1px solid var(--line); }
+  .pane--right { border-bottom: 0; border-top: 1px solid var(--line); }
+  .cmdk { display: none; }
 }
-.cta-final h2 { color: #fff; font-size: 26px; max-width: 560px; }
-.cta-final p { color: rgba(255,255,255,.9); margin-top: 8px; max-width: 520px; }
-.cta-final .btn--secondary { background: #fff; border-color: #fff; }
-
-footer { padding: 40px 0 60px; color: var(--c-muted); font-size: 12.5px; text-align: center; }
-
-/* ============================ RESPONSIVE ============================ */
-@media (max-width: 960px) {
-  .grid-3 { grid-template-columns: 1fr 1fr; }
-  .grid-2-1 { grid-template-columns: 1fr; }
-  .obsidian { grid-template-columns: 1fr; }
-  .obs-side { border-left: 0; border-top: 1px solid #2a2d52; max-height: none; }
-  .nav { display: none; }
+@media (max-width: 720px) {
+  .pane--left { display: none; }
+  .mnav { display: flex; gap: 7px; overflow-x: auto; padding: 12px 16px; position: sticky; top: 56px; z-index: 60; background: rgba(11,13,28,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+  .mnav button { white-space: nowrap; padding: 7px 13px; border-radius: 99px; border: 1px solid var(--line-2); font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+  .mnav button.is-active { background: rgba(91,140,255,.16); color: #fff; border-color: var(--blue); }
+  .pane--main { padding: 18px 16px 100px; }
+  .g2, .g3, .subj-grid, .choices, .toggle2, .gets { grid-template-columns: 1fr; }
+  .breadcrumb { display: none; }
+  .ribbon .badge { display: none; }
+  .mobile-cta { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 70; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); background: rgba(11,13,28,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--line); }
+  .graph-stage { height: 360px; }
+  .wiz__body { padding: 14px 18px 6px; } .wiz__top, .wiz__foot { padding-left: 18px; padding-right: 18px; }
 }
-@media (max-width: 680px) {
-  .shell { padding: 0 18px; }
-  .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  .id-card { grid-template-columns: auto 1fr; }
-  .id-side { grid-column: 1 / -1; text-align: left; }
-  .field .row, .choice-grid { grid-template-columns: 1fr; }
-  .cta-final { padding: 30px; }
-  .wiz__body { padding: 14px 18px 8px; }
-  .wiz__foot, .wiz__top { padding-left: 18px; padding-right: 18px; }
-}
+@media (prefers-reduced-motion: reduce) { .float { animation: none; } * { animation-duration: .001ms !important; } }
 </style>
 </head>
 <body>
 
-<!-- ===================== DEMO BANNER ===================== -->
-<div class="demo-bar">
-  <div class="demo-bar__inner">
-    <span class="demo-pulse"></span>
-    <span><strong>Exemple de profil</strong> — voici à quoi ressemble le tableau de bord d'un élève une fois le parcours complété.</span>
-    <span class="demo-bar__spacer"></span>
-    <button class="btn btn--accent" data-open-wizard>Démarrer maintenant →</button>
-  </div>
-</div>
+<!-- ===== ICON SPRITE ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-graph" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.4"/><circle cx="19" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7 7.2 10.5 16M17 7.2 13.5 16M7 6h10"/></symbol>
+  <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4.5a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0-1 4.8A2.5 2.5 0 0 0 7 16.5a2.5 2.5 0 0 0 2.5 2.5h0V4.5Z"/><path d="M14.5 4.5A2.5 2.5 0 0 1 17 7a2.5 2.5 0 0 1 1 4.8 2.5 2.5 0 0 1-1 4.7 2.5 2.5 0 0 1-2.5 2.5h0V4.5Z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v15H6a2 2 0 0 0-2 2V5.5Z"/><path d="M6 19a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="m6 3h12l3 6-9 12L3 9l3-6Z"/><path d="M3 9h18M9 3 7.5 9 12 21 16.5 9 15 3"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7.5 14h9"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 10h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path d="M5 12h14m0 0-5.5-5.5M19 12l-5.5 5.5"/></symbol>
+  <symbol id="i-arl" viewBox="0 0 24 24"><path d="M19 12H5m0 0 5.5-5.5M5 12l5.5 5.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19a6 6 0 0 1 12 0M16 6.5a3 3 0 0 1 0 5.8M21 19a5.5 5.5 0 0 0-4-5.3"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M9 15 15 9M10.5 6.5l1.5-1.5a4 4 0 0 1 5.5 5.5L16 12M13.5 17.5 12 19a4 4 0 0 1-5.5-5.5L8 12"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h7l9 9-7 7-9-9V4Z"/><circle cx="8" cy="8" r="1.4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h3.5l2 2.5H18a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13h6l-1 8 8-10h-6l1-8Z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></symbol>
+</svg>
 
-<!-- ===================== HEADER ===================== -->
-<header class="app-header">
-  <div class="shell app-header__inner">
-    <div class="app-header__left">
-      <a class="logo" href="index.html" aria-label="Proxxie · Accueil">
-        <svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        <span class="logo__wordmark">Proxxie</span>
-      </a>
-      <div class="app-header__sep"></div>
-      <nav class="nav" aria-label="Navigation principale">
-        <a href="#" class="is-active">Profil élève</a>
-        <a href="tests.html">Tests</a>
-        <a href="ressources.html">Ressources</a>
-        <a href="rapport.html">Rapport</a>
-      </nav>
-    </div>
-    <div class="app-header__right">
-      <button class="btn btn--accent btn--small" data-open-wizard>Démarrer mon parcours</button>
-      <span class="avatar" title="Compte parent">CM</span>
-    </div>
+<!-- ===== TOP BAR ===== -->
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="glyph"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 11 L16 21 L24 11" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    Proxxie
+  </a>
+  <nav class="breadcrumb" aria-label="Fil"><span>vault</span><span>/</span><b>louise.martin</b><span>/</span><b id="bcNote">README.md</b></nav>
+  <div class="cmdk" aria-hidden="true"><svg class="ic ic--sm"><use href="#i-search"/></svg><span>Rechercher dans le profil…</span><kbd>⌘K</kbd></div>
+  <div class="topbar__right">
+    <span class="badge badge--live"><span class="dot"></span>Exemple</span>
+    <button class="btn btn--accent btn--sm" data-open><svg class="ic ic--sm"><use href="#i-spark"/></svg>Démarrer</button>
   </div>
 </header>
 
-<main class="page">
-  <div class="shell">
+<!-- ===== DEMO RIBBON ===== -->
+<div class="ribbon">
+  <svg class="ic ic--sm" style="color:var(--orange)"><use href="#i-bolt"/></svg>
+  <span><b>Aperçu d'un profil complété.</b> Voici comment Proxxie relie la personnalité, les capacités et l'école de votre enfant en un seul système vivant.</span>
+  <span class="sp"></span>
+  <span class="badge">données fictives</span>
+</div>
 
-    <!-- ===================== IDENTITY CARD ===================== -->
-    <section class="id-card">
-      <div class="id-portrait">LM</div>
-      <div class="id-main">
-        <span class="chip chip--warn" style="margin-bottom:8px;">Profil exemple</span>
-        <h1>Louise Martin</h1>
-        <div class="id-meta">
-          <span>🎂 15 ans</span>
-          <span>🏫 Classe de 2nde</span>
-          <span>📍 Lycée Victor Hugo</span>
-          <span>🗓️ Bilan du 12 mai 2026</span>
-        </div>
-        <div class="id-tags">
-          <span class="id-tag">curiosité</span>
-          <span class="id-tag">créativité</span>
-          <span class="id-tag">investigatrice</span>
-          <span class="id-tag">sensibilité</span>
-          <span class="id-tag">autonomie</span>
-          <span class="id-tag">haut-potentiel</span>
-        </div>
+<!-- ===== MOBILE NAV ===== -->
+<nav class="mnav" id="mnav" aria-label="Sections"></nav>
+
+<!-- ===== APP SHELL ===== -->
+<div class="shell">
+
+  <!-- LEFT: VAULT -->
+  <aside class="pane pane--left">
+    <div class="vault">
+      <h5><svg class="ic"><use href="#i-folder"/></svg>louise.martin</h5>
+      <nav id="tree"></nav>
+    </div>
+    <div class="vault">
+      <h5><svg class="ic"><use href="#i-tag"/></svg>Tags</h5>
+      <div class="tagcloud">
+        <span class="tag">curiosité</span><span class="tag tag--p">créativité</span>
+        <span class="tag tag--o">autonomie</span><span class="tag tag--g">sensibilité</span>
+        <span class="tag">investigatrice</span><span class="tag tag--y">haut-potentiel</span>
+        <span class="tag tag--p">empathie</span><span class="tag tag--o">perfectionnisme</span>
       </div>
-      <div class="id-side">
-        <div class="id-score">132<small>QI total estimé</small></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="pane pane--main">
+    <!-- NOTE HEADER / IDENTITY -->
+    <section class="note-head">
+      <div class="frontmatter">
+        <div class="fm-rule">---</div>
+        <div><span class="k">enfant</span>: <span class="v">Louise Martin</span></div>
+        <div><span class="k">âge</span>: <span class="v">15</span> · <span class="k">classe</span>: <span class="v">2nde</span> · <span class="k">établissement</span>: <span class="v">Lycée Victor Hugo</span></div>
+        <div><span class="k">profil</span>: <span class="v">Exploratrice créative</span></div>
+        <div><span class="k">tags</span>: <span class="arr">[curiosité, créativité, autonomie, sensibilité]</span></div>
+        <div><span class="k">mis-à-jour</span>: <span class="v">2026-05-12</span></div>
+        <div class="fm-rule">---</div>
       </div>
-    </section>
-
-    <!-- ===================== TABS ===================== -->
-    <nav class="tabbar" role="tablist">
-      <button class="tab is-active" data-tab="overview" role="tab">🧭 Vue d'ensemble</button>
-      <button class="tab" data-tab="graph" role="tab">🕸️ Carte de connaissances</button>
-      <button class="tab" data-tab="tests" role="tab">🧪 Tests <span class="tcount">6</span></button>
-      <button class="tab" data-tab="school" role="tab">📚 École</button>
-      <button class="tab" data-tab="profile" role="tab">🧬 Profil & matrices</button>
-    </nav>
-
-    <!-- ============ PANEL: OVERVIEW ============ -->
-    <section class="panel is-active" data-panel="overview">
-      <div class="grid grid-3" style="margin-bottom:18px;">
-        <div class="card kpi"><span class="label">Tests complétés</span><span class="value">6<span style="font-size:15px;color:var(--c-muted);">/9</span></span><span class="delta up">+2 cette semaine</span></div>
-        <div class="card kpi"><span class="label">Moyenne générale</span><span class="value">15,5<span style="font-size:15px;color:var(--c-muted);">/20</span></span><span class="delta up">▲ 0,8 vs trimestre&nbsp;1</span></div>
-        <div class="card kpi"><span class="label">Persévérance (Grit)</span><span class="value">4,1<span style="font-size:15px;color:var(--c-muted);">/5</span></span><span class="delta up">Au-dessus de la moyenne</span></div>
-      </div>
-
-      <div class="grid grid-2-1">
-        <!-- Synthèse -->
-        <div class="card">
-          <div class="section-head"><h3>🧩 Synthèse du profil</h3><span class="chip chip--purple">Généré par Proxxie</span></div>
-          <p>Louise présente un <strong>profil à haut potentiel à dominante investigatrice et artistique</strong>. Sa curiosité intellectuelle et sa sensibilité esthétique sont ses deux moteurs principaux. Elle apprend vite, aime comprendre « le pourquoi » des choses, et a besoin d'autonomie pour s'épanouir.</p>
-          <p style="margin-top:12px;">Côté scolaire, ses résultats sont solides et homogènes, avec des pics en <strong>Anglais, Arts plastiques et SVT</strong>. L'EPS et les mathématiques sont des zones de moindre aisance, sans difficulté réelle. Son enjeu n'est pas le niveau, mais de <strong>donner du sens</strong> à ses apprentissages pour rester engagée.</p>
-          <div class="grid grid-3" style="margin-top:18px;gap:12px;">
-            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
-              <div class="eyebrow" style="color:var(--c-green);"><span class="dot" style="background:var(--c-green);"></span>Forces</div>
-              <p style="font-size:12.5px;margin-top:8px;">Curiosité · raisonnement verbal · créativité · empathie</p>
-            </div>
-            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
-              <div class="eyebrow" style="color:var(--c-orange);"><span class="dot"></span>Vigilance</div>
-              <p style="font-size:12.5px;margin-top:8px;">Perfectionnisme · gestion du stress avant épreuves</p>
-            </div>
-            <div style="padding:14px;border:1px solid var(--c-line);border-radius:14px;background:var(--c-cream-light);">
-              <div class="eyebrow" style="color:var(--c-blue-deep);"><span class="dot" style="background:var(--c-blue-deep);"></span>Pistes</div>
-              <p style="font-size:12.5px;margin-top:8px;">Sciences du vivant · design · métiers créatifs</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Big Five Radar -->
-        <div class="card">
-          <div class="section-head"><h3>🧬 Personnalité</h3><span class="chip chip--neutral">Big Five</span></div>
-          <div class="radar-wrap">
-            <svg id="radarBig" width="220" height="220" viewBox="0 0 220 220" aria-label="Radar de personnalité"></svg>
-            <ul class="radar-legend" id="radarLegend"></ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Prochaine étape -->
-      <div class="card" style="margin-top:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#E8F0FF,#fff);">
-        <div style="font-size:32px;">🎯</div>
-        <div style="flex:1;min-width:220px;">
-          <h3>Prochaine étape recommandée</h3>
-          <p style="margin-top:4px;font-size:13px;">Compléter le <strong>test RIASEC approfondi</strong> puis prendre rendez-vous avec un coach pour construire le plan d'orientation de Louise.</p>
-        </div>
-        <button class="btn btn--primary" data-open-wizard>Lancer le parcours</button>
-      </div>
-    </section>
-
-    <!-- ============ PANEL: OBSIDIAN GRAPH ============ -->
-    <section class="panel" data-panel="graph">
-      <div class="section-head">
-        <h3>🕸️ Carte de connaissances de l'élève</h3>
-        <span class="chip chip--neutral">Vue type Obsidian · cliquez sur un nœud</span>
-      </div>
-      <div class="obsidian">
-        <div class="obs-graph">
-          <div class="obs-graph__head">
-            <div class="eyebrow"><span class="dot"></span>Knowledge graph</div>
-            <h3>Louise Martin</h3>
-          </div>
-          <svg id="graphSvg" viewBox="0 0 760 480" preserveAspectRatio="xMidYMid meet" aria-label="Graphe de connaissances"></svg>
-          <div class="obs-legend">
-            <span><i style="background:#FD6936;"></i>Élève</span>
-            <span><i style="background:#7C5CFF;"></i>Dimension</span>
-            <span><i style="background:#487AFF;"></i>Donnée / note</span>
-          </div>
-        </div>
-        <aside class="obs-side" id="obsSide">
-          <h4>📝 Notes liées</h4>
-          <div class="note">
-            <div class="nt">🔬 Curiosité scientifique</div>
-            <p>Pose beaucoup de questions en SVT, mène ses propres « mini-expériences ». Moteur d'engagement n°1.</p>
-            <div class="links"><span class="wikilink">SVT 17/20</span><span class="wikilink">RIASEC · Investigateur</span></div>
-            <div class="tags"><span class="tag-pill">curiosité</span><span class="tag-pill">sciences</span></div>
-          </div>
-          <div class="note">
-            <div class="nt">🎨 Sensibilité artistique</div>
-            <p>Excelle en arts plastiques, vocabulaire riche, perçoit les nuances. À nourrir comme voie possible.</p>
-            <div class="links"><span class="wikilink">Arts 19/20</span><span class="wikilink">MBTI · INFP</span></div>
-            <div class="tags"><span class="tag-pill">créativité</span><span class="tag-pill">sensibilité</span></div>
-          </div>
-          <div class="note">
-            <div class="nt">🧭 Besoin d'autonomie</div>
-            <p>Apprend mieux seule, supporte mal la pression de groupe. Préfère choisir ses sujets.</p>
-            <div class="links"><span class="wikilink">Valeurs · Autonomie</span><span class="wikilink">Big Five · Ouverture</span></div>
-            <div class="tags"><span class="tag-pill">autonomie</span><span class="tag-pill">INFP</span></div>
-          </div>
-          <div class="note">
-            <div class="nt">⚡ Point de vigilance</div>
-            <p>Perfectionnisme : stress avant les évaluations. Travailler la gestion du trac et le droit à l'erreur.</p>
-            <div class="links"><span class="wikilink">Grit 4.1</span><span class="wikilink">Anxiété · modérée</span></div>
-            <div class="tags"><span class="tag-pill">perfectionnisme</span><span class="tag-pill">stress</span></div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- ============ PANEL: TESTS ============ -->
-    <section class="panel" data-panel="tests">
-      <div class="section-head"><h3>🧪 Tests passés & résultats</h3><span class="chip chip--ok">6 complétés</span></div>
-      <div class="grid grid-3" id="testGrid"></div>
-    </section>
-
-    <!-- ============ PANEL: SCHOOL ============ -->
-    <section class="panel" data-panel="school">
-      <div class="grid grid-2-1">
-        <div class="card">
-          <div class="section-head"><h3>📚 Résultats scolaires</h3><span class="chip chip--neutral">2nde · Trimestre 2</span></div>
-          <div class="grid grid-3" id="subjGrid" style="gap:10px;"></div>
-        </div>
-        <div class="card">
-          <div class="section-head"><h3>📈 Capacités intellectuelles</h3><span class="chip chip--purple">Indices type WISC‑V</span></div>
-          <div id="iqBars"></div>
-          <p class="muted" style="font-size:12px;margin-top:12px;">Indices standardisés (moyenne = 100). Profil hétérogène avec une compréhension verbale très élevée.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ PANEL: PROFILE & MATRICES ============ -->
-    <section class="panel" data-panel="profile">
-      <div class="grid grid-2-1">
-        <div class="card">
-          <div class="section-head"><h3>🎯 Matrice Forces × Intérêts</h3><span class="chip chip--neutral">Positionnement</span></div>
-          <div class="matrix" id="matrix">
-            <span class="axis-x l">Faible intérêt</span>
-            <span class="axis-x r">Fort intérêt</span>
-            <span class="axis-y t">Force élevée ↑</span>
-            <span class="axis-y b">↓ Force à développer</span>
-            <span class="cross-x"></span><span class="cross-y"></span>
-          </div>
-          <p class="muted" style="font-size:12px;margin-top:12px;">En haut à droite : les domaines à cultiver en priorité (force + intérêt alignés).</p>
-        </div>
-        <div class="card">
-          <div class="section-head"><h3>🧭 Intérêts RIASEC</h3><span class="chip chip--neutral">Holland</span></div>
-          <div class="radar-wrap">
-            <svg id="radarRiasec" width="210" height="210" viewBox="0 0 210 210" aria-label="Radar RIASEC"></svg>
-            <ul class="radar-legend" id="riasecLegend"></ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-2" style="margin-top:18px;">
-        <div class="card">
-          <div class="section-head"><h3>💎 Valeurs prioritaires</h3></div>
-          <div id="valuesBars"></div>
-        </div>
-        <div class="card">
-          <div class="section-head"><h3>🧠 Type de personnalité</h3><span class="chip chip--purple">MBTI</span></div>
-          <div style="display:flex;align-items:center;gap:18px;">
-            <div style="font-family:var(--font-num);font-size:48px;font-weight:600;color:var(--c-blue-deep);">INFP</div>
-            <div>
-              <strong>« Le Médiateur »</strong>
-              <p style="font-size:12.5px;margin-top:4px;">Idéaliste, créative et guidée par ses valeurs. Cherche du sens et l'harmonie. Imaginative et profondément empathique.</p>
-            </div>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;">
-            <span class="chip chip--neutral">Introversion 64%</span>
-            <span class="chip chip--neutral">Intuition 78%</span>
-            <span class="chip chip--neutral">Sentiment 71%</span>
-            <span class="chip chip--neutral">Perception 58%</span>
+      <div class="identity">
+        <div>
+          <div class="eyebrow">Profil d'orientation</div>
+          <h1>Louise Martin</h1>
+          <div class="profile-name">« Exploratrice créative »</div>
+          <p class="lede">Une adolescente <b style="color:var(--text)">curieuse et sensible</b>, qui apprend vite et a besoin de comprendre le « pourquoi ». Son moteur : explorer des idées et créer. Son enjeu n'est pas le niveau, mais de garder du sens.</p>
+          <div class="id-meta">
+            <span><svg class="ic ic--sm"><use href="#i-flask"/></svg>6 tests reliés</span>
+            <span><svg class="ic ic--sm"><use href="#i-book"/></svg>moyenne 15,5/20</span>
+            <span><svg class="ic ic--sm"><use href="#i-link"/></svg>14 connexions</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== FINAL CTA ===================== -->
-    <section class="cta-final">
-      <div>
-        <span class="chip chip--solid" style="margin-bottom:10px;">C'était un exemple</span>
-        <h2>Construisez le vrai profil de votre enfant</h2>
-        <p>Renseignez ses informations, ajoutez ses bulletins, choisissez les tests adaptés, puis réservez un échange avec Charles. Comptez 5 minutes.</p>
+    <!-- GRAPH HERO -->
+    <section class="k-card graph-card">
+      <div class="graph-top">
+        <h5 style="margin:0;color:var(--text-2)"><svg class="ic ic--sm" style="color:var(--blue)"><use href="#i-graph"/></svg>Graphe de connaissances</h5>
+        <span class="badge">vue interactive</span>
       </div>
-      <button class="btn btn--secondary btn--lg" data-open-wizard>Démarrer maintenant →</button>
+      <div class="graph-stage"><svg id="graph" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Graphe reliant l'élève à sa personnalité, ses capacités, l'école et ses valeurs"></svg></div>
+      <div class="graph-legend">
+        <span><i style="background:var(--orange)"></i>élève</span>
+        <span><i style="background:var(--purple)"></i>dimension</span>
+        <span><i style="background:var(--blue)"></i>donnée</span>
+      </div>
+      <div class="graph-hint">cliquez un nœud →</div>
     </section>
 
-  </div>
-</main>
+    <!-- ===== SWAPPABLE NOTES ===== -->
 
-<footer>
-  Proxxie · Profil élève (données fictives à but de démonstration) — <a href="index.html" style="color:var(--c-blue-deep);font-weight:600;">Retour à l'accueil</a>
-</footer>
+    <!-- OVERVIEW -->
+    <section class="note-section is-active" data-note="overview">
+      <div class="grid g3" style="margin-bottom:18px">
+        <div class="k-card metric"><span class="ml">tests complétés</span><span class="mv">6<span style="font-size:16px;color:var(--text-3)">/9</span></span><span class="md"><svg class="ic ic--sm"><use href="#i-check"/></svg>+2 cette semaine</span></div>
+        <div class="k-card metric"><span class="ml">moyenne générale</span><span class="mv">15,5</span><span class="md"><svg class="ic ic--sm"><use href="#i-arr"/></svg>+0,8 vs T1</span></div>
+        <div class="k-card metric"><span class="ml">persévérance · grit</span><span class="mv">4,1<span style="font-size:16px;color:var(--text-3)">/5</span></span><span class="md"><svg class="ic ic--sm"><use href="#i-bolt"/></svg>au-dessus de la moyenne</span></div>
+      </div>
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-spark"/></svg>Synthèse</h3><span class="badge">généré par Proxxie</span></div>
+        <p>Profil <b style="color:var(--text)">investigateur et artistique</b> : la curiosité intellectuelle et la sensibilité esthétique sont les deux moteurs de Louise. Résultats scolaires solides et homogènes, avec des pics en <b style="color:var(--text)">Anglais, Arts et SVT</b>.</p>
+        <div class="grid g3" style="margin-top:16px">
+          <div class="note-snip"><div class="nt" style="color:var(--green)"><svg class="ic"><use href="#i-bolt"/></svg>Forces</div><p>Curiosité · raisonnement verbal · créativité · empathie</p></div>
+          <div class="note-snip"><div class="nt" style="color:var(--orange)"><svg class="ic"><use href="#i-shield"/></svg>Vigilance</div><p>Perfectionnisme · stress avant les épreuves</p></div>
+          <div class="note-snip"><div class="nt" style="color:var(--blue)"><svg class="ic"><use href="#i-target"/></svg>Pistes</div><p>Sciences du vivant · design · métiers créatifs</p></div>
+        </div>
+      </div>
+    </section>
 
-<!-- ===================== WIZARD MODAL ===================== -->
-<div class="modal-overlay" id="wizardModal" role="dialog" aria-modal="true" aria-label="Parcours d'inscription">
+    <!-- PERSONNALITÉ -->
+    <section class="note-section" data-note="perso">
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-brain"/></svg>Personnalité — Big Five</h3><span class="tag tag--p">OCEAN</span></div>
+        <div class="radar-wrap"><svg id="radarBig" width="230" height="230" viewBox="0 0 230 230" aria-label="Radar Big Five"></svg><ul class="radar-legend" id="legBig" style="min-width:190px"></ul></div>
+      </div>
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-user"/></svg>Type — MBTI</h3><span class="tag tag--p">INFP</span></div>
+        <div class="mbti"><div class="type">INFP</div><div><b style="font-size:15px">« Le Médiateur »</b><p style="font-size:12.5px;margin-top:4px">Idéaliste, créative, guidée par ses valeurs. Cherche le sens et l'harmonie.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"><span class="badge">Introversion 64%</span><span class="badge">Intuition 78%</span><span class="badge">Sentiment 71%</span><span class="badge">Perception 58%</span></div></div></div>
+      </div>
+    </section>
+
+    <!-- CAPACITÉS -->
+    <section class="note-section" data-note="capacites">
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-bolt"/></svg>Capacités intellectuelles</h3><span class="tag tag--y">indices type WISC-V</span></div>
+        <div id="iqBars"></div>
+        <div class="note-inline"><svg class="ic"><use href="#i-shield"/></svg><span><b style="color:var(--text)">Estimation indicative</b>, pas un verdict. Un indice ne résume jamais un enfant — il éclaire son <i>fonctionnement</i> pour mieux l'accompagner. Moyenne de référence = 100.</span></div>
+      </div>
+    </section>
+
+    <!-- ÉCOLE -->
+    <section class="note-section" data-note="ecole">
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-book"/></svg>Résultats scolaires</h3><span class="badge">2nde · trimestre 2</span></div>
+        <div class="subj-grid" id="subjGrid"></div>
+      </div>
+    </section>
+
+    <!-- VALEURS -->
+    <section class="note-section" data-note="valeurs">
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-gem"/></svg>Valeurs prioritaires</h3></div>
+        <div id="valBars"></div>
+      </div>
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-compass"/></svg>Intérêts — RIASEC</h3><span class="badge">Holland</span></div>
+        <div class="radar-wrap"><svg id="radarRia" width="220" height="220" viewBox="0 0 220 220" aria-label="Radar RIASEC"></svg><ul class="radar-legend" id="legRia" style="min-width:180px"></ul></div>
+      </div>
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-target"/></svg>Matrice Forces × Intérêts</h3><span class="badge">positionnement</span></div>
+        <div class="matrix" id="matrix"><span class="ax bl">faible intérêt</span><span class="ax br">fort intérêt</span><span class="ax tc">force ↑</span><span class="ax bc">↓ à développer</span><span class="cx"></span><span class="cy"></span></div>
+      </div>
+    </section>
+
+    <!-- TESTS -->
+    <section class="note-section" data-note="tests">
+      <div class="k-card">
+        <div class="card-head"><h3><svg class="ic"><use href="#i-flask"/></svg>Tests passés &amp; résultats</h3><span class="tag tag--g">6 complétés</span></div>
+        <div class="grid g2" id="testGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RIGHT: INSPECTOR -->
+  <aside class="pane pane--right">
+    <div class="action-card">
+      <div class="ak">▸ prochaine étape</div>
+      <h4>Construisez le vrai profil de votre enfant</h4>
+      <p>Infos, bulletins, tests adaptés, puis un échange avec Charles. ~5 minutes.</p>
+      <button class="btn btn--accent btn--block" data-open><svg class="ic ic--sm"><use href="#i-spark"/></svg>Démarrer maintenant</button>
+    </div>
+
+    <h5><svg class="ic"><use href="#i-link"/></svg>Notes liées</h5>
+    <div id="inspector"></div>
+
+    <h5 style="margin-top:20px"><svg class="ic"><use href="#i-graph"/></svg>Backlinks</h5>
+    <div class="backlink"><svg class="ic"><use href="#i-file"/></svg><span><span class="wikilink">SVT 17/20</span> → curiosité</span></div>
+    <div class="backlink"><svg class="ic"><use href="#i-file"/></svg><span><span class="wikilink">RIASEC</span> → investigateur</span></div>
+    <div class="backlink"><svg class="ic"><use href="#i-file"/></svg><span><span class="wikilink">Arts 19/20</span> → créativité</span></div>
+
+    <div class="statbar"><span>● connecté</span><span id="statNote">README.md</span><span>14 liens</span></div>
+  </aside>
+</div>
+
+<!-- mobile sticky CTA -->
+<div class="mobile-cta"><button class="btn btn--accent btn--block btn--lg" data-open><svg class="ic ic--sm"><use href="#i-spark"/></svg>Démarrer mon parcours</button></div>
+
+<!-- ===================== WIZARD ===================== -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Parcours d'inscription">
   <div class="wiz">
     <div class="wiz__top">
       <div class="wiz__bar">
-        <a class="logo" href="#" style="pointer-events:none;font-size:16px;">
-          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1320CE"/><path d="M8 11 L16 21 L24 11" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 13 L16 18 L20 13" stroke="#B0D0F7" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-          Parcours d'inscription
-        </a>
-        <button class="wiz__close" id="wizClose" aria-label="Fermer">✕</button>
+        <span class="brand" style="font-size:15px;pointer-events:none"><span class="glyph"><svg width="15" height="15" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 11 L16 21 L24 11" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>Parcours d'inscription</span>
+        <button class="wiz__close" id="wClose" aria-label="Fermer"><svg class="ic ic--sm"><use href="#i-x"/></svg></button>
       </div>
-      <div class="wiz__steps" id="wizSteps">
-        <div class="seg"><span class="fillseg"></span></div>
-        <div class="seg"><span class="fillseg"></span></div>
-        <div class="seg"><span class="fillseg"></span></div>
-        <div class="seg"><span class="fillseg"></span></div>
-        <div class="seg"><span class="fillseg"></span></div>
-      </div>
-      <div class="wiz__stepmeta" id="wizMeta">Étape 1 / 5 · L'enfant</div>
+      <div class="segs" id="segs"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
+      <div class="wiz__meta" id="wMeta">étape 1 / 5 · l'enfant</div>
     </div>
 
     <div class="wiz__body">
 
-      <!-- STEP 1 : enfant -->
+      <!-- 1 enfant -->
       <div class="step is-active" data-step="0">
-        <h2>Parlons de votre enfant 👋</h2>
-        <p class="lead">Ces informations nous permettent de personnaliser les tests et le bilan.</p>
-        <div class="field">
-          <label for="f_prenom">Prénom de l'enfant</label>
-          <input id="f_prenom" type="text" placeholder="Ex. Louise" />
-        </div>
-        <div class="field">
-          <div class="row">
-            <div>
-              <label for="f_age">Âge</label>
-              <input id="f_age" type="number" min="5" max="25" placeholder="15" />
-            </div>
-            <div>
-              <label for="f_classe">Classe actuelle</label>
-              <select id="f_classe">
-                <option value="">Sélectionner…</option>
-                <option>CM2</option><option>6ème</option><option>5ème</option><option>4ème</option>
-                <option>3ème</option><option>2nde</option><option>1ère</option><option>Terminale</option>
-                <option>Études supérieures</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label for="f_etab">Établissement (facultatif)</label>
-          <input id="f_etab" type="text" placeholder="Ex. Lycée Victor Hugo" />
-        </div>
+        <h2>Créons la fiche de votre enfant</h2>
+        <p class="lead">Ces infos personnalisent les tests et le bilan. Rien n'est partagé.</p>
+        <div class="field"><label for="f_prenom">Prénom de l'enfant *</label><input id="f_prenom" type="text" placeholder="Louise" autocomplete="off" /></div>
+        <div class="field"><div class="row">
+          <div><label for="f_age">Âge</label><input id="f_age" type="number" min="5" max="25" placeholder="15" /></div>
+          <div><label for="f_classe">Classe</label><select id="f_classe"><option value="">Sélectionner…</option><option>CM2</option><option>6ème</option><option>5ème</option><option>4ème</option><option>3ème</option><option>2nde</option><option>1ère</option><option>Terminale</option><option>Supérieur</option></select></div>
+        </div></div>
+        <div class="field"><label for="f_etab">Établissement (facultatif)</label><input id="f_etab" type="text" placeholder="Lycée Victor Hugo" /></div>
       </div>
 
-      <!-- STEP 2 : parent + objectif -->
+      <!-- 2 parent + qui répond -->
       <div class="step" data-step="1">
-        <h2>Et vous, le parent 🧑‍🍼</h2>
-        <p class="lead">Pour vous tenir informé·e et préparer l'échange avec Charles.</p>
-        <div class="field">
-          <div class="row">
-            <div><label for="p_prenom">Votre prénom</label><input id="p_prenom" type="text" placeholder="Camille" /></div>
-            <div><label for="p_email">Email</label><input id="p_email" type="email" placeholder="vous@email.com" /></div>
+        <h2>Vous, et qui répond ?</h2>
+        <p class="lead">Pour vous tenir informé·e et adapter le déroulé.</p>
+        <div class="field"><div class="row">
+          <div><label for="p_prenom">Votre prénom</label><input id="p_prenom" type="text" placeholder="Camille" /></div>
+          <div><label for="p_email">Email *</label><input id="p_email" type="email" placeholder="vous@email.com" /></div>
+        </div></div>
+        <div class="field"><label>Qui répondra aux tests en premier ?</label>
+          <div class="toggle2" id="who">
+            <div class="opt sel" data-who="parent"><svg class="ic ic--lg"><use href="#i-user"/></svg><b>Vous, le parent</b><span>recommandé pour démarrer</span></div>
+            <div class="opt" data-who="ado"><svg class="ic ic--lg"><use href="#i-users"/></svg><b>Votre ado</b><span>directement</span></div>
           </div>
+          <div class="note-inline"><svg class="ic"><use href="#i-link"/></svg><span>Vous répondez d'abord <b style="color:var(--text)">à la place de votre enfant</b>. Ensuite, il pourra refaire les tests de son point de vue — Proxxie compare les deux visions.</span></div>
         </div>
-        <div class="field">
-          <label>Qu'est-ce qui vous amène ? <span class="muted" style="font-weight:400;">(une ou plusieurs)</span></label>
-          <div class="choice-grid" data-multi>
-            <label class="choice"><span class="cico">🧭</span><span><span class="ct">Orientation</span><span class="cd">Choisir une voie, des études</span></span><span class="ck">✓</span></label>
-            <label class="choice"><span class="cico">🧠</span><span><span class="ct">Mieux le connaître</span><span class="cd">Personnalité, fonctionnement</span></span><span class="ck">✓</span></label>
-            <label class="choice"><span class="cico">📉</span><span><span class="ct">Décrochage / motivation</span><span class="cd">Remettre du sens</span></span><span class="ck">✓</span></label>
-            <label class="choice"><span class="cico">✨</span><span><span class="ct">Haut potentiel</span><span class="cd">Détecter, accompagner</span></span><span class="ck">✓</span></label>
+        <div class="field"><label>Qu'est-ce qui vous amène ?</label>
+          <div class="choices" data-multi>
+            <label class="choice"><svg class="ic ci"><use href="#i-compass"/></svg><span><span class="ct">Orientation</span><span class="cd">choisir une voie</span></span><span class="ck"><svg class="ic"><use href="#i-check"/></svg></span></label>
+            <label class="choice"><svg class="ic ci"><use href="#i-brain"/></svg><span><span class="ct">Mieux le connaître</span><span class="cd">personnalité, fonctionnement</span></span><span class="ck"><svg class="ic"><use href="#i-check"/></svg></span></label>
+            <label class="choice"><svg class="ic ci"><use href="#i-bolt"/></svg><span><span class="ct">Motivation</span><span class="cd">remettre du sens</span></span><span class="ck"><svg class="ic"><use href="#i-check"/></svg></span></label>
+            <label class="choice"><svg class="ic ci"><use href="#i-spark"/></svg><span><span class="ct">Haut potentiel</span><span class="cd">détecter, accompagner</span></span><span class="ck"><svg class="ic"><use href="#i-check"/></svg></span></label>
           </div>
         </div>
       </div>
 
-      <!-- STEP 3 : documents -->
+      <!-- 3 documents -->
       <div class="step" data-step="2">
-        <h2>Ajoutez ses documents 📎</h2>
-        <p class="lead">Bulletins, attestations, bilans… Tout ce qui aide à mieux comprendre votre enfant. (Optionnel mais recommandé.)</p>
-        <div class="dropzone" id="dropzone">
-          <div class="dzi">⬆️</div>
+        <h2>Ajoutez ses documents</h2>
+        <p class="lead">Bulletins, attestations, bilans… Tout ce qui aide à comprendre votre enfant. (Optionnel.)</p>
+        <div class="dz" id="dz">
+          <svg class="ic ic--lg"><use href="#i-upload"/></svg>
           <h4>Glissez vos fichiers ici</h4>
-          <p>ou <span class="browse">parcourez votre ordinateur</span> · PDF, JPG, PNG — 10&nbsp;Mo max</p>
+          <p>ou <span class="browse">parcourez votre ordinateur</span> · PDF, JPG, PNG — 10 Mo max</p>
           <input id="fileInput" type="file" multiple hidden accept=".pdf,.jpg,.jpeg,.png" />
         </div>
-        <div class="doc-hint">
-          <span class="chip chip--neutral">📄 Bulletins de notes</span>
-          <span class="chip chip--neutral">📝 Bilan orthophonique</span>
-          <span class="chip chip--neutral">🏅 Attestations</span>
-          <span class="chip chip--neutral">🧩 Bilan psy / WISC</span>
+        <div class="dochints">
+          <span class="badge"><svg class="ic ic--sm"><use href="#i-file"/></svg>bulletins</span>
+          <span class="badge"><svg class="ic ic--sm"><use href="#i-file"/></svg>bilan orthophonique</span>
+          <span class="badge"><svg class="ic ic--sm"><use href="#i-file"/></svg>attestations</span>
+          <span class="badge"><svg class="ic ic--sm"><use href="#i-file"/></svg>bilan psy / WISC</span>
         </div>
-        <div class="filelist" id="fileList"></div>
+        <div class="flist" id="flist"></div>
       </div>
 
-      <!-- STEP 4 : tests recommandés -->
+      <!-- 4 tests -->
       <div class="step" data-step="3">
-        <h2>Tests recommandés 🧪</h2>
-        <p class="lead">Sélection adaptée au profil. Vous pourrez les passer à votre rythme depuis le tableau de bord.</p>
+        <h2>Tests recommandés</h2>
+        <p class="lead">Sélection adaptée au profil. À passer à votre rythme depuis le tableau de bord.</p>
         <div id="recoList"></div>
       </div>
 
-      <!-- STEP 5 : RDV -->
+      <!-- 5 reassurance + RDV -->
       <div class="step" data-step="4">
-        <h2>Réservez un échange avec Charles 📅</h2>
-        <p class="lead">30 minutes pour faire le point et définir le plan d'accompagnement de votre enfant.</p>
-        <div class="recap" id="recap"></div>
-        <div class="cal-embed">
-          <div class="calendly-inline-widget" data-url="https://calendly.com/proxxie?hide_gdpr_banner=1&primary_color=1320ce" style="min-width:320px;height:580px;"></div>
+        <h2>Un échange avec Charles</h2>
+        <p class="lead">30 min, gratuit et sans engagement, pour cadrer l'accompagnement de votre enfant.</p>
+        <div class="coach">
+          <img src="coach-charles.jpg" alt="Charles, coach Proxxie" onerror="this.style.display='none'" />
+          <div><div class="cn">Charles Broussin</div><div class="cr">fondateur &amp; coach d'orientation</div>
+            <p>Plus de 200 familles accompagnées. On part de votre profil exemple pour bâtir un plan concret.</p></div>
         </div>
+        <div class="gets">
+          <div class="get"><svg class="ic ic--sm"><use href="#i-check"/></svg>Une lecture claire du profil de votre enfant</div>
+          <div class="get"><svg class="ic ic--sm"><use href="#i-check"/></svg>Les prochaines étapes prioritaires</div>
+          <div class="get"><svg class="ic ic--sm"><use href="#i-check"/></svg>Vos questions, nos réponses</div>
+          <div class="get"><svg class="ic ic--sm"><use href="#i-check"/></svg>Aucun engagement à l'issue</div>
+        </div>
+        <div class="cal-embed"><div class="calendly-inline-widget" data-url="https://calendly.com/proxxie?primary_color=3a5bff" style="min-width:320px;height:620px;"></div></div>
+        <label class="consent"><input type="checkbox" id="consent" /><span>J'accepte que Proxxie traite ces informations pour préparer l'accompagnement, conformément à la <a href="#">politique de confidentialité</a>. Données d'un mineur saisies par son représentant légal.</span></label>
       </div>
 
-      <!-- DONE -->
+      <!-- done -->
       <div class="step" data-step="5">
-        <div style="text-align:center;padding:30px 10px;">
-          <div class="success-mark">✓</div>
-          <h2>C'est parti ! 🎉</h2>
-          <p class="lead" style="max-width:420px;margin:8px auto 0;">Le profil de votre enfant est en cours de création. Vous recevrez un email de confirmation et un rappel avant votre rendez-vous.</p>
-          <div class="recap" id="recapFinal" style="text-align:left;max-width:440px;margin:22px auto 0;"></div>
+        <div style="text-align:center;padding:26px 6px">
+          <div class="smark"><svg class="ic ic--lg"><use href="#i-check"/></svg></div>
+          <h2>C'est lancé&nbsp;!</h2>
+          <p class="lead" style="max-width:420px;margin:8px auto 0">Le profil de votre enfant est en cours de création. Vous recevrez un email de confirmation et un rappel avant votre rendez-vous.</p>
+          <div class="recap" id="recapFinal" style="text-align:left;max-width:440px;margin:22px auto 0"></div>
         </div>
       </div>
-
     </div>
 
     <div class="wiz__foot">
-      <button class="btn btn--ghost" id="wizBack" style="visibility:hidden;">← Retour</button>
-      <span class="muted" id="wizSkip" style="font-size:12.5px;cursor:pointer;">Passer cette étape</span>
-      <button class="btn btn--primary" id="wizNext">Continuer →</button>
+      <button class="btn btn--bare" id="wBack" style="visibility:hidden"><svg class="ic ic--sm"><use href="#i-arl"/></svg>Retour</button>
+      <button class="btn btn--bare" id="wSkip" style="display:none">Passer</button>
+      <button class="btn btn--primary" id="wNext">Continuer<svg class="ic ic--sm"><use href="#i-arr"/></svg></button>
     </div>
   </div>
 </div>
 
 <script>
-/* ============================ DATA ============================ */
-const BIG_FIVE = [
-  { k: "Ouverture", v: 92, c: "#7C5CFF" },
-  { k: "Conscience", v: 70, c: "#487AFF" },
-  { k: "Extraversion", v: 45, c: "#FD6936" },
-  { k: "Agréabilité", v: 80, c: "#22A06B" },
-  { k: "Stabilité émot.", v: 58, c: "#F5B700" },
-];
-const RIASEC = [
-  { k: "Investigateur", v: 90 },
-  { k: "Artistique", v: 85 },
-  { k: "Social", v: 62 },
-  { k: "Réaliste", v: 38 },
-  { k: "Entreprenant", v: 44 },
-  { k: "Conventionnel", v: 30 },
-];
-const TESTS = [
-  { ico: "🧭", bg:"rgba(72,122,255,.14)", col:"#1320CE", name: "RIASEC — Intérêts", res: "Investigateur · Artistique", note: "Profil IAS : sciences, recherche et expression créative.", date: "12 mai", status:"ok" },
-  { ico: "🧠", bg:"rgba(124,92,255,.14)", col:"#7C5CFF", name: "MBTI — Personnalité", res: "INFP « Le Médiateur »", note: "Idéaliste, créative, guidée par ses valeurs.", date: "10 mai", status:"ok" },
-  { ico: "✨", bg:"rgba(245,183,0,.18)", col:"#B07A00", name: "HPI — Potentiel", res: "QI total ≈ 132", note: "Haut potentiel, compréhension verbale très élevée.", date: "8 mai", status:"ok" },
-  { ico: "🔥", bg:"rgba(253,105,54,.14)", col:"#FD6936", name: "Grit — Persévérance", res: "4,1 / 5", note: "Engagement et constance au-dessus de la moyenne.", date: "5 mai", status:"ok" },
-  { ico: "💎", bg:"rgba(34,160,107,.14)", col:"#22A06B", name: "Valeurs", res: "Autonomie · Créativité", note: "Cherche du sens et la liberté d'explorer.", date: "3 mai", status:"ok" },
-  { ico: "🧗", bg:"rgba(72,122,255,.14)", col:"#1320CE", name: "CAAS — Adaptabilité", res: "Élevée", note: "Bonne capacité à se projeter et à s'adapter.", date: "1 mai", status:"ok" },
-];
-const SUBJECTS = [
-  { n: "Anglais", g: 18 }, { n: "Arts plast.", g: 19 }, { n: "SVT", g: 17 },
-  { n: "Français", g: 16 }, { n: "Histoire-Géo", g: 15 }, { n: "Physique", g: 14 },
-  { n: "Maths", g: 13 }, { n: "EPS", g: 12 }, { n: "Espagnol", g: 16 },
-];
-const IQ = [
-  { k: "Compréhension verbale", v: 138 },
-  { k: "Raisonnement perceptif", v: 125 },
-  { k: "Mémoire de travail", v: 119 },
-  { k: "Vitesse de traitement", v: 110 },
-];
-const VALUES = [
-  { k: "Autonomie", v: 95 }, { k: "Créativité", v: 88 },
-  { k: "Altruisme", v: 76 }, { k: "Accomplissement", v: 64 }, { k: "Sécurité", v: 40 },
-];
-const MATRIX_ITEMS = [
-  { n: "SVT", x: 82, y: 84, c: "#22A06B" },
-  { n: "Arts", x: 90, y: 90, c: "#7C5CFF" },
-  { n: "Anglais", x: 70, y: 88, c: "#487AFF" },
-  { n: "Écriture", x: 78, y: 72, c: "#FD6936" },
-  { n: "Maths", x: 35, y: 55, c: "#6B6F8C" },
-  { n: "EPS", x: 30, y: 28, c: "#6B6F8C" },
-  { n: "Histoire", x: 55, y: 64, c: "#487AFF" },
-];
-const RECO_TESTS = [
-  { ico:"🧭", bg:"rgba(72,122,255,.14)", col:"#1320CE", t:"RIASEC approfondi", d:"Affine les pistes d'orientation (15 min)", tag:"Prioritaire" },
-  { ico:"🧩", bg:"rgba(124,92,255,.14)", col:"#7C5CFF", t:"BRIEF — Fonctions exécutives", d:"Organisation, attention, planification (10 min)", tag:"Recommandé" },
-  { ico:"🔥", bg:"rgba(253,105,54,.14)", col:"#FD6936", t:"Grit — Persévérance", d:"Mesure l'engagement dans la durée (5 min)", tag:"Recommandé" },
-  { ico:"💎", bg:"rgba(34,160,107,.14)", col:"#22A06B", t:"Valeurs professionnelles", d:"Ce qui compte vraiment pour votre enfant (8 min)", tag:"Optionnel" },
-];
+/* ============ DATA ============ */
+const BIG=[{k:"Ouverture",v:92,c:"#9B7CFF"},{k:"Conscience",v:70,c:"#5B8CFF"},{k:"Extraversion",v:45,c:"#FF7A45"},{k:"Agréabilité",v:80,c:"#34D399"},{k:"Stabilité",v:58,c:"#F5E45C"}];
+const RIA=[{k:"Investigateur",v:90},{k:"Artistique",v:85},{k:"Social",v:62},{k:"Réaliste",v:38},{k:"Entreprenant",v:44},{k:"Conventionnel",v:30}];
+const TESTS=[
+ {ic:"i-compass",c:"#5B8CFF",bg:"rgba(91,140,255,.14)",n:"RIASEC — Intérêts",r:"Investigateur · Artistique",p:"Sciences, recherche et expression créative."},
+ {ic:"i-user",c:"#9B7CFF",bg:"rgba(155,124,255,.14)",n:"MBTI — Personnalité",r:"INFP « Le Médiateur »",p:"Idéaliste, créative, guidée par ses valeurs."},
+ {ic:"i-spark",c:"#F5E45C",bg:"rgba(245,228,92,.14)",n:"HPI — Potentiel",r:"Profil à haut potentiel",p:"Compréhension verbale très élevée."},
+ {ic:"i-bolt",c:"#FF7A45",bg:"rgba(255,122,69,.14)",n:"Grit — Persévérance",r:"4,1 / 5",p:"Engagement et constance élevés."},
+ {ic:"i-gem",c:"#34D399",bg:"rgba(52,211,153,.14)",n:"Valeurs",r:"Autonomie · Créativité",p:"Cherche du sens et la liberté d'explorer."},
+ {ic:"i-target",c:"#5B8CFF",bg:"rgba(91,140,255,.14)",n:"CAAS — Adaptabilité",r:"Élevée",p:"Se projette et s'adapte facilement."}];
+const SUBJ=[{n:"Anglais",g:18},{n:"Arts pl.",g:19},{n:"SVT",g:17},{n:"Français",g:16},{n:"Hist-Géo",g:15},{n:"Physique",g:14},{n:"Maths",g:13},{n:"EPS",g:12},{n:"Espagnol",g:16}];
+const IQ=[{k:"Compréhension verbale",v:138},{k:"Raisonnement perceptif",v:125},{k:"Mémoire de travail",v:119},{k:"Vitesse de traitement",v:110}];
+const VAL=[{k:"Autonomie",v:95},{k:"Créativité",v:88},{k:"Altruisme",v:76},{k:"Accomplissement",v:64},{k:"Sécurité",v:40}];
+const MAT=[{n:"SVT",x:82,y:84,c:"#34D399"},{n:"Arts",x:90,y:90,c:"#9B7CFF"},{n:"Anglais",x:70,y:88,c:"#5B8CFF"},{n:"Écriture",x:78,y:72,c:"#FF7A45"},{n:"Maths",x:35,y:55,c:"#6E769E"},{n:"EPS",x:30,y:28,c:"#6E769E"},{n:"Histoire",x:55,y:64,c:"#5B8CFF"}];
+const RECO=[
+ {ic:"i-compass",c:"#5B8CFF",bg:"rgba(91,140,255,.14)",t:"RIASEC approfondi",d:"affine les pistes d'orientation · 15 min",tag:"Prioritaire",tc:"tag--o"},
+ {ic:"i-brain",c:"#9B7CFF",bg:"rgba(155,124,255,.14)",t:"BRIEF — Fonctions exécutives",d:"organisation, attention · 10 min",tag:"Recommandé",tc:"tag--g"},
+ {ic:"i-bolt",c:"#FF7A45",bg:"rgba(255,122,69,.14)",t:"Grit — Persévérance",d:"engagement dans la durée · 5 min",tag:"Recommandé",tc:"tag--g"},
+ {ic:"i-gem",c:"#34D399",bg:"rgba(52,211,153,.14)",t:"Valeurs professionnelles",d:"ce qui compte vraiment · 8 min",tag:"Optionnel",tc:""}];
+const NOTES={
+ overview:[{i:"i-spark",t:"Exploratrice créative",p:"Curiosité + sensibilité comme moteurs. Apprend en explorant.",tags:[["curiosité",""],["créativité","tag--p"]]}],
+ perso:[{i:"i-user",t:"Idéaliste discrète",p:"INFP : valeurs avant tout, monde intérieur riche.",tags:[["INFP","tag--p"],["empathie","tag--p"]]},{i:"i-bolt",t:"Besoin d'autonomie",p:"Apprend mieux seule, choisit ses sujets.",tags:[["autonomie","tag--o"]]}],
+ capacites:[{i:"i-brain",t:"Verbal très élevé",p:"Vocabulaire riche, raisonne par le langage.",tags:[["haut-potentiel","tag--y"]]},{i:"i-shield",t:"Vitesse plus posée",p:"Prend son temps — qualité avant rapidité.",tags:[["perfectionnisme","tag--o"]]}],
+ ecole:[{i:"i-book",t:"Pics en langues & arts",p:"Anglais 18, Arts 19 — terrains d'aisance.",tags:[["créativité","tag--p"]]},{i:"i-flask",t:"Curiosité scientifique",p:"SVT 17 : pose des questions, expérimente.",tags:[["curiosité",""]]}],
+ valeurs:[{i:"i-gem",t:"Liberté d'explorer",p:"Autonomie & créativité en tête des valeurs.",tags:[["autonomie","tag--o"]]}],
+ tests:[{i:"i-flask",t:"6 tests reliés",p:"Personnalité, intérêts, potentiel, persévérance.",tags:[["haut-potentiel","tag--y"]]}]};
 
-/* ============================ TABS ============================ */
-document.querySelectorAll(".tab").forEach(t => {
-  t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("is-active"));
-    document.querySelectorAll(".panel").forEach(x => x.classList.remove("is-active"));
-    t.classList.add("is-active");
-    document.querySelector(`[data-panel="${t.dataset.tab}"]`).classList.add("is-active");
-  });
-});
+/* ============ ICON helper ============ */
+const icon=(id,cls="ic")=>`<svg class="${cls}"><use href="#${id}"/></svg>`;
 
-/* ============================ RADAR CHART ============================ */
-function drawRadar(svgId, data, opts={}) {
-  const svg = document.getElementById(svgId);
-  const size = +svg.getAttribute("width");
-  const cx = size/2, cy = size/2, R = size/2 - 26;
-  const N = data.length;
-  const NS = "http://www.w3.org/2000/svg";
-  const max = 100;
-  let html = "";
-  // rings
-  [0.25,0.5,0.75,1].forEach(r => {
-    let pts = [];
-    for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; pts.push((cx+Math.cos(a)*R*r)+","+(cy+Math.sin(a)*R*r)); }
-    html += `<polygon points="${pts.join(" ")}" fill="none" stroke="rgba(10,14,44,.08)" stroke-width="1"/>`;
-  });
-  // axes + labels
-  for (let i=0;i<N;i++){
-    const a=(Math.PI*2*i/N)-Math.PI/2;
-    const x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R;
-    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(10,14,44,.08)"/>`;
-    const lx=cx+Math.cos(a)*(R+14), ly=cy+Math.sin(a)*(R+14);
-    const anchor = Math.abs(Math.cos(a))<0.3 ? "middle" : (Math.cos(a)>0?"start":"end");
-    html += `<text x="${lx}" y="${ly+3}" text-anchor="${anchor}" font-size="9" font-weight="700" fill="#6B6F8C">${data[i].k.split(" ")[0]}</text>`;
-  }
-  // data polygon
-  let dpts=[];
-  for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; const rr=R*(data[i].v/max); dpts.push((cx+Math.cos(a)*rr)+","+(cy+Math.sin(a)*rr)); }
-  const color = opts.color || "#487AFF";
-  html += `<polygon points="${dpts.join(" ")}" fill="${color}33" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
-  for (let i=0;i<N;i++){ const a=(Math.PI*2*i/N)-Math.PI/2; const rr=R*(data[i].v/max); const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr; html += `<circle cx="${x}" cy="${y}" r="3" fill="${data[i].c||color}"/>`; }
-  svg.innerHTML = html;
+/* ============ NAV (tree + mobile) ============ */
+const SECTIONS=[
+ {id:"overview",label:"README.md",ic:"i-spark",ext:"md"},
+ {id:"perso",label:"01 · Personnalité",ic:"i-brain",ext:"md"},
+ {id:"capacites",label:"02 · Capacités",ic:"i-bolt",ext:"md"},
+ {id:"ecole",label:"03 · École",ic:"i-book",ext:"md"},
+ {id:"valeurs",label:"04 · Valeurs & intérêts",ic:"i-gem",ext:"md"},
+ {id:"tests",label:"05 · Tests",ic:"i-flask",ext:"md"}];
+const tree=document.getElementById("tree");
+tree.innerHTML=`<div class="tree-folder">${icon("i-folder")}profil</div>`+SECTIONS.map(s=>
+ `<button class="tree-item${s.id==='overview'?' is-active':''}" data-go="${s.id}">${icon(s.ic)}<span>${s.label}</span><span class="ext">${s.ext}</span></button>`).join("");
+const mnav=document.getElementById("mnav");
+mnav.innerHTML=SECTIONS.map(s=>`<button data-go="${s.id}"${s.id==='overview'?' class="is-active"':''}>${s.label.replace(/^\d+ · /,'')}</button>`).join("");
+
+function goNote(id){
+ document.querySelectorAll(".note-section").forEach(n=>n.classList.toggle("is-active",n.dataset.note===id));
+ document.querySelectorAll("[data-go]").forEach(b=>b.classList.toggle("is-active",b.dataset.go===id));
+ const sec=SECTIONS.find(s=>s.id===id);
+ document.getElementById("bcNote").textContent=sec.label.replace(/^\d+ · /,'').toLowerCase().replace(/ /g,'-')+".md";
+ document.getElementById("statNote").textContent=document.getElementById("bcNote").textContent;
+ // inspector notes
+ const ins=document.getElementById("inspector");
+ ins.innerHTML=(NOTES[id]||[]).map(n=>`<div class="note-snip"><div class="nt">${icon(n.i)}${n.t}</div><p>${n.p}</p><div class="tags">${n.tags.map(t=>`<span class="tag ${t[1]}">${t[0]}</span>`).join("")}</div></div>`).join("");
+ // graph active node
+ document.querySelectorAll(".node").forEach(g=>g.classList.toggle("is-active",g.dataset.sec===id));
+ window.scrollTo({top:document.querySelector(".note-head").offsetTop-70,behavior:"smooth"});
 }
-drawRadar("radarBig", BIG_FIVE, { color:"#7C5CFF" });
-drawRadar("radarRiasec", RIASEC, { color:"#1320CE" });
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]"); if(b) goNote(b.dataset.go);});
 
-document.getElementById("radarLegend").innerHTML = BIG_FIVE.map(d =>
-  `<li><span class="lk"><span class="dotc" style="background:${d.c}"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
-document.getElementById("riasecLegend").innerHTML = RIASEC.slice(0,4).map(d =>
-  `<li><span class="lk"><span class="dotc" style="background:#1320CE"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
+/* ============ RADAR ============ */
+function radar(svgId,data,color){
+ const svg=document.getElementById(svgId),S=+svg.getAttribute("width"),cx=S/2,cy=S/2,R=S/2-28,N=data.length;let h="";
+ [.25,.5,.75,1].forEach(r=>{let p=[];for(let i=0;i<N;i++){const a=Math.PI*2*i/N-Math.PI/2;p.push((cx+Math.cos(a)*R*r)+","+(cy+Math.sin(a)*R*r));}h+=`<polygon points="${p.join(" ")}" fill="none" stroke="rgba(140,160,230,.12)"/>`;});
+ for(let i=0;i<N;i++){const a=Math.PI*2*i/N-Math.PI/2,x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;h+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(140,160,230,.12)"/>`;
+  const lx=cx+Math.cos(a)*(R+14),ly=cy+Math.sin(a)*(R+14),an=Math.abs(Math.cos(a))<.3?"middle":(Math.cos(a)>0?"start":"end");
+  h+=`<text x="${lx}" y="${ly+3}" text-anchor="${an}" font-size="9" font-family="JetBrains Mono" fill="#6E769E">${data[i].k.split(" ")[0]}</text>`;}
+ let d=[];for(let i=0;i<N;i++){const a=Math.PI*2*i/N-Math.PI/2,rr=R*data[i].v/100;d.push((cx+Math.cos(a)*rr)+","+(cy+Math.sin(a)*rr));}
+ h+=`<polygon points="${d.join(" ")}" fill="${color}33" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+ for(let i=0;i<N;i++){const a=Math.PI*2*i/N-Math.PI/2,rr=R*data[i].v/100;h+=`<circle cx="${cx+Math.cos(a)*rr}" cy="${cy+Math.sin(a)*rr}" r="3" fill="${data[i].c||color}"/>`;}
+ svg.innerHTML=h;
+}
+radar("radarBig",BIG,"#9B7CFF"); radar("radarRia",RIA,"#5B8CFF");
+document.getElementById("legBig").innerHTML=BIG.map(d=>`<li><span class="lk"><span class="dc" style="background:${d.c}"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
+document.getElementById("legRia").innerHTML=RIA.slice(0,4).map(d=>`<li><span class="lk"><span class="dc" style="background:#5B8CFF"></span>${d.k}</span><span class="lv">${d.v}</span></li>`).join("");
 
-/* ============================ TESTS ============================ */
-document.getElementById("testGrid").innerHTML = TESTS.map(t => `
-  <div class="card test-card">
-    <div class="th">
-      <span class="ticon" style="background:${t.bg};color:${t.col}">${t.ico}</span>
-      <span class="chip chip--ok">Complété</span>
-    </div>
-    <div><h4 style="font-size:14px;">${t.name}</h4><div class="res">${t.res}</div></div>
-    <p>${t.note}</p>
-    <div class="tfoot"><span class="muted" style="font-size:12px;">📅 ${t.date} 2026</span><a class="wikilink" style="color:var(--c-blue-deep);background:var(--c-blue-tint);">Voir le détail</a></div>
-  </div>`).join("");
+/* ============ BARS / SUBJECTS / TESTS / MATRIX ============ */
+document.getElementById("iqBars").innerHTML=IQ.map(d=>{const pct=Math.min(100,(d.v-70)/(145-70)*100);return `<div class="bar"><span class="bl">${d.k}</span><span class="bv">${d.v}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`;}).join("");
+document.getElementById("valBars").innerHTML=VAL.map(d=>`<div class="bar"><span class="bl">${d.k}</span><span class="bv">${d.v}</span><div class="track"><div class="fill" style="width:${d.v}%;background:linear-gradient(90deg,#34D399,#1f9d72)"></div></div></div>`).join("");
+document.getElementById("subjGrid").innerHTML=SUBJ.map(s=>{const c=s.g>=16?"gh":(s.g>=14?"gm":"gl");return `<div class="subj"><span class="sn">${s.n}</span><span class="sg ${c}">${s.g}<small>/20</small></span></div>`;}).join("");
+document.getElementById("testGrid").innerHTML=TESTS.map(t=>`<div class="test"><span class="ti" style="background:${t.bg};color:${t.c}">${icon(t.ic)}</span><div style="flex:1"><div class="tn">${t.n}</div><div class="tr">${t.r}</div><p>${t.p}</p></div></div>`).join("");
+const mx=document.getElementById("matrix");MAT.forEach(it=>{const e=document.createElement("div");e.className="mdot";e.style.left=it.x+"%";e.style.top=(100-it.y)+"%";e.innerHTML=`<span class="p" style="background:${it.c}"></span>${it.n}`;mx.appendChild(e);});
 
-/* ============================ SCHOOL ============================ */
-document.getElementById("subjGrid").innerHTML = SUBJECTS.map(s => {
-  const cls = s.g>=16?"g-high":(s.g>=14?"g-mid":"g-low");
-  return `<div class="subj"><span class="sn">${s.n}</span><span class="sg ${cls}">${s.g}<small>/20</small></span></div>`;
-}).join("");
-
-document.getElementById("iqBars").innerHTML = IQ.map(d => {
-  const pct = Math.min(100, ((d.v-70)/(145-70))*100);
-  return `<div class="bar-row"><span class="bl">${d.k}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span class="bar-val">${d.v}</span></div>`;
-}).join("");
-
-document.getElementById("valuesBars").innerHTML = VALUES.map(d =>
-  `<div class="bar-row"><span class="bl">${d.k}</span><div class="bar-track"><div class="bar-fill" style="width:${d.v}%;background:linear-gradient(90deg,#22A06B,#1f7d55)"></div></div><span class="bar-val">${d.v}</span></div>`).join("");
-
-/* ============================ MATRIX ============================ */
-const mx = document.getElementById("matrix");
-MATRIX_ITEMS.forEach(it => {
-  const el = document.createElement("div");
-  el.className = "dot-item";
-  el.style.left = it.x + "%";
-  el.style.top = (100-it.y) + "%";
-  el.innerHTML = `<span class="pt" style="background:${it.c}"></span>${it.n}`;
-  mx.appendChild(el);
-});
-
-/* ============================ OBSIDIAN GRAPH ============================ */
+/* ============ GRAPH ============ */
 (function(){
-  const svg = document.getElementById("graphSvg");
-  const NS = "http://www.w3.org/2000/svg";
-  const nodes = [
-    { id:"louise", label:"Louise", x:380, y:240, r:30, type:"root" },
-    { id:"perso", label:"Personnalité", x:170, y:110, r:20, type:"dim" },
-    { id:"intel", label:"Intellect", x:600, y:110, r:20, type:"dim" },
-    { id:"ecole", label:"École", x:160, y:380, r:20, type:"dim" },
-    { id:"valeurs", label:"Valeurs", x:600, y:380, r:20, type:"dim" },
-    { id:"infp", label:"INFP", x:70, y:60, r:12, type:"leaf" },
-    { id:"big5", label:"Ouverture 92", x:120, y:200, r:12, type:"leaf" },
-    { id:"hpi", label:"QI 132", x:670, y:50, r:12, type:"leaf" },
-    { id:"verbal", label:"Verbal 138", x:710, y:180, r:12, type:"leaf" },
-    { id:"svt", label:"SVT 17", x:70, y:330, r:12, type:"leaf" },
-    { id:"arts", label:"Arts 19", x:120, y:450, r:12, type:"leaf" },
-    { id:"auto", label:"Autonomie", x:710, y:330, r:12, type:"leaf" },
-    { id:"creat", label:"Créativité", x:660, y:450, r:12, type:"leaf" },
-    { id:"riasec", label:"Investigateur", x:380, y:90, r:12, type:"leaf" },
-    { id:"grit", label:"Grit 4.1", x:380, y:400, r:12, type:"leaf" },
-  ];
-  const edges = [
-    ["louise","perso"],["louise","intel"],["louise","ecole"],["louise","valeurs"],
-    ["louise","riasec"],["louise","grit"],
-    ["perso","infp"],["perso","big5"],
-    ["intel","hpi"],["intel","verbal"],
-    ["ecole","svt"],["ecole","arts"],
-    ["valeurs","auto"],["valeurs","creat"],
-  ];
-  const byId = Object.fromEntries(nodes.map(n=>[n.id,n]));
-  const colors = { root:"#FD6936", dim:"#7C5CFF", leaf:"#487AFF" };
-  let html = "";
-  edges.forEach(([a,b])=>{ const A=byId[a],B=byId[b]; html += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="rgba(176,208,247,.18)" stroke-width="1.4"/>`; });
-  nodes.forEach(n=>{
-    const c = colors[n.type];
-    html += `<g class="obs-node" data-id="${n.id}">
-      <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${c}" fill-opacity="${n.type==='leaf'?0.85:1}"/>
-      <text x="${n.x}" y="${n.y + n.r + 13}" text-anchor="middle">${n.label}</text></g>`;
-  });
-  svg.innerHTML = html;
+ const svg=document.getElementById("graph");
+ const N=[
+  {id:"louise",l:"Louise",x:400,y:220,r:30,t:"root"},
+  {id:"perso",l:"Personnalité",x:180,y:95,r:19,t:"dim",sec:"perso"},
+  {id:"capacites",l:"Capacités",x:630,y:95,r:19,t:"dim",sec:"capacites"},
+  {id:"ecole",l:"École",x:165,y:355,r:19,t:"dim",sec:"ecole"},
+  {id:"valeurs",l:"Valeurs",x:635,y:355,r:19,t:"dim",sec:"valeurs"},
+  {id:"infp",l:"INFP",x:80,y:50,r:11,t:"leaf",sec:"perso"},
+  {id:"open",l:"Ouverture 92",x:120,y:185,r:11,t:"leaf",sec:"perso"},
+  {id:"qi",l:"Verbal 138",x:700,y:45,r:11,t:"leaf",sec:"capacites"},
+  {id:"wm",l:"Mémoire 119",x:735,y:170,r:11,t:"leaf",sec:"capacites"},
+  {id:"svt",l:"SVT 17",x:75,y:300,r:11,t:"leaf",sec:"ecole"},
+  {id:"arts",l:"Arts 19",x:130,y:410,r:11,t:"leaf",sec:"ecole"},
+  {id:"auto",l:"Autonomie",x:735,y:300,r:11,t:"leaf",sec:"valeurs"},
+  {id:"creat",l:"Créativité",x:680,y:415,r:11,t:"leaf",sec:"valeurs"},
+  {id:"riasec",l:"Investigateur",x:400,y:80,r:12,t:"leaf",sec:"valeurs"},
+  {id:"grit",l:"Grit 4.1",x:400,y:380,r:12,t:"leaf",sec:"tests"}];
+ const E=[["louise","perso"],["louise","capacites"],["louise","ecole"],["louise","valeurs"],["louise","riasec"],["louise","grit"],["perso","infp"],["perso","open"],["capacites","qi"],["capacites","wm"],["ecole","svt"],["ecole","arts"],["valeurs","auto"],["valeurs","creat"]];
+ const by=Object.fromEntries(N.map(n=>[n.id,n]));
+ const col={root:"#FF7A45",dim:"#9B7CFF",leaf:"#5B8CFF"};
+ let h="";
+ E.forEach(([a,b])=>{const A=by[a],B=by[b];h+=`<line class="edge" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="rgba(140,160,230,.18)" stroke-width="1.4"/>`;});
+ N.forEach((n,i)=>{const c=col[n.t];h+=`<g class="node${n.t==='leaf'?' float':''}" data-sec="${n.sec||''}" style="animation-delay:${(i%5)*.6}s">
+   <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${c}" fill-opacity="${n.t==='leaf'?.85:1}" stroke="${c}" stroke-opacity=".4"/>
+   <text x="${n.x}" y="${n.y+n.r+13}" text-anchor="middle">${n.l}</text></g>`;});
+ svg.innerHTML=h;
+ svg.querySelectorAll(".node").forEach(g=>g.addEventListener("click",()=>{if(g.dataset.sec) goNote(g.dataset.sec);}));
 })();
 
-/* ============================ WIZARD ============================ */
-const modal = document.getElementById("wizardModal");
-const steps = [...document.querySelectorAll(".step")];
-const segs = [...document.querySelectorAll("#wizSteps .seg")];
-const metaEl = document.getElementById("wizMeta");
-const backBtn = document.getElementById("wizBack");
-const nextBtn = document.getElementById("wizNext");
-const skipBtn = document.getElementById("wizSkip");
-const STEP_NAMES = ["L'enfant","Le parent","Documents","Tests","Rendez-vous","Terminé"];
-let cur = 0;
-let calendlyLoaded = false;
-
-function openWizard(){ modal.classList.add("is-open"); document.body.style.overflow="hidden"; render(); }
-function closeWizard(){ modal.classList.remove("is-open"); document.body.style.overflow=""; }
-document.querySelectorAll("[data-open-wizard]").forEach(b => b.addEventListener("click", openWizard));
-document.getElementById("wizClose").addEventListener("click", closeWizard);
-modal.addEventListener("click", e => { if(e.target===modal) closeWizard(); });
-document.addEventListener("keydown", e => { if(e.key==="Escape" && modal.classList.contains("is-open")) closeWizard(); });
-
+/* ============ WIZARD ============ */
+const overlay=document.getElementById("overlay"),steps=[...document.querySelectorAll(".step")],segs=[...document.querySelectorAll("#segs .seg")];
+const wMeta=document.getElementById("wMeta"),wBack=document.getElementById("wBack"),wNext=document.getElementById("wNext"),wSkip=document.getElementById("wSkip");
+const NAMES=["l'enfant","le parent","documents","tests","rendez-vous"];let cur=0,calLoaded=false;
+function open(){overlay.classList.add("open");document.body.style.overflow="hidden";render();}
+function close(){overlay.classList.remove("open");document.body.style.overflow="";}
+document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",open));
+document.getElementById("wClose").addEventListener("click",close);
+overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&overlay.classList.contains("open"))close();});
 function render(){
-  steps.forEach((s,i)=> s.classList.toggle("is-active", i===cur));
-  segs.forEach((s,i)=>{ s.classList.remove("done","current"); if(i<cur) s.classList.add("done"); else if(i===cur) s.classList.add("current"); });
-  const total = STEP_NAMES.length - 1; // 5 real steps (0..4), 5 = done
-  if (cur < 5) { metaEl.textContent = `Étape ${cur+1} / 5 · ${STEP_NAMES[cur]}`; }
-  else { metaEl.textContent = "Inscription confirmée"; segs.forEach(s=>s.classList.add("done")); }
-
-  backBtn.style.visibility = (cur===0 || cur===5) ? "hidden" : "visible";
-  // skip available on optional steps: documents(2), tests(3)
-  skipBtn.style.display = (cur===2 || cur===3) ? "inline" : "none";
-
-  if (cur === 4) { nextBtn.textContent = "Confirmer l'inscription ✓"; loadCalendly(); fillRecap("recap"); }
-  else if (cur === 5) { nextBtn.textContent = "Aller au tableau de bord →"; skipBtn.style.display="none"; fillRecap("recapFinal"); }
-  else { nextBtn.textContent = "Continuer →"; }
-
-  modal.querySelector(".wiz").scrollIntoView({block:"nearest"});
+ steps.forEach((s,i)=>s.classList.toggle("is-active",i===cur));
+ segs.forEach((s,i)=>{s.classList.remove("done","cur");if(i<cur)s.classList.add("done");else if(i===cur)s.classList.add("cur");});
+ if(cur<5){wMeta.textContent=`étape ${cur+1} / 5 · ${NAMES[cur]}`;}else{wMeta.textContent="inscription confirmée";segs.forEach(s=>s.classList.add("done"));}
+ wBack.style.visibility=(cur===0||cur===5)?"hidden":"visible";
+ wSkip.style.display=(cur===2||cur===3)?"inline-flex":"none";
+ if(cur===4){wNext.innerHTML='Confirmer l\'inscription'+icon("i-check","ic ic--sm");loadCal();}
+ else if(cur===5){wNext.innerHTML='Aller au tableau de bord'+icon("i-arr","ic ic--sm");wSkip.style.display="none";fillRecap();}
+ else{wNext.innerHTML='Continuer'+icon("i-arr","ic ic--sm");}
+ overlay.querySelector(".wiz").scrollIntoView({block:"nearest"});
 }
-
-backBtn.addEventListener("click", ()=>{ if(cur>0){ cur--; render(); } });
-skipBtn.addEventListener("click", ()=>{ if(cur<4){ cur++; render(); } });
-nextBtn.addEventListener("click", ()=>{
-  if (cur === 5) { closeWizard(); window.scrollTo({top:0,behavior:"smooth"}); return; }
-  if (!validateStep(cur)) return;
-  cur++; render();
+wBack.addEventListener("click",()=>{if(cur>0){cur--;render();}});
+wSkip.addEventListener("click",()=>{if(cur<4){cur++;render();}});
+wNext.addEventListener("click",()=>{
+ if(cur===5){close();window.scrollTo({top:0,behavior:"smooth"});return;}
+ if(!validate(cur))return;
+ cur++;render();
 });
-
-function validateStep(i){
-  if (i===0){
-    const p = document.getElementById("f_prenom");
-    if(!p.value.trim()){ p.focus(); p.style.borderColor="var(--c-orange)"; return false; }
-    p.style.borderColor="";
-  }
-  if (i===1){
-    const e = document.getElementById("p_email");
-    if(!e.value.trim() || !/.+@.+\..+/.test(e.value)){ e.focus(); e.style.borderColor="var(--c-orange)"; return false; }
-    e.style.borderColor="";
-  }
-  return true;
+function flag(el){el.style.borderColor="var(--orange)";el.focus();el.addEventListener("input",()=>el.style.borderColor="",{once:true});}
+function validate(i){
+ if(i===0){const p=document.getElementById("f_prenom");if(!p.value.trim()){flag(p);return false;}}
+ if(i===1){const e=document.getElementById("p_email");if(!/.+@.+\..+/.test(e.value)){flag(e);return false;}}
+ if(i===4){const c=document.getElementById("consent");if(!c.checked){c.parentElement.style.color="var(--orange)";return false;}}
+ return true;
 }
-
-/* multi-select choices */
-document.querySelectorAll("[data-multi] .choice").forEach(c=>{
-  c.addEventListener("click", ()=> c.classList.toggle("is-sel"));
-});
-
-/* recap builder */
-function fillRecap(id){
-  const el = document.getElementById(id);
-  if(!el) return;
-  const prenom = document.getElementById("f_prenom").value.trim() || "—";
-  const age = document.getElementById("f_age").value || "—";
-  const classe = document.getElementById("f_classe").value || "—";
-  const email = document.getElementById("p_email").value.trim() || "—";
-  const motifs = [...document.querySelectorAll("[data-multi] .choice.is-sel .ct")].map(x=>x.textContent).join(", ") || "—";
-  const nbDocs = document.querySelectorAll("#fileList .fileitem").length;
-  const nbTests = document.querySelectorAll(".reco .radd.is-added").length;
-  el.innerHTML = `
-    <div class="rr"><span class="rk">Enfant</span><span class="rv">${prenom}${age!=="—"?", "+age+" ans":""}${classe!=="—"?" · "+classe:""}</span></div>
-    <div class="rr"><span class="rk">Contact</span><span class="rv">${email}</span></div>
-    <div class="rr"><span class="rk">Objectifs</span><span class="rv">${motifs}</span></div>
-    <div class="rr"><span class="rk">Documents</span><span class="rv">${nbDocs} fichier${nbDocs>1?"s":""} ajouté${nbDocs>1?"s":""}</span></div>
-    <div class="rr"><span class="rk">Tests choisis</span><span class="rv">${nbTests} test${nbTests>1?"s":""}</span></div>`;
+/* who toggle */
+document.querySelectorAll("#who .opt").forEach(o=>o.addEventListener("click",()=>{document.querySelectorAll("#who .opt").forEach(x=>x.classList.remove("sel"));o.classList.add("sel");}));
+/* multi choices */
+document.querySelectorAll("[data-multi] .choice").forEach(c=>c.addEventListener("click",e=>{e.preventDefault();c.classList.toggle("sel");}));
+/* recap */
+function fillRecap(){
+ const g=id=>document.getElementById(id);
+ const prenom=g("f_prenom").value.trim()||"—",age=g("f_age").value,classe=g("f_classe").value;
+ const email=g("p_email").value.trim()||"—";
+ const who=document.querySelector("#who .opt.sel")?.dataset.who==="ado"?"l'ado d'abord":"le parent d'abord";
+ const motifs=[...document.querySelectorAll("[data-multi] .choice.sel .ct")].map(x=>x.textContent).join(", ")||"—";
+ const nd=document.querySelectorAll("#flist .fitem").length,nt=document.querySelectorAll(".reco .radd.added").length;
+ g("recapFinal").innerHTML=`
+  <div class="rr"><span class="rk">enfant</span><span class="rv">${prenom}${age?", "+age+" ans":""}${classe?" · "+classe:""}</span></div>
+  <div class="rr"><span class="rk">contact</span><span class="rv">${email}</span></div>
+  <div class="rr"><span class="rk">répond</span><span class="rv">${who}</span></div>
+  <div class="rr"><span class="rk">objectifs</span><span class="rv">${motifs}</span></div>
+  <div class="rr"><span class="rk">documents</span><span class="rv">${nd} fichier${nd>1?"s":""}</span></div>
+  <div class="rr"><span class="rk">tests</span><span class="rv">${nt} sélectionné${nt>1?"s":""}</span></div>`;
 }
+/* calendly */
+function loadCal(){if(calLoaded)return;calLoaded=true;
+ const l=document.createElement("link");l.rel="stylesheet";l.href="https://assets.calendly.com/assets/external/widget.css";document.head.appendChild(l);
+ const s=document.createElement("script");s.src="https://assets.calendly.com/assets/external/widget.js";s.async=true;document.body.appendChild(s);}
+/* upload */
+const dz=document.getElementById("dz"),fi=document.getElementById("fileInput"),fl=document.getElementById("flist");
+const fmt=b=>b>1048576?(b/1048576).toFixed(1)+" Mo":Math.max(1,Math.round(b/1024))+" Ko";
+function add(files){[...files].forEach(f=>{const r=document.createElement("div");r.className="fitem";const ext=(f.name.split(".").pop()||"").toUpperCase();
+ r.innerHTML=`<span class="fi">${icon("i-file","ic ic--sm")}</span><span><span class="fn">${f.name}</span><br><span class="fs">${ext} · ${fmt(f.size)}</span></span><button class="fx" aria-label="Retirer">${icon("i-x","ic ic--sm")}</button>`;
+ r.querySelector(".fx").addEventListener("click",()=>r.remove());fl.appendChild(r);});}
+dz.addEventListener("click",()=>fi.click());fi.addEventListener("change",e=>add(e.target.files));
+["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("drag");}));
+["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("drag");}));
+dz.addEventListener("drop",e=>add(e.dataTransfer.files));
+/* reco */
+document.getElementById("recoList").innerHTML=RECO.map((r,i)=>`<div class="reco"><span class="ri" style="background:${r.bg};color:${r.c}">${icon(r.ic)}</span><div style="flex:1"><div class="rt">${r.t}</div><div class="rd">${r.d}</div><div style="margin-top:7px"><span class="tag ${r.tc}">${r.tag}</span></div></div><button class="btn btn--ghost btn--sm radd${i<3?' added':''}" data-reco>${i<3?'✓ Ajouté':'+ Ajouter'}</button></div>`).join("");
+document.querySelectorAll("[data-reco]").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("added");b.textContent=b.classList.contains("added")?"✓ Ajouté":"+ Ajouter";}));
 
-/* Calendly lazy load */
-function loadCalendly(){
-  if (calendlyLoaded) return;
-  calendlyLoaded = true;
-  const link = document.createElement("link");
-  link.rel="stylesheet"; link.href="https://assets.calendly.com/assets/external/widget.css";
-  document.head.appendChild(link);
-  const s = document.createElement("script");
-  s.src="https://assets.calendly.com/assets/external/widget.js"; s.async=true;
-  document.body.appendChild(s);
-}
-
-/* ============================ FILE UPLOAD ============================ */
-const dz = document.getElementById("dropzone");
-const fileInput = document.getElementById("fileInput");
-const fileList = document.getElementById("fileList");
-function fmtSize(b){ return b>1048576 ? (b/1048576).toFixed(1)+" Mo" : Math.max(1,Math.round(b/1024))+" Ko"; }
-function addFiles(files){
-  [...files].forEach(f=>{
-    const row = document.createElement("div");
-    row.className="fileitem";
-    const ext = (f.name.split(".").pop()||"").toUpperCase();
-    row.innerHTML = `<span class="fi">📄</span><span><span class="fn">${f.name}</span><br><span class="fs">${ext} · ${fmtSize(f.size)}</span></span><button class="fx" aria-label="Retirer">✕</button>`;
-    row.querySelector(".fx").addEventListener("click", ()=> row.remove());
-    fileList.appendChild(row);
-  });
-}
-dz.addEventListener("click", ()=> fileInput.click());
-fileInput.addEventListener("change", e=> addFiles(e.target.files));
-["dragenter","dragover"].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add("drag"); }));
-["dragleave","drop"].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove("drag"); }));
-dz.addEventListener("drop", e=> addFiles(e.dataTransfer.files));
-
-/* ============================ RECO TESTS ============================ */
-document.getElementById("recoList").innerHTML = RECO_TESTS.map((r,i)=>{
-  const tagcls = r.tag==="Prioritaire"?"chip--warn":(r.tag==="Recommandé"?"chip--ok":"chip--neutral");
-  return `<div class="reco">
-    <span class="rico" style="background:${r.bg};color:${r.col}">${r.ico}</span>
-    <div style="flex:1;">
-      <div class="rt">${r.t}</div><div class="rd">${r.d}</div>
-      <div class="rmeta"><span class="chip ${tagcls}">${r.tag}</span></div>
-    </div>
-    <button class="btn btn--secondary btn--small radd ${i<3?'is-added':''}" data-reco>${i<3?'✓ Ajouté':'+ Ajouter'}</button>
-  </div>`;
-}).join("");
-document.querySelectorAll("[data-reco]").forEach(b=>{
-  b.addEventListener("click", ()=>{
-    b.classList.toggle("is-added");
-    b.textContent = b.classList.contains("is-added") ? "✓ Ajouté" : "+ Ajouter";
-  });
-});
+/* init inspector */
+goNote("overview");
 </script>
 </body>
 </html>
