@@ -22,19 +22,22 @@ Mode de revue : **SELECTIVE EXPANSION** (baseline tenue + cherry-pick).
       profil écrit). Effort S. Raison du report : proto statique, faible risque immédiat.
 - [ ] **7A — Poids des polices** : 3 familles × nombreux poids. Sous-ensembler / réduire les
       graisses chargées. Effort S.
-- [ ] **10A — Divergence dashboard (dette n°1)** — ✅ **TRANCHÉ (2026-06-02) : Option A —
+- [x] **10A — Divergence dashboard (dette n°1)** — ✅ **TRANCHÉ (2026-06-02) : Option A —
       « vitrine en amont du tunnel ».**
       Rôles figés : `profil-eleve.html` = page EXEMPLE/marketing AVANT inscription ;
       `dashboard.html` = PRODUIT connecté APRÈS inscription. Pas de fusion, pas de
       remplacement de l'onglet profil React.
       Tunnel cible : `index.html` (atterrir) → `profil-eleve.html` (exemple) →
       « Démarrer » (crée le profil) → `dashboard.html?role=`.
-      - Aval (Démarrer → dashboard) : ✅ fait (E1).
-      - **Amont (landing → exemple) : RESTE À FAIRE.** `profil-eleve.html` n'est lié par
-        aucune page. `index.html` étant un bundle React compilé (1,9 Mo), le CTA
-        « Voir un exemple de profil » doit être injecté via un **patch script**
-        (`_patch_*.py`, conventions du repo : marqueur + regex), pas à la main.
-        Effort S–M. Candidat de greffe : à côté du CTA principal de la landing.
+      - Aval (Démarrer → dashboard) : ✅ câblé (E1) — conservé car il rend la page de
+        référence cliquable/autonome, sans impact sur le tunnel.
+      - **Amont (landing → exemple) : ✅ TRANCHÉ (2026-06-02) — option (c) « profil-eleve
+        en interne ».** `profil-eleve.html` est jugé redondant avec le `QuickExample`
+        in-bundle (déjà ouvert par le bouton « ▶ Voir un exemple de rapport » de
+        `index.html`). Décision : on le **garde comme référence de design interne**, PAS
+        comme surface du funnel. **Aucun CTA ajouté à la landing**, aucun patch script.
+        Le `QuickExample` (exemple de rapport « Léa, Terminale ») reste l'unique surface
+        « exemple » vivante du tunnel. → 10A entièrement résolu, plus de drift à arbitrer.
 - [ ] **dataLayer → vrai outil** : brancher `track()` à l'outil analytics réel (GA4/Plausible).
 - [ ] **Backend** : la collecte du wizard reste locale (localStorage). Brancher au backend
       réel le moment venu (cf. `BACKEND_SPEC.md`).
