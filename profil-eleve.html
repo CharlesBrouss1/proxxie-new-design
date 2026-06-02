@@ -424,7 +424,7 @@ body.vault-open .scrim { opacity: 1; pointer-events: auto; }
 <!-- ===== DEMO RIBBON ===== -->
 <div class="ribbon">
   <svg class="ic ic--sm" style="color:var(--orange)"><use href="#i-bolt"/></svg>
-  <span><b>Aperçu d'un profil complété.</b> Voici comment Proxxie relie la personnalité, les capacités et l'école de votre enfant.</span>
+  <span><b>Aperçu d'un profil complété.</b> Le profil de votre enfant démarrera simple et <b>s'enrichira progressivement</b>, test après test, jusqu'à ressembler à ceci.</span>
   <span class="sp"></span>
   <span class="badge">données fictives</span>
 </div>
@@ -708,12 +708,12 @@ body.vault-open .scrim { opacity: 1; pointer-events: auto; }
 const BIG=[{k:"Ouverture",v:92,c:"#7C5CFF"},{k:"Conscience",v:70,c:"#487AFF"},{k:"Extraversion",v:45,c:"#FD6936"},{k:"Agréabilité",v:80,c:"#22A06B"},{k:"Stabilité",v:58,c:"#B07A00"}];
 const RIA=[{k:"Investigateur",v:90},{k:"Artistique",v:85},{k:"Social",v:62},{k:"Réaliste",v:38},{k:"Entreprenant",v:44},{k:"Conventionnel",v:30}];
 const TESTS=[
- {ic:"i-compass",c:"#1320CE",bg:"rgba(72,122,255,.12)",n:"RIASEC — Intérêts",r:"Investigateur · Artistique",p:"Sciences, recherche et expression créative."},
- {ic:"i-user",c:"#7C5CFF",bg:"rgba(124,92,255,.12)",n:"MBTI — Personnalité",r:"INFP « Le Médiateur »",p:"Idéaliste, créative, guidée par ses valeurs."},
- {ic:"i-spark",c:"#B07A00",bg:"rgba(176,122,0,.12)",n:"HPI — Potentiel",r:"Profil à haut potentiel",p:"Compréhension verbale très élevée."},
- {ic:"i-bolt",c:"#FD6936",bg:"rgba(253,105,54,.12)",n:"Grit — Persévérance",r:"4,1 / 5",p:"Engagement et constance élevés."},
- {ic:"i-gem",c:"#22A06B",bg:"rgba(34,160,107,.12)",n:"Valeurs",r:"Autonomie · Créativité",p:"Cherche du sens et la liberté d'explorer."},
- {ic:"i-target",c:"#1320CE",bg:"rgba(72,122,255,.12)",n:"CAAS — Adaptabilité",r:"Élevée",p:"Se projette et s'adapte facilement."}];
+ {ic:"i-compass",c:"#1320CE",bg:"rgba(72,122,255,.12)",n:"RIASEC — Intérêts",r:"Investigateur · Artistique",p:"Sciences, recherche et expression créative.",href:"test-riasec.html"},
+ {ic:"i-user",c:"#7C5CFF",bg:"rgba(124,92,255,.12)",n:"MBTI — Personnalité",r:"INFP « Le Médiateur »",p:"Idéaliste, créative, guidée par ses valeurs.",href:"test-mbti.html"},
+ {ic:"i-spark",c:"#B07A00",bg:"rgba(176,122,0,.12)",n:"HPI — Potentiel",r:"Profil à haut potentiel",p:"Compréhension verbale très élevée.",href:"test-hpi.html"},
+ {ic:"i-bolt",c:"#FD6936",bg:"rgba(253,105,54,.12)",n:"Grit — Persévérance",r:"4,1 / 5",p:"Engagement et constance élevés.",href:"test-grit.html"},
+ {ic:"i-gem",c:"#22A06B",bg:"rgba(34,160,107,.12)",n:"Valeurs",r:"Autonomie · Créativité",p:"Cherche du sens et la liberté d'explorer.",href:"test-valeurs.html"},
+ {ic:"i-target",c:"#1320CE",bg:"rgba(72,122,255,.12)",n:"CAAS — Adaptabilité",r:"Élevée",p:"Se projette et s'adapte facilement.",href:"test-caas.html"}];
 const SUBJ=[{n:"Anglais",g:18},{n:"Arts pl.",g:19},{n:"SVT",g:17},{n:"Français",g:16},{n:"Hist-Géo",g:15},{n:"Physique",g:14},{n:"Maths",g:13},{n:"EPS",g:12},{n:"Espagnol",g:16}];
 const IQ=[{k:"Compréhension verbale",v:138},{k:"Raisonnement perceptif",v:125},{k:"Mémoire de travail",v:119},{k:"Vitesse de traitement",v:110}];
 const VAL=[{k:"Autonomie",v:95},{k:"Créativité",v:88},{k:"Altruisme",v:76},{k:"Accomplissement",v:64},{k:"Sécurité",v:40}];
@@ -732,6 +732,12 @@ const NOTES={
  tests:[{i:"i-flask",t:"6 tests reliés",p:"Personnalité, intérêts, potentiel, persévérance.",tags:[["haut-potentiel","tag--y"]]}]};
 
 const icon=(id,cls="ic")=>`<svg class="${cls}"><use href="#${id}"/></svg>`;
+/* anti-XSS : échappe toute valeur saisie avant innerHTML */
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* analytics funnel (E2) : dataLayer + console, branchable à GA/Plausible */
+const track=(ev,props={})=>{ (window.dataLayer=window.dataLayer||[]).push({event:ev,...props}); try{console.debug("[track]",ev,props);}catch(_){} };
+const getRole=()=>document.querySelector("#who .opt.sel")?.dataset.who==="ado"?"enfant":"parent";
+track("view_profil_exemple");
 
 /* ============ NAV ============ */
 const SECTIONS=[
@@ -786,7 +792,7 @@ document.getElementById("legRia").innerHTML=RIA.slice(0,4).map(d=>`<li><span cla
 document.getElementById("iqBars").innerHTML=IQ.map(d=>{const pct=Math.min(100,(d.v-70)/(145-70)*100);return `<div class="bar"><span class="bl">${d.k}</span><span class="bv">${d.v}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`;}).join("");
 document.getElementById("valBars").innerHTML=VAL.map(d=>`<div class="bar"><span class="bl">${d.k}</span><span class="bv">${d.v}</span><div class="track"><div class="fill" style="width:${d.v}%;background:linear-gradient(90deg,#22A06B,#1a7d54)"></div></div></div>`).join("");
 document.getElementById("subjGrid").innerHTML=SUBJ.map(s=>{const c=s.g>=16?"gh":(s.g>=14?"gm":"gl");return `<div class="subj"><span class="sn">${s.n}</span><span class="sg ${c}">${s.g}<small>/20</small></span></div>`;}).join("");
-document.getElementById("testGrid").innerHTML=TESTS.map(t=>`<div class="test"><span class="ti" style="background:${t.bg};color:${t.c}">${icon(t.ic)}</span><div style="flex:1"><div class="tn">${t.n}</div><div class="tr">${t.r}</div><p>${t.p}</p></div></div>`).join("");
+document.getElementById("testGrid").innerHTML=TESTS.map(t=>`<div class="test"><span class="ti" style="background:${t.bg};color:${t.c}">${icon(t.ic)}</span><div style="flex:1"><div class="tn">${t.n}</div><div class="tr">${t.r}</div><p>${t.p}</p><a href="${t.href}" onclick="track('test_detail',{test:'${t.n}'})" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--blue-2);text-decoration:none">Voir le test →</a></div></div>`).join("");
 const mx=document.getElementById("matrix");MAT.forEach(it=>{const e=document.createElement("div");e.className="mdot";e.style.left=it.x+"%";e.style.top=(100-it.y)+"%";e.innerHTML=`<span class="p" style="background:${it.c}"></span>${it.n}`;mx.appendChild(e);});
 
 /* ============ GRAPH ============ */
@@ -824,7 +830,7 @@ const mx=document.getElementById("matrix");MAT.forEach(it=>{const e=document.cre
 const overlay=document.getElementById("overlay"),steps=[...document.querySelectorAll(".step")],segs=[...document.querySelectorAll("#segs .seg")];
 const wMeta=document.getElementById("wMeta"),wBack=document.getElementById("wBack"),wNext=document.getElementById("wNext"),wSkip=document.getElementById("wSkip");
 const NAMES=["l'enfant","le parent","documents","tests","rendez-vous"];let cur=0,calLoaded=false;
-function open(){overlay.classList.add("open");document.body.style.overflow="hidden";render();}
+function open(){overlay.classList.add("open");document.body.style.overflow="hidden";track("wizard_open");render();}
 function close(){overlay.classList.remove("open");document.body.style.overflow="";}
 document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",open));
 document.getElementById("wClose").addEventListener("click",close);
@@ -843,11 +849,34 @@ function render(){
 }
 wBack.addEventListener("click",()=>{if(cur>0){cur--;render();}});
 wSkip.addEventListener("click",()=>{if(cur<4){cur++;render();}});
+let navLock=false;
 wNext.addEventListener("click",()=>{
- if(cur===5){close();window.scrollTo({top:0,behavior:"smooth"});return;}
+ if(navLock)return;                                  // 4A : garde anti double-clic
+ if(cur===5){ window.location.href="dashboard.html?role="+getRole(); return; }
  if(!validate(cur))return;
+ track("wizard_step_done",{step:cur+1,name:NAMES[cur]});
+ if(cur===4){ saveProfile(); track("wizard_completed"); }   // E1 : confirme → crée le profil
+ navLock=true; setTimeout(()=>navLock=false,300);
  cur++;render();
 });
+/* E1 — écrit dans le modèle existant (mêmes clés que le vrai signup) */
+function saveProfile(){ try{
+ const g=id=>document.getElementById(id);
+ localStorage.setItem("proxxie_firstName", g("f_prenom").value.trim());
+ if(g("f_classe").value) localStorage.setItem("proxxie_grade", g("f_classe").value);
+ localStorage.setItem("proxxie.role", getRole());
+ localStorage.setItem("proxxie.justSignedUp","1");
+ localStorage.setItem("proxxie.onboarding.profile","1");
+ localStorage.setItem("proxxie.onboarding.data", JSON.stringify({
+   child:{prenom:g("f_prenom").value.trim(), age:g("f_age").value, classe:g("f_classe").value, etab:g("f_etab").value},
+   parent:{prenom:g("p_prenom").value.trim(), email:g("p_email").value.trim()},
+   answeredBy:getRole(),
+   objectifs:[...document.querySelectorAll("[data-multi] .choice.sel .ct")].map(x=>x.textContent),
+   docs:document.querySelectorAll("#flist .fitem").length,
+   tests:[...document.querySelectorAll(".reco .radd.added")].length,
+   ts:Date.now()
+ }));
+ }catch(_){} }
 function flag(el){el.style.borderColor="var(--orange)";el.focus();el.addEventListener("input",()=>el.style.borderColor="",{once:true});}
 function validate(i){
  if(i===0){const p=document.getElementById("f_prenom");if(!p.value.trim()){flag(p);return false;}}
@@ -865,27 +894,35 @@ function fillRecap(){
  const motifs=[...document.querySelectorAll("[data-multi] .choice.sel .ct")].map(x=>x.textContent).join(", ")||"—";
  const nd=document.querySelectorAll("#flist .fitem").length,nt=document.querySelectorAll(".reco .radd.added").length;
  g("recapFinal").innerHTML=`
-  <div class="rr"><span class="rk">enfant</span><span class="rv">${prenom}${age?", "+age+" ans":""}${classe?" · "+classe:""}</span></div>
-  <div class="rr"><span class="rk">contact</span><span class="rv">${email}</span></div>
+  <div class="rr"><span class="rk">enfant</span><span class="rv">${esc(prenom)}${age?", "+esc(age)+" ans":""}${classe?" · "+esc(classe):""}</span></div>
+  <div class="rr"><span class="rk">contact</span><span class="rv">${esc(email)}</span></div>
   <div class="rr"><span class="rk">répond</span><span class="rv">${who}</span></div>
-  <div class="rr"><span class="rk">objectifs</span><span class="rv">${motifs}</span></div>
+  <div class="rr"><span class="rk">objectifs</span><span class="rv">${esc(motifs)}</span></div>
   <div class="rr"><span class="rk">documents</span><span class="rv">${nd} fichier${nd>1?"s":""}</span></div>
   <div class="rr"><span class="rk">tests</span><span class="rv">${nt} sélectionné${nt>1?"s":""}</span></div>`;
 }
+function calFallback(){ const w=document.querySelector(".calendly-inline-widget");
+ if(w && !window.Calendly){ w.innerHTML='<div class="cal-loading">Le calendrier n\'a pas pu se charger. <a href="https://calendly.com/proxxie" target="_blank" rel="noopener" style="color:var(--blue-2);font-weight:700;text-decoration:underline;margin-left:6px">Ouvrir Calendly →</a></div>'; } }
 function loadCal(){if(calLoaded)return;calLoaded=true;
  const l=document.createElement("link");l.rel="stylesheet";l.href="https://assets.calendly.com/assets/external/widget.css";document.head.appendChild(l);
- const s=document.createElement("script");s.src="https://assets.calendly.com/assets/external/widget.js";s.async=true;document.body.appendChild(s);}
+ const s=document.createElement("script");s.src="https://assets.calendly.com/assets/external/widget.js";s.async=true;
+ s.onerror=calFallback; document.body.appendChild(s);
+ setTimeout(calFallback,7000);  /* 2A : secours si le widget ne charge pas */ }
+/* écoute la confirmation de RDV Calendly */
+window.addEventListener("message",e=>{ if(e.data && e.data.event==="calendly.event_scheduled"){ try{localStorage.setItem("proxxie.rdv.booked","1");}catch(_){} track("calendly_booked"); } });
 const dz=document.getElementById("dz"),fi=document.getElementById("fileInput"),fl=document.getElementById("flist");
 const fmt=b=>b>1048576?(b/1048576).toFixed(1)+" Mo":Math.max(1,Math.round(b/1024))+" Ko";
-function add(files){[...files].forEach(f=>{const r=document.createElement("div");r.className="fitem";const ext=(f.name.split(".").pop()||"").toUpperCase();
- r.innerHTML=`<span class="fi">${icon("i-file","ic ic--sm")}</span><span><span class="fn">${f.name}</span><br><span class="fs">${ext} · ${fmt(f.size)}</span></span><button class="fx" aria-label="Retirer">${icon("i-x","ic ic--sm")}</button>`;
- r.querySelector(".fx").addEventListener("click",()=>r.remove());fl.appendChild(r);});}
+function add(files){[...files].forEach(f=>{
+ if(f.size>10*1048576){alert(`« ${f.name} » dépasse 10 Mo et n'a pas été ajouté.`);return;}
+ const r=document.createElement("div");r.className="fitem";const ext=(f.name.split(".").pop()||"").toUpperCase();
+ r.innerHTML=`<span class="fi">${icon("i-file","ic ic--sm")}</span><span><span class="fn">${esc(f.name)}</span><br><span class="fs">${esc(ext)} · ${fmt(f.size)}</span></span><button class="fx" aria-label="Retirer">${icon("i-x","ic ic--sm")}</button>`;
+ r.querySelector(".fx").addEventListener("click",()=>r.remove());fl.appendChild(r);track("doc_added");});}
 dz.addEventListener("click",()=>fi.click());fi.addEventListener("change",e=>add(e.target.files));
 ["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("drag");}));
 ["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("drag");}));
 dz.addEventListener("drop",e=>add(e.dataTransfer.files));
 document.getElementById("recoList").innerHTML=RECO.map((r,i)=>`<div class="reco"><span class="ri" style="background:${r.bg};color:${r.c}">${icon(r.ic)}</span><div style="flex:1"><div class="rt">${r.t}</div><div class="rd">${r.d}</div><div style="margin-top:7px"><span class="tag ${r.tc}">${r.tag}</span></div></div><button class="btn btn--ghost btn--sm radd${i<3?' added':''}" data-reco>${i<3?'✓ Ajouté':'+ Ajouter'}</button></div>`).join("");
-document.querySelectorAll("[data-reco]").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("added");b.textContent=b.classList.contains("added")?"✓ Ajouté":"+ Ajouter";}));
+document.querySelectorAll("[data-reco]").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("added");b.textContent=b.classList.contains("added")?"✓ Ajouté":"+ Ajouter";track("test_reco_toggle",{added:b.classList.contains("added")});}));
 
 goNote("overview");
 </script>
