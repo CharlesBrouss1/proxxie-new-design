@@ -4,4 +4,5 @@ node_modules/
 .design-work/
 __pycache__/
 .pytest_cache/
-.claude/
+.claude/*
+!.claude/commands/
