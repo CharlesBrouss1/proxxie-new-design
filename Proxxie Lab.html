@@ -143,37 +143,49 @@
   .pmeta{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--ink-soft)}
 
   /* question */
-  .q{min-height:54vh;display:flex;flex-direction:column;justify-content:center}
-  .qdim{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
-  .qtext{font-family:var(--serif);font-size:27px;line-height:1.25;margin-bottom:30px}
-  .scale{display:flex;flex-direction:column;gap:10px}
-  .opt{
-    display:flex;align-items:center;gap:14px;
-    background:#fff;border:1.5px solid var(--line);border-radius:14px;
-    padding:15px 18px;cursor:pointer;font-size:16px;text-align:left;
-    transition:border-color .12s ease,background .12s ease,transform .06s ease;
+  .q{min-height:46vh;display:flex;flex-direction:column;justify-content:center}
+  .qdim{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+  .qdim .qd{width:10px;height:10px;border-radius:50%;background:var(--qac,var(--blue));flex:0 0 auto}
+  .qtext{font-family:var(--serif);font-size:27px;line-height:1.25;margin-bottom:24px}
+  /* échelle numérique 1-5 (style proxxie-new-design) */
+  .scale{display:flex;flex-direction:row;gap:9px}
+  .nopt{
+    flex:1;min-width:0;aspect-ratio:1/1;max-height:72px;
+    background:#fff;border:1.5px solid var(--line);border-radius:15px;
+    font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);
+    cursor:pointer;display:grid;place-items:center;
+    transition:transform .1s ease,border-color .12s ease,background .12s ease,color .12s ease,box-shadow .2s ease;
   }
-  .opt:hover{border-color:var(--blue-soft)}
-  .opt:active{transform:scale(.995)}
-  .opt.sel{border-color:var(--blue);background:#F4F6FF}
-  .opt .knob{width:20px;height:20px;border-radius:50%;border:2px solid #C9C2B2;flex:0 0 auto;display:grid;place-items:center}
-  .opt.sel .knob{border-color:var(--blue)}
-  .opt.sel .knob::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue)}
-  .scalehint{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:10px}
+  .nopt:hover{border-color:var(--qac,var(--blue));transform:translateY(-2px)}
+  .nopt:active{transform:scale(.96)}
+  .nopt.sel{background:var(--qac,var(--blue));border-color:var(--qac,var(--blue));color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+  .scalehint{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:11px}
+
+  .qpreview{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 18px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
+  .qpreview::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pac,var(--blue))}
+  .qpreview .qpk{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--pac,var(--blue));margin-bottom:9px}
+  .qpreview .qpk .d{width:8px;height:8px;border-radius:50%;background:var(--pac,var(--blue))}
+  .qpreview .qpq{font-family:var(--serif);font-size:18px;line-height:1.25;margin-bottom:14px}
+  .qpreview .qps{display:flex;gap:7px}
+  .qpreview .qps span{flex:1;aspect-ratio:1/1;max-height:46px;border:1.5px solid var(--line);border-radius:11px;display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:var(--ink-soft);font-size:15px}
+  .qpreview .qps span.on{background:var(--pac,var(--blue));border-color:var(--pac,var(--blue));color:#fff}
+  .qpreview .qphint{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--ink-soft);margin-top:9px}
+  .qpreview .qptag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--ptint,#F1ECDF);padding:3px 9px;border-radius:999px}
 
   .navrow{display:flex;gap:10px;margin-top:26px}
   .navrow .btn{width:auto;flex:1}
   .backlink{background:none;border:0;color:var(--ink-soft);font-size:14px;font-weight:600;cursor:pointer;padding:8px 4px}
 
-  /* empreinte (signature visual) */
+  /* empreinte (signature visual) : barres remplies */
   .empreinte{margin:6px 0 4px}
-  .erow{margin:18px 0}
-  .erow .elabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .erow{margin:16px 0}
+  .erow .elabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:10px}
   .erow .elabel b{font-size:15px}
-  .erow .elabel span{font-size:13px;color:var(--ink-soft);font-weight:600}
-  .etrack{position:relative;height:12px;border-radius:999px;background:linear-gradient(90deg,#EEE7D7,#EAF0FF)}
-  .emark{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 1px 5px rgba(19,32,206,.4);transform:translate(-50%,-50%);transition:left .7s cubic-bezier(.4,0,.2,1)}
-  .escale{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-top:5px}
+  .erow .elabel .eband{font-size:13px;color:var(--ink-soft);font-weight:600}
+  .erow .elabel .eval{font-size:14px;font-weight:800;color:var(--eac,var(--blue));font-variant-numeric:tabular-nums;margin-left:auto}
+  .etrack{position:relative;height:11px;border-radius:999px;background:#EDE6D6;overflow:hidden}
+  .efill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--eac,var(--blue)),var(--eac2,var(--blue-soft)));transition:width .8s cubic-bezier(.4,0,.2,1)}
+  .escale{font-size:11px;color:var(--ink-soft);margin-top:6px}
 
   .blurred{filter:blur(7px);opacity:.6;pointer-events:none;user-select:none}
   .lockwrap{position:relative}
@@ -286,6 +298,8 @@
     <div class="meta" id="intro-meta"></div>
     <h1 id="intro-title"></h1>
     <p class="lead" id="intro-lead"></p>
+
+    <div class="qpreview" id="intro-preview"></div>
 
     <div class="card">
       <p style="font-weight:650;margin-bottom:6px">Comment ça marche</p>
@@ -1959,17 +1973,19 @@
   // ---------- RENDU EMPREINTE ----------
   function empreinte(el, t, sc, animate, labelFn){
     el.innerHTML="";
+    var m=META[curId]||{}; var ac=isClin(t)?'#5B6B72':(m.ac||'#1320CE'); var ac2=isClin(t)?'#9DB0A8':(m.ac||'#1320CE');
+    el.style.setProperty('--eac', ac); el.style.setProperty('--eac2', ac2);
     t.order.forEach(function(d){
       var v=sc[d];
       var row=document.createElement("div"); row.className="erow";
       row.innerHTML =
-        '<div class="elabel"><b>'+t.dims[d].name+'</b><span>'+(labelFn?labelFn(d,v):bandLabel(v))+'</span></div>'+
-        '<div class="etrack"><span class="emark" style="left:'+(animate?50:v)+'%"></span></div>'+
-        '<div class="escale"><span>'+t.dims[d].sub.split(",")[0]+'</span><span></span></div>';
+        '<div class="elabel"><b>'+t.dims[d].name+'</b><span class="eband">'+(labelFn?labelFn(d,v):bandLabel(v))+'</span><span class="eval">'+v+'%</span></div>'+
+        '<div class="etrack"><span class="efill" style="width:'+(animate?0:v)+'%"></span></div>'+
+        '<div class="escale">'+t.dims[d].sub.split(",")[0]+'</div>';
       el.appendChild(row);
       if(animate){
-        var mark=row.querySelector(".emark");
-        setTimeout(function(m,val){ m.style.left=val+"%"; }, 120, mark, v);
+        var fill=row.querySelector(".efill");
+        setTimeout(function(f,val){ f.style.width=val+"%"; }, 120, fill, v);
       }
     });
   }
@@ -2109,6 +2125,17 @@
     document.getElementById("intro-how").textContent= isClin(t)
       ? "Ce test est un outil de repérage, gratuit et sans inscription. Il ne pose aucun diagnostic. À la fin, tu obtiens un résultat indicatif et des pistes pour en parler à un professionnel si besoin."
       : t.freeCount+" questions gratuites, sans inscription, pour un premier résultat. Crée ensuite un compte gratuit pour accéder à la version longue de "+t.items.length+" questions. L'analyse détaillée, rédigée pour toi, se débloque pour 4,99 €.";
+
+    var pv=document.getElementById("intro-preview");
+    if(pv){
+      var pm=META[id]||{}; var pac=isClin(t)?'#5B6B72':(pm.ac||'#1320CE'); var pti=isClin(t)?'#EDF1F0':(pm.ti||'#F1ECDF');
+      pv.style.setProperty('--pac',pac); pv.style.setProperty('--ptint',pti);
+      var d0=t.items[0].dim, dname=t.dims[d0].name, q0=t.items[0].t;
+      var on=Math.min(4,t.scale.length), cells="";
+      for(var n=1;n<=t.scale.length;n++){ cells+='<span class="'+(n===on?"on":"")+'">'+n+'</span>'; }
+      pv.innerHTML='<span class="qptag">Aperçu</span><div class="qpk"><span class="d"></span>'+dname+'</div><div class="qpq">'+q0+'</div><div class="qps">'+cells+'</div><div class="qphint"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+    }
+
     show("s-intro");
   }
 
@@ -2116,21 +2143,28 @@
   function renderQuestion(){
     var t=T(), s=st(), i=s.idx, it=t.items[i];
     var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
-    document.getElementById("qdim").textContent = t.dims[it.dim].name;
+    var m=META[curId]||{}; var ac=isClin(t) ? '#5B6B72' : (m.ac||'#1320CE');
+    document.getElementById("qdim").innerHTML = '<span class="qd"></span>'+t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
     document.getElementById("qhint-lo").textContent = t.hint[0];
     document.getElementById("qhint-hi").textContent = t.hint[1];
     document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
     document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.long ? "Version longue" : "15 gratuites");
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
+    document.getElementById("pfill").style.background = 'linear-gradient(90deg,'+ac+','+ac+'88)';
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
-    var scale=document.getElementById("scale"); scale.innerHTML="";
+    var scale=document.getElementById("scale");
+    scale.style.setProperty('--qac', ac);
+    document.querySelector("#s-quiz .q").style.setProperty('--qac', ac);
+    scale.innerHTML="";
     for(var k=1;k<=t.scale.length;k++){
       (function(val){
         var b=document.createElement("button");
-        b.className="opt"+(s.answers[it.id]===val?" sel":"");
-        b.innerHTML='<span class="knob"></span><span>'+t.scale[val-1]+'</span>';
+        b.className="nopt"+(s.answers[it.id]===val?" sel":"");
+        b.type="button";
+        b.textContent=val;
+        b.setAttribute("aria-label", t.scale[val-1]);
         b.onclick=function(){ choose(val); };
         scale.appendChild(b);
       })(k);
@@ -2140,7 +2174,7 @@
   function choose(val){
     var t=T(), s=st(), it=t.items[s.idx];
     s.answers[it.id]=val; save();
-    var opts=document.querySelectorAll("#scale .opt");
+    var opts=document.querySelectorAll("#scale .nopt");
     opts.forEach(function(o){o.classList.remove("sel");});
     opts[val-1].classList.add("sel");
     setTimeout(next,180);
