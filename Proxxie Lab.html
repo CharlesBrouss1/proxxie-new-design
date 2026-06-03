@@ -1036,16 +1036,203 @@
             lo:"Tu prends le temps qu'il faut. L'urgence ne te commande pas, tu avances à ton rythme, ce qui te rend posé(e)."}
       },
       about:"Ce profil s'inspire des cinq « drivers » de l'analyse transactionnelle (Taibi Kahler). Ce sont des automatismes, pas des défauts : repérés, ils deviennent des leviers. Il n'a pas de visée diagnostique. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    mbti:{
+      id:"mbti", code:"MBTI", short:"MBTI", kind:"self",
+      name:"Profil MBTI revisité",
+      tagline:"Tes préférences cognitives, version Proxxie.",
+      meta:["Préférences","4 axes","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Comment fonctionnes-tu, au fond ?",
+      introLead:"Quatre grandes préférences, inspirées des intuitions de Jung popularisées par le MBTI. Ce ne sont pas des cases, mais des tendances : chacun utilise les deux pôles. Réponds selon ton naturel, pas selon les circonstances.",
+      freeCount:10,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas du tout moi","Tout à fait moi"],
+      order:["EI","SN","TF","JP"],
+      dims:{
+        EI:{name:"Énergie", sub:"introversion / extraversion"},
+        SN:{name:"Perception", sub:"concret / intuition"},
+        TF:{name:"Décision", sub:"valeurs / logique"},
+        JP:{name:"Mode de vie", sub:"souplesse / structure"}
+      },
+      items:[
+        {id:"MB_EI1",dim:"EI",key:+1,t:"Je me ressource au contact des autres plus que dans la solitude."},
+        {id:"MB_SN1",dim:"SN",key:+1,t:"Je m'intéresse plus aux idées et aux possibilités qu'aux faits bruts."},
+        {id:"MB_TF1",dim:"TF",key:+1,t:"Je décide d'abord avec la logique, même si ça paraît froid."},
+        {id:"MB_JP1",dim:"JP",key:+1,t:"J'aime planifier et savoir à l'avance comment ça va se passer."},
+        {id:"MB_EI2",dim:"EI",key:+1,t:"Je pense souvent à voix haute, en parlant avec les gens."},
+        {id:"MB_SN2",dim:"SN",key:+1,t:"J'aime imaginer ce qui pourrait être, au-delà du concret."},
+        {id:"MB_TF2",dim:"TF",key:+1,t:"J'analyse le pour et le contre avant de trancher."},
+        {id:"MB_JP2",dim:"JP",key:+1,t:"Je me sens mieux quand les choses sont décidées et cadrées."},
+        {id:"MB_EI3",dim:"EI",key:+1,t:"Dans un groupe, je vais facilement vers les autres."},
+        {id:"MB_SN3",dim:"SN",key:+1,t:"Je repère vite les liens et le tableau d'ensemble."},
+        {id:"MB_TF3",dim:"TF",key:+1,t:"Je cherche la solution juste plus que celle qui plaît."},
+        {id:"MB_JP3",dim:"JP",key:+1,t:"Je fais des listes et je tiens mes échéances."},
+        {id:"MB_EI4",dim:"EI",key:-1,t:"J'ai besoin de moments seul(e) pour recharger mes batteries."},
+        {id:"MB_SN4",dim:"SN",key:-1,t:"Je fais d'abord confiance aux faits concrets et à l'expérience."},
+        {id:"MB_TF4",dim:"TF",key:-1,t:"Je tiens compte avant tout de l'impact humain de mes choix."},
+        {id:"MB_JP4",dim:"JP",key:-1,t:"Je préfère garder mes options ouvertes le plus longtemps possible."},
+        {id:"MB_EI5",dim:"EI",key:-1,t:"Je réfléchis longuement en moi-même avant de parler."},
+        {id:"MB_SN5",dim:"SN",key:-1,t:"Je préfère le détail précis aux grandes théories."},
+        {id:"MB_TF5",dim:"TF",key:-1,t:"L'harmonie et les émotions guident souvent mes décisions."},
+        {id:"MB_JP5",dim:"JP",key:-1,t:"Je m'adapte au fil de l'eau plutôt que de tout planifier."}
+      ],
+      portrait:{
+        EI:{hi:"Tu fonctionnes plutôt en Extraverti : le contact des autres te recharge, tu penses en échangeant et tu vas volontiers vers le monde. L'action et les gens te stimulent.",
+            mid:"Tu navigues entre extraversion et introversion selon les moments. Tu apprécies les autres autant que tes temps à toi : un profil ambivert.",
+            lo:"Tu fonctionnes plutôt en Introverti : tu te ressources dans le calme et la solitude, tu réfléchis en dedans avant d'agir. La profondeur prime sur l'agitation."},
+        SN:{hi:"Tu perçois plutôt par l'Intuition : tu vois les possibles, les liens, le tableau d'ensemble. Les idées t'attirent plus que les faits isolés.",
+            mid:"Tu mêles concret et intuition. Tu pars des faits, mais tu sais aussi lever les yeux vers les possibles.",
+            lo:"Tu perçois plutôt par le concret (Sensation) : tu fais confiance aux faits, à l'expérience et au détail précis. Le tangible avant les théories."},
+        TF:{hi:"Tu décides plutôt avec la Logique (Pensée) : tu pèses le pour et le contre, tu cherches la solution juste, même si elle dérange. La cohérence prime.",
+            mid:"Tu équilibres logique et valeurs. Tu raisonnes, mais tu n'oublies pas l'impact humain de tes choix.",
+            lo:"Tu décides plutôt avec les Valeurs (Sentiment) : l'impact sur les gens et l'harmonie guident tes choix. Le cœur a sa place dans tes décisions."},
+        JP:{hi:"Tu vis plutôt en mode Structuré (Jugement) : tu planifies, tu cadres, tu aimes que les choses soient décidées. L'organisation te rassure et te porte.",
+            mid:"Tu oscilles entre structure et souplesse. Tu planifies l'essentiel tout en gardant de la marge pour t'adapter.",
+            lo:"Tu vis plutôt en mode Souple (Perception) : tu gardes tes options ouvertes, tu t'adaptes au fil de l'eau. La spontanéité passe avant le plan."}
+      },
+      about:"Ce profil revisite les quatre préférences popularisées par le MBTI, inspirées de Carl Jung. Ce sont des tendances, pas des cases étanches : chacun utilise les deux pôles. Sans valeur diagnostique. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    pcm:{
+      id:"pcm", code:"PCM", short:"PCM", kind:"self",
+      name:"Process Communication",
+      tagline:"Tes six façons de communiquer et de te ressourcer.",
+      meta:["Communication","6 types","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Comment communiques-tu, vraiment ?",
+      introLead:"Six manières de percevoir le monde et d'entrer en relation, inspirées du Process Communication Model de Taibi Kahler. On a un peu de chacune, avec des dominantes. Réponds spontanément.",
+      freeCount:12,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas du tout moi","Tout à fait moi"],
+      order:["EM","TR","PE","RE","RB","PR"],
+      dims:{
+        EM:{name:"Empathique", sub:"chaleur, lien, attention aux autres"},
+        TR:{name:"Travaillomane", sub:"logique, organisation, faits"},
+        PE:{name:"Persévérant", sub:"convictions, valeurs, engagement"},
+        RE:{name:"Rêveur", sub:"calme, imaginaire, réflexion"},
+        RB:{name:"Rebelle", sub:"spontanéité, humour, créativité"},
+        PR:{name:"Promoteur", sub:"action, audace, défi"}
+      },
+      items:[
+        {id:"PC_EM1",dim:"EM",key:+1,t:"Je suis très attentif(ve) aux émotions et au bien-être des autres."},
+        {id:"PC_TR1",dim:"TR",key:+1,t:"J'aime structurer, organiser et raisonner avec méthode."},
+        {id:"PC_PE1",dim:"PE",key:+1,t:"Mes convictions et mes valeurs guident mes choix."},
+        {id:"PC_RE1",dim:"RE",key:+1,t:"J'ai besoin de calme et de temps seul(e) pour réfléchir."},
+        {id:"PC_RB1",dim:"RB",key:+1,t:"J'aime l'humour, la spontanéité et le jeu."},
+        {id:"PC_PR1",dim:"PR",key:+1,t:"J'aime l'action, le défi et aller droit au but."},
+        {id:"PC_EM2",dim:"EM",key:+1,t:"On me dit chaleureux(se) et facile à confier."},
+        {id:"PC_TR2",dim:"TR",key:+1,t:"Les faits, la logique et les données me rassurent."},
+        {id:"PC_PE2",dim:"PE",key:+1,t:"Je m'engage à fond pour ce en quoi je crois."},
+        {id:"PC_RE2",dim:"RE",key:+1,t:"Je vis beaucoup dans mon monde intérieur et mon imaginaire."},
+        {id:"PC_RB2",dim:"RB",key:+1,t:"Je déteste l'ennui et je cherche ce qui amuse."},
+        {id:"PC_PR2",dim:"PR",key:+1,t:"Je prends des risques et je fonce quand il faut."},
+        {id:"PC_EM3",dim:"EM",key:+1,t:"L'ambiance et les relations comptent énormément pour moi."},
+        {id:"PC_TR3",dim:"TR",key:+1,t:"Je suis efficace et j'aime que les choses soient bien faites."},
+        {id:"PC_PE3",dim:"PE",key:+1,t:"J'ai un avis tranché et je le défends."},
+        {id:"PC_RE3",dim:"RE",key:+1,t:"On me dit discret(e), parfois en retrait."},
+        {id:"PC_RB3",dim:"RB",key:+1,t:"Je réagis au quart de tour, j'aime ou je n'aime pas."},
+        {id:"PC_PR3",dim:"PR",key:+1,t:"Je sais convaincre et entraîner pour obtenir un résultat."},
+        {id:"PC_EM4",dim:"EM",key:+1,t:"Je prends soin des gens autour de moi, parfois avant moi."},
+        {id:"PC_TR4",dim:"TR",key:+1,t:"Je planifie et je décompose les problèmes étape par étape."},
+        {id:"PC_PE4",dim:"PE",key:+1,t:"La loyauté et l'intégrité comptent beaucoup pour moi."},
+        {id:"PC_RE4",dim:"RE",key:+1,t:"J'agis mieux quand on me laisse de l'espace et du temps."},
+        {id:"PC_RB4",dim:"RB",key:+1,t:"La créativité et la fantaisie me rendent vivant(e)."},
+        {id:"PC_PR4",dim:"PR",key:+1,t:"L'adrénaline et les situations à fort enjeu me stimulent."}
+      ],
+      portrait:{
+        EM:{hi:"L'Empathique est très présent chez toi : tu perçois le monde par l'émotion et le lien. Chaleureux(se) et attentionné(e), tu prends soin des autres. Veille à ne pas t'oublier.",
+            mid:"La dimension empathique est présente sans dominer. Tu sais être chaleureux(se) quand le lien le demande.",
+            lo:"L'empathique est plus discret chez toi. Tu entres en relation autrement que par l'émotion et le soin."},
+        TR:{hi:"Le Travaillomane est marqué : tu perçois le monde par la pensée. Logique, organisé(e), efficace, tu aimes structurer. Attention à ne pas tout vouloir maîtriser.",
+            mid:"La dimension travaillomane est présente sans dominer. Tu sais être méthodique quand il le faut.",
+            lo:"Le travaillomane est plus discret chez toi. La logique et l'organisation ne sont pas ton entrée principale."},
+        PE:{hi:"Le Persévérant est marqué : tu perçois le monde par tes opinions et tes valeurs. Engagé(e), loyal(e), tu défends ce en quoi tu crois. Gare à la rigidité.",
+            mid:"La dimension persévérante est présente sans dominer. Tes convictions comptent, sans tout régenter.",
+            lo:"Le persévérant est plus discret chez toi. Tu t'attaches moins aux convictions et aux prises de position."},
+        RE:{hi:"Le Rêveur est présent : tu perçois le monde par l'imaginaire et la réflexion. Calme et intérieur(e), tu as besoin d'espace. Veille à ne pas trop te retirer.",
+            mid:"La dimension rêveuse est présente sans dominer. Tu apprécies le calme et l'introspection par moments.",
+            lo:"Le rêveur est plus discret chez toi. Tu te tournes peu vers le retrait et l'imaginaire."},
+        RB:{hi:"Le Rebelle est marqué : tu perçois le monde par les réactions et le plaisir. Spontané(e), drôle, créatif(ve), tu fuis l'ennui. Attention à la dispersion.",
+            mid:"La dimension rebelle est présente sans dominer. Tu sais amener légèreté et spontanéité quand il faut.",
+            lo:"Le rebelle est plus discret chez toi. L'humour et la spontanéité ne sont pas ton moteur principal."},
+        PR:{hi:"Le Promoteur est marqué : tu perçois le monde par l'action. Audacieux(se), persuasif(ve), tu aimes le défi et le risque. Gare à l'impulsivité.",
+            mid:"La dimension promotrice est présente sans dominer. Tu sais passer à l'action et oser quand l'enjeu est là.",
+            lo:"Le promoteur est plus discret chez toi. Le risque et l'action pour l'action te motivent peu."}
+      },
+      about:"Ce profil s'inspire du Process Communication Model de Taibi Kahler, qui décrit six manières de percevoir le monde et de communiquer. On les possède toutes, à des degrés différents. Sans visée diagnostique. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    hpi:{
+      id:"hpi", code:"INTENSITES", short:"Intensités", kind:"self",
+      name:"Tes intensités",
+      tagline:"Ta manière d'éprouver le monde, plus fort que la moyenne.",
+      meta:["Intensités","5 formes","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Et si tu ressentais le monde plus fort ?",
+      introLead:"Cinq formes d'intensité, inspirées des « suractivités » décrites par Kazimierz Dabrowski. Ce n'est pas un test de QI : c'est une façon de mettre des mots sur une manière d'éprouver le monde souvent vive. Réponds spontanément.",
+      freeCount:10,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas du tout moi","Tout à fait moi"],
+      order:["PS","SE","IN","IM","EM"],
+      dims:{
+        PS:{name:"Psychomotrice", sub:"énergie, mouvement, besoin d'agir"},
+        SE:{name:"Sensorielle", sub:"sensibilité aux sens et au beau"},
+        IN:{name:"Intellectuelle", sub:"soif de comprendre, d'analyser"},
+        IM:{name:"Imaginative", sub:"imaginaire, rêveries, créativité"},
+        EM:{name:"Émotionnelle", sub:"intensité et profondeur des émotions"}
+      },
+      items:[
+        {id:"HP_PS1",dim:"PS",key:+1,t:"J'ai souvent un trop-plein d'énergie, du mal à rester en place."},
+        {id:"HP_SE1",dim:"SE",key:+1,t:"Je suis très sensible aux sons, lumières, odeurs ou textures."},
+        {id:"HP_IN1",dim:"IN",key:+1,t:"J'ai une soif de comprendre qui ne s'éteint jamais."},
+        {id:"HP_IM1",dim:"IM",key:+1,t:"Mon imagination est très vive, je rêve éveillé(e) souvent."},
+        {id:"HP_EM1",dim:"EM",key:+1,t:"Je ressens mes émotions de façon très intense."},
+        {id:"HP_PS2",dim:"PS",key:+1,t:"Je parle vite, je bouge, j'ai besoin d'agir."},
+        {id:"HP_SE2",dim:"SE",key:+1,t:"La beauté (musique, paysage, art) peut me bouleverser."},
+        {id:"HP_IN2",dim:"IN",key:+1,t:"J'adore analyser, questionner, aller au fond des choses."},
+        {id:"HP_IM2",dim:"IM",key:+1,t:"Je crée des images, des histoires ou des mondes dans ma tête."},
+        {id:"HP_EM2",dim:"EM",key:+1,t:"Je suis profondément touché(e) par ce que vivent les autres."},
+        {id:"HP_PS3",dim:"PS",key:+1,t:"Quand une idée me prend, je veux la réaliser tout de suite."},
+        {id:"HP_SE3",dim:"SE",key:+1,t:"Certaines ambiances sensorielles m'envahissent vite."},
+        {id:"HP_IN3",dim:"IN",key:+1,t:"Mon esprit tourne sans cesse, à la recherche d'explications."},
+        {id:"HP_IM3",dim:"IM",key:+1,t:"Je mêle facilement le réel et l'imaginaire."},
+        {id:"HP_EM3",dim:"EM",key:+1,t:"Mes émotions peuvent m'envahir et durer longtemps."},
+        {id:"HP_PS4",dim:"PS",key:+1,t:"L'inactivité prolongée me rend nerveux(se)."},
+        {id:"HP_SE4",dim:"SE",key:+1,t:"Je remarque des détails sensoriels que d'autres ignorent."},
+        {id:"HP_IN4",dim:"IN",key:+1,t:"Les problèmes complexes m'attirent plus qu'ils ne me fatiguent."},
+        {id:"HP_IM4",dim:"IM",key:+1,t:"Les métaphores et les symboles me parlent beaucoup."},
+        {id:"HP_EM4",dim:"EM",key:+1,t:"Je tisse des liens affectifs forts et durables."}
+      ],
+      portrait:{
+        PS:{hi:"Ton intensité psychomotrice est forte : énergie débordante, besoin de bouger et d'agir. Un moteur puissant, à canaliser pour ne pas t'éparpiller ni t'épuiser.",
+            mid:"Tu as une énergie présente sans être débordante. Tu sais alterner action et repos.",
+            lo:"L'intensité psychomotrice est discrète chez toi. Tu fonctionnes à un rythme posé, sans trop-plein d'agitation."},
+        SE:{hi:"Ton intensité sensorielle est forte : tu perçois le monde avec une sensibilité aiguë, parfois envahissante. Le beau te touche, le trop te submerge. Une richesse à protéger.",
+            mid:"Tu as une sensibilité sensorielle présente sans excès. Tu apprécies le beau sans en être débordé(e).",
+            lo:"L'intensité sensorielle est discrète chez toi. Tu n'es pas particulièrement envahi(e) par les stimulations."},
+        IN:{hi:"Ton intensité intellectuelle est forte : une soif de comprendre qui ne s'arrête pas, un esprit qui analyse sans cesse. Un atout, qui gagne à ne pas tourner en surchauffe.",
+            mid:"Tu as une curiosité intellectuelle présente sans être dévorante. Tu aimes comprendre, à ton rythme.",
+            lo:"L'intensité intellectuelle est discrète chez toi. Tu n'éprouves pas un besoin constant d'analyser."},
+        IM:{hi:"Ton intensité imaginative est forte : imaginaire foisonnant, rêveries, créativité débordante. Une source précieuse, à ancrer parfois dans le réel.",
+            mid:"Tu as une imagination présente sans qu'elle prenne toute la place. Tu rêves tout en gardant les pieds sur terre.",
+            lo:"L'intensité imaginative est discrète chez toi. Tu te tournes peu vers la rêverie et l'imaginaire."},
+        EM:{hi:"Ton intensité émotionnelle est forte : tu ressens tout profondément, longtemps, et tu t'attaches fort. Une grande richesse affective, à apprivoiser pour ne pas te submerger.",
+            mid:"Tu as une vie émotionnelle présente sans débordement. Tu ressens les choses sans en être envahi(e).",
+            lo:"L'intensité émotionnelle est plus discrète chez toi. Tu vis tes émotions de façon mesurée."}
+      },
+      about:"Ce profil s'inspire des cinq « suractivités » (overexcitabilities) décrites par Kazimierz Dabrowski. Ce n'est pas une mesure d'intelligence ni un diagnostic de haut potentiel : c'est une façon de décrire une manière d'éprouver le monde, souvent intense. Les niveaux se lisent sur l'échelle interne du test."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","brief","phq9","gad7"];
+  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","brief","phq9","gad7"];
   var SOON = [
-    {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."},
-    {name:"Process Communication", tagline:"Tes six façons de communiquer et de te ressourcer."},
-    {name:"Tes intensités", tagline:"Ta manière d'éprouver le monde, plus fort que la moyenne."}
+    {name:"Attention et TDAH", tagline:"Un repérage court des signes d'attention, reconnu et gratuit."},
+    {name:"Spectre autistique", tagline:"Un questionnaire de repérage reconnu, gratuit et sans jugement."},
+    {name:"Dyslexie à l'âge adulte", tagline:"Un repérage des signes, à confirmer avec un professionnel."}
   ];
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
