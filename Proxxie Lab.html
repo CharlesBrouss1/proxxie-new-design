@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Proxxie Lab, ton portrait psychométrique</title>
+<title>Proxxie Lab, tes portraits psychométriques</title>
 <style>
   :root{
     --cream:#F7F2E9;
@@ -73,6 +73,32 @@
   .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   .btn.pay{background:var(--orange)}
   .btn[disabled]{opacity:.5;cursor:default}
+
+  /* fil d'ariane / retour catalogue */
+  .crumb{background:none;border:0;color:var(--ink-soft);font-size:14px;font-weight:600;cursor:pointer;padding:0 0 16px;display:inline-flex;gap:6px;align-items:center}
+  .crumb:hover{color:var(--blue)}
+
+  /* catalogue */
+  .hero-sub{font-size:17px;color:var(--ink-soft);margin-bottom:24px}
+  .catalog{display:flex;flex-direction:column;gap:12px}
+  .tcard{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;cursor:pointer;text-align:left;width:100%;font-family:inherit;
+    transition:border-color .12s ease,transform .06s ease;
+  }
+  .tcard:hover{border-color:var(--blue-soft)}
+  .tcard:active{transform:scale(.995)}
+  .tcard .trow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .tcard h3{font-family:var(--serif);font-size:20px;line-height:1.2;margin:0 0 4px}
+  .tcard p{color:var(--ink-soft);font-size:14px;margin:0}
+  .tcard .arrow{color:var(--blue-soft);flex:0 0 auto;margin-top:2px}
+  .tcard .tfoot{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap;align-items:center}
+  .tchip{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:#F1ECDF;color:var(--ink-soft)}
+  .tchip.new{background:#F4F6FF;color:var(--blue)}
+  .tchip.prog{background:#FFF1E8;color:var(--orange)}
+  .tchip.done{background:#E7F6EF;color:var(--ok)}
+  .tcard.soon{opacity:.6;cursor:default}
+  .tcard.soon:hover{border-color:var(--line)}
 
   /* progress */
   .progress{position:sticky;top:0;background:var(--cream);padding:10px 0 16px;z-index:5}
@@ -189,23 +215,31 @@
     <div class="brand">Proxxie<small>Lab</small></div>
   </div>
 
-  <!-- ÉCRAN 1 : INTRO -->
-  <section class="screen active" id="s-intro">
-    <div class="meta">
-      <span class="pill"><span class="dot"></span>Test psychométrique</span>
-      <span class="pill">5 grands traits</span>
-      <span class="pill">~8 minutes</span>
-    </div>
-    <h1>Découvre les cinq forces qui dessinent ta personnalité.</h1>
-    <p class="lead">Un portrait clair, fondé sur le modèle scientifique des cinq grands traits. Réponds spontanément, il n'y a pas de bonne réponse.</p>
+  <!-- ÉCRAN 0 : CATALOGUE -->
+  <section class="screen active" id="s-home">
+    <h1>Explore qui tu es, un test à la fois.</h1>
+    <p class="hero-sub">Des tests fondés sur la recherche en psychologie, et pour chacun un portrait rédigé rien que pour toi. Commence librement, tu décides ensuite.</p>
+    <div class="catalog" id="catalog"></div>
+    <p class="disclaimer">
+      <b>Proxxie Lab propose des outils psychométriques à visée de connaissance de soi.</b>
+      Il ne s'agit ni de diagnostics, ni d'avis médicaux ou psychologiques. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
+    </p>
+  </section>
+
+  <!-- ÉCRAN 1 : INTRO (dynamique par test) -->
+  <section class="screen" id="s-intro">
+    <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
+    <div class="meta" id="intro-meta"></div>
+    <h1 id="intro-title"></h1>
+    <p class="lead" id="intro-lead"></p>
 
     <div class="card">
       <p style="font-weight:650;margin-bottom:6px">Comment ça marche</p>
-      <p style="color:var(--ink-soft);margin:0">Les 15 premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.</p>
+      <p style="color:var(--ink-soft);margin:0" id="intro-how"></p>
     </div>
 
     <div style="height:18px"></div>
-    <button class="btn" onclick="App.start()">Commencer, c'est gratuit</button>
+    <button class="btn" id="intro-start" onclick="App.start()">Commencer, c'est gratuit</button>
     <p class="subnote">Aucune création de compte requise pour commencer.</p>
   </section>
 
@@ -218,7 +252,7 @@
     <div class="q">
       <div class="qdim" id="qdim">Ouverture</div>
       <div class="qtext" id="qtext">...</div>
-      <div class="scalehint"><span>Pas du tout</span><span>Tout à fait</span></div>
+      <div class="scalehint"><span id="qhint-lo">Pas du tout</span><span id="qhint-hi">Tout à fait</span></div>
       <div class="scale" id="scale"></div>
       <div class="navrow">
         <button class="backlink" id="qback" onclick="App.back()">Retour</button>
@@ -258,8 +292,8 @@
       <div class="price"><b>4,99 €</b><s>14,99 €</s></div>
       <p style="color:var(--ink-soft);margin:0">Paiement unique, ton portrait t'appartient.</p>
       <ul class="ulist">
-        <li>${CHK} Les 35 questions restantes pour un profil fiable sur les cinq traits</li>
-        <li>${CHK} Ton portrait éditorial détaillé, trait par trait</li>
+        <li>${CHK} <span id="pay-li-q">Toutes les questions restantes pour un profil fiable</span></li>
+        <li>${CHK} Ton portrait éditorial détaillé, dimension par dimension</li>
         <li>${CHK} Tes points d'appui et tes angles de vigilance</li>
         <li>${CHK} Un résumé partageable, si tu le souhaites</li>
         <li>${CHK} Sauvegarde de ton profil pour suivre son évolution</li>
@@ -286,13 +320,14 @@
 
   <!-- ÉCRAN 5 : PORTRAIT COMPLET -->
   <section class="screen" id="s-full">
+    <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
     <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton portrait complet</span>
     <h1 id="full-title">Ton portrait psychométrique.</h1>
     <p class="lead" id="full-lead"></p>
 
     <div class="card">
       <p style="font-weight:650;margin-bottom:4px">Ton empreinte</p>
-      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">La position de chaque trait sur son spectre.</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">La position de chaque dimension sur son spectre.</p>
       <div class="empreinte" id="full-empreinte"></div>
     </div>
 
@@ -316,12 +351,9 @@
       <button class="btn" onclick="App.saveAccount()">Sauvegarder mon profil</button>
     </div>
 
-    <p class="disclaimer">
-      <b>À propos de ces résultats.</b>
-      Ce portrait s'appuie sur le modèle des cinq grands traits, un cadre reconnu en psychologie de la personnalité. Il décrit des tendances, pas des vérités figées, et n'a pas de visée diagnostique. Les niveaux affichés se lisent sur l'échelle interne du test, non comme une comparaison à une population de référence.
-    </p>
+    <p class="disclaimer" id="full-disclaimer"></p>
 
-    <button class="restart" onclick="App.reset()">Recommencer le test</button>
+    <button class="restart" onclick="App.reset()">Recommencer ce test</button>
   </section>
 
 </div>
@@ -366,92 +398,202 @@
   var CHK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#1f9d6b" opacity=".14"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1f9d6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.body.innerHTML = document.body.innerHTML.replace(/\$\{CHK\}/g, CHK);
 
-  // ---------- DONNÉES : IPIP Big Five (domaine public), 50 items ----------
-  // dim: O/C/E/A/N · key:+1 (item direct) ou -1 (item inversé)
-  var ITEMS = [
-    // --- 15 GRATUITS (3 par trait, mêlant items directs et inversés) ---
-    {id:"O1",dim:"O",key:+1,t:"J'ai une imagination débordante."},
-    {id:"C1",dim:"C",key:+1,t:"Je suis toujours bien préparé."},
-    {id:"E1",dim:"E",key:+1,t:"Je me sens à l'aise au milieu des gens."},
-    {id:"A1",dim:"A",key:+1,t:"Je m'intéresse sincèrement aux autres."},
-    {id:"N1",dim:"N",key:+1,t:"Je me stresse facilement."},
-    {id:"O2",dim:"O",key:-1,t:"Les idées abstraites ne m'intéressent pas."},
-    {id:"C2",dim:"C",key:-1,t:"Je laisse souvent traîner mes affaires."},
-    {id:"E2",dim:"E",key:-1,t:"Je préfère rester en retrait."},
-    {id:"A2",dim:"A",key:-1,t:"Les problèmes des autres me touchent peu."},
-    {id:"N2",dim:"N",key:-1,t:"Je suis détendu la plupart du temps."},
-    {id:"O3",dim:"O",key:+1,t:"J'ai souvent d'excellentes idées."},
-    {id:"C3",dim:"C",key:+1,t:"J'accomplis mes tâches sans tarder."},
-    {id:"E3",dim:"E",key:+1,t:"J'engage facilement la conversation."},
-    {id:"A3",dim:"A",key:+1,t:"Je prends du temps pour les autres."},
-    {id:"N3",dim:"N",key:+1,t:"Je me fais facilement du souci."},
-    // --- 35 PAYANTS ---
-    {id:"E4",dim:"E",key:+1,t:"Je suis souvent l'âme de la fête."},
-    {id:"E5",dim:"E",key:-1,t:"Je parle peu."},
-    {id:"E6",dim:"E",key:+1,t:"Je parle à beaucoup de monde en soirée."},
-    {id:"E7",dim:"E",key:-1,t:"Je n'aime pas attirer l'attention sur moi."},
-    {id:"E8",dim:"E",key:-1,t:"Je suis silencieux avec les inconnus."},
-    {id:"E9",dim:"E",key:+1,t:"Être au centre de l'attention ne me dérange pas."},
-    {id:"E10",dim:"E",key:-1,t:"J'ai peu de choses à dire."},
-    {id:"A4",dim:"A",key:+1,t:"Je ressens ce que ressentent les autres."},
-    {id:"A5",dim:"A",key:+1,t:"J'ai le cœur tendre."},
-    {id:"A6",dim:"A",key:+1,t:"Je mets les gens à l'aise."},
-    {id:"A7",dim:"A",key:-1,t:"Il m'arrive de blesser les autres."},
-    {id:"A8",dim:"A",key:-1,t:"Je ne m'intéresse pas vraiment aux autres."},
-    {id:"A9",dim:"A",key:+1,t:"Je perçois bien les émotions des gens."},
-    {id:"A10",dim:"A",key:-1,t:"Je me soucie peu du sort des autres."},
-    {id:"C4",dim:"C",key:+1,t:"Je fais attention aux détails."},
-    {id:"C5",dim:"C",key:+1,t:"J'aime que les choses soient en ordre."},
-    {id:"C6",dim:"C",key:+1,t:"Je suis rigoureux dans mon travail."},
-    {id:"C7",dim:"C",key:-1,t:"Je mets parfois la pagaille."},
-    {id:"C8",dim:"C",key:-1,t:"J'oublie souvent de ranger les choses à leur place."},
-    {id:"C9",dim:"C",key:-1,t:"Je me dérobe à mes responsabilités."},
-    {id:"C10",dim:"C",key:+1,t:"Je suis volontiers un planning."},
-    {id:"N4",dim:"N",key:+1,t:"Je suis facilement perturbé."},
-    {id:"N5",dim:"N",key:+1,t:"Je me contrarie facilement."},
-    {id:"N6",dim:"N",key:+1,t:"Mon humeur change souvent."},
-    {id:"N7",dim:"N",key:+1,t:"J'ai de fréquents changements d'humeur."},
-    {id:"N8",dim:"N",key:+1,t:"Je m'irrite assez vite."},
-    {id:"N9",dim:"N",key:+1,t:"Je me sens parfois cafardeux."},
-    {id:"N10",dim:"N",key:-1,t:"Je reste serein face à l'imprévu."},
-    {id:"O4",dim:"O",key:+1,t:"J'ai un vocabulaire riche."},
-    {id:"O5",dim:"O",key:+1,t:"Je comprends vite les choses."},
-    {id:"O6",dim:"O",key:+1,t:"Je passe du temps à réfléchir aux choses."},
-    {id:"O7",dim:"O",key:+1,t:"Je déborde d'idées."},
-    {id:"O8",dim:"O",key:-1,t:"J'ai du mal avec les idées abstraites."},
-    {id:"O9",dim:"O",key:-1,t:"Je n'ai pas beaucoup d'imagination."},
-    {id:"O10",dim:"O",key:+1,t:"J'aime explorer des sujets nouveaux."}
+  /* =========================================================================
+     REGISTRE DES TESTS
+     Chaque test est une donnée pure. Ajouter un test = ajouter une entrée ici,
+     aucune logique à toucher. Forme d'une entrée :
+       id        identifiant interne (clé d'état)
+       code      testCode envoyé à l'endpoint LLM
+       name      titre affiché
+       short     nom court (chip catalogue)
+       tagline   accroche catalogue
+       meta      pastilles de l'écran intro
+       minutes   durée indicative
+       introTitle / introLead   en-tête de l'écran intro
+       freeCount nombre de questions gratuites
+       scale     5 libellés Likert
+       hint      [bas, haut] de l'échelle
+       order     ordre d'affichage des dimensions
+       dims      { D:{name, sub} }
+       items     [{id, dim, key:+1|-1, t}]
+       portrait  { D:{hi, mid, lo} }  (repli déterministe si le LLM échoue)
+       about     phrase de bas de portrait (cadre du test)
+     ========================================================================= */
+  var TESTS = {
+
+    bigfive:{
+      id:"bigfive", code:"BIGFIVE", short:"Big Five",
+      name:"Les cinq grands traits",
+      tagline:"Le modèle de référence de la personnalité, en cinq dimensions.",
+      meta:["Personnalité","5 grands traits","~8 min"],
+      minutes:"~8 min",
+      introTitle:"Découvre les cinq forces qui dessinent ta personnalité.",
+      introLead:"Un portrait clair, fondé sur le modèle scientifique des cinq grands traits. Réponds spontanément, il n'y a pas de bonne réponse.",
+      freeCount:15,
+      scale:["Pas du tout","Plutôt non","Neutre","Plutôt oui","Tout à fait"],
+      hint:["Pas du tout","Tout à fait"],
+      order:["O","C","E","A","N"],
+      dims:{
+        O:{name:"Ouverture", sub:"curiosité, imagination, goût des idées"},
+        C:{name:"Rigueur", sub:"organisation, discipline, fiabilité"},
+        E:{name:"Extraversion", sub:"énergie sociale, élan vers les autres"},
+        A:{name:"Bienveillance", sub:"empathie, coopération, attention"},
+        N:{name:"Sensibilité", sub:"réactivité émotionnelle au stress"}
+      },
+      items:[
+        // 15 gratuits (3 par trait)
+        {id:"O1",dim:"O",key:+1,t:"J'ai une imagination débordante."},
+        {id:"C1",dim:"C",key:+1,t:"Je suis toujours bien préparé."},
+        {id:"E1",dim:"E",key:+1,t:"Je me sens à l'aise au milieu des gens."},
+        {id:"A1",dim:"A",key:+1,t:"Je m'intéresse sincèrement aux autres."},
+        {id:"N1",dim:"N",key:+1,t:"Je me stresse facilement."},
+        {id:"O2",dim:"O",key:-1,t:"Les idées abstraites ne m'intéressent pas."},
+        {id:"C2",dim:"C",key:-1,t:"Je laisse souvent traîner mes affaires."},
+        {id:"E2",dim:"E",key:-1,t:"Je préfère rester en retrait."},
+        {id:"A2",dim:"A",key:-1,t:"Les problèmes des autres me touchent peu."},
+        {id:"N2",dim:"N",key:-1,t:"Je suis détendu la plupart du temps."},
+        {id:"O3",dim:"O",key:+1,t:"J'ai souvent d'excellentes idées."},
+        {id:"C3",dim:"C",key:+1,t:"J'accomplis mes tâches sans tarder."},
+        {id:"E3",dim:"E",key:+1,t:"J'engage facilement la conversation."},
+        {id:"A3",dim:"A",key:+1,t:"Je prends du temps pour les autres."},
+        {id:"N3",dim:"N",key:+1,t:"Je me fais facilement du souci."},
+        // 35 payants
+        {id:"E4",dim:"E",key:+1,t:"Je suis souvent l'âme de la fête."},
+        {id:"E5",dim:"E",key:-1,t:"Je parle peu."},
+        {id:"E6",dim:"E",key:+1,t:"Je parle à beaucoup de monde en soirée."},
+        {id:"E7",dim:"E",key:-1,t:"Je n'aime pas attirer l'attention sur moi."},
+        {id:"E8",dim:"E",key:-1,t:"Je suis silencieux avec les inconnus."},
+        {id:"E9",dim:"E",key:+1,t:"Être au centre de l'attention ne me dérange pas."},
+        {id:"E10",dim:"E",key:-1,t:"J'ai peu de choses à dire."},
+        {id:"A4",dim:"A",key:+1,t:"Je ressens ce que ressentent les autres."},
+        {id:"A5",dim:"A",key:+1,t:"J'ai le cœur tendre."},
+        {id:"A6",dim:"A",key:+1,t:"Je mets les gens à l'aise."},
+        {id:"A7",dim:"A",key:-1,t:"Il m'arrive de blesser les autres."},
+        {id:"A8",dim:"A",key:-1,t:"Je ne m'intéresse pas vraiment aux autres."},
+        {id:"A9",dim:"A",key:+1,t:"Je perçois bien les émotions des gens."},
+        {id:"A10",dim:"A",key:-1,t:"Je me soucie peu du sort des autres."},
+        {id:"C4",dim:"C",key:+1,t:"Je fais attention aux détails."},
+        {id:"C5",dim:"C",key:+1,t:"J'aime que les choses soient en ordre."},
+        {id:"C6",dim:"C",key:+1,t:"Je suis rigoureux dans mon travail."},
+        {id:"C7",dim:"C",key:-1,t:"Je mets parfois la pagaille."},
+        {id:"C8",dim:"C",key:-1,t:"J'oublie souvent de ranger les choses à leur place."},
+        {id:"C9",dim:"C",key:-1,t:"Je me dérobe à mes responsabilités."},
+        {id:"C10",dim:"C",key:+1,t:"Je suis volontiers un planning."},
+        {id:"N4",dim:"N",key:+1,t:"Je suis facilement perturbé."},
+        {id:"N5",dim:"N",key:+1,t:"Je me contrarie facilement."},
+        {id:"N6",dim:"N",key:+1,t:"Mon humeur change souvent."},
+        {id:"N7",dim:"N",key:+1,t:"J'ai de fréquents changements d'humeur."},
+        {id:"N8",dim:"N",key:+1,t:"Je m'irrite assez vite."},
+        {id:"N9",dim:"N",key:+1,t:"Je me sens parfois cafardeux."},
+        {id:"N10",dim:"N",key:-1,t:"Je reste serein face à l'imprévu."},
+        {id:"O4",dim:"O",key:+1,t:"J'ai un vocabulaire riche."},
+        {id:"O5",dim:"O",key:+1,t:"Je comprends vite les choses."},
+        {id:"O6",dim:"O",key:+1,t:"Je passe du temps à réfléchir aux choses."},
+        {id:"O7",dim:"O",key:+1,t:"Je déborde d'idées."},
+        {id:"O8",dim:"O",key:-1,t:"J'ai du mal avec les idées abstraites."},
+        {id:"O9",dim:"O",key:-1,t:"Je n'ai pas beaucoup d'imagination."},
+        {id:"O10",dim:"O",key:+1,t:"J'aime explorer des sujets nouveaux."}
+      ],
+      portrait:{
+        O:{hi:"Tu es porté par la curiosité. Les idées neuves, les nuances, les possibles t'attirent plus que les routines. Cette ouverture nourrit ta créativité, à condition de la traduire en actes concrets.",
+           mid:"Tu sais conjuguer curiosité et pragmatisme. Tu t'ouvres aux idées nouvelles sans perdre le sens du réel, un équilibre précieux pour avancer.",
+           lo:"Tu privilégies le concret et l'éprouvé. Tu avances sur des bases solides plutôt que sur des spéculations, ce qui te rend fiable, parfois au prix de la nouveauté."},
+        C:{hi:"La rigueur est l'une de tes forces. Tu organises, tu anticipes, tu tiens tes engagements. On peut compter sur toi. Veille simplement à laisser de la place à l'imprévu.",
+           mid:"Tu es organisé sans être rigide. Tu tiens le cap quand il le faut et tu sais lâcher du lest, une souplesse qui t'évite l'épuisement.",
+           lo:"Tu fonctionnes par élans plutôt que par plans. Spontané et adaptable, tu gagnes en sérénité dès que tu te dotes de quelques repères pour les choses importantes."},
+        E:{hi:"Tu puises ton énergie dans le contact. Les échanges te stimulent et tu rayonnes en groupe. Pense à ménager des temps de retrait pour ne pas te disperser.",
+           mid:"Tu navigues aisément entre vie sociale et moments à toi. Sociable quand il le faut, à l'aise dans le calme, tu t'adaptes au contexte.",
+           lo:"Tu recharges tes batteries dans le calme et la profondeur. Moins porté sur l'agitation sociale, tu offres une présence posée et une vraie qualité d'écoute."},
+        A:{hi:"L'attention aux autres te guide. Empathique et coopératif, tu crées de la confiance autour de toi. Garde un œil sur tes propres besoins, ils comptent autant.",
+           mid:"Tu allies bienveillance et lucidité. Tu te soucies des autres sans t'oublier, un équilibre sain dans les relations comme au travail.",
+           lo:"Tu abordes les relations avec franchise et esprit critique. Direct, peu sensible à la pression du groupe, tu défends tes positions, ce qui fait ta force dans la négociation."},
+        N:{hi:"Tu vis les choses avec intensité. Ta sensibilité te rend fin et perceptif, mais t'expose au stress. Apprivoiser tes émotions sera ton meilleur levier de sérénité.",
+           mid:"Tu ressens sans te laisser submerger. Tes émotions t'informent sans diriger, un équilibre qui t'aide à garder la tête froide quand ça compte.",
+           lo:"Tu gardes ton calme sous pression. Stable et posé, tu rassures ton entourage dans la tempête, à condition de rester à l'écoute des signaux plus discrets."}
+      },
+      about:"Ce portrait s'appuie sur le modèle des cinq grands traits, un cadre reconnu en psychologie de la personnalité. Il décrit des tendances, pas des vérités figées, et n'a pas de visée diagnostique. Les niveaux affichés se lisent sur l'échelle interne du test, non comme une comparaison à une population de référence."
+    },
+
+    riasec:{
+      id:"riasec", code:"RIASEC", short:"RIASEC",
+      name:"Tes domaines d'intérêt",
+      tagline:"Le modèle RIASEC de Holland, pour éclairer ce qui t'anime vraiment.",
+      meta:["Orientation","6 domaines","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Qu'est-ce qui t'attire, au fond ?",
+      introLead:"Six grands domaines d'intérêt, issus du modèle RIASEC de John Holland. Il ne s'agit pas de compétences mais d'attirances, réponds selon ce qui te plaît.",
+      freeCount:12,
+      scale:["Pas du tout moi","Plutôt pas","Moyen","Plutôt moi","Tout à fait moi"],
+      hint:["Pas mon truc","Tout à fait moi"],
+      order:["R","I","A","S","E","C"],
+      dims:{
+        R:{name:"Réaliste", sub:"concret, manuel, technique"},
+        I:{name:"Investigateur", sub:"analyse, recherche, idées"},
+        A:{name:"Artistique", sub:"création, expression, esthétique"},
+        S:{name:"Social", sub:"aide, relation, transmission"},
+        E:{name:"Entreprenant", sub:"persuasion, initiative, leadership"},
+        C:{name:"Conventionnel", sub:"organisation, méthode, données"}
+      },
+      items:[
+        // 12 gratuits (2 par domaine)
+        {id:"R1",dim:"R",key:+1,t:"Réparer ou construire quelque chose de mes mains me plaît."},
+        {id:"I1",dim:"I",key:+1,t:"J'aime comprendre comment les choses fonctionnent."},
+        {id:"A1",dim:"A",key:+1,t:"J'aime créer, dessiner, écrire ou imaginer."},
+        {id:"S1",dim:"S",key:+1,t:"Aider les autres à progresser me rend heureux."},
+        {id:"E1",dim:"E",key:+1,t:"J'aime convaincre et entraîner les autres dans une idée."},
+        {id:"C1",dim:"C",key:+1,t:"Mettre de l'ordre dans des informations me satisfait."},
+        {id:"R2",dim:"R",key:+1,t:"Travailler dehors ou avec des outils m'attire."},
+        {id:"I2",dim:"I",key:+1,t:"Résoudre des problèmes complexes me stimule."},
+        {id:"A2",dim:"A",key:+1,t:"J'ai besoin de liberté pour exprimer ma sensibilité."},
+        {id:"S2",dim:"S",key:+1,t:"Je me sens utile quand j'écoute et soutiens quelqu'un."},
+        {id:"E2",dim:"E",key:+1,t:"Prendre les commandes d'un projet ne me fait pas peur."},
+        {id:"C2",dim:"C",key:+1,t:"J'aime suivre une méthode claire et des règles précises."},
+        // 12 payants
+        {id:"R3",dim:"R",key:+1,t:"Manipuler des machines ou des matériaux me convient bien."},
+        {id:"R4",dim:"R",key:+1,t:"Je préfère agir concrètement plutôt que théoriser."},
+        {id:"I3",dim:"I",key:+1,t:"Observer, mesurer et analyser me passionne."},
+        {id:"I4",dim:"I",key:+1,t:"J'aime apprendre pour le plaisir de comprendre."},
+        {id:"A3",dim:"A",key:+1,t:"L'art et l'esthétique tiennent une grande place pour moi."},
+        {id:"A4",dim:"A",key:+1,t:"J'aime inventer des choses qui n'existent pas encore."},
+        {id:"S3",dim:"S",key:+1,t:"Transmettre, enseigner ou conseiller me motive."},
+        {id:"S4",dim:"S",key:+1,t:"Je suis sensible au bien-être des gens autour de moi."},
+        {id:"E3",dim:"E",key:+1,t:"Vendre une idée ou négocier m'amuse."},
+        {id:"E4",dim:"E",key:+1,t:"J'aime fixer un cap et embarquer une équipe."},
+        {id:"C3",dim:"C",key:+1,t:"Gérer des chiffres, des dossiers ou des plannings me convient."},
+        {id:"C4",dim:"C",key:+1,t:"Je suis à l'aise quand les tâches sont bien définies."}
+      ],
+      portrait:{
+        R:{hi:"Le concret est ton terrain. Tu aimes agir, manipuler, voir le résultat de tes mains. Tu te réalises dans des environnements où l'on construit et l'on répare plutôt que l'on disserte.",
+           mid:"Tu apprécies le concret sans en faire ton unique boussole. Tu sais passer à l'action quand il faut, tout en gardant d'autres centres d'intérêt.",
+           lo:"Le travail manuel ou technique t'attire peu. Tu te tournes plus volontiers vers les idées, les relations ou l'expression que vers l'outil et la matière."},
+        I:{hi:"Comprendre est un moteur puissant chez toi. Tu aimes analyser, chercher, démonter les mécanismes. Les environnements qui te laissent enquêter et raisonner te nourrissent.",
+           mid:"La curiosité intellectuelle te traverse sans te définir entièrement. Tu aimes comprendre, mais l'action ou la relation comptent tout autant.",
+           lo:"L'analyse pour elle-même te motive peu. Tu préfères l'expérience directe, le contact ou la création à la recherche abstraite."},
+        A:{hi:"La création est un besoin pour toi. Tu cherches à exprimer, imaginer, donner forme. Tu t'épanouis là où l'on te laisse de la liberté et où l'esthétique a sa place.",
+           mid:"Tu as une fibre créative que tu mobilises selon les contextes. Elle colore ce que tu fais sans dicter tous tes choix.",
+           lo:"L'expression artistique n'est pas ton terrain de prédilection. Tu te sens plus à l'aise dans le concret, l'analyse ou l'organisation."},
+        S:{hi:"Les autres sont au cœur de ce qui te motive. Aider, écouter, transmettre te donne de l'énergie. Tu t'épanouis dans les métiers et les rôles tournés vers la relation.",
+           mid:"Tu accordes de l'importance aux autres sans t'y consacrer entièrement. La dimension humaine compte, à côté de tes autres intérêts.",
+           lo:"Les rôles centrés sur l'aide et l'accompagnement te sollicitent moins. Tu te tournes davantage vers les idées, l'action ou la création."},
+        E:{hi:"Tu aimes entraîner et convaincre. Prendre l'initiative, défendre une idée, mener un projet te stimule. Les environnements où l'on décide et l'on influence te conviennent.",
+           mid:"Tu sais prendre les rênes quand c'est nécessaire, sans en faire une quête permanente. Le leadership est une corde parmi d'autres.",
+           lo:"Persuader ou diriger t'attire peu. Tu préfères contribuer en profondeur que prendre la lumière et la décision."},
+        C:{hi:"L'ordre et la méthode te rassurent et te rendent efficace. Tu aimes structurer, classer, fiabiliser. Les contextes clairs et organisés te permettent de donner le meilleur.",
+           mid:"Tu apprécies un cadre sans avoir besoin que tout soit réglé. Tu sais organiser quand il le faut, et improviser le reste du temps.",
+           lo:"Les environnements très procéduraux t'attirent peu. Tu préfères la souplesse, la créativité ou l'action à la rigueur des règles."}
+      },
+      about:"Ce profil s'appuie sur le modèle RIASEC de John Holland, largement utilisé en orientation. Il décrit des centres d'intérêt, pas des aptitudes ni une vocation figée, et n'a pas de valeur de recrutement. Les niveaux se lisent sur l'échelle interne du test."
+    }
+
+  };
+
+  // ordre du catalogue + entrées « bientôt »
+  var CATALOG = ["bigfive","riasec"];
+  var SOON = [
+    {name:"Grit, ta ténacité", tagline:"Ta capacité à tenir l'effort dans la durée."},
+    {name:"Tes valeurs", tagline:"Ce qui compte vraiment pour toi, et guide tes choix."},
+    {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."}
   ];
-  var FREE_COUNT = 15;
-  var SCALE = ["Pas du tout","Plutôt non","Neutre","Plutôt oui","Tout à fait"];
-
-  var DIMS = {
-    O:{name:"Ouverture", sub:"curiosité, imagination, goût des idées"},
-    C:{name:"Rigueur", sub:"organisation, discipline, fiabilité"},
-    E:{name:"Extraversion", sub:"énergie sociale, élan vers les autres"},
-    A:{name:"Bienveillance", sub:"empathie, coopération, attention"},
-    N:{name:"Sensibilité", sub:"réactivité émotionnelle au stress"}
-  };
-  var ORDER = ["O","C","E","A","N"];
-
-  // textes éditoriaux par trait et par niveau
-  var PORTRAIT = {
-    O:{hi:"Tu es porté par la curiosité. Les idées neuves, les nuances, les possibles t'attirent plus que les routines. Cette ouverture nourrit ta créativité, à condition de la traduire en actes concrets.",
-       mid:"Tu sais conjuguer curiosité et pragmatisme. Tu t'ouvres aux idées nouvelles sans perdre le sens du réel, un équilibre précieux pour avancer.",
-       lo:"Tu privilégies le concret et l'éprouvé. Tu avances sur des bases solides plutôt que sur des spéculations, ce qui te rend fiable, parfois au prix de la nouveauté."},
-    C:{hi:"La rigueur est l'une de tes forces. Tu organises, tu anticipes, tu tiens tes engagements. On peut compter sur toi. Veille simplement à laisser de la place à l'imprévu.",
-       mid:"Tu es organisé sans être rigide. Tu tiens le cap quand il le faut et tu sais lâcher du lest, une souplesse qui t'évite l'épuisement.",
-       lo:"Tu fonctionnes par élans plutôt que par plans. Spontané et adaptable, tu gagnes en sérénité dès que tu te dotes de quelques repères pour les choses importantes."},
-    E:{hi:"Tu puises ton énergie dans le contact. Les échanges te stimulent et tu rayonnes en groupe. Pense à ménager des temps de retrait pour ne pas te disperser.",
-       mid:"Tu navigues aisément entre vie sociale et moments à toi. Sociable quand il le faut, à l'aise dans le calme, tu t'adaptes au contexte.",
-       lo:"Tu recharges tes batteries dans le calme et la profondeur. Moins porté sur l'agitation sociale, tu offres une présence posée et une vraie qualité d'écoute."},
-    A:{hi:"L'attention aux autres te guide. Empathique et coopératif, tu crées de la confiance autour de toi. Garde un œil sur tes propres besoins, ils comptent autant.",
-       mid:"Tu allies bienveillance et lucidité. Tu te soucies des autres sans t'oublier, un équilibre sain dans les relations comme au travail.",
-       lo:"Tu abordes les relations avec franchise et esprit critique. Direct, peu sensible à la pression du groupe, tu défends tes positions, ce qui fait ta force dans la négociation."},
-    N:{hi:"Tu vis les choses avec intensité. Ta sensibilité te rend fin et perceptif, mais t'expose au stress. Apprivoiser tes émotions sera ton meilleur levier de sérénité.",
-       mid:"Tu ressens sans te laisser submerger. Tes émotions t'informent sans diriger, un équilibre qui t'aide à garder la tête froide quand ça compte.",
-       lo:"Tu gardes ton calme sous pression. Stable et posé, tu rassures ton entourage dans la tempête, à condition de rester à l'écoute des signaux plus discrets."}
-  };
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
@@ -459,9 +601,9 @@
   // ---------- GÉNÉRATION LLM (endpoint Proxxie, clé côté serveur) ----------
   var AI_URL="https://proxxie-ai-edge.vercel.app/api/test-analysis";
 
-  function summaryFor(sc){
-    return ORDER.map(function(d){
-      return DIMS[d].name+" ("+DIMS[d].sub+") : "+bandLabel(sc[d])+" ("+sc[d]+"/100)";
+  function summaryFor(T, sc){
+    return T.order.map(function(d){
+      return T.dims[d].name+" ("+T.dims[d].sub+") : "+bandLabel(sc[d])+" ("+sc[d]+"/100)";
     }).join("\n");
   }
 
@@ -485,12 +627,12 @@
   }
 
   // renvoie le markdown complet, ou null en cas d'échec/timeout
-  function generatePortrait(sc, onChunk){
+  function generatePortrait(T, sc, onChunk){
     var ctrl = ("AbortController" in window) ? new AbortController() : null;
     var to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 25000);
     return fetch(AI_URL,{
       method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({testCode:"BIGFIVE", testName:"Proxxie Lab, portrait des cinq grands traits", summary:summaryFor(sc)}),
+      body:JSON.stringify({testCode:T.code, testName:"Proxxie Lab, "+T.name, summary:summaryFor(T, sc)}),
       signal: ctrl ? ctrl.signal : undefined
     }).then(function(r){
       if(!r.ok || !r.body) throw new Error("bad response");
@@ -509,11 +651,20 @@
   }
 
   // ---------- ÉTAT ----------
-  var KEY="proxxie.lab.v1";
-  var state = load() || {answers:{}, idx:0, paid:false, email:""};
+  // proxxie.lab.v2 : { email, current, tests:{ [id]:{answers, idx, paid, narrative?, narrativeScores?} } }
+  var KEY="proxxie.lab.v2";
+  var state = load() || {email:"", current:null, tests:{}};
+  if(!state.tests) state.tests={};
+  var curId = null;
 
   function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
   function save(){ try{localStorage.setItem(KEY, JSON.stringify(state));}catch(e){} }
+
+  function T(){ return TESTS[curId]; }
+  function st(){
+    if(!state.tests[curId]) state.tests[curId]={answers:{}, idx:0, paid:false};
+    return state.tests[curId];
+  }
 
   // ---------- NAVIGATION ----------
   function show(id){
@@ -523,37 +674,37 @@
     window.scrollTo(0,0);
   }
 
-  function answeredCount(limit){
-    var n=0; for(var i=0;i<limit;i++){ if(state.answers[ITEMS[i].id]!=null) n++; } return n;
+  function answeredCount(t, s, limit){
+    var n=0; for(var i=0;i<limit;i++){ if(s.answers[t.items[i].id]!=null) n++; } return n;
   }
 
   // ---------- SCORING ----------
-  function scores(limit){
+  function scores(t, s, limit){
     var sum={},cnt={};
-    ORDER.forEach(function(d){sum[d]=0;cnt[d]=0;});
+    t.order.forEach(function(d){sum[d]=0;cnt[d]=0;});
     for(var i=0;i<limit;i++){
-      var it=ITEMS[i], v=state.answers[it.id];
+      var it=t.items[i], v=s.answers[it.id];
       if(v==null) continue;
-      var s = it.key>0 ? v : (6-v); // 1..5
-      sum[it.dim]+= s; cnt[it.dim]++;
+      var x = it.key>0 ? v : (6-v); // 1..5
+      sum[it.dim]+= x; cnt[it.dim]++;
     }
     var out={};
-    ORDER.forEach(function(d){
+    t.order.forEach(function(d){
       out[d]= cnt[d]? Math.round(((sum[d]/cnt[d]) - 1) / 4 * 100) : 50;
     });
     return out;
   }
 
   // ---------- RENDU EMPREINTE ----------
-  function empreinte(el, sc, animate){
+  function empreinte(el, t, sc, animate){
     el.innerHTML="";
-    ORDER.forEach(function(d){
+    t.order.forEach(function(d){
       var v=sc[d];
       var row=document.createElement("div"); row.className="erow";
       row.innerHTML =
-        '<div class="elabel"><b>'+DIMS[d].name+'</b><span>'+bandLabel(v)+'</span></div>'+
+        '<div class="elabel"><b>'+t.dims[d].name+'</b><span>'+bandLabel(v)+'</span></div>'+
         '<div class="etrack"><span class="emark" style="left:'+(animate?50:v)+'%"></span></div>'+
-        '<div class="escale"><span>'+DIMS[d].sub.split(",")[0]+'</span><span></span></div>';
+        '<div class="escale"><span>'+t.dims[d].sub.split(",")[0]+'</span><span></span></div>';
       el.appendChild(row);
       if(animate){
         var mark=row.querySelector(".emark");
@@ -562,14 +713,90 @@
     });
   }
 
+  // ---------- CATALOGUE ----------
+  function statusOf(id){
+    var t=TESTS[id], s=state.tests[id];
+    if(!s) return {chip:"Nouveau", cls:"new"};
+    var freeDone = answeredCount(t, s, t.freeCount)===t.freeCount;
+    var allDone  = answeredCount(t, s, t.items.length)===t.items.length;
+    if(s.paid && allDone && s.narrative!==undefined) return {chip:"Terminé", cls:"done"};
+    if(s.paid) return {chip:"En cours", cls:"prog"};
+    if(freeDone) return {chip:"Aperçu prêt", cls:"prog"};
+    if(s.idx>0)  return {chip:"En cours", cls:"prog"};
+    return {chip:"Nouveau", cls:"new"};
+  }
+
+  function renderCatalog(){
+    var host=document.getElementById("catalog"); host.innerHTML="";
+    CATALOG.forEach(function(id){
+      var t=TESTS[id], stt=statusOf(id);
+      var c=document.createElement("button"); c.className="tcard"; c.type="button";
+      c.onclick=function(){ openTest(id); };
+      c.innerHTML=
+        '<div class="trow"><div>'+
+          '<h3>'+t.name+'</h3>'+
+          '<p>'+t.tagline+'</p>'+
+        '</div><svg class="arrow" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+        '<div class="tfoot">'+
+          '<span class="tchip '+stt.cls+'">'+stt.chip+'</span>'+
+          '<span class="tchip">'+t.order.length+' dimensions</span>'+
+          '<span class="tchip">'+t.minutes+'</span>'+
+        '</div>';
+      host.appendChild(c);
+    });
+    SOON.forEach(function(o){
+      var c=document.createElement("div"); c.className="tcard soon";
+      c.innerHTML=
+        '<div class="trow"><div>'+
+          '<h3>'+o.name+'</h3>'+
+          '<p>'+o.tagline+'</p>'+
+        '</div></div>'+
+        '<div class="tfoot"><span class="tchip">Bientôt</span></div>';
+      host.appendChild(c);
+    });
+  }
+
+  function openCatalog(){
+    curId=null; state.current=null; save();
+    renderCatalog();
+    show("s-home");
+  }
+
+  // ---------- INTRO (par test) ----------
+  function openTest(id){
+    curId=id; state.current=id; save();
+    var t=T(), s=st();
+    // si déjà en cours / terminé, on reprend au bon endroit
+    if(s.paid && answeredCount(t,s,t.items.length)===t.items.length){
+      if(s.narrative!==undefined){ showFull(); } else { runGeneration(); }
+      return;
+    }
+    if(s.paid){ show("s-quiz"); renderQuestion(); return; }
+    if(answeredCount(t,s,t.freeCount)===t.freeCount){ showFree(); return; }
+    if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
+
+    // sinon, écran d'intro
+    var metaHtml = t.meta.map(function(m,i){
+      return '<span class="pill">'+(i===0?'<span class="dot"></span>':'')+m+'</span>';
+    }).join("");
+    document.getElementById("intro-meta").innerHTML=metaHtml;
+    document.getElementById("intro-title").textContent=t.introTitle;
+    document.getElementById("intro-lead").textContent=t.introLead;
+    document.getElementById("intro-how").textContent=
+      "Les "+t.freeCount+" premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.";
+    show("s-intro");
+  }
+
   // ---------- QUIZ ----------
   function renderQuestion(){
-    var i=state.idx, it=ITEMS[i];
-    var limit = state.paid ? ITEMS.length : FREE_COUNT;
-    document.getElementById("qdim").textContent = DIMS[it.dim].name;
+    var t=T(), s=st(), i=s.idx, it=t.items[i];
+    var limit = s.paid ? t.items.length : t.freeCount;
+    document.getElementById("qdim").textContent = t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
+    document.getElementById("qhint-lo").textContent = t.hint[0];
+    document.getElementById("qhint-hi").textContent = t.hint[1];
     document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
-    document.getElementById("pphase").textContent = state.paid ? "Test complet" : "Aperçu gratuit";
+    document.getElementById("pphase").textContent = s.paid ? "Test complet" : "Aperçu gratuit";
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
@@ -577,8 +804,8 @@
     for(var k=1;k<=5;k++){
       (function(val){
         var b=document.createElement("button");
-        b.className="opt"+(state.answers[it.id]===val?" sel":"");
-        b.innerHTML='<span class="knob"></span><span>'+SCALE[val-1]+'</span>';
+        b.className="opt"+(s.answers[it.id]===val?" sel":"");
+        b.innerHTML='<span class="knob"></span><span>'+t.scale[val-1]+'</span>';
         b.onclick=function(){ choose(val); };
         scale.appendChild(b);
       })(k);
@@ -586,9 +813,8 @@
   }
 
   function choose(val){
-    var it=ITEMS[state.idx];
-    state.answers[it.id]=val; save();
-    // feedback visuel court puis avance
+    var t=T(), s=st(), it=t.items[s.idx];
+    s.answers[it.id]=val; save();
     var opts=document.querySelectorAll("#scale .opt");
     opts.forEach(function(o){o.classList.remove("sel");});
     opts[val-1].classList.add("sel");
@@ -596,31 +822,34 @@
   }
 
   function next(){
-    var limit = state.paid ? ITEMS.length : FREE_COUNT;
-    if(state.idx < limit-1){
-      state.idx++; save(); renderQuestion();
+    var t=T(), s=st();
+    var limit = s.paid ? t.items.length : t.freeCount;
+    if(s.idx < limit-1){
+      s.idx++; save(); renderQuestion();
     } else {
-      // fin de phase
-      if(!state.paid){ showFree(); }
+      if(!s.paid){ showFree(); }
       else { runGeneration(); }
     }
   }
 
   function back(){
-    if(state.idx>0){ state.idx--; save(); renderQuestion(); }
+    var s=st();
+    if(s.idx>0){ s.idx--; save(); renderQuestion(); }
   }
 
   // ---------- RÉSULTAT GRATUIT ----------
   function showFree(){
-    var sc=scores(FREE_COUNT);
-    empreinte(document.getElementById("free-empreinte"), sc, true);
+    var t=T(), s=st();
+    var sc=scores(t, s, t.freeCount);
+    empreinte(document.getElementById("free-empreinte"), t, sc, true);
 
-    // trait dominant pour personnaliser
-    var top=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
+    var top=t.order.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
     document.getElementById("free-lead").textContent =
-      "Sur ces 15 premières questions, c'est ta dimension « "+DIMS[top].name+" » qui ressort le plus nettement.";
+      "Sur ces "+t.freeCount+" premières questions, c'est ta dimension « "+t.dims[top].name+" » qui ressort le plus nettement.";
     document.getElementById("free-portrait").textContent =
-      PORTRAIT[top][band(sc[top])];
+      t.portrait[top][band(sc[top])];
+    document.getElementById("pay-li-q").textContent =
+      "Les "+(t.items.length - t.freeCount)+" questions restantes pour un profil fiable";
     show("s-free");
   }
 
@@ -631,40 +860,41 @@
     document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton portrait complet";
     document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
     document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
+    if(state.email) document.getElementById("chk-email").value=state.email;
     document.getElementById("checkout").classList.add("open");
   }
   function closeCheckout(){ document.getElementById("checkout").classList.remove("open"); }
 
   function pay(){
-    // paiement simulé : on persiste l'état payé AVANT la génération (rejouable)
+    var t=T(), s=st();
     var email=document.getElementById("chk-email").value.trim();
     if(email) state.email=email;
-    state.paid=true;
-    state.idx=FREE_COUNT; // reprise au Q16
+    s.paid=true;
+    s.idx=t.freeCount; // reprise à la première question payante
     save();
     closeCheckout();
     toast("Paiement confirmé (démo)");
-    // on enchaîne sur la suite du test
     show("s-quiz");
     renderQuestion();
   }
 
   // ---------- GÉNÉRATION ----------
   function runGeneration(){
+    var t=T(), s=st();
     show("s-gen");
-    var sc=scores(ITEMS.length);
+    var sc=scores(t, s, t.items.length);
     var label=document.getElementById("genstep");
     var stream=document.getElementById("genstream");
     if(stream) stream.textContent="";
-    var phases=["On calcule tes cinq traits...","On rédige ton portrait, fondé sur tes réponses..."];
+    var phases=["On calcule tes "+t.order.length+" dimensions...","On rédige ton portrait, fondé sur tes réponses..."];
     label.textContent=phases[0];
     setTimeout(function(){ if(document.getElementById("s-gen").classList.contains("active")) label.textContent=phases[1]; },900);
 
-    generatePortrait(sc, function(acc){
+    generatePortrait(t, sc, function(acc){
       if(stream) stream.textContent = acc.slice(-420);
     }).then(function(md){
-      state.narrative = md || "";          // "" => repli sur les gabarits
-      state.narrativeScores = sc;          // snapshot figé, rejouable sans régénérer
+      s.narrative = md || "";        // "" => repli sur les gabarits
+      s.narrativeScores = sc;        // snapshot figé, rejouable sans régénérer
       save();
       showFull();
     });
@@ -672,46 +902,47 @@
 
   // ---------- PORTRAIT COMPLET ----------
   function showFull(){
-    var sc = state.narrativeScores || scores(ITEMS.length);
-    empreinte(document.getElementById("full-empreinte"), sc, true);
+    var t=T(), s=st();
+    var sc = s.narrativeScores || scores(t, s, t.items.length);
+    empreinte(document.getElementById("full-empreinte"), t, sc, true);
 
-    var ordered=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];});
+    var ordered=t.order.slice().sort(function(a,b){return sc[b]-sc[a];});
     var top=ordered[0], low=ordered[ordered.length-1];
 
+    document.getElementById("full-title").textContent = "Ton portrait, "+t.name.toLowerCase()+".";
     document.getElementById("full-lead").textContent =
-      "Tes deux traits les plus marquants : "+DIMS[top].name+" et "+DIMS[ordered[1]].name+". Voici ce qu'ils racontent de toi.";
+      "Tes deux dimensions les plus marquantes : "+t.dims[top].name+" et "+t.dims[ordered[1]].name+". Voici ce qu'elles racontent de toi.";
 
     var host=document.getElementById("full-portrait");
     host.innerHTML="";
 
-    if(state.narrative){
-      // portrait rédigé par le modèle (snapshot figé)
+    if(s.narrative){
       var llm=document.createElement("div"); llm.className="card portrait llm"; llm.style.marginTop="0";
-      llm.innerHTML=mdToHtml(state.narrative);
+      llm.innerHTML=mdToHtml(s.narrative);
       host.appendChild(llm);
     } else {
-      // repli déterministe : intro + trait par trait à partir des gabarits
       var intro=document.createElement("div"); intro.className="card portrait"; intro.style.marginTop="0";
-      intro.innerHTML='<p class="drop" style="margin:0">'+PORTRAIT[top][band(sc[top])]+' '+PORTRAIT[ordered[1]][band(sc[ordered[1]])]+'</p>';
+      intro.innerHTML='<p class="drop" style="margin:0">'+t.portrait[top][band(sc[top])]+' '+t.portrait[ordered[1]][band(sc[ordered[1]])]+'</p>';
       host.appendChild(intro);
-      ORDER.forEach(function(d){
+      t.order.forEach(function(d){
         var card=document.createElement("div"); card.className="card portrait";
         card.innerHTML =
-          '<h2 style="margin-top:2px">'+DIMS[d].name+' <span class="tag" style="vertical-align:middle">'+bandLabel(sc[d])+'</span></h2>'+
-          '<p style="color:var(--ink-soft);font-size:14px;margin-top:-4px">'+DIMS[d].sub+'</p>'+
-          '<p style="margin-bottom:0">'+PORTRAIT[d][band(sc[d])]+'</p>';
+          '<h2 style="margin-top:2px">'+t.dims[d].name+' <span class="tag" style="vertical-align:middle">'+bandLabel(sc[d])+'</span></h2>'+
+          '<p style="color:var(--ink-soft);font-size:14px;margin-top:-4px">'+t.dims[d].sub+'</p>'+
+          '<p style="margin-bottom:0">'+t.portrait[d][band(sc[d])]+'</p>';
         host.appendChild(card);
       });
     }
 
-    // appuis / vigilance
     var lev=document.createElement("div"); lev.className="card";
     lev.innerHTML =
       '<p style="font-weight:650;margin-bottom:8px">Ton point d\'appui</p>'+
-      '<p style="margin-bottom:16px">Ta dimension « '+DIMS[top].name+' » est une ressource sur laquelle t\'appuyer dans tes projets et tes relations.</p>'+
+      '<p style="margin-bottom:16px">Ta dimension « '+t.dims[top].name+' » est une ressource sur laquelle t\'appuyer dans tes projets et tes relations.</p>'+
       '<p style="font-weight:650;margin-bottom:8px">Ton angle de vigilance</p>'+
-      '<p style="margin:0">Garde un œil sur ta dimension « '+DIMS[low].name+' », c\'est là que de petits ajustements auront le plus d\'effet.</p>';
+      '<p style="margin:0">Garde un œil sur ta dimension « '+t.dims[low].name+' », c\'est là que de petits ajustements auront le plus d\'effet.</p>';
     host.appendChild(lev);
+
+    document.getElementById("full-disclaimer").innerHTML = "<b>À propos de ces résultats.</b> "+t.about;
 
     if(state.email) document.getElementById("acc-email").value=state.email;
     show("s-full");
@@ -719,9 +950,10 @@
 
   // ---------- PARTAGE ----------
   function share(){
-    var sc=scores(state.paid?ITEMS.length:FREE_COUNT);
-    var top=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
-    var txt="Mon portrait Proxxie Lab : trait dominant, "+DIMS[top].name+". Découvre le tien sur Proxxie.";
+    var t=T(), s=st();
+    var sc=scores(t, s, s.paid?t.items.length:t.freeCount);
+    var top=t.order.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
+    var txt="Mon portrait Proxxie Lab ("+t.name+") : dimension dominante, "+t.dims[top].name+". Découvre le tien sur Proxxie.";
     if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(function(){toast("Résumé copié");}); }
     else toast("Résumé prêt à partager");
   }
@@ -738,8 +970,8 @@
     show("s-quiz"); renderQuestion();
   }
   function reset(){
-    state={answers:{}, idx:0, paid:false, email:""}; save();
-    show("s-intro");
+    state.tests[curId]={answers:{}, idx:0, paid:false}; save();
+    openTest(curId);
   }
   function toast(m){
     var t=document.getElementById("toast"); t.textContent=m; t.classList.add("show");
@@ -748,18 +980,16 @@
 
   // reprise de session
   function resume(){
-    if(state.paid && answeredCount(ITEMS.length)===ITEMS.length){
-      if(state.narrative!==undefined){ showFull(); } else { runGeneration(); }
+    if(state.current && TESTS[state.current]){
+      openTest(state.current); // openTest gère la reprise au bon écran
       return;
     }
-    if(state.paid){ show("s-quiz"); renderQuestion(); return; }
-    if(answeredCount(FREE_COUNT)===FREE_COUNT){ showFree(); return; }
-    if(state.idx>0){ show("s-quiz"); renderQuestion(); return; }
-    show("s-intro");
+    openCatalog();
   }
 
   // expose
-  window.App={start:start,back:back,openCheckout:openCheckout,closeCheckout:closeCheckout,
+  window.App={openCatalog:openCatalog,openTest:openTest,start:start,back:back,
+    openCheckout:openCheckout,closeCheckout:closeCheckout,
     pay:pay,share:share,saveAccount:saveAccount,reset:reset};
 
   resume();
