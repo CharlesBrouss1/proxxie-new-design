@@ -278,9 +278,9 @@
     </div>
   </section>
 
-  <!-- ÉCRAN 3 : RÉSULTAT GRATUIT + PAYWALL -->
+  <!-- ÉCRAN 3 : RÉSULTAT SIMPLE GRATUIT (après les 15 questions) -->
   <section class="screen" id="s-free">
-    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton aperçu gratuit</span>
+    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton résultat gratuit</span>
     <h1 id="free-title">Voici la première esquisse de ton profil.</h1>
     <p class="lead" id="free-lead"></p>
 
@@ -293,30 +293,50 @@
       <p id="free-portrait" style="margin:0"></p>
     </div>
 
+    <div id="free-next"></div>
+
+    <p class="disclaimer">
+      <b>Proxxie Lab propose un outil psychométrique à visée de connaissance de soi.</b>
+      Il ne s'agit ni d'un diagnostic, ni d'un avis médical ou psychologique. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
+    </p>
+  </section>
+
+  <!-- ÉCRAN 3 bis : PAYWALL (après la version longue, débloque l'analyse OpenAI) -->
+  <section class="screen" id="s-pay">
+    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Version longue terminée</span>
+    <h1>Ton profil complet est prêt.</h1>
+    <p class="lead" id="pay-lead"></p>
+
+    <div class="card">
+      <p style="font-weight:650;margin-bottom:4px">Ton empreinte complète</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">La position de chaque dimension, calculée sur toutes tes réponses.</p>
+      <div class="empreinte" id="pay-empreinte"></div>
+    </div>
+
     <div class="lockwrap">
       <div class="card" style="margin-top:14px">
-        <h2 style="margin-top:4px">Ton portrait complet</h2>
+        <h2 style="margin-top:4px">Ton analyse personnalisée</h2>
         <div class="blurred portrait">
           <p>Sur le plan relationnel, tu fonctionnes selon une logique de profondeur plutôt que de largeur. Cette tendance influence la façon dont tu recharges ton énergie, dont tu prends des décisions sous pression, et dont tu abordes les conflits au travail comme dans ta vie privée. Trois leviers concrets se dégagent pour les prochaines semaines.</p>
         </div>
       </div>
       <div class="lockbadge">
-        <span class="lk">🔒 Réservé au portrait complet</span>
+        <span class="lk">🔒 Réservé à l'analyse complète</span>
       </div>
     </div>
 
     <div class="paywall">
-      <span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Portrait complet</span>
+      <span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Analyse complète</span>
       <div class="price"><b>4,99 €</b><s>14,99 €</s></div>
-      <p style="color:var(--ink-soft);margin:0">Paiement unique, ton portrait t'appartient.</p>
+      <p style="color:var(--ink-soft);margin:0">Paiement unique, ton analyse t'appartient.</p>
       <ul class="ulist">
-        <li>${CHK} <span id="pay-li-q">Toutes les questions restantes pour un profil fiable</span></li>
+        <li>${CHK} Une analyse rédigée pour toi, fondée sur tes <span id="pay-li-n"></span> réponses</li>
         <li>${CHK} Ton portrait éditorial détaillé, dimension par dimension</li>
         <li>${CHK} Tes points d'appui et tes angles de vigilance</li>
         <li>${CHK} Un résumé partageable, si tu le souhaites</li>
         <li>${CHK} Sauvegarde de ton profil pour suivre son évolution</li>
       </ul>
-      <button class="btn pay" onclick="App.openCheckout()">Débloquer mon portrait, 4,99 €</button>
+      <button class="btn pay" onclick="App.openCheckout()">Débloquer mon analyse, 4,99 €</button>
       <p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l'abonnement Lab à 9,99 €/mois</span>, tous les tests et le suivi dans le temps</p>
     </div>
 
@@ -631,11 +651,11 @@
       id:"grit", code:"GRIT", short:"Grit", kind:"self",
       name:"Ta ténacité",
       tagline:"Ta capacité à fournir l'effort et à tenir dans la durée.",
-      meta:["Ténacité","2 facettes","~3 min"],
-      minutes:"~3 min",
+      meta:["Ténacité","2 facettes","~5 min"],
+      minutes:"~5 min",
       introTitle:"Jusqu'où tu tiens l'effort ?",
-      introLead:"Un test court, inspiré des travaux d'Angela Duckworth, pour mesurer ta ténacité : ta capacité à fournir l'effort et à garder le cap dans la durée.",
-      freeCount:4,
+      introLead:"Un test inspiré des travaux d'Angela Duckworth, pour mesurer ta ténacité : ta capacité à fournir l'effort et à garder le cap dans la durée.",
+      freeCount:15,
       scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait"],
       hint:["Pas du tout moi","Tout à fait moi"],
       order:["PE","CI"],
@@ -651,7 +671,15 @@
         {id:"GR_PE3",dim:"PE",key:+1,t:"Je ne lâche jamais l'affaire, je suis assidu(e)."},
         {id:"GR_CI3",dim:"CI",key:-1,t:"Mes centres d'intérêt changent d'une année à l'autre."},
         {id:"GR_PE4",dim:"PE",key:+1,t:"Je suis très investi(e) dans ce que j'entreprends."},
-        {id:"GR_CI4",dim:"CI",key:-1,t:"Je me suis passionné(e) pour une idée ou un projet, puis j'ai perdu l'intérêt."}
+        {id:"GR_CI4",dim:"CI",key:-1,t:"Je me suis passionné(e) pour une idée ou un projet, puis j'ai perdu l'intérêt."},
+        {id:"GR_PE5",dim:"PE",key:+1,t:"Les revers ne me découragent pas durablement : je m'y remets."},
+        {id:"GR_CI5",dim:"CI",key:-1,t:"Il m'arrive de devenir obsédé(e) par une nouvelle idée, puis de l'abandonner peu après."},
+        {id:"GR_PE6",dim:"PE",key:+1,t:"Je continue à travailler dur même quand les résultats se font attendre."},
+        {id:"GR_CI6",dim:"CI",key:-1,t:"Je change d'objectif d'une saison à l'autre."},
+        {id:"GR_PE7",dim:"PE",key:+1,t:"Face à un obstacle, je cherche un moyen de le contourner plutôt que d'abandonner."},
+        {id:"GR_CI7",dim:"CI",key:-1,t:"J'ai du mal à garder le même but pendant plusieurs années."},
+        {id:"GR_PE8",dim:"PE",key:+1,t:"Je me fixe des objectifs exigeants et je m'y tiens."},
+        {id:"GR_CI8",dim:"CI",key:-1,t:"Je me laisse facilement distraire par de nouvelles envies."}
       ],
       portrait:{
         PE:{hi:"Quand tu commences quelque chose, tu vas au bout. L'effort ne te fait pas peur, tu t'accroches même quand c'est long ou ingrat. C'est un moteur rare, veille juste à le diriger vers ce qui compte vraiment pour toi.",
@@ -1367,6 +1395,13 @@
   var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","brief","phq9","gad7","asrs","aq10","dys"];
   var SOON = [];
 
+  // Version gratuite normalisée : 15 questions pour tous les tests self.
+  var FREE_COUNT = 15;
+  CATALOG.forEach(function(id){
+    var t=TESTS[id];
+    if(t && t.kind!=="clinical"){ t.freeCount = Math.min(FREE_COUNT, t.items.length); }
+  });
+
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
   function isClin(t){ return t && t.kind==="clinical"; }
@@ -1440,7 +1475,8 @@
 
   function T(){ return TESTS[curId]; }
   function st(){
-    if(!state.tests[curId]) state.tests[curId]={answers:{}, idx:0, paid:false};
+    if(!state.tests[curId]) state.tests[curId]={answers:{}, idx:0, paid:false, long:false};
+    if(state.tests[curId].long===undefined) state.tests[curId].long=false; // migration
     return state.tests[curId];
   }
 
@@ -1504,8 +1540,9 @@
     var freeDone = answeredCount(t, s, t.freeCount)===t.freeCount;
     var allDone  = answeredCount(t, s, t.items.length)===t.items.length;
     if(s.paid && allDone && s.narrative!==undefined) return {chip:"Terminé", cls:"done"};
-    if(s.paid) return {chip:"En cours", cls:"prog"};
-    if(freeDone) return {chip:"Aperçu prêt", cls:"prog"};
+    if(s.long && allDone) return {chip:"À débloquer", cls:"prog"};
+    if(s.long) return {chip:"En cours", cls:"prog"};
+    if(freeDone) return {chip:"Résultat prêt", cls:"prog"};
     if(s.idx>0)  return {chip:"En cours", cls:"prog"};
     return {chip:"Nouveau", cls:"new"};
   }
@@ -1557,13 +1594,15 @@
       if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
     } else {
       // si déjà en cours / terminé, on reprend au bon endroit
-      if(s.paid && answeredCount(t,s,t.items.length)===t.items.length){
+      var longDone = answeredCount(t,s,t.items.length)===t.items.length;
+      if(s.paid && longDone){
         if(s.narrative!==undefined){ showFull(); } else { runGeneration(); }
         return;
       }
-      if(s.paid){ show("s-quiz"); renderQuestion(); return; }
-      if(answeredCount(t,s,t.freeCount)===t.freeCount){ showFree(); return; }
-      if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
+      if(s.long && longDone){ showPaylock(); return; }      // longue finie, en attente de paiement
+      if(s.long){ show("s-quiz"); renderQuestion(); return; } // au milieu de la version longue
+      if(answeredCount(t,s,t.freeCount)===t.freeCount){ showSimple(); return; } // 15 gratuites finies
+      if(s.idx>0){ show("s-quiz"); renderQuestion(); return; } // au milieu des 15 gratuites
     }
 
     // sinon, écran d'intro
@@ -1575,20 +1614,20 @@
     document.getElementById("intro-lead").textContent=t.introLead;
     document.getElementById("intro-how").textContent= isClin(t)
       ? "Ce test est un outil de repérage, gratuit et sans inscription. Il ne pose aucun diagnostic. À la fin, tu obtiens un résultat indicatif et des pistes pour en parler à un professionnel si besoin."
-      : "Les "+t.freeCount+" premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.";
+      : t.freeCount+" questions gratuites, sans inscription, pour un premier résultat. Crée ensuite un compte gratuit pour accéder à la version longue de "+t.items.length+" questions. L'analyse détaillée, rédigée pour toi, se débloque pour 4,99 €.";
     show("s-intro");
   }
 
   // ---------- QUIZ ----------
   function renderQuestion(){
     var t=T(), s=st(), i=s.idx, it=t.items[i];
-    var limit = isClin(t) ? t.items.length : (s.paid ? t.items.length : t.freeCount);
+    var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
     document.getElementById("qdim").textContent = t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
     document.getElementById("qhint-lo").textContent = t.hint[0];
     document.getElementById("qhint-hi").textContent = t.hint[1];
     document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
-    document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.paid ? "Test complet" : "Aperçu gratuit");
+    document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.long ? "Version longue" : "15 gratuites");
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
@@ -1613,15 +1652,18 @@
     setTimeout(next,180);
   }
 
+  function registered(){ return !!(state.email && state.email.indexOf("@")>0); }
+
   function next(){
     var t=T(), s=st();
-    var limit = isClin(t) ? t.items.length : (s.paid ? t.items.length : t.freeCount);
+    var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
     if(s.idx < limit-1){
       s.idx++; save(); renderQuestion();
     } else {
-      if(isClin(t)){ showClinical(); }
-      else if(!s.paid){ showFree(); }
-      else { runGeneration(); }
+      if(isClin(t)){ showClinical(); }      // dépistage : résultat direct
+      else if(!s.long){ showSimple(); }      // 15 gratuites terminées : résultat simple
+      else if(!s.paid){ showPaylock(); }     // version longue terminée : paiement de l'analyse
+      else { runGeneration(); }              // payé : génération OpenAI
     }
   }
 
@@ -1630,8 +1672,8 @@
     if(s.idx>0){ s.idx--; save(); renderQuestion(); }
   }
 
-  // ---------- RÉSULTAT GRATUIT ----------
-  function showFree(){
+  // ---------- RÉSULTAT SIMPLE (après les 15 gratuites) ----------
+  function showSimple(){
     var t=T(), s=st();
     var sc=scores(t, s, t.freeCount);
     empreinte(document.getElementById("free-empreinte"), t, sc, true);
@@ -1641,16 +1683,63 @@
       "Sur ces "+t.freeCount+" premières questions, c'est ta dimension « "+t.dims[top].name+" » qui ressort le plus nettement.";
     document.getElementById("free-portrait").textContent =
       t.portrait[top][band(sc[top])];
-    document.getElementById("pay-li-q").textContent =
-      "Les "+(t.items.length - t.freeCount)+" questions restantes pour un profil fiable";
+
+    var rest=t.items.length - t.freeCount;
+    var restTxt = rest>1 ? (rest+" questions") : "1 question";
+    var host=document.getElementById("free-next");
+    if(registered()){
+      host.innerHTML =
+        '<div class="card" style="margin-top:14px">'+
+          '<h2 style="margin-top:4px">Passe à la version longue</h2>'+
+          '<p style="color:var(--ink-soft);margin:0 0 14px">Ton compte est déjà créé. Il te reste '+restTxt+' pour compléter la version longue ('+t.items.length+' au total), puis tu pourras débloquer ton analyse détaillée.</p>'+
+          '<button class="btn" onclick="App.startLong()">Continuer, '+restTxt+'</button>'+
+        '</div>';
+    } else {
+      host.innerHTML =
+        '<div class="card" style="margin-top:14px">'+
+          '<span class="pill"><span class="dot"></span>Inscription gratuite</span>'+
+          '<h2 style="margin-top:10px">Crée ton compte pour la version longue</h2>'+
+          '<p style="color:var(--ink-soft);margin:0 0 12px">L\'inscription est gratuite. Elle débloque '+restTxt+' de plus pour atteindre la version longue ('+t.items.length+' au total). L\'analyse détaillée rédigée pour toi se débloque plus tard, pour 4,99 €.</p>'+
+          '<div class="field" style="margin:0"><input id="reg-email" type="email" placeholder="ton@email.com" autocomplete="email"></div>'+
+          '<div style="height:12px"></div>'+
+          '<button class="btn" onclick="App.registerContinue()">Créer mon compte gratuit et continuer</button>'+
+          '<p class="subnote">Aucune carte bancaire demandée à cette étape.</p>'+
+        '</div>';
+    }
     show("s-free");
+  }
+
+  function startLong(){
+    var t=T(), s=st();
+    s.long=true;
+    s.idx=t.freeCount;       // reprise à la première question de la version longue
+    save();
+    show("s-quiz"); renderQuestion();
+  }
+  function registerContinue(){
+    var e=document.getElementById("reg-email").value.trim();
+    if(!e || e.indexOf("@")<0){ toast("Indique un email valide"); return; }
+    state.email=e; save();
+    toast("Compte créé (démo)");
+    startLong();
+  }
+
+  // ---------- PAYWALL (après la version longue, débloque l'analyse OpenAI) ----------
+  function showPaylock(){
+    var t=T(), s=st();
+    var sc=scores(t, s, t.items.length);
+    empreinte(document.getElementById("pay-empreinte"), t, sc, true);
+    document.getElementById("pay-lead").textContent =
+      "Tu as répondu aux "+t.items.length+" questions. Voici ton empreinte complète. Débloque l'analyse détaillée, rédigée pour toi, dimension par dimension.";
+    document.getElementById("pay-li-n").textContent = t.items.length;
+    show("s-pay");
   }
 
   // ---------- CHECKOUT SIMULÉ ----------
   var subMode=false;
   function openCheckout(sub){
     subMode=!!sub;
-    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton portrait complet";
+    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton analyse complète";
     document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
     document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
     if(state.email) document.getElementById("chk-email").value=state.email;
@@ -1659,16 +1748,14 @@
   function closeCheckout(){ document.getElementById("checkout").classList.remove("open"); }
 
   function pay(){
-    var t=T(), s=st();
+    var s=st();
     var email=document.getElementById("chk-email").value.trim();
     if(email) state.email=email;
     s.paid=true;
-    s.idx=t.freeCount; // reprise à la première question payante
     save();
     closeCheckout();
     toast("Paiement confirmé (démo)");
-    show("s-quiz");
-    renderQuestion();
+    runGeneration();   // version longue déjà terminée : on génère l'analyse
   }
 
   // ---------- GÉNÉRATION ----------
@@ -1838,7 +1925,7 @@
   // ---------- PARTAGE ----------
   function share(){
     var t=T(), s=st();
-    var sc=scores(t, s, s.paid?t.items.length:t.freeCount);
+    var sc=scores(t, s, s.long?t.items.length:t.freeCount);
     var top=t.order.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
     var txt="Mon portrait Proxxie Lab ("+t.name+") : dimension dominante, "+t.dims[top].name+". Découvre le tien sur Proxxie.";
     if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(function(){toast("Résumé copié");}); }
@@ -1857,7 +1944,7 @@
     show("s-quiz"); renderQuestion();
   }
   function reset(){
-    state.tests[curId]={answers:{}, idx:0, paid:false}; save();
+    state.tests[curId]={answers:{}, idx:0, paid:false, long:false}; save();
     openTest(curId);
   }
   function toast(m){
@@ -1876,6 +1963,7 @@
 
   // expose
   window.App={openCatalog:openCatalog,openTest:openTest,start:start,back:back,
+    startLong:startLong,registerContinue:registerContinue,
     openCheckout:openCheckout,closeCheckout:closeCheckout,
     pay:pay,share:share,saveAccount:saveAccount,reset:reset};
 
