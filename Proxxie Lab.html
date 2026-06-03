@@ -151,6 +151,18 @@
   .spinner{width:48px;height:48px;border-radius:50%;border:4px solid #E7E0D0;border-top-color:var(--blue);margin:0 auto 22px;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .genstep{font-size:15px;color:var(--ink-soft);min-height:22px;transition:opacity .3s}
+  .genstream{max-width:520px;margin:20px auto 0;font-size:13.5px;line-height:1.6;color:var(--ink-soft);text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;max-height:180px;overflow:hidden;white-space:pre-wrap;-webkit-mask-image:linear-gradient(180deg,transparent,#000 34px,#000);mask-image:linear-gradient(180deg,transparent,#000 34px,#000)}
+  .genstream:empty{display:none}
+
+  /* portrait rédigé par le modèle */
+  .portrait.llm h2{font-family:var(--serif);font-size:20px;margin:22px 0 8px}
+  .portrait.llm h2:first-child{margin-top:2px}
+  .portrait.llm h3{font-size:16px;margin:16px 0 6px}
+  .portrait.llm ul{margin:6px 0 14px;padding:0;list-style:none}
+  .portrait.llm li{position:relative;padding-left:20px;margin-bottom:7px;font-size:15.5px;line-height:1.55}
+  .portrait.llm li::before{content:"";position:absolute;left:3px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--orange)}
+  .portrait.llm p{font-size:16px;line-height:1.62;margin-bottom:11px}
+  .portrait.llm b{color:var(--ink)}
 
   .disclaimer{font-size:12.5px;color:var(--ink-soft);line-height:1.55;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
   .disclaimer b{color:var(--ink)}
@@ -266,8 +278,9 @@
   <section class="screen" id="s-gen">
     <div class="gen">
       <div class="spinner"></div>
-      <h2 style="font-family:var(--serif)">On compose ton portrait</h2>
+      <h2 style="font-family:var(--serif)">On rédige ton portrait</h2>
       <p class="genstep" id="genstep">Analyse de tes réponses...</p>
+      <p class="genstream" id="genstream"></p>
     </div>
   </section>
 
@@ -443,6 +456,58 @@
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
 
+  // ---------- GÉNÉRATION LLM (endpoint Proxxie, clé côté serveur) ----------
+  var AI_URL="https://proxxie-ai-edge.vercel.app/api/test-analysis";
+
+  function summaryFor(sc){
+    return ORDER.map(function(d){
+      return DIMS[d].name+" ("+DIMS[d].sub+") : "+bandLabel(sc[d])+" ("+sc[d]+"/100)";
+    }).join("\n");
+  }
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  // mini markdown -> html, échappé d'abord (sortie du modèle = non fiable)
+  function mdToHtml(md){
+    var lines=esc(md).split(/\r?\n/), html="", inList=false;
+    function closeList(){ if(inList){ html+="</ul>"; inList=false; } }
+    for(var i=0;i<lines.length;i++){
+      var ln=lines[i].trim();
+      if(!ln){ closeList(); continue; }
+      ln=ln.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+      if(/^###\s+/.test(ln)){ closeList(); html+="<h3>"+ln.replace(/^###\s+/,"")+"</h3>"; }
+      else if(/^#{1,2}\s+/.test(ln)){ closeList(); html+="<h2>"+ln.replace(/^#{1,2}\s+/,"")+"</h2>"; }
+      else if(/^[-*]\s+/.test(ln)){ if(!inList){ html+="<ul>"; inList=true; } html+="<li>"+ln.replace(/^[-*]\s+/,"")+"</li>"; }
+      else { closeList(); html+="<p>"+ln+"</p>"; }
+    }
+    closeList();
+    return html;
+  }
+
+  // renvoie le markdown complet, ou null en cas d'échec/timeout
+  function generatePortrait(sc, onChunk){
+    var ctrl = ("AbortController" in window) ? new AbortController() : null;
+    var to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 25000);
+    return fetch(AI_URL,{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({testCode:"BIGFIVE", testName:"Proxxie Lab, portrait des cinq grands traits", summary:summaryFor(sc)}),
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function(r){
+      if(!r.ok || !r.body) throw new Error("bad response");
+      var reader=r.body.getReader(), dec=new TextDecoder(), acc="";
+      return (function pump(){
+        return reader.read().then(function(res){
+          if(res.done){ clearTimeout(to); return acc; }
+          acc += dec.decode(res.value,{stream:true});
+          if(onChunk) onChunk(acc);
+          return pump();
+        });
+      })();
+    }).then(function(md){
+      return (md && md.trim().length>40) ? md : null;
+    }).catch(function(){ clearTimeout(to); return null; });
+  }
+
   // ---------- ÉTAT ----------
   var KEY="proxxie.lab.v1";
   var state = load() || {answers:{}, idx:0, paid:false, email:""};
@@ -587,19 +652,27 @@
   // ---------- GÉNÉRATION ----------
   function runGeneration(){
     show("s-gen");
-    var steps=["Analyse de tes réponses...","Calcul de tes cinq traits...","Composition de ton portrait...","Derniers ajustements..."];
-    var el=document.getElementById("genstep"), k=0;
-    el.textContent=steps[0];
-    var iv=setInterval(function(){
-      k++;
-      if(k<steps.length){ el.style.opacity=0; setTimeout(function(){el.textContent=steps[k];el.style.opacity=1;},200); }
-      else { clearInterval(iv); showFull(); }
-    },850);
+    var sc=scores(ITEMS.length);
+    var label=document.getElementById("genstep");
+    var stream=document.getElementById("genstream");
+    if(stream) stream.textContent="";
+    var phases=["On calcule tes cinq traits...","On rédige ton portrait, fondé sur tes réponses..."];
+    label.textContent=phases[0];
+    setTimeout(function(){ if(document.getElementById("s-gen").classList.contains("active")) label.textContent=phases[1]; },900);
+
+    generatePortrait(sc, function(acc){
+      if(stream) stream.textContent = acc.slice(-420);
+    }).then(function(md){
+      state.narrative = md || "";          // "" => repli sur les gabarits
+      state.narrativeScores = sc;          // snapshot figé, rejouable sans régénérer
+      save();
+      showFull();
+    });
   }
 
   // ---------- PORTRAIT COMPLET ----------
   function showFull(){
-    var sc=scores(ITEMS.length);
+    var sc = state.narrativeScores || scores(ITEMS.length);
     empreinte(document.getElementById("full-empreinte"), sc, true);
 
     var ordered=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];});
@@ -611,20 +684,25 @@
     var host=document.getElementById("full-portrait");
     host.innerHTML="";
 
-    // intro narrative (drop cap)
-    var intro=document.createElement("div"); intro.className="card portrait"; intro.style.marginTop="0";
-    intro.innerHTML='<p class="drop" style="margin:0">'+PORTRAIT[top][band(sc[top])]+' '+PORTRAIT[ordered[1]][band(sc[ordered[1]])]+'</p>';
-    host.appendChild(intro);
-
-    // section trait par trait
-    ORDER.forEach(function(d){
-      var card=document.createElement("div"); card.className="card portrait";
-      card.innerHTML =
-        '<h2 style="margin-top:2px">'+DIMS[d].name+' <span class="tag" style="vertical-align:middle">'+bandLabel(sc[d])+'</span></h2>'+
-        '<p style="color:var(--ink-soft);font-size:14px;margin-top:-4px">'+DIMS[d].sub+'</p>'+
-        '<p style="margin-bottom:0">'+PORTRAIT[d][band(sc[d])]+'</p>';
-      host.appendChild(card);
-    });
+    if(state.narrative){
+      // portrait rédigé par le modèle (snapshot figé)
+      var llm=document.createElement("div"); llm.className="card portrait llm"; llm.style.marginTop="0";
+      llm.innerHTML=mdToHtml(state.narrative);
+      host.appendChild(llm);
+    } else {
+      // repli déterministe : intro + trait par trait à partir des gabarits
+      var intro=document.createElement("div"); intro.className="card portrait"; intro.style.marginTop="0";
+      intro.innerHTML='<p class="drop" style="margin:0">'+PORTRAIT[top][band(sc[top])]+' '+PORTRAIT[ordered[1]][band(sc[ordered[1]])]+'</p>';
+      host.appendChild(intro);
+      ORDER.forEach(function(d){
+        var card=document.createElement("div"); card.className="card portrait";
+        card.innerHTML =
+          '<h2 style="margin-top:2px">'+DIMS[d].name+' <span class="tag" style="vertical-align:middle">'+bandLabel(sc[d])+'</span></h2>'+
+          '<p style="color:var(--ink-soft);font-size:14px;margin-top:-4px">'+DIMS[d].sub+'</p>'+
+          '<p style="margin-bottom:0">'+PORTRAIT[d][band(sc[d])]+'</p>';
+        host.appendChild(card);
+      });
+    }
 
     // appuis / vigilance
     var lev=document.createElement("div"); lev.className="card";
@@ -670,7 +748,10 @@
 
   // reprise de session
   function resume(){
-    if(state.paid && answeredCount(ITEMS.length)===ITEMS.length){ showFull(); return; }
+    if(state.paid && answeredCount(ITEMS.length)===ITEMS.length){
+      if(state.narrative!==undefined){ showFull(); } else { runGeneration(); }
+      return;
+    }
     if(state.paid){ show("s-quiz"); renderQuestion(); return; }
     if(answeredCount(FREE_COUNT)===FREE_COUNT){ showFree(); return; }
     if(state.idx>0){ show("s-quiz"); renderQuestion(); return; }
