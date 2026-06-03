@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Proxxie Lab, tes portraits psychométriques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,640&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#F7F2E9;
@@ -17,8 +20,10 @@
     --card:#FFFFFF;
     --ok:#1f9d6b;
     --radius:20px;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --serif:"Fraunces","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --tan:#EEE6D9;
+    --tan-line:#E6E2D6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
@@ -136,29 +141,31 @@
   .tcard.clin .tfoot{padding-left:56px}
   .tcard.soon .tico{background:#F1ECDF;color:var(--ink-soft)}
 
-  /* progress */
-  .progress{position:sticky;top:0;background:var(--cream);padding:10px 0 16px;z-index:5}
-  .ptrack{height:6px;background:#EDE6D6;border-radius:999px;overflow:hidden}
-  .pfill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-soft));border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1)}
-  .pmeta{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--ink-soft)}
+  /* progress / en-tête question (style proxxie-new-design) */
+  .qtop{position:sticky;top:0;background:var(--cream);padding:8px 0 14px;z-index:5}
+  .qhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:11px}
+  .qnum{font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-soft)}
+  .qphase{display:block;font-size:11px;font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--qac,var(--blue));margin-top:3px}
+  .qbadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--qac,var(--blue));white-space:nowrap;flex:0 0 auto}
+  .qbadge .qd{width:9px;height:9px;border-radius:50%;background:var(--qac,var(--blue));flex:0 0 auto}
+  .ptrack{height:4px;background:var(--tan);border-radius:999px;overflow:hidden}
+  .pfill{height:100%;width:0;background:var(--qac,var(--blue));border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1)}
 
   /* question */
-  .q{min-height:46vh;display:flex;flex-direction:column;justify-content:center}
-  .qdim{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
-  .qdim .qd{width:10px;height:10px;border-radius:50%;background:var(--qac,var(--blue));flex:0 0 auto}
-  .qtext{font-family:var(--serif);font-size:27px;line-height:1.25;margin-bottom:24px}
+  .q{min-height:42vh;display:flex;flex-direction:column;justify-content:center}
+  .qtext{font-family:var(--serif);font-size:27px;line-height:1.28;font-weight:500;margin-bottom:22px}
   /* échelle numérique 1-5 (style proxxie-new-design) */
   .scale{display:flex;flex-direction:row;gap:9px}
   .nopt{
     flex:1;min-width:0;aspect-ratio:1/1;max-height:72px;
-    background:#fff;border:1.5px solid var(--line);border-radius:15px;
-    font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);
+    background:var(--tan);border:1.5px solid var(--tan-line);border-radius:13px;
+    font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);
     cursor:pointer;display:grid;place-items:center;
     transition:transform .1s ease,border-color .12s ease,background .12s ease,color .12s ease,box-shadow .2s ease;
   }
   .nopt:hover{border-color:var(--qac,var(--blue));transform:translateY(-2px)}
   .nopt:active{transform:scale(.96)}
-  .nopt.sel{background:var(--qac,var(--blue));border-color:var(--qac,var(--blue));color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+  .nopt.sel{background:var(--qac,var(--blue));border-color:var(--qac,var(--blue));color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}
   .scalehint{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:11px}
 
   .qpreview{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 18px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
@@ -167,7 +174,7 @@
   .qpreview .qpk .d{width:8px;height:8px;border-radius:50%;background:var(--pac,var(--blue))}
   .qpreview .qpq{font-family:var(--serif);font-size:18px;line-height:1.25;margin-bottom:14px}
   .qpreview .qps{display:flex;gap:7px}
-  .qpreview .qps span{flex:1;aspect-ratio:1/1;max-height:46px;border:1.5px solid var(--line);border-radius:11px;display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:var(--ink-soft);font-size:15px}
+  .qpreview .qps span{flex:1;aspect-ratio:1/1;max-height:46px;background:var(--tan);border:1.5px solid var(--tan-line);border-radius:11px;display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:var(--ink);font-size:15px}
   .qpreview .qps span.on{background:var(--pac,var(--blue));border-color:var(--pac,var(--blue));color:#fff}
   .qpreview .qphint{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--ink-soft);margin-top:9px}
   .qpreview .qptag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--ptint,#F1ECDF);padding:3px 9px;border-radius:999px}
@@ -176,16 +183,23 @@
   .navrow .btn{width:auto;flex:1}
   .backlink{background:none;border:0;color:var(--ink-soft);font-size:14px;font-weight:600;cursor:pointer;padding:8px 4px}
 
-  /* empreinte (signature visual) : barres remplies */
+  /* empreinte (signature visual) : barres remplies + badge dimension */
   .empreinte{margin:6px 0 4px}
-  .erow{margin:16px 0}
-  .erow .elabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:10px}
-  .erow .elabel b{font-size:15px}
+  .erow{margin:18px 0}
+  .erow .elabel{display:flex;align-items:center;margin-bottom:8px;gap:10px}
+  .erow .ebadge{width:28px;height:28px;border-radius:8px;background:var(--eac,var(--blue));color:#fff;font-family:var(--serif);font-weight:600;font-size:15px;display:grid;place-items:center;flex:0 0 auto}
+  .erow .elabel b{font-size:15px;font-weight:700}
   .erow .elabel .eband{font-size:13px;color:var(--ink-soft);font-weight:600}
   .erow .elabel .eval{font-size:14px;font-weight:800;color:var(--eac,var(--blue));font-variant-numeric:tabular-nums;margin-left:auto}
-  .etrack{position:relative;height:11px;border-radius:999px;background:#EDE6D6;overflow:hidden}
+  .etrack{position:relative;height:10px;border-radius:999px;background:var(--tan);overflow:hidden;margin-left:38px}
   .efill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--eac,var(--blue)),var(--eac2,var(--blue-soft)));transition:width .8s cubic-bezier(.4,0,.2,1)}
-  .escale{font-size:11px;color:var(--ink-soft);margin-top:6px}
+  .escale{font-size:11.5px;color:var(--eac,var(--blue));font-weight:600;margin:6px 0 0 38px}
+
+  /* kicker de section (style proxxie-new-design) */
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+  .kicker .kd{width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto}
+  .reassure{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-top:13px}
+  .reassure svg{flex:0 0 auto}
 
   .blurred{filter:blur(7px);opacity:.6;pointer-events:none;user-select:none}
   .lockwrap{position:relative}
@@ -313,12 +327,14 @@
 
   <!-- ÉCRAN 2 : QUESTIONS -->
   <section class="screen" id="s-quiz">
-    <div class="progress">
+    <div class="qtop">
+      <div class="qhead">
+        <span class="qnum"><span id="pcount">Question 1 / 15</span><span class="qphase" id="pphase"></span></span>
+        <span class="qbadge" id="qdim"><span class="qd"></span>Ouverture</span>
+      </div>
       <div class="ptrack"><div class="pfill" id="pfill"></div></div>
-      <div class="pmeta"><span id="pcount">Question 1</span><span id="pphase">Aperçu gratuit</span></div>
     </div>
     <div class="q">
-      <div class="qdim" id="qdim">Ouverture</div>
       <div class="qtext" id="qtext">...</div>
       <div class="scalehint"><span id="qhint-lo">Pas du tout</span><span id="qhint-hi">Tout à fait</span></div>
       <div class="scale" id="scale"></div>
@@ -330,7 +346,7 @@
 
   <!-- ÉCRAN 3 : RÉSULTAT SIMPLE GRATUIT (après les 15 questions) -->
   <section class="screen" id="s-free">
-    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton résultat gratuit</span>
+    <span class="kicker"><span class="kd"></span>Ton résultat gratuit</span>
     <h1 id="free-title">Voici la première esquisse de ton profil.</h1>
     <p class="lead" id="free-lead"></p>
 
@@ -353,7 +369,7 @@
 
   <!-- ÉCRAN 3 bis : PAYWALL (après la version longue, débloque l'analyse OpenAI) -->
   <section class="screen" id="s-pay">
-    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Version longue terminée</span>
+    <span class="kicker"><span class="kd"></span>Version longue terminée</span>
     <h1>Ton profil complet est prêt.</h1>
     <p class="lead" id="pay-lead"></p>
 
@@ -409,7 +425,7 @@
   <!-- ÉCRAN 5 : PORTRAIT COMPLET -->
   <section class="screen" id="s-full">
     <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
-    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton portrait complet</span>
+    <span class="kicker"><span class="kd"></span>Ton portrait complet</span>
     <h1 id="full-title">Ton portrait psychométrique.</h1>
     <p class="lead" id="full-lead"></p>
 
@@ -430,13 +446,14 @@
     </div>
 
     <div class="card" id="account-card" style="margin-top:14px">
-      <p style="font-weight:650;margin-bottom:4px">Garder ton portrait</p>
+      <span class="kicker"><span class="kd"></span>Garder ton portrait</span>
       <p style="color:var(--ink-soft);font-size:14px;margin:0 0 12px">Reçois ton portrait par email et retrouve-le quand tu veux pour suivre son évolution.</p>
       <div class="field" style="margin:0">
         <input id="acc-email" type="email" placeholder="ton@email.com" autocomplete="email">
       </div>
       <div style="height:12px"></div>
       <button class="btn" onclick="App.saveAccount()">Sauvegarder mon profil</button>
+      <div class="reassure">${LOCKICON_S}Tes données restent stockées en local, sur ton appareil.</div>
     </div>
 
     <p class="disclaimer" id="full-disclaimer"></p>
@@ -508,7 +525,8 @@
 
   // ---- check icon injection (avoids inline SVG repetition) ----
   var CHK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#1f9d6b" opacity=".14"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1f9d6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  document.body.innerHTML = document.body.innerHTML.replace(/\$\{CHK\}/g, CHK);
+  var LOCKICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 1 1 8 0V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  document.body.innerHTML = document.body.innerHTML.replace(/\$\{CHK\}/g, CHK).replace(/\$\{LOCKICON_S\}/g, LOCKICON);
 
   /* =========================================================================
      REGISTRE DES TESTS
@@ -1978,8 +1996,9 @@
     t.order.forEach(function(d){
       var v=sc[d];
       var row=document.createElement("div"); row.className="erow";
+      var letter=(t.dims[d].name||"?").trim().charAt(0).toUpperCase();
       row.innerHTML =
-        '<div class="elabel"><b>'+t.dims[d].name+'</b><span class="eband">'+(labelFn?labelFn(d,v):bandLabel(v))+'</span><span class="eval">'+v+'%</span></div>'+
+        '<div class="elabel"><span class="ebadge">'+letter+'</span><b>'+t.dims[d].name+'</b><span class="eband">'+(labelFn?labelFn(d,v):bandLabel(v))+'</span><span class="eval">'+v+'%</span></div>'+
         '<div class="etrack"><span class="efill" style="width:'+(animate?0:v)+'%"></span></div>'+
         '<div class="escale">'+t.dims[d].sub.split(",")[0]+'</div>';
       el.appendChild(row);
@@ -2148,15 +2167,13 @@
     document.getElementById("qtext").textContent = it.t;
     document.getElementById("qhint-lo").textContent = t.hint[0];
     document.getElementById("qhint-hi").textContent = t.hint[1];
-    document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
+    document.getElementById("pcount").textContent = "Question "+(i+1)+" / "+limit;
     document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.long ? "Version longue" : "15 gratuites");
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
-    document.getElementById("pfill").style.background = 'linear-gradient(90deg,'+ac+','+ac+'88)';
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
     var scale=document.getElementById("scale");
-    scale.style.setProperty('--qac', ac);
-    document.querySelector("#s-quiz .q").style.setProperty('--qac', ac);
+    document.getElementById("s-quiz").style.setProperty('--qac', ac);
     scale.innerHTML="";
     for(var k=1;k<=t.scale.length;k++){
       (function(val){
@@ -2225,13 +2242,13 @@
     } else {
       host.innerHTML =
         '<div class="card" style="margin-top:14px">'+
-          '<span class="pill"><span class="dot"></span>Inscription gratuite</span>'+
-          '<h2 style="margin-top:10px">Crée ton compte pour la version longue</h2>'+
-          '<p style="color:var(--ink-soft);margin:0 0 12px">L\'inscription est gratuite. Elle débloque '+restTxt+' de plus pour atteindre la version longue ('+t.items.length+' au total). L\'analyse détaillée rédigée pour toi se débloque plus tard, pour 4,99 €.</p>'+
+          '<span class="kicker"><span class="kd"></span>Inscription gratuite</span>'+
+          '<h2 style="margin-top:2px">Crée ton compte pour la version longue</h2>'+
+          '<p style="color:var(--ink-soft);margin:0 0 14px">L\'inscription est gratuite. Elle débloque '+restTxt+' de plus pour atteindre la version longue ('+t.items.length+' au total). L\'analyse détaillée rédigée pour toi se débloque plus tard, pour 4,99 €.</p>'+
           '<div class="field" style="margin:0"><input id="reg-email" type="email" placeholder="ton@email.com" autocomplete="email"></div>'+
           '<div style="height:12px"></div>'+
           '<button class="btn" onclick="App.registerContinue()">Créer mon compte gratuit et continuer</button>'+
-          '<p class="subnote">Aucune carte bancaire demandée à cette étape.</p>'+
+          '<div class="reassure">'+LOCKICON+'Tes données restent stockées en local, aucune carte bancaire à cette étape.</div>'+
         '</div>';
     }
     show("s-free");
