@@ -99,6 +99,42 @@
   .tchip.done{background:#E7F6EF;color:var(--ok)}
   .tcard.soon{opacity:.6;cursor:default}
   .tcard.soon:hover{border-color:var(--line)}
+  /* catalogue v2 : sections + vignettes (kicker + pastille + CTA) */
+  .catalog{gap:12px}
+  .csec{display:flex;align-items:baseline;gap:9px;margin:28px 2px 14px}
+  .csec:first-child{margin-top:6px}
+  .csec h2{font-family:var(--serif);font-size:19px;margin:0;font-weight:600}
+  .csec span{font-size:12px;color:var(--ink-soft);font-weight:600}
+  .csec .ln{flex:1;height:1px;background:var(--line)}
+  .tcard{position:relative;overflow:hidden;padding:17px 18px 16px;transition:border-color .15s ease,transform .12s ease,box-shadow .2s ease}
+  .tcard:hover{border-color:var(--ac,var(--blue-soft));transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
+  .tcard:active{transform:scale(.997)}
+  .tcard .trow{align-items:flex-start}
+  .tico{width:46px;height:46px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;background:var(--tint,#F1ECDF);color:var(--ac,var(--blue))}
+  .tmain{flex:1;min-width:0;display:flex;gap:14px;align-items:flex-start}
+  .tinfo{flex:1;min-width:0}
+  .tkick{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--ac,var(--blue));margin-bottom:5px}
+  .tcard h3{margin-top:0}
+  .tcard .tfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;padding-left:60px}
+  .tchips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .tgo{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;background:var(--ac,var(--blue));color:#fff;font-family:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:filter .15s ease}
+  .tcard:hover .tgo{filter:brightness(1.08)}
+  .tchip.new{background:var(--tint,#F4F6FF);color:var(--ac,var(--blue))}
+  .tchip.free{background:#E7F6EF;color:var(--ok)}
+  .tcard.feat{padding:22px 20px}
+  .tcard.feat .tico{width:54px;height:54px;border-radius:15px}
+  .tcard.feat h3{font-size:23px}
+  .tcard.feat p{font-size:14px}
+  .tcard.feat .tfoot{padding-left:0;margin-top:16px}
+  .tcard.feat .tgo{padding:10px 18px;font-size:14px}
+  .tcard.clin{padding:14px 16px}
+  .tcard.clin .tico{width:40px;height:40px;border-radius:11px;background:#EDF1F0;color:#5B6B72}
+  .tcard.clin .tkick{color:#7B8A85}
+  .tcard.clin:hover{border-color:#9DB0A8}
+  .tcard.clin h3{font-size:17px}
+  .tcard.clin .tgo{background:#5B6B72}
+  .tcard.clin .tfoot{padding-left:56px}
+  .tcard.soon .tico{background:#F1ECDF;color:var(--ink-soft)}
 
   /* progress */
   .progress{position:sticky;top:0;background:var(--cream);padding:10px 0 16px;z-index:5}
@@ -1958,34 +1994,81 @@
     return {chip:"Nouveau", cls:"new"};
   }
 
+  // icônes + accent couleur par test (catalogue)
+  var ICONS={
+    brain:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.5V17a2 2 0 0 0 4 0M12 5a3 3 0 0 1 3 3 3 3 0 0 1 1 5.5V17a2 2 0 0 1-4 0M12 5V19"/></svg>',
+    compass:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>',
+    flame:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-.5-2-1-3 .2 4-3 5-3 1 0-2 1-4-2-6z"/></svg>',
+    route:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8 17c8 0 8-3 8-9"/></svg>',
+    bolt:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>',
+    heart:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.5-7-10a3.5 3.5 0 0 1 7-1 3.5 3.5 0 0 1 7 1c0 5.5-7 10-7 10z"/></svg>',
+    seed:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21v-7M12 14c-4 0-6-3-6-6 4 0 6 3 6 6zM12 12c0-3 2-6 6-6 0 3-2 6-6 6z"/></svg>',
+    grid:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+    chat:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 4V7a2 2 0 0 1 2-2z"/></svg>',
+    wave:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12c2 0 2-5 4-5s2 10 4 10 2-10 4-10 2 5 4 5"/></svg>',
+    scan:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/></svg>'
+  };
+  var META={
+    bigfive:{ic:'brain',  ac:'#1320CE', ti:'#EEF0FF', kick:'Personnalité',           feat:1},
+    riasec: {ic:'compass',ac:'#C2603A', ti:'#FBEFE9', kick:'Intérêts professionnels', feat:1},
+    grit:   {ic:'flame',  ac:'#B8842A', ti:'#FAF1DF', kick:'Persévérance'},
+    caas:   {ic:'route',  ac:'#2E8B82', ti:'#E6F3F1', kick:'Carrière'},
+    drivers:{ic:'bolt',   ac:'#7A4FB5', ti:'#F2ECFA', kick:'Sous pression'},
+    valeurs:{ic:'heart',  ac:'#C24A6B', ti:'#FBEAEF', kick:'Valeurs'},
+    besoins:{ic:'seed',   ac:'#4E8A3A', ti:'#ECF4E7', kick:'Besoins profonds'},
+    mbti:   {ic:'grid',   ac:'#2C6FB5', ti:'#E8F0F9', kick:'Style cognitif'},
+    pcm:    {ic:'chat',   ac:'#D2722E', ti:'#FBEFE2', kick:'Communication'},
+    hpi:    {ic:'wave',   ac:'#9B4070', ti:'#F8EAF1', kick:'Sensibilité'}
+  };
+  var GOARR='<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function catCard(id){
+    var t=TESTS[id], stt=statusOf(id), clin=isClin(t);
+    var m=META[id]||{ic:'grid'};
+    var c=document.createElement("button"); c.type="button";
+    c.className="tcard"+(m.feat?" feat":"")+(clin?" clin":"");
+    if(!clin){ c.style.setProperty('--ac',m.ac); c.style.setProperty('--tint',m.ti); }
+    c.onclick=function(){ openTest(id); };
+    var icon=clin?ICONS.scan:(ICONS[m.ic]||ICONS.grid);
+    var kick=clin?'Dépistage':(m.kick||'');
+    var chips=clin
+      ? '<span class="tchip free">'+(stt.chip==="Gratuit"?"Gratuit":stt.chip)+'</span><span class="tchip">'+t.minutes+'</span>'
+      : '<span class="tchip '+stt.cls+'">'+stt.chip+'</span><span class="tchip">'+t.order.length+' dimensions</span><span class="tchip">'+t.minutes+'</span>';
+    var goLabel=clin?'Commencer':(stt.cls==="prog"?'Continuer':(stt.cls==="done"?'Revoir':'Commencer'));
+    c.innerHTML=
+      '<div class="trow"><div class="tmain"><div class="tico">'+icon+'</div>'+
+        '<div class="tinfo">'+(kick?'<div class="tkick">'+kick+'</div>':'')+
+          '<h3>'+t.name+'</h3><p>'+t.tagline+'</p></div></div></div>'+
+      '<div class="tfoot"><div class="tchips">'+chips+'</div>'+
+        '<span class="tgo">'+goLabel+' '+GOARR+'</span></div>';
+    return c;
+  }
+
   function renderCatalog(){
     var host=document.getElementById("catalog"); host.innerHTML="";
-    CATALOG.forEach(function(id){
-      var t=TESTS[id], stt=statusOf(id);
-      var c=document.createElement("button"); c.className="tcard"; c.type="button";
-      c.onclick=function(){ openTest(id); };
-      c.innerHTML=
-        '<div class="trow"><div>'+
-          '<h3>'+t.name+'</h3>'+
-          '<p>'+t.tagline+'</p>'+
-        '</div><svg class="arrow" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
-        '<div class="tfoot">'+
-          '<span class="tchip '+stt.cls+'">'+stt.chip+'</span>'+
-          (isClin(t)?'<span class="tchip">Dépistage</span>':'<span class="tchip">'+t.order.length+' dimensions</span>')+
-          '<span class="tchip">'+t.minutes+'</span>'+
-        '</div>';
-      host.appendChild(c);
-    });
+    var perso=CATALOG.filter(function(id){return !isClin(TESTS[id]);});
+    var clin =CATALOG.filter(function(id){return isClin(TESTS[id]);});
+    function header(title,note){
+      var h=document.createElement("div"); h.className="csec";
+      h.innerHTML='<h2>'+title+'</h2><span>'+note+'</span><span class="ln"></span>';
+      host.appendChild(h);
+    }
+    if(perso.length){
+      header("Tests de personnalité", perso.length+" tests");
+      perso.forEach(function(id){ host.appendChild(catCard(id)); });
+    }
     SOON.forEach(function(o){
       var c=document.createElement("div"); c.className="tcard soon";
       c.innerHTML=
-        '<div class="trow"><div>'+
-          '<h3>'+o.name+'</h3>'+
-          '<p>'+o.tagline+'</p>'+
-        '</div></div>'+
+        '<div class="trow"><div class="tmain"><div class="tico">'+ICONS.grid+'</div>'+
+          '<div><h3>'+o.name+'</h3><p>'+o.tagline+'</p></div></div></div>'+
         '<div class="tfoot"><span class="tchip">Bientôt</span></div>';
       host.appendChild(c);
     });
+    if(clin.length){
+      header("Dépistages gratuits", "confidentiel");
+      clin.forEach(function(id){ host.appendChild(catCard(id)); });
+    }
   }
 
   function openCatalog(){
