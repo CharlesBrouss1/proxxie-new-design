@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proxxie Lab, ton portrait psychométrique</title>
+<style>
+  :root{
+    --cream:#F7F2E9;
+    --blue:#1320CE;
+    --blue-soft:#B0D0F7;
+    --yellow:#F5EB3F;
+    --orange:#FD6936;
+    --ink:#15162B;
+    --ink-soft:#54566E;
+    --line:#E4DCCB;
+    --card:#FFFFFF;
+    --ok:#1f9d6b;
+    --radius:20px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:680px;
+    margin:0 auto;
+    padding:24px 20px calc(120px + env(safe-area-inset-bottom));
+    min-height:100%;
+  }
+  .topbar{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 0 22px;
+  }
+  .mark{width:34px;height:34px;border-radius:9px;background:var(--blue);display:grid;place-items:center;flex:0 0 auto}
+  .mark svg{width:22px;height:22px}
+  .brand{font-weight:700;letter-spacing:.2px}
+  .brand small{display:block;font-weight:500;color:var(--ink-soft);font-size:12px;letter-spacing:.4px;text-transform:uppercase}
+
+  .screen{display:none;animation:rise .4s ease both}
+  .screen.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  h1{font-family:var(--serif);font-size:30px;line-height:1.18;letter-spacing:-.2px;margin-bottom:14px}
+  h2{font-family:var(--serif);font-size:23px;line-height:1.2;margin:26px 0 10px}
+  .lead{font-size:17px;color:var(--ink-soft);margin-bottom:26px}
+  p{margin-bottom:12px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .card + .card{margin-top:14px}
+
+  .pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+
+  .btn{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:16px;font-weight:650;
+    background:var(--blue);color:#fff;
+    padding:15px 22px;border-radius:14px;
+    width:100%;transition:transform .08s ease,filter .15s ease;
+  }
+  .btn:hover{filter:brightness(1.06)}
+  .btn:active{transform:scale(.99)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.pay{background:var(--orange)}
+  .btn[disabled]{opacity:.5;cursor:default}
+
+  /* progress */
+  .progress{position:sticky;top:0;background:var(--cream);padding:10px 0 16px;z-index:5}
+  .ptrack{height:6px;background:#EDE6D6;border-radius:999px;overflow:hidden}
+  .pfill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-soft));border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .pmeta{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--ink-soft)}
+
+  /* question */
+  .q{min-height:54vh;display:flex;flex-direction:column;justify-content:center}
+  .qdim{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+  .qtext{font-family:var(--serif);font-size:27px;line-height:1.25;margin-bottom:30px}
+  .scale{display:flex;flex-direction:column;gap:10px}
+  .opt{
+    display:flex;align-items:center;gap:14px;
+    background:#fff;border:1.5px solid var(--line);border-radius:14px;
+    padding:15px 18px;cursor:pointer;font-size:16px;text-align:left;
+    transition:border-color .12s ease,background .12s ease,transform .06s ease;
+  }
+  .opt:hover{border-color:var(--blue-soft)}
+  .opt:active{transform:scale(.995)}
+  .opt.sel{border-color:var(--blue);background:#F4F6FF}
+  .opt .knob{width:20px;height:20px;border-radius:50%;border:2px solid #C9C2B2;flex:0 0 auto;display:grid;place-items:center}
+  .opt.sel .knob{border-color:var(--blue)}
+  .opt.sel .knob::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue)}
+  .scalehint{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:10px}
+
+  .navrow{display:flex;gap:10px;margin-top:26px}
+  .navrow .btn{width:auto;flex:1}
+  .backlink{background:none;border:0;color:var(--ink-soft);font-size:14px;font-weight:600;cursor:pointer;padding:8px 4px}
+
+  /* empreinte (signature visual) */
+  .empreinte{margin:6px 0 4px}
+  .erow{margin:18px 0}
+  .erow .elabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .erow .elabel b{font-size:15px}
+  .erow .elabel span{font-size:13px;color:var(--ink-soft);font-weight:600}
+  .etrack{position:relative;height:12px;border-radius:999px;background:linear-gradient(90deg,#EEE7D7,#EAF0FF)}
+  .emark{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 1px 5px rgba(19,32,206,.4);transform:translate(-50%,-50%);transition:left .7s cubic-bezier(.4,0,.2,1)}
+  .escale{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-top:5px}
+
+  .blurred{filter:blur(7px);opacity:.6;pointer-events:none;user-select:none}
+  .lockwrap{position:relative}
+  .lockbadge{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
+  .lockbadge .lk{background:rgba(255,255,255,.86);backdrop-filter:blur(2px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:650;display:flex;gap:8px;align-items:center}
+
+  .paywall{background:linear-gradient(180deg,#fff,#FFFBF2);border:1.5px solid var(--orange);border-radius:var(--radius);padding:24px;margin-top:18px}
+  .price{display:flex;align-items:baseline;gap:8px;margin:4px 0 6px}
+  .price b{font-size:34px;font-family:var(--serif)}
+  .price s{color:var(--ink-soft);font-size:17px}
+  .ulist{list-style:none;margin:14px 0 20px}
+  .ulist li{display:flex;gap:10px;align-items:flex-start;margin-bottom:9px;font-size:15px}
+  .ulist li svg{flex:0 0 auto;margin-top:3px}
+  .subnote{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:12px}
+  .sublink{color:var(--blue);text-decoration:underline;cursor:pointer;font-weight:600}
+
+  /* portrait editorial */
+  .portrait p{font-size:17px;line-height:1.65}
+  .portrait .drop::first-letter{font-family:var(--serif);font-size:54px;line-height:.8;float:left;padding:6px 10px 0 0;color:var(--blue)}
+  .tag{display:inline-block;background:#F4F6FF;color:var(--blue);font-size:13px;font-weight:650;padding:4px 11px;border-radius:999px;margin:0 6px 6px 0}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(21,22,43,.5);display:none;place-items:end center;z-index:50;padding:0}
+  .modal.open{display:grid}
+  .sheet{background:#fff;width:100%;max-width:680px;border-radius:24px 24px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom));animation:up .3s ease both}
+  @keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .field{margin:14px 0}
+  .field label{display:block;font-size:13px;font-weight:650;margin-bottom:6px;color:var(--ink-soft)}
+  .field input{width:100%;font-size:16px;font-family:inherit;padding:14px;border:1.5px solid var(--line);border-radius:12px;background:#FAFAF7}
+  .field input:focus{outline:none;border-color:var(--blue)}
+  .securerow{display:flex;align-items:center;gap:7px;justify-content:center;font-size:12px;color:var(--ink-soft);margin-top:14px}
+  .fakecard{display:flex;gap:8px}
+  .fakecard .field{flex:1}
+
+  /* generating */
+  .gen{text-align:center;padding:48px 0}
+  .spinner{width:48px;height:48px;border-radius:50%;border:4px solid #E7E0D0;border-top-color:var(--blue);margin:0 auto 22px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .genstep{font-size:15px;color:var(--ink-soft);min-height:22px;transition:opacity .3s}
+
+  .disclaimer{font-size:12.5px;color:var(--ink-soft);line-height:1.55;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
+  .disclaimer b{color:var(--ink)}
+
+  .sharebar{display:flex;gap:10px;margin-top:10px}
+  .sharebar .btn{flex:1}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.3s;z-index:80;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+
+  .restart{display:block;margin:34px auto 0;background:none;border:0;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="mark">
+      <svg viewBox="0 0 320 320" aria-hidden="true">
+        <path d="M70 90 L160 230 L250 90" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M110 130 L160 200 L210 130" stroke="#B0D0F7" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="brand">Proxxie<small>Lab</small></div>
+  </div>
+
+  <!-- ÉCRAN 1 : INTRO -->
+  <section class="screen active" id="s-intro">
+    <div class="meta">
+      <span class="pill"><span class="dot"></span>Test psychométrique</span>
+      <span class="pill">5 grands traits</span>
+      <span class="pill">~8 minutes</span>
+    </div>
+    <h1>Découvre les cinq forces qui dessinent ta personnalité.</h1>
+    <p class="lead">Un portrait clair, fondé sur le modèle scientifique des cinq grands traits. Réponds spontanément, il n'y a pas de bonne réponse.</p>
+
+    <div class="card">
+      <p style="font-weight:650;margin-bottom:6px">Comment ça marche</p>
+      <p style="color:var(--ink-soft);margin:0">Les 15 premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.</p>
+    </div>
+
+    <div style="height:18px"></div>
+    <button class="btn" onclick="App.start()">Commencer, c'est gratuit</button>
+    <p class="subnote">Aucune création de compte requise pour commencer.</p>
+  </section>
+
+  <!-- ÉCRAN 2 : QUESTIONS -->
+  <section class="screen" id="s-quiz">
+    <div class="progress">
+      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+      <div class="pmeta"><span id="pcount">Question 1</span><span id="pphase">Aperçu gratuit</span></div>
+    </div>
+    <div class="q">
+      <div class="qdim" id="qdim">Ouverture</div>
+      <div class="qtext" id="qtext">...</div>
+      <div class="scalehint"><span>Pas du tout</span><span>Tout à fait</span></div>
+      <div class="scale" id="scale"></div>
+      <div class="navrow">
+        <button class="backlink" id="qback" onclick="App.back()">Retour</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 3 : RÉSULTAT GRATUIT + PAYWALL -->
+  <section class="screen" id="s-free">
+    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton aperçu gratuit</span>
+    <h1 id="free-title">Voici la première esquisse de ton profil.</h1>
+    <p class="lead" id="free-lead"></p>
+
+    <div class="card">
+      <div class="empreinte" id="free-empreinte"></div>
+    </div>
+
+    <h2>Ce que cela révèle déjà</h2>
+    <div class="card portrait">
+      <p id="free-portrait" style="margin:0"></p>
+    </div>
+
+    <div class="lockwrap">
+      <div class="card" style="margin-top:14px">
+        <h2 style="margin-top:4px">Ton portrait complet</h2>
+        <div class="blurred portrait">
+          <p>Sur le plan relationnel, tu fonctionnes selon une logique de profondeur plutôt que de largeur. Cette tendance influence la façon dont tu recharges ton énergie, dont tu prends des décisions sous pression, et dont tu abordes les conflits au travail comme dans ta vie privée. Trois leviers concrets se dégagent pour les prochaines semaines.</p>
+        </div>
+      </div>
+      <div class="lockbadge">
+        <span class="lk">🔒 Réservé au portrait complet</span>
+      </div>
+    </div>
+
+    <div class="paywall">
+      <span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Portrait complet</span>
+      <div class="price"><b>4,99 €</b><s>14,99 €</s></div>
+      <p style="color:var(--ink-soft);margin:0">Paiement unique, ton portrait t'appartient.</p>
+      <ul class="ulist">
+        <li>${CHK} Les 35 questions restantes pour un profil fiable sur les cinq traits</li>
+        <li>${CHK} Ton portrait éditorial détaillé, trait par trait</li>
+        <li>${CHK} Tes points d'appui et tes angles de vigilance</li>
+        <li>${CHK} Un résumé partageable, si tu le souhaites</li>
+        <li>${CHK} Sauvegarde de ton profil pour suivre son évolution</li>
+      </ul>
+      <button class="btn pay" onclick="App.openCheckout()">Débloquer mon portrait, 4,99 €</button>
+      <p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l'abonnement Lab à 9,99 €/mois</span>, tous les tests et le suivi dans le temps</p>
+    </div>
+
+    <p class="disclaimer">
+      <b>Proxxie Lab propose un outil psychométrique à visée de connaissance de soi.</b>
+      Il ne s'agit ni d'un diagnostic, ni d'un avis médical ou psychologique. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
+    </p>
+  </section>
+
+  <!-- ÉCRAN 4 : GÉNÉRATION -->
+  <section class="screen" id="s-gen">
+    <div class="gen">
+      <div class="spinner"></div>
+      <h2 style="font-family:var(--serif)">On compose ton portrait</h2>
+      <p class="genstep" id="genstep">Analyse de tes réponses...</p>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 5 : PORTRAIT COMPLET -->
+  <section class="screen" id="s-full">
+    <span class="pill" style="margin-bottom:14px"><span class="dot"></span>Ton portrait complet</span>
+    <h1 id="full-title">Ton portrait psychométrique.</h1>
+    <p class="lead" id="full-lead"></p>
+
+    <div class="card">
+      <p style="font-weight:650;margin-bottom:4px">Ton empreinte</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">La position de chaque trait sur son spectre.</p>
+      <div class="empreinte" id="full-empreinte"></div>
+    </div>
+
+    <div id="full-portrait"></div>
+
+    <div class="card" style="margin-top:18px">
+      <p style="font-weight:650;margin-bottom:8px">Partager ton profil</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">Tu choisis ce qui est partagé. Aucune donnée n'est diffusée sans ton accord.</p>
+      <div class="sharebar">
+        <button class="btn ghost" onclick="App.share()">Copier mon résumé</button>
+      </div>
+    </div>
+
+    <div class="card" id="account-card" style="margin-top:14px">
+      <p style="font-weight:650;margin-bottom:4px">Garder ton portrait</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin:0 0 12px">Reçois ton portrait par email et retrouve-le quand tu veux pour suivre son évolution.</p>
+      <div class="field" style="margin:0">
+        <input id="acc-email" type="email" placeholder="ton@email.com" autocomplete="email">
+      </div>
+      <div style="height:12px"></div>
+      <button class="btn" onclick="App.saveAccount()">Sauvegarder mon profil</button>
+    </div>
+
+    <p class="disclaimer">
+      <b>À propos de ces résultats.</b>
+      Ce portrait s'appuie sur le modèle des cinq grands traits, un cadre reconnu en psychologie de la personnalité. Il décrit des tendances, pas des vérités figées, et n'a pas de visée diagnostique. Les niveaux affichés se lisent sur l'échelle interne du test, non comme une comparaison à une population de référence.
+    </p>
+
+    <button class="restart" onclick="App.reset()">Recommencer le test</button>
+  </section>
+
+</div>
+
+<!-- MODAL CHECKOUT SIMULÉ -->
+<div class="modal" id="checkout">
+  <div class="sheet">
+    <p style="font-weight:700;font-size:18px" id="chk-title">Débloquer ton portrait complet</p>
+    <p style="color:var(--ink-soft);font-size:14px;margin-top:4px" id="chk-sub">Paiement unique de 4,99 €</p>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="chk-email" type="email" placeholder="ton@email.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Numéro de carte</label>
+      <input id="chk-card" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="cc-number">
+    </div>
+    <div class="fakecard">
+      <div class="field"><label>Expiration</label><input placeholder="12 / 28" autocomplete="cc-exp"></div>
+      <div class="field"><label>CVC</label><input placeholder="123" inputmode="numeric"></div>
+    </div>
+
+    <div style="height:6px"></div>
+    <button class="btn pay" id="chk-pay" onclick="App.pay()">Payer <span id="chk-amount">4,99 €</span></button>
+    <button class="btn ghost" style="margin-top:10px" onclick="App.closeCheckout()">Annuler</button>
+
+    <div class="securerow">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 11V8a6 6 0 1112 0v3" stroke="#54566E" stroke-width="2"/><rect x="4" y="11" width="16" height="10" rx="2" stroke="#54566E" stroke-width="2"/></svg>
+      Démonstration, aucun paiement réel n'est effectué.
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- check icon injection (avoids inline SVG repetition) ----
+  var CHK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#1f9d6b" opacity=".14"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1f9d6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.body.innerHTML = document.body.innerHTML.replace(/\$\{CHK\}/g, CHK);
+
+  // ---------- DONNÉES : IPIP Big Five (domaine public), 50 items ----------
+  // dim: O/C/E/A/N · key:+1 (item direct) ou -1 (item inversé)
+  var ITEMS = [
+    // --- 15 GRATUITS (3 par trait, mêlant items directs et inversés) ---
+    {id:"O1",dim:"O",key:+1,t:"J'ai une imagination débordante."},
+    {id:"C1",dim:"C",key:+1,t:"Je suis toujours bien préparé."},
+    {id:"E1",dim:"E",key:+1,t:"Je me sens à l'aise au milieu des gens."},
+    {id:"A1",dim:"A",key:+1,t:"Je m'intéresse sincèrement aux autres."},
+    {id:"N1",dim:"N",key:+1,t:"Je me stresse facilement."},
+    {id:"O2",dim:"O",key:-1,t:"Les idées abstraites ne m'intéressent pas."},
+    {id:"C2",dim:"C",key:-1,t:"Je laisse souvent traîner mes affaires."},
+    {id:"E2",dim:"E",key:-1,t:"Je préfère rester en retrait."},
+    {id:"A2",dim:"A",key:-1,t:"Les problèmes des autres me touchent peu."},
+    {id:"N2",dim:"N",key:-1,t:"Je suis détendu la plupart du temps."},
+    {id:"O3",dim:"O",key:+1,t:"J'ai souvent d'excellentes idées."},
+    {id:"C3",dim:"C",key:+1,t:"J'accomplis mes tâches sans tarder."},
+    {id:"E3",dim:"E",key:+1,t:"J'engage facilement la conversation."},
+    {id:"A3",dim:"A",key:+1,t:"Je prends du temps pour les autres."},
+    {id:"N3",dim:"N",key:+1,t:"Je me fais facilement du souci."},
+    // --- 35 PAYANTS ---
+    {id:"E4",dim:"E",key:+1,t:"Je suis souvent l'âme de la fête."},
+    {id:"E5",dim:"E",key:-1,t:"Je parle peu."},
+    {id:"E6",dim:"E",key:+1,t:"Je parle à beaucoup de monde en soirée."},
+    {id:"E7",dim:"E",key:-1,t:"Je n'aime pas attirer l'attention sur moi."},
+    {id:"E8",dim:"E",key:-1,t:"Je suis silencieux avec les inconnus."},
+    {id:"E9",dim:"E",key:+1,t:"Être au centre de l'attention ne me dérange pas."},
+    {id:"E10",dim:"E",key:-1,t:"J'ai peu de choses à dire."},
+    {id:"A4",dim:"A",key:+1,t:"Je ressens ce que ressentent les autres."},
+    {id:"A5",dim:"A",key:+1,t:"J'ai le cœur tendre."},
+    {id:"A6",dim:"A",key:+1,t:"Je mets les gens à l'aise."},
+    {id:"A7",dim:"A",key:-1,t:"Il m'arrive de blesser les autres."},
+    {id:"A8",dim:"A",key:-1,t:"Je ne m'intéresse pas vraiment aux autres."},
+    {id:"A9",dim:"A",key:+1,t:"Je perçois bien les émotions des gens."},
+    {id:"A10",dim:"A",key:-1,t:"Je me soucie peu du sort des autres."},
+    {id:"C4",dim:"C",key:+1,t:"Je fais attention aux détails."},
+    {id:"C5",dim:"C",key:+1,t:"J'aime que les choses soient en ordre."},
+    {id:"C6",dim:"C",key:+1,t:"Je suis rigoureux dans mon travail."},
+    {id:"C7",dim:"C",key:-1,t:"Je mets parfois la pagaille."},
+    {id:"C8",dim:"C",key:-1,t:"J'oublie souvent de ranger les choses à leur place."},
+    {id:"C9",dim:"C",key:-1,t:"Je me dérobe à mes responsabilités."},
+    {id:"C10",dim:"C",key:+1,t:"Je suis volontiers un planning."},
+    {id:"N4",dim:"N",key:+1,t:"Je suis facilement perturbé."},
+    {id:"N5",dim:"N",key:+1,t:"Je me contrarie facilement."},
+    {id:"N6",dim:"N",key:+1,t:"Mon humeur change souvent."},
+    {id:"N7",dim:"N",key:+1,t:"J'ai de fréquents changements d'humeur."},
+    {id:"N8",dim:"N",key:+1,t:"Je m'irrite assez vite."},
+    {id:"N9",dim:"N",key:+1,t:"Je me sens parfois cafardeux."},
+    {id:"N10",dim:"N",key:-1,t:"Je reste serein face à l'imprévu."},
+    {id:"O4",dim:"O",key:+1,t:"J'ai un vocabulaire riche."},
+    {id:"O5",dim:"O",key:+1,t:"Je comprends vite les choses."},
+    {id:"O6",dim:"O",key:+1,t:"Je passe du temps à réfléchir aux choses."},
+    {id:"O7",dim:"O",key:+1,t:"Je déborde d'idées."},
+    {id:"O8",dim:"O",key:-1,t:"J'ai du mal avec les idées abstraites."},
+    {id:"O9",dim:"O",key:-1,t:"Je n'ai pas beaucoup d'imagination."},
+    {id:"O10",dim:"O",key:+1,t:"J'aime explorer des sujets nouveaux."}
+  ];
+  var FREE_COUNT = 15;
+  var SCALE = ["Pas du tout","Plutôt non","Neutre","Plutôt oui","Tout à fait"];
+
+  var DIMS = {
+    O:{name:"Ouverture", sub:"curiosité, imagination, goût des idées"},
+    C:{name:"Rigueur", sub:"organisation, discipline, fiabilité"},
+    E:{name:"Extraversion", sub:"énergie sociale, élan vers les autres"},
+    A:{name:"Bienveillance", sub:"empathie, coopération, attention"},
+    N:{name:"Sensibilité", sub:"réactivité émotionnelle au stress"}
+  };
+  var ORDER = ["O","C","E","A","N"];
+
+  // textes éditoriaux par trait et par niveau
+  var PORTRAIT = {
+    O:{hi:"Tu es porté par la curiosité. Les idées neuves, les nuances, les possibles t'attirent plus que les routines. Cette ouverture nourrit ta créativité, à condition de la traduire en actes concrets.",
+       mid:"Tu sais conjuguer curiosité et pragmatisme. Tu t'ouvres aux idées nouvelles sans perdre le sens du réel, un équilibre précieux pour avancer.",
+       lo:"Tu privilégies le concret et l'éprouvé. Tu avances sur des bases solides plutôt que sur des spéculations, ce qui te rend fiable, parfois au prix de la nouveauté."},
+    C:{hi:"La rigueur est l'une de tes forces. Tu organises, tu anticipes, tu tiens tes engagements. On peut compter sur toi. Veille simplement à laisser de la place à l'imprévu.",
+       mid:"Tu es organisé sans être rigide. Tu tiens le cap quand il le faut et tu sais lâcher du lest, une souplesse qui t'évite l'épuisement.",
+       lo:"Tu fonctionnes par élans plutôt que par plans. Spontané et adaptable, tu gagnes en sérénité dès que tu te dotes de quelques repères pour les choses importantes."},
+    E:{hi:"Tu puises ton énergie dans le contact. Les échanges te stimulent et tu rayonnes en groupe. Pense à ménager des temps de retrait pour ne pas te disperser.",
+       mid:"Tu navigues aisément entre vie sociale et moments à toi. Sociable quand il le faut, à l'aise dans le calme, tu t'adaptes au contexte.",
+       lo:"Tu recharges tes batteries dans le calme et la profondeur. Moins porté sur l'agitation sociale, tu offres une présence posée et une vraie qualité d'écoute."},
+    A:{hi:"L'attention aux autres te guide. Empathique et coopératif, tu crées de la confiance autour de toi. Garde un œil sur tes propres besoins, ils comptent autant.",
+       mid:"Tu allies bienveillance et lucidité. Tu te soucies des autres sans t'oublier, un équilibre sain dans les relations comme au travail.",
+       lo:"Tu abordes les relations avec franchise et esprit critique. Direct, peu sensible à la pression du groupe, tu défends tes positions, ce qui fait ta force dans la négociation."},
+    N:{hi:"Tu vis les choses avec intensité. Ta sensibilité te rend fin et perceptif, mais t'expose au stress. Apprivoiser tes émotions sera ton meilleur levier de sérénité.",
+       mid:"Tu ressens sans te laisser submerger. Tes émotions t'informent sans diriger, un équilibre qui t'aide à garder la tête froide quand ça compte.",
+       lo:"Tu gardes ton calme sous pression. Stable et posé, tu rassures ton entourage dans la tempête, à condition de rester à l'écoute des signaux plus discrets."}
+  };
+
+  function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
+  function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
+
+  // ---------- ÉTAT ----------
+  var KEY="proxxie.lab.v1";
+  var state = load() || {answers:{}, idx:0, paid:false, email:""};
+
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
+  function save(){ try{localStorage.setItem(KEY, JSON.stringify(state));}catch(e){} }
+
+  // ---------- NAVIGATION ----------
+  function show(id){
+    var els=document.querySelectorAll(".screen");
+    for(var i=0;i<els.length;i++) els[i].classList.remove("active");
+    document.getElementById(id).classList.add("active");
+    window.scrollTo(0,0);
+  }
+
+  function answeredCount(limit){
+    var n=0; for(var i=0;i<limit;i++){ if(state.answers[ITEMS[i].id]!=null) n++; } return n;
+  }
+
+  // ---------- SCORING ----------
+  function scores(limit){
+    var sum={},cnt={};
+    ORDER.forEach(function(d){sum[d]=0;cnt[d]=0;});
+    for(var i=0;i<limit;i++){
+      var it=ITEMS[i], v=state.answers[it.id];
+      if(v==null) continue;
+      var s = it.key>0 ? v : (6-v); // 1..5
+      sum[it.dim]+= s; cnt[it.dim]++;
+    }
+    var out={};
+    ORDER.forEach(function(d){
+      out[d]= cnt[d]? Math.round(((sum[d]/cnt[d]) - 1) / 4 * 100) : 50;
+    });
+    return out;
+  }
+
+  // ---------- RENDU EMPREINTE ----------
+  function empreinte(el, sc, animate){
+    el.innerHTML="";
+    ORDER.forEach(function(d){
+      var v=sc[d];
+      var row=document.createElement("div"); row.className="erow";
+      row.innerHTML =
+        '<div class="elabel"><b>'+DIMS[d].name+'</b><span>'+bandLabel(v)+'</span></div>'+
+        '<div class="etrack"><span class="emark" style="left:'+(animate?50:v)+'%"></span></div>'+
+        '<div class="escale"><span>'+DIMS[d].sub.split(",")[0]+'</span><span></span></div>';
+      el.appendChild(row);
+      if(animate){
+        var mark=row.querySelector(".emark");
+        setTimeout(function(m,val){ m.style.left=val+"%"; }, 120, mark, v);
+      }
+    });
+  }
+
+  // ---------- QUIZ ----------
+  function renderQuestion(){
+    var i=state.idx, it=ITEMS[i];
+    var limit = state.paid ? ITEMS.length : FREE_COUNT;
+    document.getElementById("qdim").textContent = DIMS[it.dim].name;
+    document.getElementById("qtext").textContent = it.t;
+    document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
+    document.getElementById("pphase").textContent = state.paid ? "Test complet" : "Aperçu gratuit";
+    document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
+    document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
+
+    var scale=document.getElementById("scale"); scale.innerHTML="";
+    for(var k=1;k<=5;k++){
+      (function(val){
+        var b=document.createElement("button");
+        b.className="opt"+(state.answers[it.id]===val?" sel":"");
+        b.innerHTML='<span class="knob"></span><span>'+SCALE[val-1]+'</span>';
+        b.onclick=function(){ choose(val); };
+        scale.appendChild(b);
+      })(k);
+    }
+  }
+
+  function choose(val){
+    var it=ITEMS[state.idx];
+    state.answers[it.id]=val; save();
+    // feedback visuel court puis avance
+    var opts=document.querySelectorAll("#scale .opt");
+    opts.forEach(function(o){o.classList.remove("sel");});
+    opts[val-1].classList.add("sel");
+    setTimeout(next,180);
+  }
+
+  function next(){
+    var limit = state.paid ? ITEMS.length : FREE_COUNT;
+    if(state.idx < limit-1){
+      state.idx++; save(); renderQuestion();
+    } else {
+      // fin de phase
+      if(!state.paid){ showFree(); }
+      else { runGeneration(); }
+    }
+  }
+
+  function back(){
+    if(state.idx>0){ state.idx--; save(); renderQuestion(); }
+  }
+
+  // ---------- RÉSULTAT GRATUIT ----------
+  function showFree(){
+    var sc=scores(FREE_COUNT);
+    empreinte(document.getElementById("free-empreinte"), sc, true);
+
+    // trait dominant pour personnaliser
+    var top=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
+    document.getElementById("free-lead").textContent =
+      "Sur ces 15 premières questions, c'est ta dimension « "+DIMS[top].name+" » qui ressort le plus nettement.";
+    document.getElementById("free-portrait").textContent =
+      PORTRAIT[top][band(sc[top])];
+    show("s-free");
+  }
+
+  // ---------- CHECKOUT SIMULÉ ----------
+  var subMode=false;
+  function openCheckout(sub){
+    subMode=!!sub;
+    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton portrait complet";
+    document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
+    document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
+    document.getElementById("checkout").classList.add("open");
+  }
+  function closeCheckout(){ document.getElementById("checkout").classList.remove("open"); }
+
+  function pay(){
+    // paiement simulé : on persiste l'état payé AVANT la génération (rejouable)
+    var email=document.getElementById("chk-email").value.trim();
+    if(email) state.email=email;
+    state.paid=true;
+    state.idx=FREE_COUNT; // reprise au Q16
+    save();
+    closeCheckout();
+    toast("Paiement confirmé (démo)");
+    // on enchaîne sur la suite du test
+    show("s-quiz");
+    renderQuestion();
+  }
+
+  // ---------- GÉNÉRATION ----------
+  function runGeneration(){
+    show("s-gen");
+    var steps=["Analyse de tes réponses...","Calcul de tes cinq traits...","Composition de ton portrait...","Derniers ajustements..."];
+    var el=document.getElementById("genstep"), k=0;
+    el.textContent=steps[0];
+    var iv=setInterval(function(){
+      k++;
+      if(k<steps.length){ el.style.opacity=0; setTimeout(function(){el.textContent=steps[k];el.style.opacity=1;},200); }
+      else { clearInterval(iv); showFull(); }
+    },850);
+  }
+
+  // ---------- PORTRAIT COMPLET ----------
+  function showFull(){
+    var sc=scores(ITEMS.length);
+    empreinte(document.getElementById("full-empreinte"), sc, true);
+
+    var ordered=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];});
+    var top=ordered[0], low=ordered[ordered.length-1];
+
+    document.getElementById("full-lead").textContent =
+      "Tes deux traits les plus marquants : "+DIMS[top].name+" et "+DIMS[ordered[1]].name+". Voici ce qu'ils racontent de toi.";
+
+    var host=document.getElementById("full-portrait");
+    host.innerHTML="";
+
+    // intro narrative (drop cap)
+    var intro=document.createElement("div"); intro.className="card portrait"; intro.style.marginTop="0";
+    intro.innerHTML='<p class="drop" style="margin:0">'+PORTRAIT[top][band(sc[top])]+' '+PORTRAIT[ordered[1]][band(sc[ordered[1]])]+'</p>';
+    host.appendChild(intro);
+
+    // section trait par trait
+    ORDER.forEach(function(d){
+      var card=document.createElement("div"); card.className="card portrait";
+      card.innerHTML =
+        '<h2 style="margin-top:2px">'+DIMS[d].name+' <span class="tag" style="vertical-align:middle">'+bandLabel(sc[d])+'</span></h2>'+
+        '<p style="color:var(--ink-soft);font-size:14px;margin-top:-4px">'+DIMS[d].sub+'</p>'+
+        '<p style="margin-bottom:0">'+PORTRAIT[d][band(sc[d])]+'</p>';
+      host.appendChild(card);
+    });
+
+    // appuis / vigilance
+    var lev=document.createElement("div"); lev.className="card";
+    lev.innerHTML =
+      '<p style="font-weight:650;margin-bottom:8px">Ton point d\'appui</p>'+
+      '<p style="margin-bottom:16px">Ta dimension « '+DIMS[top].name+' » est une ressource sur laquelle t\'appuyer dans tes projets et tes relations.</p>'+
+      '<p style="font-weight:650;margin-bottom:8px">Ton angle de vigilance</p>'+
+      '<p style="margin:0">Garde un œil sur ta dimension « '+DIMS[low].name+' », c\'est là que de petits ajustements auront le plus d\'effet.</p>';
+    host.appendChild(lev);
+
+    if(state.email) document.getElementById("acc-email").value=state.email;
+    show("s-full");
+  }
+
+  // ---------- PARTAGE ----------
+  function share(){
+    var sc=scores(state.paid?ITEMS.length:FREE_COUNT);
+    var top=ORDER.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
+    var txt="Mon portrait Proxxie Lab : trait dominant, "+DIMS[top].name+". Découvre le tien sur Proxxie.";
+    if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(function(){toast("Résumé copié");}); }
+    else toast("Résumé prêt à partager");
+  }
+
+  function saveAccount(){
+    var e=document.getElementById("acc-email").value.trim();
+    if(!e || e.indexOf("@")<0){ toast("Indique un email valide"); return; }
+    state.email=e; save();
+    toast("Profil sauvegardé, à bientôt !");
+  }
+
+  // ---------- DIVERS ----------
+  function start(){
+    show("s-quiz"); renderQuestion();
+  }
+  function reset(){
+    state={answers:{}, idx:0, paid:false, email:""}; save();
+    show("s-intro");
+  }
+  function toast(m){
+    var t=document.getElementById("toast"); t.textContent=m; t.classList.add("show");
+    clearTimeout(t._h); t._h=setTimeout(function(){t.classList.remove("show");},2200);
+  }
+
+  // reprise de session
+  function resume(){
+    if(state.paid && answeredCount(ITEMS.length)===ITEMS.length){ showFull(); return; }
+    if(state.paid){ show("s-quiz"); renderQuestion(); return; }
+    if(answeredCount(FREE_COUNT)===FREE_COUNT){ showFree(); return; }
+    if(state.idx>0){ show("s-quiz"); renderQuestion(); return; }
+    show("s-intro");
+  }
+
+  // expose
+  window.App={start:start,back:back,openCheckout:openCheckout,closeCheckout:closeCheckout,
+    pay:pay,share:share,saveAccount:saveAccount,reset:reset};
+
+  resume();
+})();
+</script>
+</body>
+</html>
