@@ -1223,17 +1223,149 @@
             lo:"L'intensité émotionnelle est plus discrète chez toi. Tu vis tes émotions de façon mesurée."}
       },
       about:"Ce profil s'inspire des cinq « suractivités » (overexcitabilities) décrites par Kazimierz Dabrowski. Ce n'est pas une mesure d'intelligence ni un diagnostic de haut potentiel : c'est une façon de décrire une manière d'éprouver le monde, souvent intense. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    asrs:{
+      id:"asrs", code:"ASRS", short:"TDAH", kind:"clinical",
+      name:"Attention et TDAH",
+      tagline:"Un repérage des signes d'attention et d'agitation, version adulte.",
+      meta:["Dépistage","ASRS v1.1","~4 min"],
+      minutes:"~4 min",
+      introTitle:"Comment va ton attention au quotidien ?",
+      introLead:"Un repérage court inspiré de l'ASRS v1.1 (Organisation mondiale de la santé), pour adultes. Il ne pose pas de diagnostic : seul un professionnel le peut. Réponds en pensant aux 6 derniers mois.",
+      scale:["Jamais","Rarement","Parfois","Souvent","Très souvent"],
+      hint:["Jamais","Très souvent"],
+      order:["IN","HI"],
+      dims:{
+        IN:{name:"Inattention", sub:"concentration, oublis, organisation"},
+        HI:{name:"Hyperactivité, impulsivité", sub:"agitation, impatience, impulsions"}
+      },
+      items:[
+        {id:"AS_IN1",dim:"IN",key:+1,t:"J'ai du mal à finir les derniers détails d'un projet, une fois le plus dur fait."},
+        {id:"AS_HI1",dim:"HI",key:+1,t:"Je gigote ou je remue mains et pieds quand je dois rester assis(e) longtemps."},
+        {id:"AS_IN2",dim:"IN",key:+1,t:"J'ai du mal à mettre de l'ordre quand une tâche demande de l'organisation."},
+        {id:"AS_HI2",dim:"HI",key:+1,t:"Je me sens poussé(e) à bouger, comme « monté(e) sur ressort »."},
+        {id:"AS_IN3",dim:"IN",key:+1,t:"J'oublie des rendez-vous ou des obligations."},
+        {id:"AS_HI3",dim:"HI",key:+1,t:"Je quitte ma place dans des situations où l'on attend que je reste assis(e)."},
+        {id:"AS_IN4",dim:"IN",key:+1,t:"Je retarde ou j'évite ce qui demande beaucoup de réflexion."},
+        {id:"AS_HI4",dim:"HI",key:+1,t:"Je me sens agité(e), incapable de tenir en place."},
+        {id:"AS_IN5",dim:"IN",key:+1,t:"Je fais des erreurs d'inattention sur un travail ennuyeux ou difficile."},
+        {id:"AS_HI5",dim:"HI",key:+1,t:"J'ai du mal à me détendre et à me poser dans mes temps libres."},
+        {id:"AS_IN6",dim:"IN",key:+1,t:"J'ai du mal à rester concentré(e) sur un travail répétitif ou monotone."},
+        {id:"AS_HI6",dim:"HI",key:+1,t:"Je me surprends à trop parler en société."},
+        {id:"AS_IN7",dim:"IN",key:+1,t:"J'ai du mal à me concentrer sur ce que les gens me disent."},
+        {id:"AS_HI7",dim:"HI",key:+1,t:"Je termine les phrases des autres à leur place."},
+        {id:"AS_IN8",dim:"IN",key:+1,t:"J'égare des objets ou j'ai du mal à les retrouver."},
+        {id:"AS_HI8",dim:"HI",key:+1,t:"J'ai du mal à attendre mon tour."},
+        {id:"AS_IN9",dim:"IN",key:+1,t:"Je suis facilement distrait(e) par le bruit ou l'agitation autour de moi."},
+        {id:"AS_HI9",dim:"HI",key:+1,t:"J'interromps les autres quand ils sont occupés."}
+      ],
+      clinical:{
+        metric:"dimMean",
+        kicker:"Repérage TDAH adulte",
+        resultTitle:"Tes signes d'attention",
+        lead:"Voici, pour chaque versant, à quel point les signes reviennent chez toi sur les 6 derniers mois. C'est un repérage, pas un diagnostic.",
+        levels:[
+          {min:3.5,label:"Signes marqués",tone:"high",text:"Les signes reviennent souvent. Cela vaut la peine d'en parler à un professionnel (médecin, psychiatre, neuropsychologue) pour y voir clair."},
+          {min:2.5,label:"Signes modérés",tone:"mid",text:"Quelques signes reviennent régulièrement. Si cela te gêne au quotidien, un avis professionnel peut aider à comprendre."},
+          {min:1,label:"Peu de signes",tone:"low",text:"Peu de signes ressortent sur ce versant. Rien qui n'évoque un repérage particulier ici."}
+        ],
+        signpostTitle:"Et maintenant ?",
+        signpost:"<p>Ce repérage ne remplace pas un bilan. Si l'attention ou l'agitation te gênent vraiment, parles-en à ton médecin : il pourra t'orienter vers un professionnel du TDAH adulte (psychiatre, centre spécialisé, neuropsychologue).</p>"
+      },
+      about:"Ce repérage s'inspire de l'Adult ADHD Self-Report Scale (ASRS v1.1), développée avec l'Organisation mondiale de la santé. Il ne pose aucun diagnostic et ne remplace pas un avis médical. Les niveaux indiquent seulement la fréquence des signes que tu rapportes."
+    },
+
+    aq10:{
+      id:"aq10", code:"AQ10", short:"Autisme", kind:"clinical",
+      name:"Spectre autistique",
+      tagline:"Un repérage court et reconnu, pour adultes, sans jugement.",
+      meta:["Dépistage","AQ-10","~3 min"],
+      minutes:"~3 min",
+      introTitle:"Ta façon de percevoir et d'interagir.",
+      introLead:"Un repérage court inspiré de l'AQ-10 (Autism Spectrum Quotient), pour adultes. Il ne pose pas de diagnostic : seul un bilan spécialisé le peut. Réponds spontanément, selon ce qui te ressemble.",
+      scale:["Tout à fait d'accord","Plutôt d'accord","Plutôt pas d'accord","Pas du tout d'accord"],
+      hint:["D'accord","Pas d'accord"],
+      order:["AQ"],
+      dims:{
+        AQ:{name:"Repérage", sub:"attention, détails, interactions"}
+      },
+      items:[
+        {id:"AQ1",dim:"AQ",dir:"agree",key:+1,t:"Je remarque souvent de petits sons que les autres n'entendent pas."},
+        {id:"AQ2",dim:"AQ",dir:"disagree",key:+1,t:"Je me concentre plus sur l'ensemble que sur les petits détails."},
+        {id:"AQ3",dim:"AQ",dir:"disagree",key:+1,t:"Je trouve facile de faire plusieurs choses en même temps."},
+        {id:"AQ4",dim:"AQ",dir:"disagree",key:+1,t:"Après une interruption, je reviens très vite à ce que je faisais."},
+        {id:"AQ5",dim:"AQ",dir:"disagree",key:+1,t:"Je lis facilement entre les lignes quand quelqu'un me parle."},
+        {id:"AQ6",dim:"AQ",dir:"disagree",key:+1,t:"Je sais dire si la personne qui m'écoute commence à s'ennuyer."},
+        {id:"AQ7",dim:"AQ",dir:"agree",key:+1,t:"Dans une histoire, j'ai du mal à cerner les intentions des personnages."},
+        {id:"AQ8",dim:"AQ",dir:"agree",key:+1,t:"J'aime collecter des informations sur des catégories de choses (voitures, oiseaux, trains...)."},
+        {id:"AQ9",dim:"AQ",dir:"disagree",key:+1,t:"Je devine facilement ce que ressent quelqu'un rien qu'à son visage."},
+        {id:"AQ10",dim:"AQ",dir:"agree",key:+1,t:"J'ai du mal à comprendre les intentions des gens."}
+      ],
+      clinical:{
+        metric:"binary",
+        kicker:"Repérage spectre autistique",
+        resultTitle:"Ton repérage",
+        scoreLabel:"Score AQ-10",
+        lead:"L'AQ-10 compte les réponses qui vont dans le sens d'un repérage. À partir de 6 sur 10, un bilan spécialisé peut être utile. C'est un repérage, jamais un diagnostic.",
+        levels:[
+          {min:6,label:"Repérage positif",tone:"high",text:"Ton score atteint le seuil habituel de l'AQ-10. Cela ne dit pas que tu es autiste : cela suggère qu'un bilan spécialisé pourrait être éclairant si le sujet te parle."},
+          {min:0,label:"Repérage non significatif",tone:"low",text:"Ton score reste sous le seuil habituel. Cela n'exclut rien, mais le repérage ne ressort pas particulièrement ici."}
+        ],
+        signpostTitle:"Et maintenant ?",
+        signpost:"<p>L'AQ-10 est un simple filtre. Pour aller plus loin, un diagnostic ne peut être posé que par une équipe spécialisée (psychiatre, centre expert autisme, neuropsychologue). Si le sujet compte pour toi, parles-en à ton médecin, sans pression ni étiquette.</p>"
+      },
+      about:"Ce repérage reprend l'AQ-10 (Autism Spectrum Quotient, version courte), un outil de filtrage reconnu pour adultes. Il ne pose aucun diagnostic et ne remplace pas un bilan spécialisé. Le score compte seulement les réponses orientées « repérage »."
+    },
+
+    dys:{
+      id:"dys", code:"DYS", short:"Dyslexie", kind:"clinical",
+      name:"Dyslexie à l'âge adulte",
+      tagline:"Un repérage des signes liés à la lecture et à l'écrit.",
+      meta:["Dépistage","Repérage adulte","~3 min"],
+      minutes:"~3 min",
+      introTitle:"Ton rapport à la lecture et à l'écrit.",
+      introLead:"Un repérage des signes souvent associés à la dyslexie chez l'adulte. Il ne pose pas de diagnostic : seul un bilan orthophonique le peut. Réponds selon ce que tu vis habituellement.",
+      scale:["Jamais","Rarement","Parfois","Souvent","Très souvent"],
+      hint:["Jamais","Très souvent"],
+      order:["LE"],
+      dims:{
+        LE:{name:"Lecture et écrit", sub:"lecture, orthographe, mémoire des mots"}
+      },
+      items:[
+        {id:"DY1",dim:"LE",key:+1,t:"Je lis plus lentement que la plupart des gens."},
+        {id:"DY2",dim:"LE",key:+1,t:"Je dois relire plusieurs fois pour bien comprendre un texte."},
+        {id:"DY3",dim:"LE",key:+1,t:"Je fais des fautes d'orthographe même sur des mots courants."},
+        {id:"DY4",dim:"LE",key:+1,t:"J'inverse ou je confonds des lettres ou des chiffres."},
+        {id:"DY5",dim:"LE",key:+1,t:"J'ai du mal à retenir l'orthographe d'un mot d'une fois sur l'autre."},
+        {id:"DY6",dim:"LE",key:+1,t:"J'évite de lire à voix haute devant les autres."},
+        {id:"DY7",dim:"LE",key:+1,t:"Je confonds la gauche et la droite, ou je me repère mal sur un plan."},
+        {id:"DY8",dim:"LE",key:+1,t:"J'ai du mal à prendre des notes et à écouter en même temps."},
+        {id:"DY9",dim:"LE",key:+1,t:"Je perds le fil d'une phrase longue ou d'une consigne écrite."},
+        {id:"DY10",dim:"LE",key:+1,t:"J'ai du mal à me souvenir d'une suite (numéro, code, liste)."}
+      ],
+      clinical:{
+        metric:"totalPoints",
+        kicker:"Repérage dyslexie adulte",
+        resultTitle:"Tes signes liés à l'écrit",
+        scoreLabel:"Signes repérés",
+        lead:"Voici à quel point les signes souvent associés à la dyslexie reviennent chez toi. C'est un repérage, pas un diagnostic.",
+        levels:[
+          {min:24,label:"Signes marqués",tone:"high",text:"Beaucoup de signes reviennent souvent. Un bilan orthophonique pourrait être éclairant, surtout si cela te gêne au quotidien ou depuis l'enfance."},
+          {min:12,label:"Signes modérés",tone:"mid",text:"Plusieurs signes ressortent. Si la lecture ou l'écrit te pèsent, un avis d'orthophoniste peut aider à y voir clair."},
+          {min:0,label:"Peu de signes",tone:"low",text:"Peu de signes ressortent. Rien qui n'évoque un repérage particulier ici."}
+        ],
+        signpostTitle:"Et maintenant ?",
+        signpost:"<p>Ce repérage ne remplace pas un bilan. Le diagnostic de dyslexie se fait avec un(e) orthophoniste, parfois un(e) neuropsychologue. Si l'écrit te gêne vraiment, parles-en à ton médecin pour une orientation, à tout âge.</p>"
+      },
+      about:"Ce repérage rassemble des signes fréquemment associés à la dyslexie chez l'adulte, à partir de questionnaires d'auto-repérage reconnus. Il ne pose aucun diagnostic et ne remplace pas un bilan orthophonique. Les niveaux indiquent seulement la fréquence des signes rapportés."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","brief","phq9","gad7"];
-  var SOON = [
-    {name:"Attention et TDAH", tagline:"Un repérage court des signes d'attention, reconnu et gratuit."},
-    {name:"Spectre autistique", tagline:"Un questionnaire de repérage reconnu, gratuit et sans jugement."},
-    {name:"Dyslexie à l'âge adulte", tagline:"Un repérage des signes, à confirmer avec un professionnel."}
-  ];
+  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","brief","phq9","gad7","asrs","aq10","dys"];
+  var SOON = [];
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
@@ -1650,6 +1782,31 @@
       var c=document.createElement("div"); c.className="clband";
       c.innerHTML='<div class="crow"><h3>'+lv.label+'</h3><span class="lvl t-'+lv.tone+'">'+(cl.scoreLabel||"Niveau")+'</span></div><p>'+lv.text+'</p>';
       bands.appendChild(c);
+
+    } else if(cl.metric==="binary"){
+      // binaire : 1 point par item répondu dans le sens scoré (ex. AQ-10)
+      var half=t.scale.length/2;
+      var btot=0;
+      t.items.forEach(function(it){
+        var v=s.answers[it.id];
+        if(v!=null){ var hit=(it.dir==="agree")?(v<=half):(v>half); if(hit) btot++; }
+      });
+      var bmax=t.items.length;
+      var bpct=Math.round(btot/bmax*100);
+      var blv=pickLevel(cl.levels, btot);
+
+      empEl.innerHTML="";
+      var brow=document.createElement("div"); brow.className="erow";
+      brow.innerHTML =
+        '<div class="elabel"><b>'+(cl.scoreLabel||"Score")+'</b><span>'+btot+" / "+bmax+'</span></div>'+
+        '<div class="etrack"><span class="emark" style="left:0%"></span></div>'+
+        '<div class="escale"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+      empEl.appendChild(brow);
+      setTimeout(function(m,val){ m.style.left=val+"%"; }, 120, brow.querySelector(".emark"), bpct);
+
+      var bc=document.createElement("div"); bc.className="clband";
+      bc.innerHTML='<div class="crow"><h3>'+blv.label+'</h3><span class="lvl t-'+blv.tone+'">'+(cl.scoreLabel||"Repérage")+'</span></div><p>'+blv.text+'</p>';
+      bands.appendChild(bc);
 
     } else {
       // dimMean : un palier par sous-échelle (moyenne 1..N)
