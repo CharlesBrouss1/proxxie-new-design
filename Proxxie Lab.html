@@ -200,6 +200,24 @@
   .toast.show{opacity:1;transform:translateX(-50%)}
 
   .restart{display:block;margin:34px auto 0;background:none;border:0;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer}
+
+  /* écran clinique / dépistage */
+  .safety{background:#FFF1F0;border:1.5px solid #E5484D;border-radius:var(--radius);padding:20px 22px;margin:16px 0}
+  .safety h3{font-family:var(--serif);font-size:18px;margin:0 0 8px;color:#C0292E}
+  .safety p{font-size:14.5px;line-height:1.55;margin-bottom:10px}
+  .safety .hot{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E5484D;border-radius:12px;padding:11px 15px;font-weight:700;color:#C0292E;text-decoration:none}
+  .clband{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-top:12px}
+  .clband .crow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .clband h3{font-family:var(--serif);font-size:18px;margin:0}
+  .clband .lvl{font-size:12.5px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
+  .lvl.t-high{background:#FDECEC;color:#C0292E}
+  .lvl.t-mid{background:#FFF1E8;color:var(--orange)}
+  .lvl.t-low{background:#E7F6EF;color:var(--ok)}
+  .clband p{font-size:14.5px;color:var(--ink-soft);margin:0;line-height:1.55}
+  .signpost{background:linear-gradient(180deg,#fff,#F4F6FF);border:1.5px solid var(--blue-soft);border-radius:var(--radius);padding:22px;margin-top:18px}
+  .signpost h3{font-family:var(--serif);font-size:19px;margin:0 0 10px}
+  .signpost p{font-size:15px;line-height:1.6;margin-bottom:9px}
+  .signpost p:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -356,6 +374,30 @@
     <button class="restart" onclick="App.reset()">Recommencer ce test</button>
   </section>
 
+  <!-- ÉCRAN 6 : RÉSULTAT CLINIQUE / DÉPISTAGE (gratuit, sans portrait IA) -->
+  <section class="screen" id="s-clinical">
+    <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
+    <span class="pill" style="margin-bottom:14px"><span class="dot"></span><span id="cl-kicker">Résultat de ton repérage</span></span>
+    <h1 id="cl-title"></h1>
+    <p class="lead" id="cl-lead"></p>
+
+    <div id="cl-safety"></div>
+
+    <div class="card">
+      <p style="font-weight:650;margin-bottom:4px">Où tu te situes</p>
+      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">Un repère indicatif, lu sur l'échelle du questionnaire.</p>
+      <div class="empreinte" id="cl-empreinte"></div>
+    </div>
+
+    <div id="cl-bands"></div>
+
+    <div id="cl-signpost"></div>
+
+    <p class="disclaimer" id="cl-disclaimer"></p>
+
+    <button class="restart" onclick="App.reset()">Recommencer ce test</button>
+  </section>
+
 </div>
 
 <!-- MODAL CHECKOUT SIMULÉ -->
@@ -422,7 +464,7 @@
   var TESTS = {
 
     bigfive:{
-      id:"bigfive", code:"BIGFIVE", short:"Big Five",
+      id:"bigfive", code:"BIGFIVE", short:"Big Five", kind:"self",
       name:"Les cinq grands traits",
       tagline:"Le modèle de référence de la personnalité, en cinq dimensions.",
       meta:["Personnalité","5 grands traits","~8 min"],
@@ -515,7 +557,7 @@
     },
 
     riasec:{
-      id:"riasec", code:"RIASEC", short:"RIASEC",
+      id:"riasec", code:"RIASEC", short:"RIASEC", kind:"self",
       name:"Tes domaines d'intérêt",
       tagline:"Le modèle RIASEC de Holland, pour éclairer ce qui t'anime vraiment.",
       meta:["Orientation","6 domaines","~5 min"],
@@ -583,20 +625,225 @@
            lo:"Les environnements très procéduraux t'attirent peu. Tu préfères la souplesse, la créativité ou l'action à la rigueur des règles."}
       },
       about:"Ce profil s'appuie sur le modèle RIASEC de John Holland, largement utilisé en orientation. Il décrit des centres d'intérêt, pas des aptitudes ni une vocation figée, et n'a pas de valeur de recrutement. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    grit:{
+      id:"grit", code:"GRIT", short:"Grit", kind:"self",
+      name:"Ta ténacité",
+      tagline:"Ta capacité à fournir l'effort et à tenir dans la durée.",
+      meta:["Ténacité","2 facettes","~3 min"],
+      minutes:"~3 min",
+      introTitle:"Jusqu'où tu tiens l'effort ?",
+      introLead:"Un test court, inspiré des travaux d'Angela Duckworth, pour mesurer ta ténacité : ta capacité à fournir l'effort et à garder le cap dans la durée.",
+      freeCount:4,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait"],
+      hint:["Pas du tout moi","Tout à fait moi"],
+      order:["PE","CI"],
+      dims:{
+        PE:{name:"Persévérance de l'effort", sub:"fournir l'effort, finir ce qu'on commence"},
+        CI:{name:"Constance des intérêts", sub:"garder le même cap dans la durée"}
+      },
+      items:[
+        {id:"GR_PE1",dim:"PE",key:+1,t:"Je suis travailleur(se)."},
+        {id:"GR_CI1",dim:"CI",key:-1,t:"De nouvelles idées et de nouveaux projets me détournent parfois de ceux sur lesquels je travaille déjà."},
+        {id:"GR_PE2",dim:"PE",key:+1,t:"Je finis tout ce que je commence."},
+        {id:"GR_CI2",dim:"CI",key:-1,t:"J'ai eu du mal à rester concentré(e) sur des projets qui prenaient plus de quelques mois à finir."},
+        {id:"GR_PE3",dim:"PE",key:+1,t:"Je ne lâche jamais l'affaire, je suis assidu(e)."},
+        {id:"GR_CI3",dim:"CI",key:-1,t:"Mes centres d'intérêt changent d'une année à l'autre."},
+        {id:"GR_PE4",dim:"PE",key:+1,t:"Je suis très investi(e) dans ce que j'entreprends."},
+        {id:"GR_CI4",dim:"CI",key:-1,t:"Je me suis passionné(e) pour une idée ou un projet, puis j'ai perdu l'intérêt."}
+      ],
+      portrait:{
+        PE:{hi:"Quand tu commences quelque chose, tu vas au bout. L'effort ne te fait pas peur, tu t'accroches même quand c'est long ou ingrat. C'est un moteur rare, veille juste à le diriger vers ce qui compte vraiment pour toi.",
+            mid:"Tu sais fournir l'effort quand le sujet t'importe, sans pour autant tout finir coûte que coûte. Une persévérance souple, qui te protège de l'acharnement inutile.",
+            lo:"Tu donnes le meilleur sur des élans courts plutôt que sur de longs marathons. Te fixer des étapes intermédiaires et célébrer les petites victoires t'aidera à tenir la distance quand un projet compte."},
+        CI:{hi:"Tes centres d'intérêt sont stables. Tu gardes le même cap d'une année sur l'autre, ce qui te permet de capitaliser et d'approfondir là où d'autres se dispersent.",
+            mid:"Tu sais rester fidèle à un cap sans t'interdire d'explorer. Un équilibre entre constance et curiosité qui nourrit ta progression.",
+            lo:"Tes intérêts évoluent vite et de nouvelles idées te détournent volontiers de tes projets en cours. C'est une richesse créative, à condition de choisir un fil conducteur pour ne pas tout recommencer sans cesse."}
+      },
+      about:"Ce test s'inspire de l'échelle de « grit » d'Angela Duckworth, qui décrit la ténacité comme combinaison de persévérance et de constance. Il décrit une tendance, pas une fatalité : la ténacité se cultive. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    caas:{
+      id:"caas", code:"CAAS", short:"CAAS", kind:"self",
+      name:"Ton adaptabilité de carrière",
+      tagline:"Tes ressources pour rebondir et t'adapter dans ton parcours.",
+      meta:["Carrière","4 ressources","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Es-tu prêt(e) pour les virages de ta vie ?",
+      introLead:"Quatre ressources qui aident à rebondir et à s'adapter dans son parcours, d'après le modèle CAAS de Mark Savickas. Réponds selon ce que tu sens développé en toi.",
+      freeCount:12,
+      scale:["Pas du tout fort","Un peu fort","Moyennement fort","Très fort","Extrêmement fort"],
+      hint:["Peu développé","Très développé"],
+      order:["CN","CT","CU","CF"],
+      dims:{
+        CN:{name:"Préoccupation", sub:"penser et préparer son avenir"},
+        CT:{name:"Maîtrise", sub:"se sentir responsable de ses choix"},
+        CU:{name:"Curiosité", sub:"explorer les possibles et soi-même"},
+        CF:{name:"Confiance", sub:"se sentir capable de réussir"}
+      },
+      items:[
+        {id:"CA_CN1",dim:"CN",key:+1,t:"Penser à ce à quoi ressemblera mon futur."},
+        {id:"CA_CT1",dim:"CT",key:+1,t:"Être responsable de mes propres choix."},
+        {id:"CA_CU1",dim:"CU",key:+1,t:"Explorer ce qui m'entoure."},
+        {id:"CA_CF1",dim:"CF",key:+1,t:"Accomplir des tâches efficacement."},
+        {id:"CA_CN2",dim:"CN",key:+1,t:"Réaliser que les choix d'aujourd'hui construisent mon avenir."},
+        {id:"CA_CT2",dim:"CT",key:+1,t:"Compter sur moi-même."},
+        {id:"CA_CU2",dim:"CU",key:+1,t:"Chercher des occasions de progresser."},
+        {id:"CA_CF2",dim:"CF",key:+1,t:"Prendre soin de bien faire les choses."},
+        {id:"CA_CN3",dim:"CN",key:+1,t:"Me préparer pour le futur."},
+        {id:"CA_CT3",dim:"CT",key:+1,t:"Décider par moi-même."},
+        {id:"CA_CU3",dim:"CU",key:+1,t:"Explorer différentes façons de faire les choses."},
+        {id:"CA_CF3",dim:"CF",key:+1,t:"Apprendre de nouvelles compétences."},
+        {id:"CA_CN4",dim:"CN",key:+1,t:"Prendre conscience des choix d'études et de métier à faire."},
+        {id:"CA_CT4",dim:"CT",key:+1,t:"Tenir mes engagements."},
+        {id:"CA_CU4",dim:"CU",key:+1,t:"Approfondir les questions qui me semblent importantes."},
+        {id:"CA_CF4",dim:"CF",key:+1,t:"Travailler à la hauteur de mes capacités."},
+        {id:"CA_CN5",dim:"CN",key:+1,t:"Planifier comment atteindre mes objectifs."},
+        {id:"CA_CT5",dim:"CT",key:+1,t:"Faire ce qui est juste pour moi."},
+        {id:"CA_CU5",dim:"CU",key:+1,t:"Rester curieux(se) des nouvelles occasions."},
+        {id:"CA_CF5",dim:"CF",key:+1,t:"Surmonter les obstacles."},
+        {id:"CA_CN6",dim:"CN",key:+1,t:"Me soucier de ma future carrière."},
+        {id:"CA_CT6",dim:"CT",key:+1,t:"Faire les choses par moi-même."},
+        {id:"CA_CU6",dim:"CU",key:+1,t:"Étudier les différents rôles que je pourrais jouer."},
+        {id:"CA_CF6",dim:"CF",key:+1,t:"Résoudre des problèmes."}
+      ],
+      portrait:{
+        CN:{hi:"Tu te projettes naturellement dans l'avenir. Tu penses à demain, tu anticipes, tu prépares tes choix. Cette préoccupation te donne une longueur d'avance pour construire ton chemin.",
+            mid:"Tu penses à ton avenir sans en faire une obsession. Tu prépares l'essentiel tout en restant ancré dans le présent.",
+            lo:"L'avenir t'occupe peu pour l'instant, tu vis surtout dans le présent. Te donner de temps en temps un horizon, même flou, t'aidera à orienter tes choix d'aujourd'hui."},
+        CT:{hi:"Tu te sens aux commandes de ta vie. Tu assumes tes choix, tu comptes sur toi, tu décides par toi-même. Cette maîtrise est un socle solide pour avancer.",
+            mid:"Tu prends tes décisions tout en t'appuyant sur les autres quand il le faut. Un sens des responsabilités équilibré.",
+            lo:"Tu laisses parfois les circonstances ou les autres décider pour toi. Reprendre, pas à pas, de petites décisions en main renforcera ton sentiment de maîtrise."},
+        CU:{hi:"La curiosité te pousse à explorer. Tu testes, tu compares, tu cherches de nouvelles façons de faire et de nouveaux rôles. Cette exploration ouvre tes possibles.",
+            mid:"Tu explores selon les occasions, sans en faire une quête permanente. Une curiosité mesurée qui t'ouvre des portes au bon moment.",
+            lo:"Tu explores peu pour l'instant, tu préfères le connu. T'autoriser à essayer des choses nouvelles, même petites, élargira ton champ des possibles."},
+        CF:{hi:"Tu te sens capable de relever les défis. Apprendre, surmonter les obstacles, résoudre les problèmes : tu t'en sens à la hauteur. Cette confiance est un puissant moteur d'action.",
+            mid:"Tu te sens capable sur la plupart des terrains, avec des doutes ponctuels bien normaux. Une confiance solide et réaliste.",
+            lo:"Le doute sur tes capacités te freine parfois. Accumuler de petites réussites concrètes nourrira, brique après brique, ta confiance en toi."}
+      },
+      about:"Ce profil s'appuie sur la Career Adapt-Abilities Scale (CAAS) de Mark Savickas, qui évalue quatre ressources d'adaptabilité de carrière. Il décrit des ressources mobilisables, pas un destin. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    brief:{
+      id:"brief", code:"BRIEF", short:"Exécutif", kind:"clinical",
+      name:"Tes fonctions exécutives",
+      tagline:"Organisation, temps, émotions, concentration : où tu en es.",
+      meta:["Attention","Repérage","~4 min"],
+      minutes:"~4 min",
+      introTitle:"Comment fonctionnent ton organisation et ta concentration ?",
+      introLead:"Un repérage de tes fonctions exécutives : organisation, gestion du temps, régulation des émotions, concentration. Gratuit, sans inscription, et sans diagnostic.",
+      scale:["Jamais","Rarement","Parfois","Souvent","Toujours"],
+      hint:["Jamais","Toujours"],
+      order:["ORG","TIME","EMO","WM"],
+      dims:{
+        ORG:{name:"Organisation", sub:"planifier, hiérarchiser, garder l'ordre"},
+        TIME:{name:"Gestion du temps", sub:"estimer, anticiper, ne pas remettre à plus tard"},
+        EMO:{name:"Régulation émotionnelle", sub:"gérer la frustration et l'humeur"},
+        WM:{name:"Mémoire de travail", sub:"retenir, rester concentré"}
+      },
+      items:[
+        {id:"BR_ORG1",dim:"ORG",key:+1,t:"J'ai du mal à hiérarchiser mes tâches quand j'ai plusieurs choses à faire."},
+        {id:"BR_TIME1",dim:"TIME",key:+1,t:"Je sous-estime le temps qu'une tâche va me prendre."},
+        {id:"BR_EMO1",dim:"EMO",key:+1,t:"Quand je suis énervé(e), j'ai du mal à me calmer rapidement."},
+        {id:"BR_WM1",dim:"WM",key:+1,t:"J'oublie ce que je devais faire dans la minute qui suit."},
+        {id:"BR_ORG2",dim:"ORG",key:+1,t:"Mon bureau, ma chambre ou mon sac sont souvent en désordre."},
+        {id:"BR_TIME2",dim:"TIME",key:+1,t:"Je suis souvent en retard à mes rendez-vous."},
+        {id:"BR_EMO2",dim:"EMO",key:+1,t:"Je réagis plus fort que les autres aux petites frustrations."},
+        {id:"BR_WM2",dim:"WM",key:+1,t:"Je perds le fil quand on me donne plusieurs consignes à la suite."},
+        {id:"BR_ORG3",dim:"ORG",key:+1,t:"Je commence beaucoup de projets que je ne finis pas."},
+        {id:"BR_TIME3",dim:"TIME",key:+1,t:"Je remets à plus tard les choses importantes mais non urgentes."},
+        {id:"BR_EMO3",dim:"EMO",key:+1,t:"Mon humeur change brutalement plusieurs fois dans la même journée."},
+        {id:"BR_WM3",dim:"WM",key:+1,t:"J'ai du mal à rester concentré(e) plus de vingt minutes sur une tâche peu stimulante."},
+        {id:"BR_ORG4",dim:"ORG",key:+1,t:"Quand un problème surgit, j'ai du mal à trouver plusieurs solutions."},
+        {id:"BR_TIME4",dim:"TIME",key:+1,t:"Je m'y prends à la dernière minute pour les choses à rendre."},
+        {id:"BR_EMO4",dim:"EMO",key:+1,t:"Je dis des choses que je regrette quand je suis énervé(e)."},
+        {id:"BR_WM4",dim:"WM",key:+1,t:"Je relis le même paragraphe plusieurs fois sans le retenir."},
+        {id:"BR_ORG5",dim:"ORG",key:+1,t:"Je perds des objets importants (clés, téléphone, papiers)."},
+        {id:"BR_TIME5",dim:"TIME",key:+1,t:"Je gère mal mon temps pendant un examen ou un test."},
+        {id:"BR_EMO5",dim:"EMO",key:+1,t:"Je suis souvent ramené(e) vers des émotions négatives sans raison claire."},
+        {id:"BR_WM5",dim:"WM",key:+1,t:"Je suis facilement distrait(e) par mon téléphone ou les bruits autour."}
+      ],
+      clinical:{
+        metric:"dimMean",
+        kicker:"Résultat de ton repérage",
+        resultTitle:"Tes fonctions exécutives, en repérage.",
+        lead:"Voici comment tu te situes sur quatre grandes fonctions exécutives, d'après tes réponses. C'est un repérage, pas un diagnostic.",
+        levels:[
+          {min:3.8,label:"Très difficile",tone:"high",text:"Ce domaine te demande beaucoup d'énergie au quotidien. Un accompagnement pourrait vraiment te soulager."},
+          {min:3.0,label:"Souvent difficile",tone:"mid",text:"Tu rencontres des frictions régulières ici. Quelques stratégies ciblées, voire un appui extérieur, peuvent aider."},
+          {min:2.2,label:"À surveiller",tone:"mid",text:"Ce domaine est globalement gérable, avec des moments plus délicats. De petits ajustements suffisent souvent."},
+          {min:0,label:"Plutôt fluide",tone:"low",text:"Tu sembles à l'aise sur ce terrain. C'est une ressource sur laquelle t'appuyer."}
+        ],
+        signpostTitle:"Que faire de ce résultat ?",
+        signpost:"<p>Des difficultés marquées et durables sur plusieurs de ces domaines (organisation, temps, émotions, concentration) peuvent avoir bien des origines, dont parfois un trouble de l'attention. Seul un professionnel peut le déterminer.</p><p>Si tu te reconnais fortement, un médecin, un(e) psychologue ou un(e) neuropsychologue peut t'aider à faire le point. Ce résultat peut servir de base à la discussion.</p>"
+      },
+      about:"Ce questionnaire explore des difficultés fréquentes des fonctions exécutives, inspiré des échelles de type BDEFS. C'est un outil de repérage à visée de connaissance de soi, pas un diagnostic. Un professionnel de santé reste seul habilité à poser un diagnostic."
+    },
+
+    phq9:{
+      id:"phq9", code:"PHQ9", short:"PHQ-9", kind:"clinical",
+      name:"Ton moral en ce moment",
+      tagline:"Un repérage de l'humeur reconnu, gratuit et confidentiel.",
+      meta:["Humeur","Repérage","~2 min"],
+      minutes:"~2 min",
+      introTitle:"Comment va ton moral, vraiment ?",
+      introLead:"Un court questionnaire de repérage de l'humeur (le PHQ-9), reconnu et utilisé par les professionnels. Gratuit, sans inscription, et sans diagnostic.",
+      scale:["Jamais","Plusieurs jours","Plus de la moitié des jours","Presque tous les jours"],
+      hint:["Jamais","Presque tous les jours"],
+      order:["P"],
+      dims:{
+        P:{name:"Ces 2 dernières semaines", sub:"fréquence des symptômes"}
+      },
+      items:[
+        {id:"P1",dim:"P",key:+1,t:"Peu d'intérêt ou de plaisir à faire les choses."},
+        {id:"P2",dim:"P",key:+1,t:"Me sentir triste, déprimé(e) ou désespéré(e)."},
+        {id:"P3",dim:"P",key:+1,t:"Des difficultés à m'endormir, un sommeil interrompu, ou dormir trop."},
+        {id:"P4",dim:"P",key:+1,t:"Me sentir fatigué(e) ou manquer d'énergie."},
+        {id:"P5",dim:"P",key:+1,t:"Avoir peu d'appétit ou manger trop."},
+        {id:"P6",dim:"P",key:+1,t:"Avoir une mauvaise opinion de moi, sentir que je suis nul(le), ou que j'ai déçu mes proches."},
+        {id:"P7",dim:"P",key:+1,t:"Avoir du mal à me concentrer (lire, regarder un film, étudier)."},
+        {id:"P8",dim:"P",key:+1,t:"Bouger ou parler si lentement que les autres ont pu le remarquer. Ou au contraire, être si agité(e) que je bouge bien plus que d'habitude."},
+        {id:"P9",dim:"P",key:+1,t:"Penser qu'il vaudrait mieux être mort(e), ou penser à me faire du mal d'une façon ou d'une autre."}
+      ],
+      clinical:{
+        metric:"totalPoints",
+        kicker:"Résultat de ton repérage",
+        resultTitle:"Ton repère sur l'humeur.",
+        scoreLabel:"Score PHQ-9",
+        lead:"Voici un repère indicatif, fondé sur tes réponses des deux dernières semaines. Ce n'est pas un diagnostic.",
+        levels:[
+          {min:20,label:"Symptômes sévères",tone:"high",text:"Tes réponses évoquent une souffrance importante. Il est vivement conseillé d'en parler rapidement à un médecin ou à un psychologue."},
+          {min:15,label:"Symptômes modérément sévères",tone:"high",text:"Tes réponses évoquent des symptômes marqués. Un échange avec un professionnel de santé t'aiderait à y voir clair et à être soutenu(e)."},
+          {min:10,label:"Symptômes modérés",tone:"mid",text:"Tes réponses évoquent des symptômes notables. En parler à un professionnel peut être utile, surtout si cela dure ou s'aggrave."},
+          {min:5,label:"Symptômes légers",tone:"mid",text:"Tes réponses évoquent quelques symptômes légers. Reste attentif(ve) à leur évolution, et n'hésite pas à en parler si cela s'installe."},
+          {min:0,label:"Peu ou pas de symptômes",tone:"low",text:"Tes réponses n'évoquent que peu ou pas de symptômes dépressifs en ce moment. C'est une bonne nouvelle."}
+        ],
+        safety:{itemId:"P9",min:1,title:"Tu as évoqué des pensées sombres",text:"Tu as indiqué avoir eu des pensées sombres ces derniers jours. Tu n'es pas seul(e), et de l'aide existe, tout de suite. Si tu te sens en danger, contacte le 3114, le numéro national de prévention du suicide, gratuit et disponible 24h/24. En cas d'urgence vitale, appelle le 15."},
+        signpostTitle:"Et maintenant ?",
+        signpost:"<p>Ce résultat est un point de repère, pas un verdict. Si tes symptômes durent depuis plus de deux semaines, gênent ton quotidien, ou si tu as un doute, parles-en à ton médecin traitant : c'est souvent la première porte, simple et sans jugement.</p><p>Un psychologue ou un psychiatre peut aussi t'accompagner. Tu peux y aller avec ce résultat en main, cela facilite le dialogue.</p>"
+      },
+      about:"Ce questionnaire est le PHQ-9, un outil de repérage de l'humeur reconnu, et non un diagnostic. Seul un professionnel de santé peut poser un diagnostic. Si tu te sens en danger, contacte le 3114 (gratuit, 24h/24) ou le 15 en cas d'urgence."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec"];
+  var CATALOG = ["bigfive","riasec","grit","caas","brief","phq9"];
   var SOON = [
-    {name:"Grit, ta ténacité", tagline:"Ta capacité à tenir l'effort dans la durée."},
     {name:"Tes valeurs", tagline:"Ce qui compte vraiment pour toi, et guide tes choix."},
+    {name:"Anxiété, ton niveau", tagline:"Un repérage court de l'anxiété (GAD-7)."},
     {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."}
   ];
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
+  function isClin(t){ return t && t.kind==="clinical"; }
+  // sélectionne le palier dont le seuil min est atteint (liste triée par min décroissant)
+  function pickLevel(levels, v){
+    for(var i=0;i<levels.length;i++){ if(v>=levels[i].min) return levels[i]; }
+    return levels[levels.length-1];
+  }
 
   // ---------- GÉNÉRATION LLM (endpoint Proxxie, clé côté serveur) ----------
   var AI_URL="https://proxxie-ai-edge.vercel.app/api/test-analysis";
@@ -696,13 +943,13 @@
   }
 
   // ---------- RENDU EMPREINTE ----------
-  function empreinte(el, t, sc, animate){
+  function empreinte(el, t, sc, animate, labelFn){
     el.innerHTML="";
     t.order.forEach(function(d){
       var v=sc[d];
       var row=document.createElement("div"); row.className="erow";
       row.innerHTML =
-        '<div class="elabel"><b>'+t.dims[d].name+'</b><span>'+bandLabel(v)+'</span></div>'+
+        '<div class="elabel"><b>'+t.dims[d].name+'</b><span>'+(labelFn?labelFn(d,v):bandLabel(v))+'</span></div>'+
         '<div class="etrack"><span class="emark" style="left:'+(animate?50:v)+'%"></span></div>'+
         '<div class="escale"><span>'+t.dims[d].sub.split(",")[0]+'</span><span></span></div>';
       el.appendChild(row);
@@ -716,6 +963,12 @@
   // ---------- CATALOGUE ----------
   function statusOf(id){
     var t=TESTS[id], s=state.tests[id];
+    if(isClin(t)){
+      var cdone = s && answeredCount(t, s, t.items.length)===t.items.length;
+      if(cdone) return {chip:"Terminé", cls:"done"};
+      if(s && s.idx>0) return {chip:"En cours", cls:"prog"};
+      return {chip:"Gratuit", cls:"new"};
+    }
     if(!s) return {chip:"Nouveau", cls:"new"};
     var freeDone = answeredCount(t, s, t.freeCount)===t.freeCount;
     var allDone  = answeredCount(t, s, t.items.length)===t.items.length;
@@ -739,7 +992,7 @@
         '</div><svg class="arrow" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
         '<div class="tfoot">'+
           '<span class="tchip '+stt.cls+'">'+stt.chip+'</span>'+
-          '<span class="tchip">'+t.order.length+' dimensions</span>'+
+          (isClin(t)?'<span class="tchip">Dépistage</span>':'<span class="tchip">'+t.order.length+' dimensions</span>')+
           '<span class="tchip">'+t.minutes+'</span>'+
         '</div>';
       host.appendChild(c);
@@ -766,14 +1019,21 @@
   function openTest(id){
     curId=id; state.current=id; save();
     var t=T(), s=st();
-    // si déjà en cours / terminé, on reprend au bon endroit
-    if(s.paid && answeredCount(t,s,t.items.length)===t.items.length){
-      if(s.narrative!==undefined){ showFull(); } else { runGeneration(); }
-      return;
+
+    // tests cliniques : pas de paywall, on reprend au bon endroit
+    if(isClin(t)){
+      if(answeredCount(t,s,t.items.length)===t.items.length){ showClinical(); return; }
+      if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
+    } else {
+      // si déjà en cours / terminé, on reprend au bon endroit
+      if(s.paid && answeredCount(t,s,t.items.length)===t.items.length){
+        if(s.narrative!==undefined){ showFull(); } else { runGeneration(); }
+        return;
+      }
+      if(s.paid){ show("s-quiz"); renderQuestion(); return; }
+      if(answeredCount(t,s,t.freeCount)===t.freeCount){ showFree(); return; }
+      if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
     }
-    if(s.paid){ show("s-quiz"); renderQuestion(); return; }
-    if(answeredCount(t,s,t.freeCount)===t.freeCount){ showFree(); return; }
-    if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
 
     // sinon, écran d'intro
     var metaHtml = t.meta.map(function(m,i){
@@ -782,26 +1042,27 @@
     document.getElementById("intro-meta").innerHTML=metaHtml;
     document.getElementById("intro-title").textContent=t.introTitle;
     document.getElementById("intro-lead").textContent=t.introLead;
-    document.getElementById("intro-how").textContent=
-      "Les "+t.freeCount+" premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.";
+    document.getElementById("intro-how").textContent= isClin(t)
+      ? "Ce test est un outil de repérage, gratuit et sans inscription. Il ne pose aucun diagnostic. À la fin, tu obtiens un résultat indicatif et des pistes pour en parler à un professionnel si besoin."
+      : "Les "+t.freeCount+" premières questions sont gratuites et débouchent sur un premier aperçu de ton profil. Tu décides ensuite si tu veux le portrait complet.";
     show("s-intro");
   }
 
   // ---------- QUIZ ----------
   function renderQuestion(){
     var t=T(), s=st(), i=s.idx, it=t.items[i];
-    var limit = s.paid ? t.items.length : t.freeCount;
+    var limit = isClin(t) ? t.items.length : (s.paid ? t.items.length : t.freeCount);
     document.getElementById("qdim").textContent = t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
     document.getElementById("qhint-lo").textContent = t.hint[0];
     document.getElementById("qhint-hi").textContent = t.hint[1];
     document.getElementById("pcount").textContent = "Question "+(i+1)+" sur "+limit;
-    document.getElementById("pphase").textContent = s.paid ? "Test complet" : "Aperçu gratuit";
+    document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.paid ? "Test complet" : "Aperçu gratuit");
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
     var scale=document.getElementById("scale"); scale.innerHTML="";
-    for(var k=1;k<=5;k++){
+    for(var k=1;k<=t.scale.length;k++){
       (function(val){
         var b=document.createElement("button");
         b.className="opt"+(s.answers[it.id]===val?" sel":"");
@@ -823,11 +1084,12 @@
 
   function next(){
     var t=T(), s=st();
-    var limit = s.paid ? t.items.length : t.freeCount;
+    var limit = isClin(t) ? t.items.length : (s.paid ? t.items.length : t.freeCount);
     if(s.idx < limit-1){
       s.idx++; save(); renderQuestion();
     } else {
-      if(!s.paid){ showFree(); }
+      if(isClin(t)){ showClinical(); }
+      else if(!s.paid){ showFree(); }
       else { runGeneration(); }
     }
   }
@@ -946,6 +1208,75 @@
 
     if(state.email) document.getElementById("acc-email").value=state.email;
     show("s-full");
+  }
+
+  // ---------- RÉSULTAT CLINIQUE / DÉPISTAGE ----------
+  function showClinical(){
+    var t=T(), s=st(), cl=t.clinical;
+    var maxItem = t.scale.length-1; // points 0-based max par item
+
+    // bloc sécurité (ex. idéation suicidaire PHQ-9 item 9)
+    var safe=document.getElementById("cl-safety"); safe.innerHTML="";
+    if(cl.safety){
+      var rv=s.answers[cl.safety.itemId];
+      if(rv!=null && (rv-1)>=cl.safety.min){
+        safe.innerHTML='<div class="safety"><h3>'+cl.safety.title+'</h3><p>'+cl.safety.text+'</p>'+
+          '<a class="hot" href="tel:3114">📞 3114 · prévention du suicide, 24h/24</a></div>';
+      }
+    }
+
+    document.getElementById("cl-kicker").textContent = cl.kicker || "Résultat de ton repérage";
+    document.getElementById("cl-title").textContent = cl.resultTitle || ("Ton résultat, "+t.name.toLowerCase()+".");
+    document.getElementById("cl-lead").textContent = cl.lead || "";
+
+    var empEl=document.getElementById("cl-empreinte");
+    var bands=document.getElementById("cl-bands"); bands.innerHTML="";
+
+    if(cl.metric==="totalPoints"){
+      var total=0;
+      t.items.forEach(function(it){ var v=s.answers[it.id]; if(v!=null) total+=(v-1); });
+      var max=t.items.length*maxItem;
+      var pct=Math.round(total/max*100);
+      var lv=pickLevel(cl.levels, total);
+
+      empEl.innerHTML="";
+      var row=document.createElement("div"); row.className="erow";
+      row.innerHTML =
+        '<div class="elabel"><b>'+(cl.scoreLabel||"Score")+'</b><span>'+total+" / "+max+'</span></div>'+
+        '<div class="etrack"><span class="emark" style="left:0%"></span></div>'+
+        '<div class="escale"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+      empEl.appendChild(row);
+      setTimeout(function(m,val){ m.style.left=val+"%"; }, 120, row.querySelector(".emark"), pct);
+
+      var c=document.createElement("div"); c.className="clband";
+      c.innerHTML='<div class="crow"><h3>'+lv.label+'</h3><span class="lvl t-'+lv.tone+'">'+(cl.scoreLabel||"Niveau")+'</span></div><p>'+lv.text+'</p>';
+      bands.appendChild(c);
+
+    } else {
+      // dimMean : un palier par sous-échelle (moyenne 1..N)
+      var pctMap={}, lvMap={};
+      t.order.forEach(function(d){
+        var sum=0,cnt=0;
+        t.items.forEach(function(it){ if(it.dim===d){ var v=s.answers[it.id]; if(v!=null){ sum+=v; cnt++; } } });
+        var mean = cnt? sum/cnt : 1;             // 1..N
+        pctMap[d]= Math.round((mean-1)/maxItem*100);
+        lvMap[d]= pickLevel(cl.levels, mean);
+      });
+      empreinte(empEl, t, pctMap, true, function(d){ return lvMap[d].label; });
+      t.order.forEach(function(d){
+        var lv=lvMap[d];
+        var c=document.createElement("div"); c.className="clband";
+        c.innerHTML='<div class="crow"><h3>'+t.dims[d].name+'</h3><span class="lvl t-'+lv.tone+'">'+lv.label+'</span></div><p>'+(lv.text||t.dims[d].sub)+'</p>';
+        bands.appendChild(c);
+      });
+    }
+
+    var sp=document.getElementById("cl-signpost");
+    sp.className="signpost";
+    sp.innerHTML='<h3>'+(cl.signpostTitle||"Que faire de ce résultat ?")+'</h3>'+cl.signpost;
+
+    document.getElementById("cl-disclaimer").innerHTML = "<b>À propos de ce repérage.</b> "+t.about;
+    show("s-clinical");
   }
 
   // ---------- PARTAGE ----------
