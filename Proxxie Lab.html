@@ -1921,7 +1921,7 @@
   // renvoie le markdown complet, ou null en cas d'échec/timeout
   function generatePortrait(T, sc, onChunk){
     var ctrl = ("AbortController" in window) ? new AbortController() : null;
-    var to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 25000);
+    var to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 45000);
     return fetch(AI_URL,{
       method:"POST", headers:{"Content-Type":"application/json"},
       body:JSON.stringify({testCode:T.code, testName:"Proxxie Lab, "+T.name, summary:summaryFor(T, sc)}),
