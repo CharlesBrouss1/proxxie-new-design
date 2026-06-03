@@ -865,16 +865,187 @@
         signpost:"<p>Ce résultat est un point de repère, pas un verdict. Si tes inquiétudes durent depuis plus de deux semaines, sont difficiles à contrôler, ou gênent ton quotidien, parles-en à ton médecin traitant : c'est souvent la première porte, simple et sans jugement.</p><p>Un psychologue peut aussi t'accompagner, notamment avec des approches efficaces contre l'anxiété. Tu peux y aller avec ce résultat en main.</p>"
       },
       about:"Ce questionnaire est le GAD-7, un outil de repérage de l'anxiété reconnu, et non un diagnostic. Seul un professionnel de santé peut poser un diagnostic. Si tu te sens en détresse, tu peux contacter le 3114 (gratuit, 24h/24)."
+    },
+
+    valeurs:{
+      id:"valeurs", code:"VALEURS", short:"Valeurs", kind:"self",
+      name:"Tes valeurs",
+      tagline:"Ce qui compte vraiment pour toi, et guide tes choix.",
+      meta:["Valeurs","4 grands pôles","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Qu'est-ce qui compte vraiment, pour toi ?",
+      introLead:"Quatre grandes familles de valeurs, inspirées des travaux de Shalom Schwartz. Il n'y a pas de bonne réponse, seulement ce qui te ressemble.",
+      freeCount:8,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas mes valeurs","Tout à fait mes valeurs"],
+      order:["OC","AS","CO","DS"],
+      dims:{
+        OC:{name:"Ouverture au changement", sub:"autonomie, nouveauté, stimulation"},
+        AS:{name:"Affirmation de soi", sub:"réussite, influence, ambition"},
+        CO:{name:"Continuité", sub:"sécurité, stabilité, traditions"},
+        DS:{name:"Dépassement de soi", sub:"bienveillance, justice, autrui"}
+      },
+      items:[
+        {id:"VA_OC1",dim:"OC",key:+1,t:"Avoir la liberté de choisir moi-même ce que je fais."},
+        {id:"VA_AS1",dim:"AS",key:+1,t:"Réussir et qu'on reconnaisse mes accomplissements."},
+        {id:"VA_CO1",dim:"CO",key:+1,t:"Vivre dans un environnement sûr et stable."},
+        {id:"VA_DS1",dim:"DS",key:+1,t:"Aider les gens autour de moi et veiller à leur bien-être."},
+        {id:"VA_OC2",dim:"OC",key:+1,t:"Découvrir des choses nouvelles et vivre des aventures."},
+        {id:"VA_AS2",dim:"AS",key:+1,t:"Avoir de l'influence sur les autres et sur les événements."},
+        {id:"VA_CO2",dim:"CO",key:+1,t:"Préserver les traditions et les repères qui comptent."},
+        {id:"VA_DS2",dim:"DS",key:+1,t:"Défendre la justice et l'égalité pour tous."},
+        {id:"VA_OC3",dim:"OC",key:+1,t:"Sortir de la routine et tenter des expériences inédites."},
+        {id:"VA_AS3",dim:"AS",key:+1,t:"Être ambitieux(se) et viser haut."},
+        {id:"VA_CO3",dim:"CO",key:+1,t:"Suivre les règles et faire ce qui est attendu."},
+        {id:"VA_DS3",dim:"DS",key:+1,t:"Protéger la nature et l'environnement."},
+        {id:"VA_OC4",dim:"OC",key:+1,t:"Penser par moi-même, sans suivre les sentiers battus."},
+        {id:"VA_AS4",dim:"AS",key:+1,t:"Me montrer compétent(e) et performant(e)."},
+        {id:"VA_CO4",dim:"CO",key:+1,t:"Éviter les risques et les imprévus."},
+        {id:"VA_DS4",dim:"DS",key:+1,t:"Être loyal(e) et fidèle envers mes proches."},
+        {id:"VA_OC5",dim:"OC",key:+1,t:"Avoir de la variété et des défis dans ma vie."},
+        {id:"VA_AS5",dim:"AS",key:+1,t:"Diriger ou prendre les décisions importantes."},
+        {id:"VA_CO5",dim:"CO",key:+1,t:"M'appuyer sur des repères clairs et durables."},
+        {id:"VA_DS5",dim:"DS",key:+1,t:"Contribuer à un monde meilleur, au-delà de mon intérêt."}
+      ],
+      portrait:{
+        OC:{hi:"La liberté et la nouveauté te portent. Tu as besoin de choisir ta route, d'explorer, de te renouveler. Les cadres trop rigides t'étouffent vite.",
+            mid:"Tu aimes la nouveauté sans renier la stabilité. Tu explores quand l'occasion est bonne, tout en gardant des repères.",
+            lo:"Tu privilégies le connu et l'éprouvé. La nouveauté pour elle-même t'attire peu, tu avances sur des bases sûres."},
+        AS:{hi:"Réussir et peser comptent pour toi. Tu vises haut, tu aimes la performance et l'influence. Cette ambition est un moteur, à équilibrer avec le reste.",
+            mid:"Tu as de l'ambition sans en faire ta seule boussole. Tu aimes réussir, mais pas à n'importe quel prix.",
+            lo:"La réussite visible et le pouvoir te motivent peu. Tu cherches ton sens ailleurs que dans le statut ou la performance."},
+        CO:{hi:"La sécurité et la stabilité te rassurent. Tu apprécies les repères, les règles et la continuité. Cela te rend fiable, veille juste à ne pas te fermer au changement.",
+            mid:"Tu aimes un cadre stable sans en faire une prison. Tu sais t'adapter quand il le faut.",
+            lo:"Les cadres figés et les traditions te pèsent. Tu préfères la souplesse et te sens à l'aise dans l'imprévu."},
+        DS:{hi:"Le souci des autres et du collectif te guide. Justice, entraide, écologie comptent profondément pour toi. Une boussole tournée vers l'extérieur.",
+            mid:"Tu te soucies des autres sans t'oublier. La dimension collective compte, à côté de tes intérêts propres.",
+            lo:"Les grandes causes te mobilisent moins. Tu te concentres davantage sur ton cercle proche et tes objectifs personnels."}
+      },
+      about:"Ce profil s'inspire de la théorie des valeurs de base de Shalom Schwartz, qui organise les valeurs humaines en grands pôles. Il décrit ce qui compte pour toi, pas ce que tu vaux. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    besoins:{
+      id:"besoins", code:"BESOINS", short:"Besoins", kind:"self",
+      name:"Tes besoins",
+      tagline:"Les moteurs profonds qui orientent tes décisions.",
+      meta:["Motivation","4 besoins","~4 min"],
+      minutes:"~4 min",
+      introTitle:"Qu'est-ce qui te met vraiment en mouvement ?",
+      introLead:"Quatre grands besoins psychologiques qui, souvent sans qu'on le voie, orientent nos choix et notre énergie. Réponds selon ce que tu ressens, pas selon l'idéal.",
+      freeCount:8,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas mon moteur","Tout à fait mon moteur"],
+      order:["AC","LI","IN","AU"],
+      dims:{
+        AC:{name:"Accomplissement", sub:"progresser, relever des défis"},
+        LI:{name:"Lien", sub:"appartenir, être proche des autres"},
+        IN:{name:"Influence", sub:"peser, convaincre, mener"},
+        AU:{name:"Autonomie", sub:"décider seul, être libre"}
+      },
+      items:[
+        {id:"BE_AC1",dim:"AC",key:+1,t:"J'ai besoin de me dépasser et de progresser."},
+        {id:"BE_LI1",dim:"LI",key:+1,t:"J'ai besoin de me sentir proche des autres."},
+        {id:"BE_IN1",dim:"IN",key:+1,t:"J'ai besoin d'avoir de l'impact sur ce qui m'entoure."},
+        {id:"BE_AU1",dim:"AU",key:+1,t:"J'ai besoin de décider par moi-même."},
+        {id:"BE_AC2",dim:"AC",key:+1,t:"Atteindre des objectifs ambitieux me rend vivant(e)."},
+        {id:"BE_LI2",dim:"LI",key:+1,t:"Appartenir à un groupe soudé compte beaucoup pour moi."},
+        {id:"BE_IN2",dim:"IN",key:+1,t:"Convaincre et entraîner les autres me stimule."},
+        {id:"BE_AU2",dim:"AU",key:+1,t:"Qu'on me dise quoi faire m'agace vite."},
+        {id:"BE_AC3",dim:"AC",key:+1,t:"Je me sens bien quand je relève un défi difficile."},
+        {id:"BE_LI3",dim:"LI",key:+1,t:"Je me ressource dans des relations chaleureuses."},
+        {id:"BE_IN3",dim:"IN",key:+1,t:"J'aime être celui ou celle vers qui on se tourne."},
+        {id:"BE_AU3",dim:"AU",key:+1,t:"Ma liberté d'organisation passe avant le confort."},
+        {id:"BE_AC4",dim:"AC",key:+1,t:"Mesurer mes progrès me motive."},
+        {id:"BE_LI4",dim:"LI",key:+1,t:"Me sentir seul(e) m'affecte vite."},
+        {id:"BE_IN4",dim:"IN",key:+1,t:"Peser sur les décisions est important pour moi."},
+        {id:"BE_AU4",dim:"AU",key:+1,t:"Je préfère répondre de mes choix plutôt qu'obéir."}
+      ],
+      portrait:{
+        AC:{hi:"Le dépassement est ton carburant. Tu as besoin de progresser, de relever des défis, de voir tes efforts porter. Sans objectif à atteindre, tu t'ennuies vite.",
+            mid:"Tu aimes progresser sans être en quête permanente de performance. Le défi te motive quand le sujet t'importe.",
+            lo:"Tu n'as pas besoin de te mesurer sans cesse pour avancer. Ta motivation vient d'ailleurs que de la performance."},
+        LI:{hi:"Le lien aux autres est vital pour toi. Tu as besoin d'appartenance, de chaleur, de relations proches. La solitude prolongée te pèse.",
+            mid:"Tu accordes de l'importance aux relations sans en dépendre entièrement. Tu sais aussi te ressourcer seul(e).",
+            lo:"Tu te suffis assez à toi-même. Les relations comptent, mais ton équilibre ne repose pas d'abord sur l'appartenance."},
+        IN:{hi:"Tu as besoin de peser. Avoir de l'impact, convaincre, être écouté(e) te donne de l'énergie. Le rôle d'influence te va bien.",
+            mid:"Tu aimes avoir de l'impact à l'occasion, sans en faire une quête de tous les instants.",
+            lo:"Peser sur les autres ou les événements te motive peu. Tu préfères contribuer sans chercher l'influence."},
+        AU:{hi:"L'autonomie est un besoin fort chez toi. Décider par toi-même, garder ta liberté, répondre de tes choix : c'est non négociable. La contrainte t'use.",
+            mid:"Tu apprécies ta liberté sans rejeter tout cadre. Tu sais composer avec les règles quand elles ont du sens.",
+            lo:"Un cadre qui décide pour toi ne te dérange pas, il peut même te rassurer. Tu n'as pas un grand besoin d'indépendance."}
+      },
+      about:"Ce profil s'appuie sur les théories des besoins et de la motivation (McClelland, autodétermination). Il décrit tes moteurs dominants, qui peuvent évoluer. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    drivers:{
+      id:"drivers", code:"DRIVERS", short:"Drivers", kind:"self",
+      name:"Tes messages contraignants",
+      tagline:"Les automatismes qui te poussent à agir, parfois à ton insu.",
+      meta:["Analyse transactionnelle","5 drivers","~5 min"],
+      minutes:"~5 min",
+      introTitle:"Quels messages te poussent à agir ?",
+      introLead:"Cinq « drivers », issus de l'analyse transactionnelle de Taibi Kahler : des injonctions intérieures qui colorent ta façon de fonctionner. Réponds spontanément.",
+      freeCount:10,
+      scale:["Pas du tout moi","Un peu","Moyennement","Beaucoup","Tout à fait moi"],
+      hint:["Pas du tout moi","Tout à fait moi"],
+      order:["PA","PL","EF","FO","DE"],
+      dims:{
+        PA:{name:"Sois parfait", sub:"exigence, rigueur, zéro défaut"},
+        PL:{name:"Fais plaisir", sub:"attention aux autres, harmonie"},
+        EF:{name:"Fais des efforts", sub:"ténacité, mérite par l'effort"},
+        FO:{name:"Sois fort", sub:"maîtrise, retenue, autonomie"},
+        DE:{name:"Dépêche-toi", sub:"rapidité, urgence, énergie"}
+      },
+      items:[
+        {id:"DR_PA1",dim:"PA",key:+1,t:"Je veux que tout soit fait parfaitement, sans erreur."},
+        {id:"DR_PL1",dim:"PL",key:+1,t:"Je fais souvent passer le confort des autres avant le mien."},
+        {id:"DR_EF1",dim:"EF",key:+1,t:"Je me dis qu'il faut souffrir pour mériter sa réussite."},
+        {id:"DR_FO1",dim:"FO",key:+1,t:"Je préfère garder mes émotions pour moi."},
+        {id:"DR_DE1",dim:"DE",key:+1,t:"J'ai souvent l'impression de manquer de temps."},
+        {id:"DR_PA2",dim:"PA",key:+1,t:"Une petite imperfection peut me gâcher un travail réussi."},
+        {id:"DR_PL2",dim:"PL",key:+1,t:"J'ai du mal à dire non de peur de décevoir."},
+        {id:"DR_EF2",dim:"EF",key:+1,t:"Même quand c'est dur, je m'acharne plutôt que d'alléger."},
+        {id:"DR_FO2",dim:"FO",key:+1,t:"Montrer une faiblesse me met mal à l'aise."},
+        {id:"DR_DE2",dim:"DE",key:+1,t:"Je fais plusieurs choses à la fois, et vite."},
+        {id:"DR_PA3",dim:"PA",key:+1,t:"Je vérifie plusieurs fois avant de rendre quelque chose."},
+        {id:"DR_PL3",dim:"PL",key:+1,t:"Je sens tout de suite quand quelqu'un n'est pas content de moi."},
+        {id:"DR_EF3",dim:"EF",key:+1,t:"J'ai parfois l'impression de compliquer les choses simples."},
+        {id:"DR_FO3",dim:"FO",key:+1,t:"Je gère seul(e) plutôt que de demander de l'aide."},
+        {id:"DR_DE3",dim:"DE",key:+1,t:"L'attente et la lenteur m'agacent vite."},
+        {id:"DR_PA4",dim:"PA",key:+1,t:"J'ai du mal à me dire que « c'est assez bien »."},
+        {id:"DR_PL4",dim:"PL",key:+1,t:"L'harmonie dans le groupe compte énormément pour moi."},
+        {id:"DR_EF4",dim:"EF",key:+1,t:"Pour moi, le mérite passe d'abord par l'effort."},
+        {id:"DR_FO4",dim:"FO",key:+1,t:"On me dit parfois difficile à déchiffrer."},
+        {id:"DR_DE4",dim:"DE",key:+1,t:"Je commence à répondre avant qu'on ait fini de parler."}
+      ],
+      portrait:{
+        PA:{hi:"« Sois parfait » te pousse fort. Tu vises l'irréprochable et tu repères la moindre faille. Une exigence précieuse, qui peut virer à la paralysie ou à l'insatisfaction chronique.",
+            mid:"Tu as le souci du travail bien fait sans tomber dans le perfectionnisme. Tu sais reconnaître quand c'est suffisant.",
+            lo:"Tu ne te laisses pas tyranniser par la perfection. Tu avances même quand tout n'est pas parfait, ce qui te rend fluide."},
+        PL:{hi:"« Fais plaisir » t'anime. Tu es attentif(ve) aux autres et tu fuis les tensions. Une grande qualité relationnelle, à condition de ne pas t'oublier en chemin.",
+            mid:"Tu prends soin des autres sans te sacrifier systématiquement. Tu sais aussi poser tes limites.",
+            lo:"Tu n'es pas gouverné(e) par le besoin de plaire. Tu dis ce que tu penses, quitte à déplaire, ce qui te rend franc(he)."},
+        EF:{hi:"« Fais des efforts » te guide. Tu associes la valeur à l'effort et tu t'acharnes volontiers. Une belle ténacité, qui gagne à ne pas se compliquer la vie inutilement.",
+            mid:"Tu sais fournir l'effort sans en faire une religion. Tu acceptes que certaines choses puissent être simples.",
+            lo:"Tu ne crois pas qu'il faille souffrir pour réussir. Tu cherches l'efficacité plutôt que l'effort pour l'effort."},
+        FO:{hi:"« Sois fort » te traverse. Tu encaisses, tu gères seul(e), tu montres peu tes failles. Une solidité réelle, qui gagne à s'autoriser parfois la vulnérabilité.",
+            mid:"Tu sais rester solide sans te couper de tes émotions. Tu demandes de l'aide quand il le faut.",
+            lo:"Tu n'as pas besoin de jouer les forts. Tu exprimes tes émotions et demandes de l'aide sans difficulté, ce qui te rend accessible."},
+        DE:{hi:"« Dépêche-toi » t'accompagne. Tu fonctionnes vite, dans l'urgence et l'énergie. Un vrai moteur, à tempérer pour ne pas t'épuiser ni bâcler.",
+            mid:"Tu sais accélérer quand il le faut sans vivre en permanence dans l'urgence. Un rythme plutôt maîtrisé.",
+            lo:"Tu prends le temps qu'il faut. L'urgence ne te commande pas, tu avances à ton rythme, ce qui te rend posé(e)."}
+      },
+      about:"Ce profil s'inspire des cinq « drivers » de l'analyse transactionnelle (Taibi Kahler). Ce sont des automatismes, pas des défauts : repérés, ils deviennent des leviers. Il n'a pas de visée diagnostique. Les niveaux se lisent sur l'échelle interne du test."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","brief","phq9","gad7"];
+  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","brief","phq9","gad7"];
   var SOON = [
-    {name:"Tes valeurs", tagline:"Ce qui compte vraiment pour toi, et guide tes choix."},
-    {name:"Tes besoins", tagline:"Les moteurs profonds qui orientent tes décisions."},
-    {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."}
+    {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."},
+    {name:"Process Communication", tagline:"Tes six façons de communiquer et de te ressourcer."},
+    {name:"Tes intensités", tagline:"Ta manière d'éprouver le monde, plus fort que la moyenne."}
   ];
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
