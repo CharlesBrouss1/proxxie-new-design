@@ -824,15 +824,56 @@
         signpost:"<p>Ce résultat est un point de repère, pas un verdict. Si tes symptômes durent depuis plus de deux semaines, gênent ton quotidien, ou si tu as un doute, parles-en à ton médecin traitant : c'est souvent la première porte, simple et sans jugement.</p><p>Un psychologue ou un psychiatre peut aussi t'accompagner. Tu peux y aller avec ce résultat en main, cela facilite le dialogue.</p>"
       },
       about:"Ce questionnaire est le PHQ-9, un outil de repérage de l'humeur reconnu, et non un diagnostic. Seul un professionnel de santé peut poser un diagnostic. Si tu te sens en danger, contacte le 3114 (gratuit, 24h/24) ou le 15 en cas d'urgence."
+    },
+
+    gad7:{
+      id:"gad7", code:"GAD7", short:"GAD-7", kind:"clinical",
+      name:"Ton niveau d'anxiété",
+      tagline:"Un repérage court de l'anxiété, reconnu et confidentiel.",
+      meta:["Anxiété","Repérage","~2 min"],
+      minutes:"~2 min",
+      introTitle:"À quel point l'inquiétude t'occupe-t-elle ?",
+      introLead:"Un court questionnaire de repérage de l'anxiété (le GAD-7), reconnu et utilisé par les professionnels. Gratuit, sans inscription, et sans diagnostic.",
+      scale:["Jamais","Plusieurs jours","Plus de la moitié des jours","Presque tous les jours"],
+      hint:["Jamais","Presque tous les jours"],
+      order:["G"],
+      dims:{
+        G:{name:"Ces 2 dernières semaines", sub:"fréquence des symptômes d'anxiété"}
+      },
+      items:[
+        {id:"G1",dim:"G",key:+1,t:"Me sentir nerveux(se), anxieux(se) ou à cran."},
+        {id:"G2",dim:"G",key:+1,t:"Ne pas pouvoir arrêter de me faire du souci, ou ne pas pouvoir contrôler mes inquiétudes."},
+        {id:"G3",dim:"G",key:+1,t:"Me faire trop de souci à propos de tout et de rien."},
+        {id:"G4",dim:"G",key:+1,t:"Avoir du mal à me détendre."},
+        {id:"G5",dim:"G",key:+1,t:"Être si agité(e) qu'il est difficile de rester en place."},
+        {id:"G6",dim:"G",key:+1,t:"Devenir facilement contrarié(e) ou irritable."},
+        {id:"G7",dim:"G",key:+1,t:"Avoir peur que quelque chose d'horrible puisse arriver."}
+      ],
+      clinical:{
+        metric:"totalPoints",
+        kicker:"Résultat de ton repérage",
+        resultTitle:"Ton repère sur l'anxiété.",
+        scoreLabel:"Score GAD-7",
+        lead:"Voici un repère indicatif, fondé sur tes réponses des deux dernières semaines. Ce n'est pas un diagnostic.",
+        levels:[
+          {min:15,label:"Anxiété sévère",tone:"high",text:"Tes réponses évoquent une anxiété importante. Il est vivement conseillé d'en parler à un médecin ou à un psychologue."},
+          {min:10,label:"Anxiété modérée",tone:"mid",text:"Tes réponses évoquent une anxiété notable. Un échange avec un professionnel peut t'aider, surtout si cela dure ou gêne ton quotidien."},
+          {min:5,label:"Anxiété légère",tone:"mid",text:"Tes réponses évoquent une anxiété légère. Reste attentif(ve) à son évolution, et n'hésite pas à en parler si elle s'installe."},
+          {min:0,label:"Peu ou pas d'anxiété",tone:"low",text:"Tes réponses n'évoquent que peu ou pas de symptômes d'anxiété en ce moment. C'est une bonne nouvelle."}
+        ],
+        signpostTitle:"Et maintenant ?",
+        signpost:"<p>Ce résultat est un point de repère, pas un verdict. Si tes inquiétudes durent depuis plus de deux semaines, sont difficiles à contrôler, ou gênent ton quotidien, parles-en à ton médecin traitant : c'est souvent la première porte, simple et sans jugement.</p><p>Un psychologue peut aussi t'accompagner, notamment avec des approches efficaces contre l'anxiété. Tu peux y aller avec ce résultat en main.</p>"
+      },
+      about:"Ce questionnaire est le GAD-7, un outil de repérage de l'anxiété reconnu, et non un diagnostic. Seul un professionnel de santé peut poser un diagnostic. Si tu te sens en détresse, tu peux contacter le 3114 (gratuit, 24h/24)."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","brief","phq9"];
+  var CATALOG = ["bigfive","riasec","grit","caas","brief","phq9","gad7"];
   var SOON = [
     {name:"Tes valeurs", tagline:"Ce qui compte vraiment pour toi, et guide tes choix."},
-    {name:"Anxiété, ton niveau", tagline:"Un repérage court de l'anxiété (GAD-7)."},
+    {name:"Tes besoins", tagline:"Les moteurs profonds qui orientent tes décisions."},
     {name:"Profil MBTI revisité", tagline:"Tes préférences cognitives, version Proxxie."}
   ];
 
