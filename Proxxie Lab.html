@@ -324,13 +324,13 @@
   .gr-progbar{flex:1;height:7px;border-radius:99px;background:#EAE1D0;overflow:hidden}
   .gr-progfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--orange));transition:width .9s cubic-bezier(.2,.7,.2,1)}
   .gr-progtxt{font-size:12.5px;font-weight:800;color:var(--ink-soft);white-space:nowrap}
-  .gr-stage{position:relative;width:100%;max-width:460px;margin:6px auto 0}
+  .gr-stage{position:relative;width:100%;max-width:520px;margin:10px auto 0}
   .gr-backchip{position:absolute;top:2px;left:0;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:700;padding:7px 14px 7px 11px;border-radius:999px;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(20,18,8,.07);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .3s,transform .3s;z-index:5}
   .gr-backchip.on{opacity:1;transform:translateY(0);pointer-events:auto}
   .gr-hint{font-size:13px;color:var(--ink-soft);text-align:center;margin:8px 0 4px;min-height:18px;transition:opacity .3s}
   #grGraph{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
-  .gr-lnk{stroke:var(--line);stroke-width:1.6}
-  .gr-lnk.live{stroke:#D9CDB4}
+  .gr-lnk{stroke:#CDBFA3;stroke-width:1.8;stroke-linecap:round}
+  .gr-lnk.live{stroke:#BFAE8E;stroke-width:2}
   .gr-node{cursor:pointer}
   .gr-lbl{font-size:11px;font-weight:700;fill:var(--ink);text-anchor:middle;pointer-events:none;font-family:var(--sans)}
   .gr-lbl.soft{fill:var(--ink-soft);font-weight:650}
@@ -341,6 +341,14 @@
   @keyframes grpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
   .gr-pulse{transform-box:fill-box;transform-origin:center;animation:grpulse 3.4s ease-in-out infinite}
   @keyframes grpulse{0%,100%{opacity:.5}50%{opacity:.92}}
+  @media (hover:hover){
+    .gr-node{transition:transform .18s cubic-bezier(.2,.8,.2,1)}
+    .gr-node.hub,.gr-node.leaf{transform-box:fill-box;transform-origin:center}
+    .gr-node.hub:hover,.gr-node.leaf:hover{transform:scale(1.08)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .gr-fade,.gr-pop,.gr-pulse,.gr-progfill,.gr-backchip,.gr-sheet,.gr-scrim,.gr-node{animation:none!important;transition:none!important}
+  }
   .gr-scrim{position:fixed;inset:0;background:rgba(10,14,44,.32);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
   .gr-scrim.on{opacity:1;pointer-events:auto}
   .gr-sheet{position:fixed;left:0;right:0;bottom:0;max-width:600px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;box-shadow:0 -18px 50px rgba(20,18,8,.18);padding:8px 22px calc(28px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .36s cubic-bezier(.2,.8,.2,1);z-index:50}
@@ -404,7 +412,7 @@
     <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 16 explorées</span></div>
     <div class="gr-stage">
       <button class="gr-backchip" id="grBack">‹ Vue d'ensemble</button>
-      <svg id="grGraph" viewBox="-26 -18 452 520" aria-label="Carte des parties de toi"></svg>
+      <svg id="grGraph" viewBox="-26 40 452 432" aria-label="Carte des parties de toi"></svg>
     </div>
     <p class="gr-hint" id="grHint">Touche une zone pour l'explorer.</p>
     <p class="disclaimer">
@@ -2825,10 +2833,10 @@
 
   // ---------- CARTE INTÉRIEURE (graphe d'accueil) ----------
   var FACETS={
-    perso:{name:"Qui tu es",   hex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm"]},
-    aspir:{name:"Ce qui te meut",hex:"#FD6936", pos:[280,135], kicker:"Aspirations", tests:["valeurs","besoins","drivers"]},
-    carr: {name:"Où tu vas",    hex:"#2E8B6E", pos:[120,405], kicker:"Carrière",    tests:["riasec","caas","grit"]},
-    equi: {name:"Ton équilibre",hex:"#C2892B", pos:[280,405], kicker:"Équilibre",   tests:["brief","phq9","gad7","asrs","aq10","dys"]}
+    perso:{name:"Qui tu es",   hex:"#1320CE", tHex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm"]},
+    aspir:{name:"Ce qui te meut",hex:"#FD6936", tHex:"#B83E0C", pos:[280,135], kicker:"Aspirations", tests:["valeurs","besoins","drivers"]},
+    carr: {name:"Où tu vas",    hex:"#2E8B6E", tHex:"#1F6B53", pos:[120,405], kicker:"Carrière",    tests:["riasec","caas","grit"]},
+    equi: {name:"Ton équilibre",hex:"#C2892B", tHex:"#8A5E12", pos:[280,405], kicker:"Équilibre",   tests:["brief","phq9","gad7","asrs","aq10","dys"]}
   };
   // libellés courts + nombre de dimensions pour la carte (les longs restent dans TESTS)
   var GMETA={
@@ -2902,11 +2910,13 @@
     for(fid in FACETS){ (function(fid){
       var F=FACETS[fid],p=F.pos,dc=gFacetDone(fid),tot=gFacetTests(fid).length;
       var hg=gEl('g',{'class':'gr-node hub gr-fade'},gN);
-      gRing(hg,p[0],p[1],23,F.hex,tot?dc/tot:0,3.4);
-      gEl('circle',{cx:p[0],cy:p[1],r:16,fill:F.hex,opacity:'.1'},hg);
-      var ht=gEl('text',{x:p[0],y:p[1]+1,'class':'gr-lbl',fill:F.hex,'font-size':'12','font-weight':'800'},hg); ht.textContent=dc+'/'+tot;
-      var by=p[1]<G_CENTER[1]? p[1]-32 : p[1]+38;
-      var hn=gEl('text',{x:p[0],y:by,'class':'gr-lbl'},hg); hn.textContent=F.name;
+      gEl('circle',{cx:p[0],cy:p[1],r:25,fill:F.hex,opacity:'.07'},hg);
+      gRing(hg,p[0],p[1],23,F.hex,tot?dc/tot:0,3.6);
+      gEl('circle',{cx:p[0],cy:p[1],r:16,fill:F.hex,opacity:'.16'},hg);
+      var ht=gEl('text',{x:p[0],y:p[1]+1.5,'class':'gr-lbl',fill:F.tHex,'font-size':'13','font-weight':'800'},hg); ht.textContent=dc+'/'+tot;
+      var by=p[1]<G_CENTER[1]? p[1]-34 : p[1]+40;
+      var hn=gEl('text',{x:p[0],y:by,'class':'gr-lbl',fill:F.tHex,'font-weight':'800'},hg); hn.textContent=F.name;
+      gEl('circle',{cx:p[0],cy:p[1],r:24,fill:'transparent'},hg);
       hg.onclick=function(ev){ ev.stopPropagation(); gOpenFocus(fid); };
     })(fid); }
     svg.onclick=null;
@@ -2921,22 +2931,24 @@
     var hg=gEl('g',{'class':'gr-node gr-fade'},gN);
     gRing(hg,hub[0],hub[1],30,F.hex,n?dc/n:0,4);
     gEl('circle',{cx:hub[0],cy:hub[1],r:21,fill:F.hex,opacity:'.12'},hg);
-    var hc=gEl('text',{x:hub[0],y:hub[1]-1,'class':'gr-lbl',fill:F.hex,'font-size':'15','font-weight':'800'},hg); hc.textContent=dc+'/'+n;
+    var hc=gEl('text',{x:hub[0],y:hub[1]-1,'class':'gr-lbl',fill:F.tHex,'font-size':'15','font-weight':'800'},hg); hc.textContent=dc+'/'+n;
     var hs=gEl('text',{x:hub[0],y:hub[1]+14,'class':'gr-lbl soft','font-size':'9.5'},hg); hs.textContent='passés';
-    var ttl=gEl('text',{x:hub[0],y:hub[1]-44,'class':'gr-lbl',fill:F.hex,'font-size':'13','font-weight':'800'},hg); ttl.textContent=F.name;
+    var ttl=gEl('text',{x:hub[0],y:hub[1]-44,'class':'gr-lbl',fill:F.tHex,'font-size':'13','font-weight':'800'},hg); ttl.textContent=F.name;
     leaves.forEach(function(id,i){
       var a=-Math.PI/2+i*(2*Math.PI/n),lx=hub[0]+Math.cos(a)*rad,ly=hub[1]+Math.sin(a)*rad;
       var lg=gEl('g',{'class':'gr-node leaf gr-pop',style:'animation-delay:'+(i*55)+'ms'},gN);
+      gEl('circle',{cx:lx,cy:ly,r:22,fill:'transparent'},lg);
       if(gDone(id)){
         gEl('circle',{cx:lx,cy:ly,r:15,fill:F.hex,'class':'gr-pulse',filter:'url(#grglow-'+gFocus+')',opacity:'.5'},lg);
         gEl('circle',{cx:lx,cy:ly,r:12,fill:F.hex},lg);
         var ck=gEl('text',{x:lx,y:ly+4,'text-anchor':'middle','font-size':'12','font-weight':'800',fill:'#fff'},lg); ck.textContent='✓';
       } else {
-        gEl('circle',{cx:lx,cy:ly,r:12,fill:'#FFFDF8',stroke:F.hex,'stroke-width':'2','stroke-dasharray':'3 3'},lg);
-        gEl('circle',{cx:lx,cy:ly,r:3.2,fill:F.hex,opacity:'.55'},lg);
+        gEl('circle',{cx:lx,cy:ly,r:12,fill:F.hex,opacity:'.12'},lg);
+        gEl('circle',{cx:lx,cy:ly,r:12,fill:'none',stroke:F.hex,'stroke-width':'2'},lg);
+        gEl('circle',{cx:lx,cy:ly,r:3.4,fill:F.hex,opacity:'.7'},lg);
       }
       var dx=Math.cos(a),dy=Math.sin(a);
-      var ox=lx+dx*(14+Math.abs(dx)*34), oy=ly+dy*(14+Math.abs(dy)*10)+4;
+      var ox=lx+dx*(15+Math.abs(dx)*40), oy=ly+dy*(15+Math.abs(dy)*14)+4;
       var lt=gEl('text',{x:ox,y:oy,'class':'gr-lbl'+(gDone(id)?'':' soft')},lg); lt.textContent=gName(id);
       lt.setAttribute('text-anchor',dx<-0.2?'end':(dx>0.2?'start':'middle'));
       lg.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
