@@ -376,6 +376,14 @@
   .gr-smeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
   .gr-mp{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:#F1ECDF;color:var(--ink)}
   .gr-mp.done{background:#E7F6EF;color:var(--green)}
+  .gr-sci{background:#F8F4EA;border-radius:14px;padding:13px 15px;margin:0 0 18px}
+  .gr-sci-model{font-weight:800;color:var(--ink);font-size:12.5px;display:block;margin:0 0 4px}
+  .gr-sci-txt{margin:0;font-size:13px;line-height:1.5;color:var(--ink-soft)}
+  .gr-gtitle{font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:var(--ink-soft);margin:0 0 11px}
+  .gr-gains{list-style:none;padding:0;margin:0 0 20px}
+  .gr-gains li{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;color:var(--ink);margin-bottom:11px}
+  .gr-gains li:last-child{margin-bottom:0}
+  .gr-gains li svg{flex:0 0 auto;margin-top:1px}
   .gr-go{width:100%;border:0;border-radius:14px;padding:15px;font-size:15.5px;font-weight:800;font-family:inherit;color:#fff;cursor:pointer}
 
   .sharebar{display:flex;gap:10px;margin-top:10px}
@@ -942,6 +950,9 @@
   <h2 class="gr-stitle" id="grSt"></h2>
   <p class="gr-stag" id="grSg"></p>
   <div class="gr-smeta" id="grSm"></div>
+  <div class="gr-sci" id="grSci" style="display:none"><span class="gr-sci-model" id="grSciModel"></span><p class="gr-sci-txt" id="grSciTxt"></p></div>
+  <p class="gr-gtitle" id="grGtitle" style="display:none">Ce que tu obtiens</p>
+  <ul class="gr-gains" id="grGains"></ul>
   <button class="gr-go" id="grSgo"></button>
 </div>
 
@@ -2467,6 +2478,21 @@
   if(state.synthNarrativeKey===undefined) state.synthNarrativeKey=""; // signature des tests passés (régénère si elle change)
   var curId = null;
 
+  // migration : un test « passé » (résultat affiché) doit rester compté même si la banque de
+  // questions a changé depuis (réponses devenues orphelines) ou si l'état est antérieur au flag
+  // `complete`. Sans ça, un test fini mais avec des trous ne franchit jamais le seuil de Synthèse.
+  (function migrateComplete(){
+    if(!state.tests) return;
+    var changed=false;
+    Object.keys(state.tests).forEach(function(id){
+      var t=TESTS[id], s=state.tests[id];
+      if(!t||!s||s.complete) return;
+      var lim = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
+      if(s.idx!=null && s.idx >= lim-1 && answeredCount(t,s,lim) > 0){ s.complete=true; changed=true; }
+    });
+    if(changed) save();
+  })();
+
   function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
   function save(){ try{localStorage.setItem(KEY, JSON.stringify(state));}catch(e){} }
 
@@ -2758,6 +2784,7 @@
     if(s.idx < limit-1){
       s.idx++; save(); renderQuestion();
     } else {
+      s.complete=true; save();                                  // résultat atteint : test « passé » (compté pour la Synthèse)
       if(isClin(t)){ showClinical(); }                          // dépistage : résultat direct
       else if(!s.long){ runNarrative(t.freeCount, showSimple); } // 15 gratuites : narration gratuite (aperçu)
       else { runNarrative(t.items.length, function(){ runAction(showFull); }); } // version longue : portrait complet + pistes métiers, gratuits
@@ -3257,6 +3284,73 @@
     aq10:   {name:"Spectre aut.",tag:"Repère court sur le fonctionnement autistique.",dims:1},
     dys:    {name:"Dyslexie",  tag:"Un repère sur la lecture chez l'adulte.",dims:1}
   };
+  // infos riches affichées dans la fiche d'un test (modèle scientifique, ce que tu obtiens, durée · questions)
+  var GINFO={
+    bigfive:{model:"Modèle OCEAN · standard scientifique depuis 30 ans",
+      sci:"Le modèle OCEAN (Ouverture, Conscienciosité, Extraversion, Agréabilité, Stabilité) est le standard scientifique de la personnalité depuis plus de 30 ans.",
+      gains:["Ton score sur les 5 grandes dimensions OCEAN","Ta position en percentile, où tu te situes vraiment","Tes 3 forces principales + 2 points de vigilance","6 à 8 métiers qui collent à ton profil, 3 à éviter"],
+      min:"15 min",q:60},
+    mbti:{model:"Inspiré de Carl Jung · 16 types",
+      sci:"Inspiré des travaux de Carl Jung. 4 préférences cognitives, 16 types possibles (INTJ, ENFP, etc.).",
+      gains:["Ton type parmi les 16 profils MBTI","Comment tu perçois l'information et prends tes décisions","Tes préférences sur les 4 axes cognitifs","Ce que ton type révèle de ta façon de fonctionner"],
+      min:"6 min",q:24},
+    hpi:{model:"Modèle Silverman / Kieboom · douance",
+      sci:"Identifie les traits de douance sur 4 dimensions : cognitive, émotionnelle, comportementale et sensorielle.",
+      gains:["Tes traits de douance sur 4 dimensions","La forme particulière de ton intensité intérieure","Ce qui nourrit ta sur-stimulation, et ce qui l'apaise","Comment transformer cette intensité en force"],
+      min:"6 min",q:20},
+    pcm:{model:"Process Com · Taibi Kahler · utilisé par la NASA",
+      sci:"Le modèle Process Communication de Taibi Kahler, utilisé par la NASA. 6 types : Empathique, Travaillomane, Persévérant, Rêveur, Promoteur, Rebelle.",
+      gains:["Ta base et ta phase parmi les 6 types PCM","Ta façon préférée de communiquer","Ce qui te motive, et ce qui te met sous stress","Comment mieux te faire comprendre des autres"],
+      min:"8 min",q:30},
+    valeurs:{model:"Modèle Schwartz · 10 valeurs universelles",
+      sci:"Le modèle de Schwartz décrit 10 valeurs universelles : autonomie, sécurité, réussite, bienveillance, et d'autres.",
+      gains:["Tes 3 valeurs cardinales","Ce qui oriente vraiment tes choix de vie","Les tensions possibles entre tes valeurs","Comment aligner tes décisions sur ce qui compte"],
+      min:"5 min",q:20},
+    besoins:{model:"Modèle McClelland · 3 besoins moteurs",
+      sci:"Le modèle de McClelland identifie 3 besoins acquis : Réussite (nAch), Affiliation (nAff) et Pouvoir (nPow).",
+      gains:["Le besoin fondamental qui te motive le plus","Ce qui te donne de l'énergie au quotidien","Les environnements où tu t'épanouis","Comment nourrir ce moteur profond"],
+      min:"5 min",q:18},
+    drivers:{model:"Drivers (Analyse Transactionnelle) · Taibi Kahler",
+      sci:"Les 5 drivers de l'Analyse Transactionnelle : Sois Parfait, Sois Fort, Fais Effort, Fais Plaisir, Dépêche-toi.",
+      gains:["Le driver inconscient qui te pilote sous stress","Les automatismes qui te poussent à bout","Comment repérer ces messages quand ils s'activent","Des leviers pour reprendre la main"],
+      min:"7 min",q:25},
+    riasec:{model:"Code Holland (RIASEC) · référence mondiale depuis 60 ans",
+      sci:"Le modèle RIASEC de John Holland est la référence mondiale pour l'orientation professionnelle depuis 60 ans.",
+      gains:["Tes 3 types d'intérêts dominants","Les métiers compatibles avec ton profil","Les environnements de travail qui te conviennent","Des pistes concrètes pour t'orienter"],
+      min:"15 min",q:60},
+    caas:{model:"Modèle Savickas · adaptabilité carrière",
+      sci:"L'échelle CAAS de Savickas mesure 4 ressources d'adaptation : Préoccupation, Contrôle, Curiosité et Confiance.",
+      gains:["Tes 4 muscles de l'adaptation carrière","Ta capacité à rebondir dans un monde qui change vite","Tes ressources les plus solides, et les plus fragiles","Comment renforcer ton agilité professionnelle"],
+      min:"7 min",q:24},
+    grit:{model:"Échelle Grit-S · Angela Duckworth (Penn, 2009)",
+      sci:"L'échelle Grit-S d'Angela Duckworth (Penn, 2009), utilisée par West Point, Stanford et Yale.",
+      gains:["Ton score de ténacité : passion + persévérance","Ta capacité à tenir l'effort sur le long terme","Ce qui soutient ta constance, et ce qui l'érode","Des leviers pour rester sur la durée"],
+      min:"5 min",q:8},
+    brief:{model:"Modèle Barkley (BDEFS) · fonctions exécutives",
+      sci:"Mesure 4 muscles cognitifs du quotidien : organiser, gérer le temps, réguler les émotions et retenir l'information.",
+      gains:["Tes 4 fonctions exécutives clés","Tes forces en organisation et concentration","Les situations où ton cerveau décroche","Des stratégies concrètes pour compenser"],
+      min:"6 min",q:20},
+    phq9:{model:"PHQ-9 · outil clinique de référence",
+      sci:"Le PHQ-9 (Kroenke) est un outil de dépistage clinique de référence pour repérer un état dépressif.",
+      gains:["Un repère clair sur ton humeur récente","L'impact ressenti sur ton quotidien","Des signaux à surveiller","Quand et vers qui te tourner si besoin"],
+      min:"3 min",q:9},
+    gad7:{model:"GAD-7 · échelle clinique validée",
+      sci:"Le GAD-7 (Spitzer, 2006), complété de quelques items, repère ton niveau d'anxiété et son impact.",
+      gains:["Un repère sur ton niveau d'anxiété","L'impact ressenti au quotidien","Les moments où ça monte le plus","Des pistes pour mieux la gérer"],
+      min:"4 min",q:12},
+    asrs:{model:"ASRS-v1.1 · Organisation Mondiale de la Santé",
+      sci:"Screening basé sur l'ASRS de l'OMS, qui repère des indicateurs liés à l'attention et l'agitation.",
+      gains:["Un repère sur l'attention et l'agitation","Les situations où ça se manifeste le plus","Ce que ces indicateurs veulent dire, et pas dire","Les prochaines étapes si tu veux creuser"],
+      min:"5 min",q:18},
+    aq10:{model:"AQ · Baron-Cohen, Cambridge",
+      sci:"Screening AQ (Baron-Cohen, Cambridge) qui repère des indicateurs liés au spectre autistique.",
+      gains:["Un repère sur le fonctionnement autistique","Tes particularités sociales et sensorielles","Ce que ce screening peut, et ne peut pas, dire","Les prochaines étapes si tu veux creuser"],
+      min:"6 min",q:20},
+    dys:{model:"Screening multi-DYS · 4 domaines",
+      sci:"Couvre 4 domaines : lecture, orthographe, calcul et coordination motrice.",
+      gains:["Un repère sur la lecture et l'écriture","Les domaines où tu rencontres le plus de friction","Ce que ces signaux peuvent indiquer","Les prochaines étapes si tu veux creuser"],
+      min:"6 min",q:20}
+  };
   var GNS="http://www.w3.org/2000/svg";
 
   function gName(id){ return (GMETA[id]&&GMETA[id].name) || (TESTS[id]&&TESTS[id].name) || id; }
@@ -3267,6 +3361,7 @@
   function gDone(id){
     var t=TESTS[id], s=state.tests[id];
     if(!t||!s) return false;
+    if(s.complete) return true; // source de vérité : l'utilisateur a vu son résultat
     if(isClin(t)) return answeredCount(t,s,t.items.length)===t.items.length;
     return answeredCount(t,s,t.freeCount)===t.freeCount;
   }
@@ -3759,11 +3854,23 @@
     document.getElementById('grSkt').textContent=F.kicker;
     document.getElementById('grSt').textContent=gName(id);
     document.getElementById('grSg').textContent=gTag(id);
+    var info=GINFO[id]||null;
     var sm=document.getElementById('grSm'); sm.innerHTML='';
     var d=gDims(id);
     var m1=document.createElement('span'); m1.className='gr-mp'; m1.textContent=d+' dimension'+(d>1?'s':''); sm.appendChild(m1);
-    var m2=document.createElement('span'); m2.className='gr-mp'; m2.textContent=gMin(id); sm.appendChild(m2);
+    var m2=document.createElement('span'); m2.className='gr-mp'; m2.textContent=(info&&info.min)||gMin(id); sm.appendChild(m2);
+    if(info&&info.q){ var mq=document.createElement('span'); mq.className='gr-mp'; mq.textContent=info.q+' questions'; sm.appendChild(mq); }
     if(done){ var m3=document.createElement('span'); m3.className='gr-mp done'; m3.textContent='✓ Déjà passé'; sm.appendChild(m3); }
+    // bloc modèle scientifique
+    var sci=document.getElementById('grSci');
+    if(info&&info.sci){ document.getElementById('grSciModel').textContent=info.model||''; document.getElementById('grSciTxt').textContent=info.sci; sci.style.display=''; }
+    else { sci.style.display='none'; }
+    // liste "Ce que tu obtiens"
+    var gt=document.getElementById('grGtitle'), gl=document.getElementById('grGains'); gl.innerHTML='';
+    if(info&&info.gains&&info.gains.length){
+      gt.style.display='';
+      for(var gi=0;gi<info.gains.length;gi++){ var li=document.createElement('li'); li.innerHTML=CHK+'<span>'+info.gains[gi]+'</span>'; gl.appendChild(li); }
+    } else { gt.style.display='none'; }
     var go=document.getElementById('grSgo'); go.style.background=F.hex; go.textContent=done?'Revoir mes résultats':'Commencer ce test';
     go.onclick=function(){ gCloseSheet(); if(done){ reviewResults(id); } else { openTest(id); } };
     document.getElementById('grScrim').classList.add('on');
