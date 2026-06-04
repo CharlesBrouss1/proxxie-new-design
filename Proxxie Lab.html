@@ -6,7 +6,7 @@
 <title>Proxxie Lab, tes portraits psychométriques</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,640&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#F7F2E9;
@@ -14,14 +14,15 @@
     --blue-soft:#B0D0F7;
     --yellow:#F5EB3F;
     --orange:#FD6936;
-    --ink:#15162B;
+    --ink:#0A0E2C;
     --ink-soft:#54566E;
     --line:#E4DCCB;
     --card:#FFFFFF;
     --ok:#1f9d6b;
     --radius:20px;
     --sans:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --serif:"Fraunces","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --serif:"Mulish",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --head:"Mulish",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --tan:#EEE6D9;
     --tan-line:#E6E2D6;
   }
@@ -39,10 +40,18 @@
     margin:0 auto;
     padding:24px 20px calc(120px + env(safe-area-inset-bottom));
     min-height:100%;
+    position:relative;
+    z-index:1;
   }
+  /* formes pastel décoratives en fond (style proxxie-new-design) */
+  .blobs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .blob{position:absolute;border-radius:50%;filter:blur(8px);opacity:.55}
+  .blob.b1{width:340px;height:300px;top:-120px;right:-90px;background:radial-gradient(circle at 35% 35%, rgba(245,235,63,.85), rgba(245,235,63,0) 70%);border-radius:62% 38% 55% 45% / 55% 50% 50% 45%}
+  .blob.b2{width:300px;height:280px;top:160px;left:-130px;background:radial-gradient(circle at 50% 50%, rgba(176,208,247,.7), rgba(176,208,247,0) 70%);border-radius:50% 50% 42% 58% / 45% 55% 45% 55%}
+  .blob.b3{width:260px;height:240px;bottom:-90px;right:-70px;background:radial-gradient(circle at 50% 50%, rgba(196,150,230,.42), rgba(196,150,230,0) 70%);border-radius:55% 45% 50% 50% / 50% 52% 48% 50%}
   .topbar{
     display:flex;align-items:center;gap:10px;
-    padding:6px 0 22px;
+    padding:6px 0 22px;cursor:pointer;
   }
   .mark{width:34px;height:34px;border-radius:9px;background:var(--blue);display:grid;place-items:center;flex:0 0 auto}
   .mark svg{width:22px;height:22px}
@@ -53,25 +62,30 @@
   .screen.active{display:block}
   @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  h1{font-family:var(--serif);font-size:30px;line-height:1.18;letter-spacing:-.2px;margin-bottom:14px}
-  h2{font-family:var(--serif);font-size:23px;line-height:1.2;margin:26px 0 10px}
+  h1{font-family:var(--head);font-size:33px;font-weight:800;line-height:1.14;letter-spacing:-.6px;margin-bottom:14px}
+  h2{font-family:var(--head);font-size:23px;font-weight:800;line-height:1.18;letter-spacing:-.3px;margin:26px 0 10px}
   .lead{font-size:17px;color:var(--ink-soft);margin-bottom:26px}
   p{margin-bottom:12px}
 
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  /* surligneur jaune sur mots-clés (style proxxie-new-design) */
+  .hl{position:relative;display:inline;background:linear-gradient(transparent 58%, rgba(245,235,63,.55) 58%);padding:0 2px;border-radius:2px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 18px 44px rgba(20,18,8,.05)}
   .card + .card{margin-top:14px}
 
   .pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px}
   .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+  .pill.hlc{background:rgba(245,235,63,.4);border-color:transparent;color:var(--ink)}
 
   .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
 
   .btn{
     appearance:none;border:0;cursor:pointer;font-family:inherit;
-    font-size:16px;font-weight:650;
+    font-size:16px;font-weight:700;letter-spacing:.1px;
     background:var(--blue);color:#fff;
-    padding:15px 22px;border-radius:14px;
-    width:100%;transition:transform .08s ease,filter .15s ease;
+    padding:16px 24px;border-radius:999px;
+    width:100%;transition:transform .08s ease,filter .15s ease,box-shadow .2s ease;
+    box-shadow:0 12px 26px rgba(19,32,206,.22);
   }
   .btn:hover{filter:brightness(1.06)}
   .btn:active{transform:scale(.99)}
@@ -111,7 +125,7 @@
   .csec h2{font-family:var(--serif);font-size:19px;margin:0;font-weight:600}
   .csec span{font-size:12px;color:var(--ink-soft);font-weight:600}
   .csec .ln{flex:1;height:1px;background:var(--line)}
-  .tcard{position:relative;overflow:hidden;padding:17px 18px 16px;transition:border-color .15s ease,transform .12s ease,box-shadow .2s ease}
+  .tcard{position:relative;overflow:hidden;padding:17px 18px 16px;box-shadow:0 10px 26px rgba(20,18,8,.05);transition:border-color .15s ease,transform .12s ease,box-shadow .2s ease}
   .tcard:hover{border-color:var(--ac,var(--blue-soft));transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
   .tcard:active{transform:scale(.997)}
   .tcard .trow{align-items:flex-start}
@@ -151,22 +165,26 @@
   .ptrack{height:4px;background:var(--tan);border-radius:999px;overflow:hidden}
   .pfill{height:100%;width:0;background:var(--qac,var(--blue));border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1)}
 
-  /* question */
-  .q{min-height:42vh;display:flex;flex-direction:column;justify-content:center}
-  .qtext{font-family:var(--serif);font-size:27px;line-height:1.28;font-weight:500;margin-bottom:22px}
+  /* question : carte blanche surélevée (style proxxie-new-design) */
+  .q{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 22px 22px;box-shadow:0 16px 38px rgba(0,0,0,.07);overflow:hidden}
+  .q::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--qac,var(--blue))}
+  .qtext{font-family:var(--serif);font-size:25px;line-height:1.3;font-weight:500;margin-bottom:20px}
   /* échelle numérique 1-5 (style proxxie-new-design) */
-  .scale{display:flex;flex-direction:row;gap:9px}
+  .scale{display:flex;flex-direction:row;gap:8px;align-items:flex-start}
+  .scaleitem{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
   .nopt{
-    flex:1;min-width:0;aspect-ratio:1/1;max-height:72px;
+    width:100%;aspect-ratio:1/1;max-height:60px;
     background:var(--tan);border:1.5px solid var(--tan-line);border-radius:13px;
-    font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);
+    font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);
     cursor:pointer;display:grid;place-items:center;
     transition:transform .1s ease,border-color .12s ease,background .12s ease,color .12s ease,box-shadow .2s ease;
   }
   .nopt:hover{border-color:var(--qac,var(--blue));transform:translateY(-2px)}
   .nopt:active{transform:scale(.96)}
   .nopt.sel{background:var(--qac,var(--blue));border-color:var(--qac,var(--blue));color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}
-  .scalehint{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:11px}
+  .scaleitem.sel .noptcap{color:var(--qac,var(--blue))}
+  .noptcap{font-size:10px;font-weight:600;color:var(--ink-soft);text-align:center;line-height:1.18;letter-spacing:.1px}
+  .scalehint{display:none}
 
   .qpreview{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 18px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
   .qpreview::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pac,var(--blue))}
@@ -192,7 +210,7 @@
   .erow .elabel .eband{font-size:13px;color:var(--ink-soft);font-weight:600}
   .erow .elabel .eval{font-size:14px;font-weight:800;color:var(--eac,var(--blue));font-variant-numeric:tabular-nums;margin-left:auto}
   .etrack{position:relative;height:10px;border-radius:999px;background:var(--tan);overflow:hidden;margin-left:38px}
-  .efill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--eac,var(--blue)),var(--eac2,var(--blue-soft)));transition:width .8s cubic-bezier(.4,0,.2,1)}
+  .efill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--eac,var(--blue)),color-mix(in srgb,var(--eac,var(--blue)) 58%, #fff));transition:width .8s cubic-bezier(.4,0,.2,1)}
   .escale{font-size:11.5px;color:var(--eac,var(--blue));font-weight:600;margin:6px 0 0 38px}
 
   /* kicker de section (style proxxie-new-design) */
@@ -215,6 +233,16 @@
   .ulist li svg{flex:0 0 auto;margin-top:3px}
   .subnote{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:12px}
   .sublink{color:var(--blue);text-decoration:underline;cursor:pointer;font-weight:600}
+
+  /* portrait gratuit : un bloc par dimension distinctive */
+  .pblocks{display:flex;flex-direction:column;gap:14px}
+  .pblock{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 20px 20px 22px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
+  .pblock::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pac,var(--blue))}
+  .pbhead{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .pbbadge{width:30px;height:30px;border-radius:9px;background:var(--pac,var(--blue));color:#fff;font-family:var(--serif);font-weight:600;font-size:16px;display:grid;place-items:center;flex:0 0 auto}
+  .pbname{font-size:16px;font-weight:700}
+  .pbband{font-size:13px;font-weight:600;color:var(--pac,var(--blue));margin-left:auto;background:color-mix(in srgb,var(--pac,var(--blue)) 12%, #fff);padding:3px 11px;border-radius:999px}
+  .pblock p{font-size:15.5px;line-height:1.6;margin:0;color:var(--ink)}
 
   /* portrait editorial */
   .portrait p{font-size:17px;line-height:1.65}
@@ -251,6 +279,37 @@
   .portrait.llm li::before{content:"";position:absolute;left:3px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--orange)}
   .portrait.llm p{font-size:16px;line-height:1.62;margin-bottom:11px}
   .portrait.llm b{color:var(--ink)}
+  /* pastille "Profil complet" (style rapport ancien site) */
+  .statpill{display:inline-flex;align-items:center;gap:7px;background:#E7F6EF;color:#2E8B6E;font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;white-space:nowrap;flex:0 0 auto}
+  .statpill::before{content:"";width:8px;height:8px;border-radius:50%;background:#2E8B6E}
+
+  /* couche payante "quoi en faire" : rapport tabulé façon ancien site */
+  .tabs{display:flex;gap:6px;background:#F1ECDF;border-radius:14px;padding:5px;margin:18px 0}
+  .tab{flex:1;text-align:center;font-size:13.5px;font-weight:700;color:var(--ink-soft);padding:9px 6px;border-radius:10px;cursor:pointer;border:0;background:none;font-family:inherit}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:0 4px 12px rgba(20,18,8,.06)}
+  .tabpane{display:none}
+  .tabpane.on{display:block}
+  .secttl{font-family:var(--serif);font-weight:800;font-size:19px;margin:0 0 3px}
+  .sectsub{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;line-height:1.45}
+  .crow{display:flex;gap:13px;align-items:flex-start;padding:15px 0;border-top:1px solid var(--line)}
+  .crow:first-of-type{border-top:0;padding-top:2px}
+  .cbadge{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;flex:0 0 auto;background:#F4F6FF}
+  .cmain{flex:1;min-width:0}
+  .ctop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:3px}
+  .cname{font-weight:700;font-size:15.5px}
+  .cpct{font-weight:800;font-size:15px;flex:0 0 auto}
+  .csub{font-size:13px;color:var(--ink-soft);margin:0 0 9px;line-height:1.4}
+  .ctrack{height:8px;border-radius:99px;background:#EFE7D6;overflow:hidden}
+  .cfill{height:100%;border-radius:99px;width:0;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;font-weight:650;padding:7px 13px;border-radius:999px;background:#F1ECDF;color:var(--ink)}
+  .fv{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--line)}
+  .fv:first-of-type{border-top:0;padding-top:0}
+  .fvic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px;flex:0 0 auto;font-weight:800}
+  .fvic.up{background:#E7F6EF;color:#2E8B6E}
+  .fvic.watch{background:#FFF1E8;color:var(--orange)}
+  .fvb{font-weight:700;font-size:14.5px;margin:0 0 2px}
+  .fvp{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.45}
 
   .disclaimer{font-size:12.5px;color:var(--ink-soft);line-height:1.55;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
   .disclaimer b{color:var(--ink)}
@@ -283,9 +342,10 @@
 </style>
 </head>
 <body>
+<div class="blobs" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 <div class="wrap">
 
-  <div class="topbar">
+  <div class="topbar" onclick="App.openCatalog()" title="Retour à tous les tests" role="button">
     <div class="mark">
       <svg viewBox="0 0 320 320" aria-hidden="true">
         <path d="M70 90 L160 230 L250 90" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -297,7 +357,7 @@
 
   <!-- ÉCRAN 0 : CATALOGUE -->
   <section class="screen active" id="s-home">
-    <h1>Explore qui tu es, un test à la fois.</h1>
+    <h1>Explore <span class="hl">qui tu es</span>, un test à la fois.</h1>
     <p class="hero-sub">Des tests fondés sur la recherche en psychologie, et pour chacun un portrait rédigé rien que pour toi. Commence librement, tu décides ensuite.</p>
     <div class="catalog" id="catalog"></div>
     <p class="disclaimer">
@@ -346,6 +406,7 @@
 
   <!-- ÉCRAN 3 : RÉSULTAT SIMPLE GRATUIT (après les 15 questions) -->
   <section class="screen" id="s-free">
+    <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
     <span class="kicker"><span class="kd"></span>Ton résultat gratuit</span>
     <h1 id="free-title">Voici la première esquisse de ton profil.</h1>
     <p class="lead" id="free-lead"></p>
@@ -355,56 +416,16 @@
     </div>
 
     <h2>Ce que cela révèle déjà</h2>
-    <div class="card portrait">
-      <p id="free-portrait" style="margin:0"></p>
-    </div>
+    <div id="free-portrait"></div>
 
     <div id="free-next"></div>
 
-    <p class="disclaimer">
-      <b>Proxxie Lab propose un outil psychométrique à visée de connaissance de soi.</b>
-      Il ne s'agit ni d'un diagnostic, ni d'un avis médical ou psychologique. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
-    </p>
-  </section>
-
-  <!-- ÉCRAN 3 bis : PAYWALL (après la version longue, débloque l'analyse OpenAI) -->
-  <section class="screen" id="s-pay">
-    <span class="kicker"><span class="kd"></span>Version longue terminée</span>
-    <h1>Ton profil complet est prêt.</h1>
-    <p class="lead" id="pay-lead"></p>
-
-    <div class="card">
-      <p style="font-weight:650;margin-bottom:4px">Ton empreinte complète</p>
-      <p style="color:var(--ink-soft);font-size:14px;margin-bottom:6px">La position de chaque dimension, calculée sur toutes tes réponses.</p>
-      <div class="empreinte" id="pay-empreinte"></div>
-    </div>
-
-    <div class="lockwrap">
-      <div class="card" style="margin-top:14px">
-        <h2 style="margin-top:4px">Ton analyse personnalisée</h2>
-        <div class="blurred portrait">
-          <p>Sur le plan relationnel, tu fonctionnes selon une logique de profondeur plutôt que de largeur. Cette tendance influence la façon dont tu recharges ton énergie, dont tu prends des décisions sous pression, et dont tu abordes les conflits au travail comme dans ta vie privée. Trois leviers concrets se dégagent pour les prochaines semaines.</p>
-        </div>
-      </div>
-      <div class="lockbadge">
-        <span class="lk">🔒 Réservé à l'analyse complète</span>
-      </div>
-    </div>
-
-    <div class="paywall">
-      <span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Analyse complète</span>
-      <div class="price"><b>4,99 €</b><s>14,99 €</s></div>
-      <p style="color:var(--ink-soft);margin:0">Paiement unique, ton analyse t'appartient.</p>
-      <ul class="ulist">
-        <li>${CHK} Une analyse rédigée pour toi, fondée sur tes <span id="pay-li-n"></span> réponses</li>
-        <li>${CHK} Ton portrait éditorial détaillé, dimension par dimension</li>
-        <li>${CHK} Tes points d'appui et tes angles de vigilance</li>
-        <li>${CHK} Un résumé partageable, si tu le souhaites</li>
-        <li>${CHK} Sauvegarde de ton profil pour suivre son évolution</li>
-      </ul>
-      <button class="btn pay" onclick="App.openCheckout()">Débloquer mon analyse, 4,99 €</button>
-      <p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l'abonnement Lab à 9,99 €/mois</span>, tous les tests et le suivi dans le temps</p>
-    </div>
+    <!-- DEV-BTN start (bouton de test temporaire, à retirer) -->
+    <button id="dev-generate" onclick="App.devGenerate()"
+      style="margin-top:14px;width:100%;padding:14px;border-radius:14px;border:1.5px dashed #C24A6B;background:rgba(194,74,107,.06);color:#C24A6B;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">
+      DEV · Générer l'analyse détaillée (sur les réponses actuelles)
+    </button>
+    <!-- DEV-BTN end -->
 
     <p class="disclaimer">
       <b>Proxxie Lab propose un outil psychométrique à visée de connaissance de soi.</b>
@@ -418,14 +439,16 @@
       <div class="spinner"></div>
       <h2 style="font-family:var(--serif)">On rédige ton portrait</h2>
       <p class="genstep" id="genstep">Analyse de tes réponses...</p>
-      <p class="genstream" id="genstream"></p>
     </div>
   </section>
 
   <!-- ÉCRAN 5 : PORTRAIT COMPLET -->
   <section class="screen" id="s-full">
     <button class="crumb" onclick="App.openCatalog()">‹ Tous les tests</button>
-    <span class="kicker"><span class="kd"></span>Ton portrait complet</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px">
+      <span class="kicker" style="margin:0"><span class="kd"></span>Ton portrait complet</span>
+      <span class="statpill">Profil complet</span>
+    </div>
     <h1 id="full-title">Ton portrait psychométrique.</h1>
     <p class="lead" id="full-lead"></p>
 
@@ -1884,6 +1907,14 @@
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
   function isClin(t){ return t && t.kind==="clinical"; }
+  // palette : une couleur par dimension (évite le rendu monochrome)
+  var DIMPAL=['#1320CE','#C2603A','#2E8B82','#7A4FB5','#C24A6B','#4E8A3A','#B8842A'];
+  function dimColor(t,d){
+    if(isClin(t)) return '#5B6B72';
+    var i=t.order.indexOf(d);
+    return DIMPAL[(i<0?0:i)%DIMPAL.length];
+  }
+
   // sélectionne le palier dont le seuil min est atteint (liste triée par min décroissant)
   function pickLevel(levels, v){
     for(var i=0;i<levels.length;i++){ if(v>=levels[i].min) return levels[i]; }
@@ -1991,11 +2022,10 @@
   // ---------- RENDU EMPREINTE ----------
   function empreinte(el, t, sc, animate, labelFn){
     el.innerHTML="";
-    var m=META[curId]||{}; var ac=isClin(t)?'#5B6B72':(m.ac||'#1320CE'); var ac2=isClin(t)?'#9DB0A8':(m.ac||'#1320CE');
-    el.style.setProperty('--eac', ac); el.style.setProperty('--eac2', ac2);
     t.order.forEach(function(d){
       var v=sc[d];
       var row=document.createElement("div"); row.className="erow";
+      row.style.setProperty('--eac', dimColor(t,d));
       var letter=(t.dims[d].name||"?").trim().charAt(0).toUpperCase();
       row.innerHTML =
         '<div class="elabel"><span class="ebadge">'+letter+'</span><b>'+t.dims[d].name+'</b><span class="eband">'+(labelFn?labelFn(d,v):bandLabel(v))+'</span><span class="eval">'+v+'%</span></div>'+
@@ -2125,12 +2155,12 @@
       // si déjà en cours / terminé, on reprend au bon endroit
       var longDone = answeredCount(t,s,t.items.length)===t.items.length;
       if(s.paid && longDone){
-        if(s.narrative!==undefined){ showFull(); } else { runGeneration(); }
+        runNarrative(t.items.length, function(){ runAction(showFull); }); // payé : narration + pistes (cache => instantané)
         return;
       }
-      if(s.long && longDone){ showPaylock(); return; }      // longue finie, en attente de paiement
+      if(s.long && longDone){ runNarrative(t.items.length, showFull); return; } // longue finie : narration gratuite + paywall
       if(s.long){ show("s-quiz"); renderQuestion(); return; } // au milieu de la version longue
-      if(answeredCount(t,s,t.freeCount)===t.freeCount){ showSimple(); return; } // 15 gratuites finies
+      if(answeredCount(t,s,t.freeCount)===t.freeCount){ runNarrative(t.freeCount, showSimple); return; } // 15 gratuites finies
       if(s.idx>0){ show("s-quiz"); renderQuestion(); return; } // au milieu des 15 gratuites
     }
 
@@ -2162,7 +2192,7 @@
   function renderQuestion(){
     var t=T(), s=st(), i=s.idx, it=t.items[i];
     var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
-    var m=META[curId]||{}; var ac=isClin(t) ? '#5B6B72' : (m.ac||'#1320CE');
+    var ac=dimColor(t, it.dim);
     document.getElementById("qdim").innerHTML = '<span class="qd"></span>'+t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
     document.getElementById("qhint-lo").textContent = t.hint[0];
@@ -2177,13 +2207,20 @@
     scale.innerHTML="";
     for(var k=1;k<=t.scale.length;k++){
       (function(val){
+        var wrap=document.createElement("div");
+        wrap.className="scaleitem"+(s.answers[it.id]===val?" sel":"");
         var b=document.createElement("button");
         b.className="nopt"+(s.answers[it.id]===val?" sel":"");
         b.type="button";
         b.textContent=val;
         b.setAttribute("aria-label", t.scale[val-1]);
         b.onclick=function(){ choose(val); };
-        scale.appendChild(b);
+        var cap=document.createElement("span");
+        cap.className="noptcap";
+        cap.textContent=t.scale[val-1];
+        wrap.appendChild(b);
+        wrap.appendChild(cap);
+        scale.appendChild(wrap);
       })(k);
     }
   }
@@ -2193,7 +2230,10 @@
     s.answers[it.id]=val; save();
     var opts=document.querySelectorAll("#scale .nopt");
     opts.forEach(function(o){o.classList.remove("sel");});
-    opts[val-1].classList.add("sel");
+    if(opts[val-1]) opts[val-1].classList.add("sel");
+    var items=document.querySelectorAll("#scale .scaleitem");
+    items.forEach(function(o){o.classList.remove("sel");});
+    if(items[val-1]) items[val-1].classList.add("sel");
     setTimeout(next,180);
   }
 
@@ -2205,10 +2245,9 @@
     if(s.idx < limit-1){
       s.idx++; save(); renderQuestion();
     } else {
-      if(isClin(t)){ showClinical(); }      // dépistage : résultat direct
-      else if(!s.long){ showSimple(); }      // 15 gratuites terminées : résultat simple
-      else if(!s.paid){ showPaylock(); }     // version longue terminée : paiement de l'analyse
-      else { runGeneration(); }              // payé : génération OpenAI
+      if(isClin(t)){ showClinical(); }                          // dépistage : résultat direct
+      else if(!s.long){ runNarrative(t.freeCount, showSimple); } // 15 gratuites : narration gratuite (aperçu)
+      else { runNarrative(t.items.length, showFull); }           // version longue : narration complète gratuite + paywall "quoi en faire"
     }
   }
 
@@ -2223,11 +2262,33 @@
     var sc=scores(t, s, t.freeCount);
     empreinte(document.getElementById("free-empreinte"), t, sc, true);
 
-    var top=t.order.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
     document.getElementById("free-lead").textContent =
-      "Sur ces "+t.freeCount+" premières questions, c'est ta dimension « "+t.dims[top].name+" » qui ressort le plus nettement.";
-    document.getElementById("free-portrait").textContent =
-      t.portrait[top][band(sc[top])];
+      "Voici un premier portrait, rédigé à partir de tes "+t.freeCount+" réponses. La version longue l'affine sur l'ensemble de tes traits.";
+
+    var host=document.getElementById("free-portrait");
+    host.innerHTML="";
+    if(s.narrative){
+      var llm=document.createElement("div"); llm.className="card portrait llm"; llm.style.marginTop="0";
+      llm.innerHTML=mdToHtml(s.narrative);
+      host.appendChild(llm);
+    } else {
+      // repli déterministe : le trait dominant puis les plus distinctifs
+      var top=t.order.slice().sort(function(a,b){return sc[b]-sc[a];})[0];
+      var others=t.order.filter(function(d){return d!==top;})
+        .sort(function(a,b){return Math.abs(sc[b]-50)-Math.abs(sc[a]-50);});
+      var picks=[top].concat(others).slice(0,3);
+      var html='<div class="pblocks">';
+      picks.forEach(function(d){
+        var v=sc[d], letter=(t.dims[d].name||"?").trim().charAt(0).toUpperCase();
+        html+='<div class="pblock" style="--pac:'+dimColor(t,d)+'">'
+          +'<div class="pbhead"><span class="pbbadge">'+letter+'</span>'
+          +'<span class="pbname">'+t.dims[d].name+'</span>'
+          +'<span class="pbband">'+bandLabel(v)+' · '+v+'%</span></div>'
+          +'<p>'+t.portrait[d][band(v)]+'</p></div>';
+      });
+      html+='</div>';
+      host.innerHTML=html;
+    }
 
     var rest=t.items.length - t.freeCount;
     var restTxt = rest>1 ? (rest+" questions") : "1 question";
@@ -2269,17 +2330,6 @@
     startLong();
   }
 
-  // ---------- PAYWALL (après la version longue, débloque l'analyse OpenAI) ----------
-  function showPaylock(){
-    var t=T(), s=st();
-    var sc=scores(t, s, t.items.length);
-    empreinte(document.getElementById("pay-empreinte"), t, sc, true);
-    document.getElementById("pay-lead").textContent =
-      "Tu as répondu aux "+t.items.length+" questions. Voici ton empreinte complète. Débloque l'analyse détaillée, rédigée pour toi, dimension par dimension.";
-    document.getElementById("pay-li-n").textContent = t.items.length;
-    show("s-pay");
-  }
-
   // ---------- CHECKOUT SIMULÉ ----------
   var subMode=false;
   function openCheckout(sub){
@@ -2300,29 +2350,202 @@
     save();
     closeCheckout();
     toast("Paiement confirmé (démo)");
-    runGeneration();   // version longue déjà terminée : on génère l'analyse
+    // narration déjà en cache (version longue terminée) : on génère la couche "quoi en faire"
+    runNarrative(T().items.length, function(){ runAction(showFull); });
   }
 
-  // ---------- GÉNÉRATION ----------
-  function runGeneration(){
-    var t=T(), s=st();
-    show("s-gen");
-    var sc=scores(t, s, t.items.length);
-    var label=document.getElementById("genstep");
-    var stream=document.getElementById("genstream");
-    if(stream) stream.textContent="";
-    var phases=["On calcule tes "+t.order.length+" dimensions...","On rédige ton portrait, fondé sur tes réponses..."];
-    label.textContent=phases[0];
-    setTimeout(function(){ if(document.getElementById("s-gen").classList.contains("active")) label.textContent=phases[1]; },900);
+  // bouton DEV (temporaire) : simule le parcours payant complet sur les réponses actuelles
+  function devGenerate(){
+    var s=st(); s.paid=true; save();
+    runNarrative(T().items.length, function(){ runAction(showFull); });
+  }
 
-    generatePortrait(t, sc, function(acc){
-      if(stream) stream.textContent = acc.slice(-420);
-    }).then(function(md){
+  // ---------- DONNÉES MÉTIERS (repli de démo si le JSON LLM est indisponible) ----------
+  var CAREERS={
+    _default:{
+      metiers:[
+        {nom:"Chef·fe de projet",secteur:"Conseil & organisation",icon:"&#128203;"},
+        {nom:"Chargé·e de mission",secteur:"Secteur public & associatif",icon:"&#127970;"},
+        {nom:"Responsable communication",secteur:"Marketing & médias",icon:"&#128226;"},
+        {nom:"Consultant·e",secteur:"Conseil & stratégie",icon:"&#129504;"},
+        {nom:"Formateur·rice",secteur:"Éducation & formation",icon:"&#127979;"}
+      ],
+      secteurs:[
+        {nom:"Conseil & stratégie",icon:"&#129504;"},{nom:"Éducation",icon:"&#127979;"},
+        {nom:"Marketing & médias",icon:"&#128226;"},{nom:"Secteur public",icon:"&#127963;"},
+        {nom:"Entrepreneuriat",icon:"&#128640;"}
+      ]
+    },
+    bigfive:{
+      metiers:[
+        {nom:"UX / Product designer",secteur:"Design & Tech",icon:"&#127912;"},
+        {nom:"Chercheur·se en sciences sociales",secteur:"Recherche",icon:"&#128218;"},
+        {nom:"Psychologue du travail",secteur:"Santé & social",icon:"&#129504;"},
+        {nom:"Rédacteur·rice de contenu",secteur:"Culture & médias",icon:"&#128221;"},
+        {nom:"Coordinateur·rice de projet",secteur:"Conseil & organisation",icon:"&#128203;"}
+      ],
+      secteurs:[
+        {nom:"Design & Tech",icon:"&#128187;"},{nom:"Éducation",icon:"&#127979;"},
+        {nom:"Santé & social",icon:"&#129658;"},{nom:"Recherche",icon:"&#128202;"},
+        {nom:"Culture & médias",icon:"&#127916;"}
+      ]
+    },
+    riasec:{
+      metiers:[
+        {nom:"Ingénieur·e",secteur:"Industrie & technique",icon:"&#9881;"},
+        {nom:"Designer",secteur:"Création & design",icon:"&#127912;"},
+        {nom:"Éducateur·rice",secteur:"Social & enseignement",icon:"&#127979;"},
+        {nom:"Entrepreneur·e",secteur:"Business & innovation",icon:"&#128640;"},
+        {nom:"Gestionnaire",secteur:"Administration & finance",icon:"&#128202;"}
+      ],
+      secteurs:[
+        {nom:"Industrie & technique",icon:"&#9881;"},{nom:"Création & design",icon:"&#127912;"},
+        {nom:"Social & enseignement",icon:"&#127979;"},{nom:"Business",icon:"&#128640;"},
+        {nom:"Administration",icon:"&#128188;"}
+      ]
+    }
+  };
+
+  // ---------- GÉNÉRATION ----------
+  var genTimer=null;
+  // écran de chargement : phrases qui défilent toutes les 3 s, aucun contenu visible
+  function startGenLoader(title, phases){
+    show("s-gen");
+    var ht=document.querySelector("#s-gen .gen h2"); if(ht) ht.textContent=title;
+    var label=document.getElementById("genstep");
+    var pi=0; label.textContent=phases[0];
+    if(genTimer){ clearInterval(genTimer); }
+    genTimer=setInterval(function(){
+      if(!document.getElementById("s-gen").classList.contains("active")){ clearInterval(genTimer); genTimer=null; return; }
+      pi=(pi+1)%phases.length;
+      label.style.opacity="0";
+      setTimeout(function(){ label.textContent=phases[pi]; label.style.opacity="1"; }, 240);
+    }, 3000);
+  }
+  function stopGenLoader(){ if(genTimer){ clearInterval(genTimer); genTimer=null; } }
+
+  // narration "qui tu es" (gratuite) : générée sur `limit` réponses, mise en cache par nombre
+  function runNarrative(limit, doneFn){
+    var t=T(), s=st();
+    var sc=scores(t, s, limit);
+    if(s.narrative && s.narrativeCount>=limit){ s.narrativeScores=sc; save(); doneFn(); return; }
+    startGenLoader("On rédige ton portrait", [
+      "On analyse tes réponses...",
+      "On calcule tes "+t.order.length+" dimensions...",
+      "On identifie tes traits les plus marquants...",
+      "On rédige ton portrait, fondé sur tes réponses...",
+      "On nuance chaque dimension...",
+      "On met la dernière main à ton portrait..."
+    ]);
+    generatePortrait(t, sc, null).then(function(md){
+      stopGenLoader();
       s.narrative = md || "";        // "" => repli sur les gabarits
+      s.narrativeCount = limit;
       s.narrativeScores = sc;        // snapshot figé, rejouable sans régénérer
       save();
-      showFull();
+      doneFn();
     });
+  }
+
+  // couche payante "quoi en faire" : métiers / secteurs / forces / vigilance (JSON)
+  function generateAction(t, sc){
+    var ctrl=("AbortController" in window)?new AbortController():null;
+    var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 45000);
+    return fetch(AI_URL,{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({testCode:t.code, testName:"Proxxie Lab, "+t.name, summary:summaryFor(t, sc), mode:"action", format:"json"}),
+      signal:ctrl?ctrl.signal:undefined
+    }).then(function(r){ clearTimeout(to); if(!r.ok) throw 0; return r.text(); })
+      .then(function(txt){
+        // tolère un JSON brut ou enrobé dans un bloc ```json
+        var m=txt.match(/```(?:json)?\s*([\s\S]*?)```/); if(m) txt=m[1];
+        var obj=JSON.parse(txt);
+        if(!obj || !obj.metiers || !obj.metiers.length) throw 0;
+        return obj;
+      }).catch(function(){ return null; });
+  }
+
+  // repli déterministe pour que la démo reste complète si le JSON LLM est absent
+  function fallbackAction(t, sc){
+    var ordered=t.order.slice().sort(function(a,b){return sc[b]-sc[a];});
+    var top=ordered.slice(0,2), low=ordered[ordered.length-1];
+    var cat=(CAREERS[t.id]||CAREERS._default);
+    var metiers=cat.metiers.map(function(m,i){
+      return {nom:m.nom, secteur:m.secteur, icon:m.icon, compat:Math.max(58, 94-i*7)};
+    });
+    var forces=top.map(function(d){
+      return {titre:t.dims[d].name, texte:"Trait marquant ("+sc[d]+"%). "+t.dims[d].sub.charAt(0).toUpperCase()+t.dims[d].sub.slice(1)+"."};
+    });
+    var vigilances=[{titre:t.dims[low].name, texte:"Ta dimension la plus discrète ("+sc[low]+"%). C'est là que de petits ajustements ont le plus d'effet."}];
+    return {metiers:metiers, secteurs:cat.secteurs, forces:forces, vigilances:vigilances};
+  }
+
+  function runAction(doneFn){
+    var t=T(), s=st();
+    var sc=s.narrativeScores || scores(t, s, t.items.length);
+    if(s.action){ doneFn(); return; }
+    startGenLoader("On cherche tes pistes", [
+      "On relie ton profil aux métiers...",
+      "On évalue ta compatibilité, secteur par secteur...",
+      "On repère tes points d'appui...",
+      "On identifie tes angles de vigilance...",
+      "On met la dernière main à tes pistes..."
+    ]);
+    generateAction(t, sc).then(function(obj){
+      stopGenLoader();
+      s.action = obj || fallbackAction(t, sc);
+      save();
+      doneFn();
+    });
+  }
+
+  // rendu du rapport tabulé "quoi en faire"
+  function renderActionLayer(host, action){
+    var accent=["var(--orange)","var(--blue)","var(--blue)","var(--blue)","var(--blue)","var(--blue)"];
+    var metiersRows=action.metiers.map(function(m,i){
+      var col=accent[i]||"var(--blue)";
+      return '<div class="crow"><span class="cbadge"'+(i===0?' style="background:#FFF1E8"':'')+'>'+(m.icon||"&#128188;")+'</span>'
+        +'<div class="cmain"><div class="ctop"><span class="cname">'+esc(m.nom)+'</span>'
+        +'<span class="cpct" style="color:'+col+'">'+(m.compat||"")+'%</span></div>'
+        +(m.secteur?'<p class="csub">'+esc(m.secteur)+'</p>':'')
+        +'<div class="ctrack"><div class="cfill" data-w="'+(m.compat||0)+'" style="background:'+col+'"></div></div></div></div>';
+    }).join("");
+    var secteurChips=(action.secteurs||[]).map(function(s){
+      return '<span class="chip">'+(s.icon?s.icon+" ":"")+esc(s.nom||s)+'</span>';
+    }).join("");
+    var fvRows=(action.forces||[]).map(function(f){
+      return '<div class="fv"><span class="fvic up">&#9650;</span><div><p class="fvb">'+esc(f.titre)+'</p><p class="fvp">'+esc(f.texte)+'</p></div></div>';
+    }).join("")+(action.vigilances||[]).map(function(v){
+      return '<div class="fv"><span class="fvic watch">&#9888;</span><div><p class="fvb">'+esc(v.titre)+'</p><p class="fvp">'+esc(v.texte)+'</p></div></div>';
+    }).join("");
+
+    host.innerHTML=
+      '<div class="tabs">'
+        +'<button class="tab on" data-pane="pane-met">Métiers</button>'
+        +'<button class="tab" data-pane="pane-sec">Secteurs</button>'
+        +'<button class="tab" data-pane="pane-fv">Forces &amp; vigilance</button></div>'
+      +'<div class="card" style="margin-top:0">'
+        +'<div class="tabpane on" id="pane-met"><h2 class="secttl">Métiers possibles</h2>'
+          +'<p class="sectsub">Classés par compatibilité avec ton profil. Des pistes à explorer, pas un verdict.</p>'+metiersRows+'</div>'
+        +'<div class="tabpane" id="pane-sec"><h2 class="secttl">Secteurs d\'activité</h2>'
+          +'<p class="sectsub">Les environnements où ton profil s\'épanouit le plus.</p><div class="chips">'+secteurChips+'</div></div>'
+        +'<div class="tabpane" id="pane-fv"><h2 class="secttl">Forces &amp; points de vigilance</h2>'
+          +'<p class="sectsub">Ce sur quoi t\'appuyer, et ce à surveiller.</p>'+fvRows+'</div>'
+      +'</div>';
+
+    var tabs=host.querySelectorAll(".tab");
+    tabs.forEach(function(tb){
+      tb.addEventListener("click", function(){
+        tabs.forEach(function(x){x.classList.remove("on");});
+        host.querySelectorAll(".tabpane").forEach(function(p){p.classList.remove("on");});
+        tb.classList.add("on");
+        var pane=document.getElementById(tb.getAttribute("data-pane"));
+        if(pane) pane.classList.add("on");
+      });
+    });
+    setTimeout(function(){
+      host.querySelectorAll(".cfill").forEach(function(f){ f.style.width=(f.getAttribute("data-w")||0)+"%"; });
+    }, 120);
   }
 
   // ---------- PORTRAIT COMPLET ----------
@@ -2359,13 +2582,36 @@
       });
     }
 
-    var lev=document.createElement("div"); lev.className="card";
-    lev.innerHTML =
-      '<p style="font-weight:650;margin-bottom:8px">Ton point d\'appui</p>'+
-      '<p style="margin-bottom:16px">Ta dimension « '+t.dims[top].name+' » est une ressource sur laquelle t\'appuyer dans tes projets et tes relations.</p>'+
-      '<p style="font-weight:650;margin-bottom:8px">Ton angle de vigilance</p>'+
-      '<p style="margin:0">Garde un œil sur ta dimension « '+t.dims[low].name+' », c\'est là que de petits ajustements auront le plus d\'effet.</p>';
-    host.appendChild(lev);
+    // couche "quoi en faire" : débloquée si payé, sinon teaser + paywall
+    if(s.paid && s.action){
+      var sep=document.createElement("div");
+      sep.style.cssText="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:28px 0 2px";
+      sep.innerHTML='<span class="kicker" style="margin:0"><span class="kd"></span>Quoi en faire</span>'
+        +'<span class="statpill">Pistes débloquées</span>';
+      host.appendChild(sep);
+      var ttl=document.createElement("h2"); ttl.style.cssText="font-family:var(--serif);font-size:22px;margin:6px 0 0";
+      ttl.textContent="Tes métiers et secteurs.";
+      host.appendChild(ttl);
+      var act=document.createElement("div"); act.id="full-action";
+      host.appendChild(act);
+      renderActionLayer(act, s.action);
+    } else {
+      var pw=document.createElement("div"); pw.className="paywall"; pw.style.marginTop="26px";
+      pw.innerHTML=
+        '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Quoi en faire</span>'+
+        '<h2 style="font-family:var(--serif);margin:12px 0 4px">Passe du portrait à l\'action.</h2>'+
+        '<div class="price"><b>4,99 €</b><s>14,99 €</s></div>'+
+        '<p style="color:var(--ink-soft);margin:0 0 4px">Ton portrait te dit qui tu es. Débloque ce que tu peux en faire.</p>'+
+        '<ul class="ulist">'+
+          '<li>'+CHK+' Les métiers les plus compatibles avec ton profil</li>'+
+          '<li>'+CHK+' Les secteurs d\'activité où tu t\'épanouis</li>'+
+          '<li>'+CHK+' Tes forces concrètes et tes points de vigilance</li>'+
+          '<li>'+CHK+' Un résumé partageable de tout ton portrait</li>'+
+        '</ul>'+
+        '<button class="btn pay" onclick="App.openCheckout()">Débloquer mes pistes, 4,99 €</button>'+
+        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, tous les tests et le suivi dans le temps</p>';
+      host.appendChild(pw);
+    }
 
     document.getElementById("full-disclaimer").innerHTML = "<b>À propos de ces résultats.</b> "+t.about;
 
@@ -2510,7 +2756,8 @@
   window.App={openCatalog:openCatalog,openTest:openTest,start:start,back:back,
     startLong:startLong,registerContinue:registerContinue,
     openCheckout:openCheckout,closeCheckout:closeCheckout,
-    pay:pay,share:share,saveAccount:saveAccount,reset:reset};
+    pay:pay,share:share,saveAccount:saveAccount,reset:reset,
+    devGenerate:devGenerate};
 
   resume();
 })();
