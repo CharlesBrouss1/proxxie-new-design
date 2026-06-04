@@ -743,12 +743,6 @@
       <button class="btn ghost hp-cont-all" onclick="App.openHome()">Voir ma carte complète</button>
     </section>
 
-    <!-- DEV-BTN start (bouton de test temporaire, à retirer) -->
-    <button id="dev-generate" onclick="App.devGenerate()"
-      style="margin-top:14px;width:100%;padding:14px;border-radius:14px;border:1.5px dashed #C24A6B;background:rgba(194,74,107,.06);color:#C24A6B;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">
-      DEV · Générer l'analyse détaillée (sur les réponses actuelles)
-    </button>
-    <!-- DEV-BTN end -->
 
     <!-- CTA : décrypter les résultats avec Charles -->
     <section class="cta-c">
@@ -2469,6 +2463,8 @@
   if(!state.tests) state.tests={};
   if(!state.reflect) state.reflect={}; // réponses aux questions à se poser
   if(state.synthesisPaid===undefined) state.synthesisPaid=false; // produit payant global : la Synthèse cross-tests
+  if(state.synthNarrative===undefined) state.synthNarrative=""; // cache du fil rouge rédigé par le LLM
+  if(state.synthNarrativeKey===undefined) state.synthNarrativeKey=""; // signature des tests passés (régénère si elle change)
   var curId = null;
 
   function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
@@ -2835,29 +2831,6 @@
     closeCheckout();
     toast("Paiement confirmé (démo)");
     openSynthese();
-  }
-
-  // bouton DEV (temporaire) : débloque la Synthèse et l'ouvre directement
-  function devGenerate(){
-    var s=st(); s.paid=true; state.synthesisPaid=true; save();
-    runNarrative(T().items.length, function(){ runAction(showFull); });
-  }
-
-  // dev: remplit les réponses gratuites de plusieurs tests pour visualiser la carte
-  function devFill(ids){
-    ids.forEach(function(id){
-      var t=TESTS[id]; if(!t) return;
-      var lim=(t.freeCount!=null?t.freeCount:t.items.length);
-      var s=state.tests[id]||(state.tests[id]={answers:{},idx:0,paid:false,long:false});
-      for(var i=0;i<lim;i++){
-        var it=t.items[i];
-        // valeur variée pour produire une dimension dominante nette
-        var v=1+((i*2+ (it.dim?it.dim.charCodeAt(0):0))%5);
-        s.answers[it.id]=v;
-      }
-      s.idx=lim;
-    });
-    save(); if(typeof renderGraph==='function') renderGraph();
   }
 
   // ---------- DONNÉES MÉTIERS (repli de démo si le JSON LLM est indisponible) ----------
@@ -3441,15 +3414,65 @@
     return {facets:facets, fils:allTraits.slice(0,3), pistes:pistes.slice(0,6), nTests:synthDoneIds().length, reflectCount:reflectCount};
   }
 
-  // routeur de l'écran Synthèse : éligibilité -> paywall -> contenu
+  // signature de l'ensemble des tests passés : sert de clé de cache du fil rouge LLM
+  function synthKey(){ return synthDoneIds().slice().sort().join(','); }
+
+  // résumé textuel envoyé au LLM pour rédiger le fil rouge cross-tests
+  function synthSummary(d){
+    var lines=[];
+    d.facets.forEach(function(f){
+      var ts=f.traits.map(function(t){ return t.label+(t.score!=null?' ('+t.score+'/100)':' [clinique]'); }).join(', ');
+      lines.push(f.name+' : '+ts);
+    });
+    if(d.fils.length) lines.push('Traits dominants : '+d.fils.map(function(f){return f.label+' '+f.score+'/100';}).join(', '));
+    if(d.reflectCount>0) lines.push(d.reflectCount+' réflexion(s) personnelle(s) écrite(s) par la personne.');
+    return lines.join('\n');
+  }
+
+  // couche LLM : rédige le "fil rouge" cross-tests (prose courte). Repli => "" => gabarit déterministe.
+  function generateSynthese(d){
+    var ctrl=("AbortController" in window)?new AbortController():null;
+    var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 45000);
+    return fetch(AI_URL,{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Synthèse cross-tests", summary:synthSummary(d), mode:"synthesis"}),
+      signal:ctrl?ctrl.signal:undefined
+    }).then(function(r){ clearTimeout(to); if(!r.ok) throw 0; return r.text(); })
+      .then(function(md){ return (md && md.trim().length>60) ? md : null; })
+      .catch(function(){ clearTimeout(to); return null; });
+  }
+
+  // routeur de l'écran Synthèse : éligibilité -> paywall -> (génération LLM) -> contenu
   function openSynthese(){
     var head=document.getElementById('syn-head'), body=document.getElementById('syn-body');
     if(!body){ show('s-synthese'); return; }
     if(!synthEligible()){ renderSyntheseLocked(head, body, 'few'); show('s-synthese'); return; }
     if(!state.synthesisPaid){ renderSyntheseLocked(head, body, 'pay'); show('s-synthese'); return; }
     if(head) head.innerHTML='';
-    renderSynthese();
-    show('s-synthese');
+    var key=synthKey();
+    // fil rouge déjà rédigé pour ce même set de tests : on rejoue le cache, instantané
+    if(state.synthNarrative && state.synthNarrativeKey===key){
+      renderSynthese(state.synthNarrative);
+      show('s-synthese');
+      return;
+    }
+    // sinon on (re)génère : loader, puis rendu avec le fil rouge LLM (ou repli déterministe)
+    var d=buildSynthese();
+    startGenLoader("On relie tes tests", [
+      "On rassemble tes "+d.nTests+" tests...",
+      "On cherche le fil rouge entre tes dimensions...",
+      "On croise tes traits les plus marquants...",
+      "On en déduit des directions de carrière...",
+      "On rédige ta lecture d'ensemble..."
+    ]);
+    generateSynthese(d).then(function(md){
+      stopGenLoader();
+      state.synthNarrative = md || "";   // "" => repli sur le gabarit déterministe
+      state.synthNarrativeKey = key;     // mémorise le set de tests couvert
+      save();
+      renderSynthese(state.synthNarrative);
+      show('s-synthese');
+    });
   }
 
   // états verrouillés : pas assez de tests, ou pas encore payé
@@ -3489,23 +3512,29 @@
       '</div>';
   }
 
-  // contenu complet (payé)
-  function renderSynthese(){
+  // contenu complet (payé). `md` = fil rouge rédigé par le LLM ; vide => gabarit déterministe.
+  function renderSynthese(md){
     var host=document.getElementById('syn-body'); if(!host) return;
     var d=buildSynthese();
     host.innerHTML='';
 
     var lead=document.createElement('div'); lead.className='card'; lead.style.marginTop='0';
-    var names=d.fils.map(function(f){return f.label;}), phrase;
-    if(names.length>=2){
-      phrase='À travers tes '+d.nTests+' tests, trois signaux ressortent plus que les autres : <b>'+esc(names[0])+'</b>, <b>'+esc(names[1])+'</b>'+(names[2]?' et <b>'+esc(names[2])+'</b>':'')+'. Pris ensemble, ils dessinent une même direction.';
-    } else if(names.length===1){
-      phrase='Le signal le plus net de tes tests, c\'est <b>'+esc(names[0])+'</b>. Voici comment il se relie au reste de ton profil.';
+    if(md && md.trim()){
+      // fil rouge rédigé par le LLM, à partir des vrais scores cross-tests
+      lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ce qui relie tout</span><div class="nlead" style="margin:0">'+mdToHtml(md)+'</div>';
     } else {
-      phrase='Tes repères se recoupent. Voici ce qu\'ils racontent quand on les lit ensemble.';
+      // repli déterministe : on tisse une phrase à partir des traits dominants
+      var names=d.fils.map(function(f){return f.label;}), phrase;
+      if(names.length>=2){
+        phrase='À travers tes '+d.nTests+' tests, trois signaux ressortent plus que les autres : <b>'+esc(names[0])+'</b>, <b>'+esc(names[1])+'</b>'+(names[2]?' et <b>'+esc(names[2])+'</b>':'')+'. Pris ensemble, ils dessinent une même direction.';
+      } else if(names.length===1){
+        phrase='Le signal le plus net de tes tests, c\'est <b>'+esc(names[0])+'</b>. Voici comment il se relie au reste de ton profil.';
+      } else {
+        phrase='Tes repères se recoupent. Voici ce qu\'ils racontent quand on les lit ensemble.';
+      }
+      if(d.reflectCount>0) phrase+=' On y ajoute ce que tu as écrit dans tes '+d.reflectCount+' réflexion'+(d.reflectCount>1?'s':'')+'.';
+      lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ce qui relie tout</span><p style="margin:0">'+phrase+'</p>';
     }
-    if(d.reflectCount>0) phrase+=' On y ajoute ce que tu as écrit dans tes '+d.reflectCount+' réflexion'+(d.reflectCount>1?'s':'')+'.';
-    lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ce qui relie tout</span><p style="margin:0">'+phrase+'</p>';
     host.appendChild(lead);
 
     if(d.fils.length){
@@ -3827,8 +3856,8 @@
   });
 
   // RDV Charles : une seule source d'URL, câblée sur tous les CTA [data-cta="rdv-charles"].
-  // TODO Charles : remplace par ta vraie URL Calendly (ex. https://calendly.com/charles-proxxie/30min).
-  var CALENDLY_URL="https://calendly.com/charles-proxxie/decryptage-30min";
+  // Source : CTA "30 min avec Charles" du site proxxie-new-design.
+  var CALENDLY_URL="https://calendly.com/proxxie/entretien";
   Array.prototype.forEach.call(document.querySelectorAll('[data-cta="rdv-charles"]'),function(a){
     a.setAttribute('href',CALENDLY_URL);
     a.setAttribute('target','_blank');
@@ -3840,7 +3869,7 @@
     chooseLong:chooseLong,startLongFromIntro:startLongFromIntro,
     openCheckout:openCheckout,closeCheckout:closeCheckout,
     pay:pay,share:share,saveAccount:saveAccount,reset:reset,
-    devGenerate:devGenerate,devFill:devFill,setGraphMode:setGraphMode,resumeLast:resumeLast,
+    setGraphMode:setGraphMode,resumeLast:resumeLast,
     openSynthese:openSynthese,openReflect:openReflect};
 
   resume();
