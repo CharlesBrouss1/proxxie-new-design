@@ -303,6 +303,13 @@ BUNDLE_PATCHES = [
     {
         "name": "F007 pain-points next step",
         "needle": '{ t: "Filières méconnues", d: "Le système a changé depuis votre époque et c\'est devenu opaque." },',
+        # Idempotency anchor that survives markup/comment-punctuation drift. The
+        # situations CTA carries this tracking source in both the em-dash and
+        # comma comment variants, so if it's already in the bundle (team source
+        # now ships the CTA, or a prior run added it) we skip rather than append
+        # a duplicate. This is the regression that kept reappearing after every
+        # bundle re-export.
+        "skip_if": 'source: "situations_cta"',
         "replacements": [
             (
                 # OLD/NEW stop at the CTA-strip </div> (not at </section>) so
@@ -311,7 +318,7 @@ BUNDLE_PATCHES = [
                 # F007's idempotency check.
                 '        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>\n          {items.map((it, i) => (\n            <div key={i} className="card" style={{ padding: 24, background: "white" }}>\n              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FD6936", marginBottom: 14 }} />\n              <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{it.t}</div>\n              <p style={{ color: "var(--c-muted)", fontSize: 14 }}>{it.d}</p>\n            </div>\n          ))}\n        </div>',
                 # Same grid + an in-section CTA strip that points to the method explanation.
-                '        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>\n          {items.map((it, i) => (\n            <div key={i} className="card" style={{ padding: 24, background: "white" }}>\n              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FD6936", marginBottom: 14 }} />\n              <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{it.t}</div>\n              <p style={{ color: "var(--c-muted)", fontSize: 14 }}>{it.d}</p>\n            </div>\n          ))}\n        </div>\n        {/* F007: section CTA — closes the empathy block with two clear paths. */}\n        <div style={{ marginTop: 36, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>\n          <a href="#methode" className="btn btn-orange btn-arrow" style={{ textDecoration: "none" }}>\n            Voir comment on aide\n          </a>\n          <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ textDecoration: "none", background: "white", borderColor: "var(--c-ink)", color: "var(--c-ink)" }} onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "situations_cta" }); }}>\n            30 min avec Charles\n          </a>\n        </div>',
+                '        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>\n          {items.map((it, i) => (\n            <div key={i} className="card" style={{ padding: 24, background: "white" }}>\n              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FD6936", marginBottom: 14 }} />\n              <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{it.t}</div>\n              <p style={{ color: "var(--c-muted)", fontSize: 14 }}>{it.d}</p>\n            </div>\n          ))}\n        </div>\n        {/* F007: section CTA, closes the empathy block with two clear paths. */}\n        <div style={{ marginTop: 36, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>\n          <a href="#methode" className="btn btn-orange btn-arrow" style={{ textDecoration: "none" }}>\n            Voir comment on aide\n          </a>\n          <a href="https://calendly.com/proxxie/entretien" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ textDecoration: "none", background: "white", borderColor: "var(--c-ink)", color: "var(--c-ink)" }} onClick={() => { if (typeof window !== "undefined" && window.trackEvent) window.trackEvent("calendly_opened", { source: "situations_cta" }); }}>\n            30 min avec Charles\n          </a>\n        </div>',
             ),
         ],
     },
@@ -1092,6 +1099,15 @@ def apply_bundle_patches(html: str, path_name: str) -> tuple[str, int]:
         for patch in BUNDLE_PATCHES:
             if patch["needle"].encode() not in data and patch["needle"] not in text:
                 continue
+            # Per-patch "already satisfied" guard. Additive patches that inject
+            # a block can duplicate it when the team's re-export already ships
+            # an equivalent block whose markup differs from our `new` string
+            # (e.g. a comment punctuation change). `skip_if` is a stable marker
+            # that's present whenever the target block exists in ANY variant, so
+            # we skip the whole patch instead of appending a second copy.
+            skip_if = patch.get("skip_if")
+            if skip_if and skip_if in text:
+                continue
             for old, new in patch["replacements"]:
                 if new in text:
                     # already applied
@@ -1443,6 +1459,13 @@ if __name__ == "__main__":
                     continue
                 needle_in_text = (patch["needle"].encode() in data) or (patch["needle"] in text)
                 if not needle_in_text:
+                    continue
+                # See apply_bundle_patches: skip an additive patch when its
+                # target block already exists (any variant), so a re-export that
+                # already ships the block isn't doubled — and isn't flagged as
+                # drift either.
+                skip_if = patch.get("skip_if")
+                if skip_if and skip_if in text:
                     continue
                 for old, new in patch["replacements"]:
                     if new in text:

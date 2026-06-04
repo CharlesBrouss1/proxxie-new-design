@@ -184,3 +184,59 @@ def test_no_overlapping_bundle_patches():
                         f"the same pages: {seen[key]['name']!r} and {patch['name']!r}"
                     )
             seen[key] = patch
+
+
+# ============================================================================
+# 7. The situations CTA (F007) must never be duplicated. This regression kept
+#    reappearing: every bundle re-export ships the CTA (comma comment variant),
+#    but the additive F007 patch only recognized its own em-dash `new` string,
+#    so it appended a second copy on each patcher run. A `skip_if` marker now
+#    detects the existing CTA in any variant. Guard it so it can't come back.
+# ============================================================================
+def _count_in_bundle(html: str, needle: str) -> int:
+    m = re.search(r'<script type="__bundler/manifest"[^>]*>(.*?)</script>', html, re.DOTALL)
+    assert m is not None, "no bundler manifest"
+    manifest = json.loads(m.group(1))
+    total = 0
+    for entry in manifest.values():
+        data = base64.b64decode(entry["data"])
+        if entry.get("compressed"):
+            try:
+                data = gzip.decompress(data)
+            except Exception:
+                continue
+        try:
+            total += data.decode("utf-8").count(needle)
+        except UnicodeDecodeError:
+            continue
+    return total
+
+
+def test_situations_cta_not_duplicated_after_patch():
+    home = REPO / "Proxxie Home.html"
+    subprocess.run(["git", "checkout", "--", str(home)], cwd=REPO, check=True)
+    try:
+        # The committed bundle already ships exactly one situations CTA.
+        assert _count_in_bundle(home.read_text(encoding="utf-8"), "Voir comment on aide") == 1, \
+            "Precondition failed: committed Home.html should ship exactly one situations CTA"
+        # Running the patcher must NOT append a second one.
+        subprocess.run([sys.executable, "_design_fixes.py", "Proxxie Home.html"],
+                       cwd=REPO, check=True, capture_output=True)
+        count = _count_in_bundle(home.read_text(encoding="utf-8"), "Voir comment on aide")
+        assert count == 1, (
+            f"F007 duplicated the situations CTA: found {count} copies of "
+            f"'Voir comment on aide' after a patcher run (expected 1). The "
+            f"skip_if idempotency guard regressed."
+        )
+    finally:
+        subprocess.run(["git", "checkout", "--", str(home)], cwd=REPO, check=True)
+
+
+def test_f007_patch_has_skip_if_guard():
+    df = _load_patcher_module()
+    f007 = next((p for p in df.BUNDLE_PATCHES if p["name"].startswith("F007")), None)
+    assert f007 is not None, "F007 patch disappeared from BUNDLE_PATCHES"
+    assert f007.get("skip_if"), (
+        "F007 lost its skip_if guard — without it, a re-export that already "
+        "ships the CTA will be doubled on the next patcher run."
+    )
