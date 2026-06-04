@@ -235,6 +235,36 @@
   .subnote{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:12px}
   .sublink{color:var(--blue);text-decoration:underline;cursor:pointer;font-weight:600}
 
+  /* page Synthèse : "ce que tu obtiens" détaillé */
+  .syg-h{font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);margin:20px 0 11px}
+  .ulist li b{color:var(--ink)}
+  .ulist li span.sygd{display:block;color:var(--ink-soft);font-size:13px;margin-top:2px;line-height:1.4}
+  /* aperçu d'une vraie Synthèse, exemple anonymisé (Léa) */
+  .exrep{margin:0 0 4px;border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.07)}
+  .exrep-top{display:flex;align-items:center;gap:11px;padding:14px 16px;background:linear-gradient(180deg,#F8F4EA,#fff);border-bottom:1px solid var(--line)}
+  .exrep-av{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:16px;flex:0 0 auto}
+  .exrep-id{flex:1 1 auto;min-width:0}
+  .exrep-name{font-weight:800;font-size:14px;color:var(--ink);margin:0}
+  .exrep-meta{font-size:12px;color:var(--ink-soft);margin:1px 0 0}
+  .exrep-tag{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--blue);background:#1320CE12;padding:4px 9px;border-radius:999px;flex:0 0 auto}
+  .exrep-body{position:relative;padding:16px}
+  .exrep-sec{margin:0 0 15px}
+  .exrep-sec:last-child{margin-bottom:0}
+  .exrep-k{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin:0 0 7px}
+  .exrep-lead{font-size:13px;line-height:1.5;color:var(--ink);margin:0}
+  .exrep-lead b{color:var(--blue)}
+  .exrep-bars{display:flex;flex-direction:column;gap:9px;margin:0}
+  .exrep-bar{display:grid;grid-template-columns:94px 1fr 32px;align-items:center;gap:9px}
+  .exrep-bl{font-size:12px;color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .exrep-bt{height:7px;border-radius:6px;background:#ECE6D8;overflow:hidden}
+  .exrep-bf{height:100%;border-radius:6px;background:var(--blue)}
+  .exrep-bv{font-size:11px;font-weight:800;color:var(--blue);text-align:right}
+  .exrep-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .exrep-chip{font-size:11.5px;font-weight:600;color:var(--ink);background:#F4EFE3;border-radius:999px;padding:5px 11px}
+  .exrep-fade::after{content:"";position:absolute;left:0;right:0;bottom:0;height:96px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 80%);pointer-events:none}
+  .exrep-foot{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink-soft);background:#FCFAF4}
+  .exrep-foot b{color:var(--ink)}
+
   /* portrait gratuit : un bloc par dimension distinctive */
   .pblocks{display:flex;flex-direction:column;gap:14px}
   .pblock{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 20px 20px 22px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
@@ -882,11 +912,11 @@
   <section class="screen" id="s-synthese">
     <button class="crumb" onclick="App.openHome()">‹ Retour à ma carte</button>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px">
-      <span class="kicker" style="margin:0"><span class="kd"></span>Ta Synthèse</span>
+      <span class="kicker" style="margin:0"><span class="kd"></span>Ton Audit</span>
       <span class="statpill">Lecture croisée</span>
     </div>
-    <h1>Tout ce que tes tests<br><span class="hl">disent ensemble.</span></h1>
-    <p class="lead">Un test éclaire un axe de toi. La Synthèse les croise tous pour en sortir une seule lecture, claire, avec les pistes qui en découlent.</p>
+    <h1>Audit de personnalité<br><span class="hl">et d'aspiration.</span></h1>
+    <p class="lead">Un test éclaire un seul axe de toi. Ton Audit les croise tous pour en sortir une seule lecture, claire, avec les pistes carrière qui en découlent.</p>
 
     <div id="syn-head"></div>
     <div id="syn-body"></div>
@@ -894,7 +924,7 @@
     <!-- CTA : décrypter la synthèse avec Charles -->
     <section class="cta-c" style="margin-top:18px">
       <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
-      <h2>Ta Synthèse en main, passons à l'action.</h2>
+      <h2>Ton Audit en main, passons à l'action.</h2>
       <p class="cta-lead">On reprend ta lecture croisée en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
       <div class="cta-act">
         <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
@@ -2842,7 +2872,7 @@
   // Checkout désormais dédié au seul produit payant : la Synthèse cross-tests.
   function openCheckout(sub){
     subMode=!!sub;
-    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ta Synthèse";
+    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton Audit";
     document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
     document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
     if(state.email) document.getElementById("chk-email").value=state.email;
@@ -3530,7 +3560,7 @@
     var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 45000);
     return fetch(AI_URL,{
       method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Synthèse cross-tests", summary:synthSummary(d), mode:"synthesis"}),
+      body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Audit de personnalité et d'aspiration (cross-tests)", summary:synthSummary(d), mode:"synthesis"}),
       signal:ctrl?ctrl.signal:undefined
     }).then(function(r){ clearTimeout(to); if(!r.ok) throw 0; return r.text(); })
       .then(function(md){ return (md && md.trim().length>60) ? md : null; })
@@ -3580,30 +3610,54 @@
         '<div class="card" style="margin-top:0">'+
         '<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Bientôt disponible</span>'+
         '<h2 style="font-family:var(--serif);margin:0 0 6px">Encore un test, et on relie tout.</h2>'+
-        '<p style="color:var(--ink-soft);margin:0 0 14px">La Synthèse croise tes différents tests pour en sortir une lecture d\'ensemble. Il te faut au moins '+SYNTH_MIN+' tests. Tu en as '+d.nTests+', plus que '+need+' à passer.</p>'+
+        '<p style="color:var(--ink-soft);margin:0 0 14px">Ton Audit croise tes différents tests pour en sortir une lecture d\'ensemble. Il te faut au moins '+SYNTH_MIN+' tests. Tu en as '+d.nTests+', plus que '+need+' à passer.</p>'+
         '<button class="btn" onclick="App.openHome()">Choisir un test à passer</button>'+
         '</div>';
       return;
     }
-    // mode 'pay' : aperçu flouté + offre
+    // mode 'pay' : page de valeur (ce que tu obtiens + exemple) puis l'offre en bas
     var names=d.fils.map(function(f){return f.label;});
     var teaser = names.length>=2
-      ? 'Tes tests pointent déjà vers <b>'+esc(names[0])+'</b> et <b>'+esc(names[1])+'</b>. La Synthèse en fait une lecture d\'ensemble.'
-      : 'Tu as passé assez de tests pour une vraie lecture croisée.';
+      ? 'Tes tests pointent déjà vers <b>'+esc(names[0])+'</b> et <b>'+esc(names[1])+'</b>'+(names[2]?', et <b>'+esc(names[2])+'</b>':'')+'. Ton Audit en fait une lecture d\'ensemble, et en tire des directions concrètes.'
+      : 'Tu as passé assez de tests pour une vraie lecture croisée. Ton Audit fait parler tes '+d.nTests+' tests ensemble, et en tire des directions concrètes.';
     body.innerHTML=
-      '<div class="paywall" style="margin-top:0">'+
-        '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Ta Synthèse</span>'+
-        '<h2 style="font-family:var(--serif);margin:12px 0 4px">Relie tous tes tests en une seule lecture.</h2>'+
-        '<div class="price"><b>4,99 €</b><s>14,99 €</s></div>'+
-        '<p style="color:var(--ink-soft);margin:0 0 4px">'+teaser+' Un test te dit qui tu es sur un axe. La Synthèse fait parler tes '+d.nTests+' tests ensemble.</p>'+
+      '<div class="card" style="margin-top:0">'+
+        '<p style="color:var(--ink-soft);margin:0;font-size:15px">'+teaser+'</p>'+
+        '<p class="syg-h">Ce que tu obtiens</p>'+
         '<ul class="ulist">'+
-          '<li>'+CHK+' Le fil rouge qui traverse tous tes tests</li>'+
-          '<li>'+CHK+' Ce que tes quatre dimensions disent, mises bout à bout</li>'+
-          '<li>'+CHK+' Les directions de carrière déduites du croisement</li>'+
-          '<li>'+CHK+' Un résumé partageable de l\'ensemble de ton profil</li>'+
+          '<li>'+CHK+'<div><b>Ton fil rouge</b><span class="sygd">Ce qui revient d\'un test à l\'autre, écrit noir sur blanc.</span></div></li>'+
+          '<li>'+CHK+'<div><b>Tes 4 dimensions reliées</b><span class="sygd">Personnalité, aspirations, carrière et équilibre, mises bout à bout.</span></div></li>'+
+          '<li>'+CHK+'<div><b>Tes traits dominants</b><span class="sygd">Les signaux les plus forts, tous tests confondus, classés.</span></div></li>'+
+          '<li>'+CHK+'<div><b>Tes pistes carrière</b><span class="sygd">Des directions déduites du croisement, pas d\'un test isolé.</span></div></li>'+
+          '<li>'+CHK+'<div><b>Un résumé partageable</b><span class="sygd">Ton profil complet en une page, à garder et à transmettre.</span></div></li>'+
         '</ul>'+
-        '<button class="btn pay" onclick="App.openCheckout()">Débloquer ma Synthèse, 4,99 €</button>'+
-        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, la Synthèse, tous les tests et le suivi dans le temps</p>'+
+        '<p class="syg-h">À quoi ça ressemble</p>'+
+        '<div class="exrep">'+
+          '<div class="exrep-top">'+
+            '<div class="exrep-av">L</div>'+
+            '<div class="exrep-id"><p class="exrep-name">Léa, 24 ans</p><p class="exrep-meta">Audit · 5 tests reliés</p></div>'+
+            '<span class="exrep-tag">Exemple</span>'+
+          '</div>'+
+          '<div class="exrep-body exrep-fade">'+
+            '<div class="exrep-sec"><p class="exrep-k">Ce qui relie tout</p><p class="exrep-lead">À travers ses 5 tests, un même fil : Léa cherche du <b>sens</b> et de <b>l\'autonomie</b> avant le statut. Très <b>ouverte</b>, elle a besoin de varier les sujets, et son exigence envers elle-même monte quand le cadre devient trop rigide.</p></div>'+
+            '<div class="exrep-sec"><p class="exrep-k">Son fil rouge</p><div class="exrep-bars">'+
+              '<div class="exrep-bar"><span class="exrep-bl">Ouverture</span><div class="exrep-bt"><div class="exrep-bf" style="width:88%"></div></div><span class="exrep-bv">88</span></div>'+
+              '<div class="exrep-bar"><span class="exrep-bl">Autonomie</span><div class="exrep-bt"><div class="exrep-bf" style="width:81%"></div></div><span class="exrep-bv">81</span></div>'+
+              '<div class="exrep-bar"><span class="exrep-bl">Sens, valeurs</span><div class="exrep-bt"><div class="exrep-bf" style="width:76%"></div></div><span class="exrep-bv">76</span></div>'+
+            '</div></div>'+
+            '<div class="exrep-sec"><p class="exrep-k">Vers quoi ça pointe</p><div class="exrep-chips">'+
+              '<span class="exrep-chip">Métiers à mission</span><span class="exrep-chip">Recherche, R&amp;D</span><span class="exrep-chip">Indépendante</span><span class="exrep-chip">Conseil</span><span class="exrep-chip">Design produit</span>'+
+            '</div></div>'+
+          '</div>'+
+          '<div class="exrep-foot">Aperçu · l\'Audit complet fait <b>&nbsp;~20 pages</b></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="paywall">'+
+        '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Débloquer la tienne</span>'+
+        '<div class="price" style="margin-top:10px"><b>4,99 €</b><s>14,99 €</s></div>'+
+        '<p style="color:var(--ink-soft);margin:0 0 14px;font-size:14px">Un seul paiement. Ton Audit se met à jour à chaque nouveau test, sans repayer.</p>'+
+        '<button class="btn pay" onclick="App.openCheckout()">Débloquer mon Audit</button>'+
+        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, l\'Audit, tous les tests et le suivi dans le temps</p>'+
       '</div>';
   }
 
@@ -3665,16 +3719,16 @@
     var sec=document.createElement('section'); sec.className='card'; sec.style.marginTop='18px';
     var body, btn;
     if(paid){
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ta Synthèse relie ce test à tous les autres que tu as passés.</p>';
-      btn='<button class="btn" onclick="App.openSynthese()">Voir ma Synthèse</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ton Audit relie ce test à tous les autres que tu as passés.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Voir mon Audit</button>';
     } else if(elig){
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ce portrait éclaire un axe. La Synthèse croise tes '+synthDoneIds().length+' tests en une seule lecture, avec les pistes carrière qui en découlent.</p>';
-      btn='<button class="btn" onclick="App.openSynthese()">Débloquer ma Synthèse, 4,99 €</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ce portrait éclaire un axe. Ton Audit croise tes '+synthDoneIds().length+' tests en une seule lecture, avec les pistes carrière qui en découlent.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Découvrir mon Audit</button>';
     } else {
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Passe un test de plus et débloque ta Synthèse : une lecture qui croise tous tes tests.</p>';
-      btn='<button class="btn ghost" onclick="App.openSynthese()">En savoir plus sur la Synthèse</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Passe un test de plus et débloque ton Audit : une lecture qui croise tous tes tests.</p>';
+      btn='<button class="btn ghost" onclick="App.openSynthese()">En savoir plus sur l\'Audit</button>';
     }
-    sec.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Aller plus loin · ta Synthèse</span>'+
+    sec.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Aller plus loin · ton Audit</span>'+
       '<h2 style="font-family:var(--serif);font-size:21px;margin:0 0 6px">Et si on reliait tous tes tests ?</h2>'+body+btn;
     host.appendChild(sec);
   }
@@ -3688,19 +3742,19 @@
     var paid=!!state.synthesisPaid, elig=synthEligible();
     var badge, title, lead, btn;
     if(paid){
-      badge='Débloquée'; title='Ta Synthèse est prête.';
+      badge='Débloqué'; title='Ton Audit est prêt.';
       lead='Une lecture d\'ensemble qui croise tes '+n+' tests. Reviens-y à chaque nouveau test.';
-      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Voir ma Synthèse →</button>';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Voir mon Audit →</button>';
     } else if(elig){
       badge=n+' tests reliés'; title='Relie tous tes tests.';
-      lead='Tu as passé assez de tests pour une vraie lecture croisée : fil rouge, dimensions, pistes carrière.';
-      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Débloquer ma Synthèse, 4,99 € →</button>';
+      lead='Tu as relié assez de tests pour une vraie lecture croisée. Ton Audit fait parler tes '+n+' tests ensemble : le fil rouge qui revient, tes dimensions mises bout à bout, et les pistes carrière qui en découlent.';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Découvrir mon Audit →</button>';
     } else {
-      badge=n+' / '+SYNTH_MIN; title='Bientôt ta Synthèse.';
-      lead='Encore '+(SYNTH_MIN-n)+' test'+((SYNTH_MIN-n)>1?'s':'')+' et la Synthèse croise tout ton profil en une lecture.';
+      badge=n+' / '+SYNTH_MIN; title='Bientôt ton Audit.';
+      lead='Encore '+(SYNTH_MIN-n)+' test'+((SYNTH_MIN-n)>1?'s':'')+' et ton Audit croise tout ton profil en une lecture.';
       btn='<button class="btn ghost hp-cont-all" onclick="App.openSynthese()">En savoir plus</button>';
     }
-    sec.innerHTML='<div class="hp-cont-head"><span class="kicker" style="margin:0"><span class="kd"></span>Ta Synthèse</span><span class="statpill">'+badge+'</span></div>'+
+    sec.innerHTML='<div class="hp-cont-head"><span class="kicker" style="margin:0"><span class="kd"></span>Ton Audit</span><span class="statpill">'+badge+'</span></div>'+
       '<h2 class="hp-cont-title">'+title+'</h2>'+
       '<p class="hp-cont-lead">'+lead+'</p>'+btn;
   }
