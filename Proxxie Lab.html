@@ -46,10 +46,10 @@
   }
   /* formes pastel décoratives en fond (style proxxie-new-design) */
   .blobs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-  .blob{position:absolute;border-radius:50%;filter:blur(8px);opacity:.55}
-  .blob.b1{width:340px;height:300px;top:-120px;right:-90px;background:radial-gradient(circle at 35% 35%, rgba(245,235,63,.85), rgba(245,235,63,0) 70%);border-radius:62% 38% 55% 45% / 55% 50% 50% 45%}
-  .blob.b2{width:300px;height:280px;top:160px;left:-130px;background:radial-gradient(circle at 50% 50%, rgba(176,208,247,.7), rgba(176,208,247,0) 70%);border-radius:50% 50% 42% 58% / 45% 55% 45% 55%}
-  .blob.b3{width:260px;height:240px;bottom:-90px;right:-70px;background:radial-gradient(circle at 50% 50%, rgba(196,150,230,.42), rgba(196,150,230,0) 70%);border-radius:55% 45% 50% 50% / 50% 52% 48% 50%}
+  .blob{position:absolute;border-radius:50%;filter:blur(12px);opacity:.32}
+  .blob.b1{width:300px;height:270px;top:-130px;right:-100px;background:radial-gradient(circle at 35% 35%, rgba(245,235,63,.8), rgba(245,235,63,0) 70%);border-radius:62% 38% 55% 45% / 55% 50% 50% 45%}
+  .blob.b2{width:260px;height:240px;top:180px;left:-140px;background:radial-gradient(circle at 50% 50%, rgba(176,208,247,.65), rgba(176,208,247,0) 70%);border-radius:50% 50% 42% 58% / 45% 55% 45% 55%}
+  .blob.b3{width:220px;height:200px;bottom:-90px;right:-70px;background:radial-gradient(circle at 50% 50%, rgba(253,105,54,.28), rgba(253,105,54,0) 70%);border-radius:55% 45% 50% 50% / 50% 52% 48% 50%}
   .topbar{
     display:flex;align-items:center;gap:10px;
     padding:6px 0 22px;cursor:pointer;
@@ -324,7 +324,22 @@
   .gr-progbar{flex:1;height:7px;border-radius:99px;background:#EAE1D0;overflow:hidden}
   .gr-progfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--orange));transition:width .9s cubic-bezier(.2,.7,.2,1)}
   .gr-progtxt{font-size:12.5px;font-weight:800;color:var(--ink-soft);white-space:nowrap}
-  .gr-stage{position:relative;width:100%;max-width:520px;margin:10px auto 0}
+  /* mode segmented control */
+  .gr-modes{display:inline-flex;gap:2px;padding:4px;margin:14px 0 2px;background:#fff;border:1px solid var(--line);border-radius:999px}
+  .gr-mode{appearance:none;border:0;background:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;color:var(--ink-soft);padding:8px 18px;border-radius:999px;transition:background .18s,color .18s}
+  .gr-mode.on{background:var(--blue);color:#fff}
+  .gr-mode:not(.on):hover{color:var(--ink)}
+  /* signature line under the map */
+  .gr-sign{max-width:560px;font-family:var(--serif);font-weight:650;font-size:16px;line-height:1.5;color:var(--ink);margin:6px 0 2px}
+  .gr-sign b{font-weight:800}
+  /* radar + flow svg primitives */
+  .gr-rgrid{fill:none;stroke:#D9CDB4;stroke-width:1}
+  .gr-rspoke{stroke:#E2D8C4;stroke-width:1}
+  .gr-rlbl{font-size:10.5px;font-weight:700;font-family:var(--sans)}
+  .gr-fcard{fill:#fff;stroke-width:1}
+  .gr-flbl{font-size:11.5px;font-weight:700;fill:var(--ink);font-family:var(--sans);dominant-baseline:middle}
+  .gr-fconn{fill:none}
+  .gr-stage{position:relative;width:100%;max-width:520px;margin:6px auto 0}
   .gr-backchip{position:absolute;top:2px;left:0;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:700;padding:7px 14px 7px 11px;border-radius:999px;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(20,18,8,.07);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .3s,transform .3s;z-index:5}
   .gr-backchip.on{opacity:1;transform:translateY(0);pointer-events:auto}
   .gr-hint{font-size:13px;color:var(--ink-soft);text-align:center;margin:8px 0 4px;min-height:18px;transition:opacity .3s}
@@ -388,6 +403,142 @@
   .signpost h3{font-family:var(--serif);font-size:19px;margin:0 0 10px}
   .signpost p{font-size:15px;line-height:1.6;margin-bottom:9px}
   .signpost p:last-child{margin-bottom:0}
+
+  /* CTA décryptage avec Charles (bas de la carte) */
+  .cta-c{position:relative;overflow:hidden;margin:32px 0 6px;border-radius:24px;padding:30px 26px;background:linear-gradient(135deg,#1B2BE0,#1320CE 55%,#0E18A8);color:#fff;box-shadow:0 22px 50px rgba(19,32,206,.26)}
+  .cta-c::after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;top:-90px;right:-70px;background:radial-gradient(circle at 35% 35%,rgba(253,105,54,.5),rgba(196,74,107,.16) 58%,transparent 72%);pointer-events:none}
+  .cta-c .cta-k{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--yellow);margin-bottom:13px}
+  .cta-c .cta-k .kd{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+  .cta-c h2{position:relative;font-family:var(--head);color:#fff;font-size:25px;line-height:1.16;letter-spacing:-.3px;margin:0 0 11px}
+  .cta-c .cta-lead{position:relative;font-size:15px;line-height:1.55;color:rgba(255,255,255,.85);margin:0 0 20px;max-width:48ch}
+  .cta-c .cta-act{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .cta-c .cta-go{display:inline-flex;align-items:center;gap:9px;background:var(--orange);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:700;text-decoration:none;padding:15px 24px;border-radius:999px;cursor:pointer;box-shadow:0 14px 30px rgba(253,105,54,.4);transition:filter .15s ease,transform .08s ease}
+  .cta-c .cta-go:hover{filter:brightness(1.06)}
+  .cta-c .cta-go:active{transform:scale(.99)}
+  .cta-c .cta-meta{font-size:13px;font-weight:600;color:rgba(255,255,255,.68)}
+  .cta-c .cta-chips{position:relative;display:flex;flex-wrap:wrap;gap:9px 18px;margin-top:20px}
+  .cta-c .cta-chips span{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:rgba(255,255,255,.82)}
+  .cta-c .cta-chips svg{flex:0 0 auto}
+
+  /* ===== Accueil 1er passage : bloc invitation ===== */
+  .gr-top{gap:10px;align-items:center}
+  .hi-resume{margin-right:auto;color:var(--blue);font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;border-bottom:1.5px solid rgba(19,32,206,.25);padding-bottom:1px}
+  .hi-resume:hover{border-color:var(--blue)}
+  #homeInvite{margin:2px 0 6px}
+  .hi-kick{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+  .hi-kick .kd{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+  .hi-h1{font-family:var(--head);font-weight:800;font-size:34px;line-height:1.12;letter-spacing:-.5px;margin:0 0 12px}
+  .hi-lead{font-size:16px;color:var(--ink-soft);line-height:1.5;max-width:33em;margin:0 0 22px}
+  .hi-cta{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:700;padding:16px 26px;border-radius:999px;cursor:pointer;box-shadow:0 14px 30px rgba(19,32,206,.28);transition:filter .15s ease,transform .08s ease}
+  .hi-cta:hover{filter:brightness(1.07)}
+  .hi-cta:active{transform:scale(.99)}
+  .hi-reassure{margin-top:12px;color:var(--ink-soft);font-size:13.5px;font-weight:600}
+  .hi-reassure b{color:var(--ink)}
+  .hi-starters{margin-top:26px}
+  .hi-slbl{font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:11px}
+  .hi-chips{display:flex;flex-wrap:wrap;gap:10px}
+  .hi-chip{display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 16px;min-width:150px;flex:1;cursor:pointer;font-family:inherit;transition:border-color .15s ease,transform .08s ease,box-shadow .15s ease}
+  .hi-chip:hover{border-color:#D9CDB4;box-shadow:0 8px 20px rgba(10,14,44,.06);transform:translateY(-1px)}
+  .hi-chip:active{transform:translateY(0)}
+  .hi-ck{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px}
+  .hi-ck::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+  .hi-chip[data-fx="perso"] .hi-ck{color:var(--blue)}
+  .hi-chip[data-fx="aspir"] .hi-ck{color:var(--orange)}
+  .hi-chip[data-fx="carr"] .hi-ck{color:var(--green)}
+  .hi-cn{font-family:var(--head);font-weight:800;font-size:15.5px;color:var(--ink)}
+  .hi-cm{font-size:12px;color:var(--ink-soft)}
+  .hi-cap{font-size:13.5px;color:var(--ink-soft);text-align:center;max-width:42ch;margin:8px auto 2px}
+  .hi-cap b{color:var(--ink)}
+  /* bascule fraîche : on masque la carte-héros, on montre l'invitation */
+  #s-home.fresh #homeCarteHead,
+  #s-home.fresh .gr-hint,
+  #s-home.fresh #grSign,
+  #s-home.fresh #homeReflect,
+  #s-home.fresh #homeCharlesCta{display:none}
+  #s-home:not(.fresh) #homeInvite,
+  #s-home:not(.fresh) #homeInviteCap{display:none}
+  @media(max-width:520px){.hi-h1{font-size:29px}.hi-chip{min-width:calc(50% - 5px)}}
+
+  /* ===== Entrée + panneau réflexion (se poser des questions) ===== */
+  .reflect-entry{display:flex;align-items:center;gap:14px;width:100%;max-width:560px;margin:18px auto 4px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;text-align:left;cursor:pointer;font-family:inherit;box-shadow:0 12px 30px rgba(20,18,8,.05);transition:border-color .15s,transform .08s}
+  .reflect-entry:hover{border-color:#D4C7AC}
+  .reflect-entry:active{transform:scale(.995)}
+  .reflect-entry .re-ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(19,32,206,.08);color:var(--blue)}
+  .reflect-entry .re-tx{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+  .reflect-entry .re-tx b{font-family:var(--head);font-size:15.5px;color:var(--ink);font-weight:800}
+  .reflect-entry .re-tx span{font-size:13px;color:var(--ink-soft)}
+  .reflect-entry .re-go{flex:0 0 auto;color:var(--ink-soft);font-size:18px}
+  .rf-intro{color:var(--ink-soft);font-size:15px;max-width:34em;margin-bottom:8px}
+  .rf-empty{background:rgba(19,32,206,.04);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink-soft);font-size:14px;max-width:36em}
+  .rf-facet{margin-top:26px}
+  .rf-facet:first-of-type{margin-top:14px}
+  .rf-fhead{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+  .rf-fdot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .rf-fname{font-family:var(--head);font-weight:800;font-size:17px;color:var(--ink)}
+  .rf-fkick{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px 20px}
+  .rf-q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:12px;box-shadow:0 10px 26px rgba(20,18,8,.04)}
+  .rf-q p{font-family:var(--head);font-weight:700;font-size:15px;color:var(--ink);margin-bottom:9px;line-height:1.35}
+  .rf-q textarea{width:100%;min-height:64px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:14.5px;color:var(--ink);background:#FFFEFB;line-height:1.5}
+  .rf-q textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(19,32,206,.10)}
+  .rf-q textarea::placeholder{color:#A9A28F}
+  .rf-saved{display:block;margin-top:6px;font-size:11.5px;font-weight:700;color:var(--green);opacity:0;transition:opacity .2s}
+  .rf-saved.on{opacity:1}
+
+  /* ===== Choix version longue sur l'intro ===== */
+  .intro-long{margin-top:16px}
+  .il-or{display:flex;align-items:center;gap:12px;color:var(--ink-soft);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:4px 0 14px}
+  .il-or::before,.il-or::after{content:"";flex:1;height:1px;background:var(--line)}
+  .intro-longbtn{display:flex;align-items:center;gap:13px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .08s}
+  .intro-longbtn:hover{border-color:#D4C7AC}
+  .intro-longbtn:active{transform:scale(.995)}
+  .intro-longbtn .il-lock{flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:rgba(19,32,206,.08);color:var(--blue)}
+  .intro-longbtn .il-tx{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+  .intro-longbtn .il-tx b{font-family:var(--head);font-weight:800;font-size:15px;color:var(--ink)}
+  .intro-longbtn .il-tx span{font-size:12.5px;color:var(--ink-soft)}
+  .intro-longbtn .il-go{flex:0 0 auto;color:var(--ink-soft);font-size:18px}
+  .intro-longreg{margin-top:12px}
+  .il-regtxt{font-size:13.5px;color:var(--ink-soft);margin-bottom:9px}
+  .il-regrow{display:flex;flex-direction:column;gap:9px}
+  .il-regrow input{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 14px;font-family:inherit;font-size:15px;color:var(--ink);background:#FFFEFB}
+  .il-regrow input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(19,32,206,.10)}
+  .il-regrow .btn{width:100%}
+
+  /* ===== Portrait IA enrichi : sections colorées + avatars ===== */
+  .narrative{display:flex;flex-direction:column;gap:14px}
+  .nlead{font-size:16px;color:var(--ink);line-height:1.6}
+  .nlead p{margin:0 0 9px} .nlead p:last-child{margin-bottom:0}
+  .nlead b{color:var(--ink)}
+  .nsec{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px 16px 14px 18px;position:relative;overflow:hidden}
+  .nsec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nac)}
+  .nsec-h{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+  .nbadge{flex:0 0 auto;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:18px;line-height:1;background:color-mix(in srgb,var(--nac) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--nac) 32%,#fff)}
+  .nsec-h h2{font-family:var(--serif);font-weight:800;font-size:17px;line-height:1.15;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .nsec-b{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  .nsec-b p{margin:0 0 8px} .nsec-b p:last-child{margin-bottom:0}
+  .nsec-b b{color:var(--ink)}
+  .nsec-b h3{font-family:var(--serif);font-size:14px;color:var(--ink);margin:11px 0 4px}
+  .nsec-b ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .nsec-b li{position:relative;padding-left:20px}
+  .nsec-b li::before{content:"";position:absolute;left:2px;top:7px;width:7px;height:7px;border-radius:50%;background:var(--nac)}
+  .nsec-b ul.ntodo li{padding-left:28px;color:var(--ink)}
+  .nsec-b ul.ntodo li::before{content:"";left:0;top:1px;width:18px;height:18px;border-radius:6px;background:color-mix(in srgb,var(--nac) 14%,#fff);box-shadow:inset 0 0 0 1.5px var(--nac)}
+  .nsec-b ul.ntodo li::after{content:"✓";position:absolute;left:3.5px;top:0;font-size:12px;font-weight:800;color:var(--nac)}
+  .nprofs{display:flex;flex-direction:column;gap:13px}
+  .nprof{display:flex;gap:12px;align-items:flex-start}
+  .npav{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--serif);font-weight:800;font-size:19px;box-shadow:0 4px 11px rgba(10,14,44,.18)}
+  .npbody{font-size:14px;color:var(--ink-soft);line-height:1.5;padding-top:2px}
+  .npbody b{color:var(--ink);font-family:var(--serif)}
+
+  /* ===== Suite résultat : ta carte s'agrandit ===== */
+  .hp-cont{text-align:center}
+  .hp-cont-head{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}
+  .hp-cont-title{font-family:var(--head);font-size:21px;letter-spacing:-.2px;margin:10px 0 4px;text-align:left}
+  .hp-cont-lead{color:var(--ink-soft);font-size:14.5px;line-height:1.5;margin:0 0 6px;text-align:left}
+  .hp-cont-svg{display:block;width:100%;max-width:380px;height:auto;margin:2px auto 6px}
+  .hp-cont-go{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;background:var(--blue);color:#fff;border:0;font-family:inherit;font-size:15.5px;font-weight:700;padding:15px 22px;border-radius:14px;cursor:pointer;box-shadow:0 12px 26px rgba(19,32,206,.24);transition:filter .15s ease,transform .08s ease}
+  .hp-cont-go:hover{filter:brightness(1.07)}
+  .hp-cont-go:active{transform:scale(.99)}
+  .hp-cont-all{margin-top:10px;width:100%}
 </style>
 </head>
 <body>
@@ -406,19 +557,94 @@
 
   <!-- ÉCRAN 0 : CARTE INTÉRIEURE (graphe, accueil par défaut) -->
   <section class="screen active" id="s-home">
-    <div class="gr-top"><button class="gr-listbtn" onclick="App.openList()">Voir en liste</button></div>
-    <h1>Ta carte <span class="hl">intérieure</span>.</h1>
-    <p class="gr-lead">Chaque partie de toi est un point. Touche une zone pour révéler ses tests, passe-les, et regarde ta carte s'allumer.</p>
-    <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 16 explorées</span></div>
+
+    <!-- barre haute : reprendre (si progrès) + voir en liste -->
+    <div class="gr-top">
+      <a class="hi-resume" id="homeResume" hidden onclick="App.resumeLast()">Reprendre où j'en étais <span aria-hidden="true">→</span></a>
+      <button class="gr-listbtn" onclick="App.openList()">Voir en liste</button>
+    </div>
+
+    <!-- BLOC INVITATION : visible au tout premier passage (0 test fait) -->
+    <div id="homeInvite">
+      <span class="hi-kick"><span class="kd"></span>Ta carte intérieure</span>
+      <h1 class="hi-h1">Découvre qui tu es,<br><span class="hl">un test à la fois.</span></h1>
+      <p class="hi-lead">Réponds à quelques questions. Ta carte intérieure se révèle, trait après trait : ta personnalité, ce qui te meut, vers quoi tu vas.</p>
+      <button class="cta-go hi-cta" onclick="App.openTest('bigfive')">Commencer un test gratuit <span aria-hidden="true">→</span></button>
+      <div class="hi-reassure"><b>Gratuit</b> · sans inscription · ~5 min par test</div>
+      <div class="hi-starters">
+        <div class="hi-slbl">Par où commencer ?</div>
+        <div class="hi-chips">
+          <button class="hi-chip" data-fx="perso" onclick="App.openTest('bigfive')"><span class="hi-ck">Personnalité</span><span class="hi-cn">Big Five</span><span class="hi-cm">Tes 5 grands traits · 5 min</span></button>
+          <button class="hi-chip" data-fx="aspir" onclick="App.openTest('valeurs')"><span class="hi-ck">Moteurs</span><span class="hi-cn">Tes valeurs</span><span class="hi-cm">Ce qui compte pour toi · 4 min</span></button>
+          <button class="hi-chip" data-fx="carr" onclick="App.openTest('riasec')"><span class="hi-ck">Direction</span><span class="hi-cn">Métiers (RIASEC)</span><span class="hi-cm">Vers quoi tu es fait · 5 min</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EN-TÊTE CARTE : visible dès qu'un test est fait -->
+    <div id="homeCarteHead">
+      <h1>Ta carte <span class="hl">intérieure</span>.</h1>
+      <p class="gr-lead">Chaque partie de toi est un point. Touche une zone pour révéler ses tests, passe-les, et regarde ta carte s'allumer.</p>
+      <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 16 explorées</span></div>
+      <nav class="gr-modes" id="grModes" aria-label="Mode d'affichage">
+        <button type="button" class="gr-mode on" data-mode="map">Carte</button>
+        <button type="button" class="gr-mode" data-mode="radar">Radar</button>
+        <button type="button" class="gr-mode" data-mode="flow">Potentiel</button>
+      </nav>
+    </div>
+
     <div class="gr-stage">
       <button class="gr-backchip" id="grBack">‹ Vue d'ensemble</button>
       <svg id="grGraph" viewBox="-26 40 452 432" aria-label="Carte des parties de toi"></svg>
     </div>
+
+    <!-- légende d'aperçu : visible au premier passage -->
+    <p class="hi-cap" id="homeInviteCap"><b>Ta carte est encore vierge.</b> Elle se construit à chaque test que tu passes. Touche un point pour commencer.</p>
+
     <p class="gr-hint" id="grHint">Touche une zone pour l'explorer.</p>
+    <p class="gr-sign" id="grSign" hidden></p>
+
+    <!-- ENTRÉE SYNTHÈSE : le produit payant, lecture croisée de tous les tests -->
+    <section class="card hp-cont" id="homeSynthese" hidden style="margin-top:18px;text-align:left"></section>
+
+    <!-- ENTRÉE RÉFLEXION : se poser des questions à soi-même -->
+    <button type="button" class="reflect-entry" id="homeReflect" onclick="App.openReflect()">
+      <span class="re-ic" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5l1-3.6L15.4 5.5a1.8 1.8 0 0 1 2.5 0l.6.6a1.8 1.8 0 0 1 0 2.5L8.1 19l-3.6 1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 7.1l2.6 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="re-tx"><b>Te poser des questions</b><span>Des questions guidées pour réfléchir sur toi, à ton rythme.</span></span>
+      <span class="re-go" aria-hidden="true">→</span>
+    </button>
+
+    <!-- CTA : décrypter les résultats avec Charles -->
+    <section class="cta-c" id="homeCharlesCta">
+      <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
+      <h2>Tes résultats sont riches. Décryptons-les ensemble.</h2>
+      <p class="cta-lead">Une fois tes tests passés, on reprend chaque signal en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
+      <div class="cta-act">
+        <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
+        <span class="cta-meta">30 min · visio · gratuit</span>
+      </div>
+      <div class="cta-chips">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Lecture croisée des tests</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan d'action concret</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sans engagement</span>
+      </div>
+    </section>
+
     <p class="disclaimer">
       <b>Proxxie Lab propose des outils psychométriques à visée de connaissance de soi.</b>
       Il ne s'agit ni de diagnostics, ni d'avis médicaux ou psychologiques. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
     </p>
+  </section>
+
+  <!-- ÉCRAN RÉFLEXION : se poser des questions à soi-même -->
+  <section class="screen" id="s-reflect">
+    <button class="crumb" onclick="App.openHome()">‹ Retour à ma carte</button>
+    <span class="kicker"><span class="kd"></span>Te poser des questions</span>
+    <h1>Réfléchis sur <span class="hl">toi</span>.</h1>
+    <p class="rf-intro">Des questions guidées, reliées aux parties de toi que tu as déjà explorées. Écris ce qui te vient, c'est gardé pour toi sur cet appareil. Reviens quand tu veux.</p>
+    <div id="reflect-body"></div>
   </section>
 
   <!-- ÉCRAN 0b : CATALOGUE EN LISTE (repli) -->
@@ -449,7 +675,24 @@
 
     <div style="height:18px"></div>
     <button class="btn" id="intro-start" onclick="App.start()">Commencer, c'est gratuit</button>
-    <p class="subnote">Aucune création de compte requise pour commencer.</p>
+    <p class="subnote">15 questions · aucune création de compte requise.</p>
+
+    <!-- choix version longue (non clinique) : compte gratuit -> 48 questions -->
+    <div class="intro-long" id="intro-long" hidden>
+      <div class="il-or"><span>ou</span></div>
+      <button type="button" class="intro-longbtn" id="intro-longbtn" onclick="App.chooseLong()">
+        <span class="il-lock" aria-hidden="true">${LOCKICON_S}</span>
+        <span class="il-tx"><b>Version longue · <span id="il-count">48</span> questions</b><span>Portrait complet sur tous tes traits · compte gratuit</span></span>
+        <span class="il-go" aria-hidden="true">→</span>
+      </button>
+      <div class="intro-longreg" id="intro-longreg" hidden>
+        <p class="il-regtxt">Crée ton compte gratuit pour la version longue.</p>
+        <div class="il-regrow">
+          <input type="email" id="intro-reg-email" placeholder="ton@email.com" autocomplete="email">
+          <button class="btn" id="intro-reg-go" onclick="App.startLongFromIntro()">Créer mon compte et commencer <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ÉCRAN 2 : QUESTIONS -->
@@ -487,12 +730,41 @@
 
     <div id="free-next"></div>
 
+    <!-- SUITE : ta carte s'agrandit (boucle vers le test suivant) -->
+    <section class="card hp-cont" id="free-continue" style="margin-top:18px">
+      <div class="hp-cont-head">
+        <span class="kicker" style="margin:0"><span class="kd"></span>Ta carte intérieure</span>
+        <span class="statpill" id="free-cont-badge">1 / 16</span>
+      </div>
+      <h2 class="hp-cont-title">Ta carte s'agrandit.</h2>
+      <p class="hp-cont-lead">Ce test vient d'allumer une partie de toi. Chaque test que tu passes révèle un trait de plus.</p>
+      <svg id="free-cont-svg" class="hp-cont-svg" viewBox="-26 40 452 432" aria-label="Aperçu de ta carte intérieure"></svg>
+      <button class="hp-cont-go" id="free-cont-go"></button>
+      <button class="btn ghost hp-cont-all" onclick="App.openHome()">Voir ma carte complète</button>
+    </section>
+
     <!-- DEV-BTN start (bouton de test temporaire, à retirer) -->
     <button id="dev-generate" onclick="App.devGenerate()"
       style="margin-top:14px;width:100%;padding:14px;border-radius:14px;border:1.5px dashed #C24A6B;background:rgba(194,74,107,.06);color:#C24A6B;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">
       DEV · Générer l'analyse détaillée (sur les réponses actuelles)
     </button>
     <!-- DEV-BTN end -->
+
+    <!-- CTA : décrypter les résultats avec Charles -->
+    <section class="cta-c">
+      <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
+      <h2>Tes résultats sont riches. Décryptons-les ensemble.</h2>
+      <p class="cta-lead">On reprend chaque signal en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
+      <div class="cta-act">
+        <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
+        <span class="cta-meta">30 min · visio · gratuit</span>
+      </div>
+      <div class="cta-chips">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Lecture croisée des tests</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan d'action concret</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sans engagement</span>
+      </div>
+    </section>
 
     <p class="disclaimer">
       <b>Proxxie Lab propose un outil psychométrique à visée de connaissance de soi.</b>
@@ -546,6 +818,35 @@
       <div class="reassure">${LOCKICON_S}Tes données restent stockées en local, sur ton appareil.</div>
     </div>
 
+    <!-- SUITE : ta carte s'agrandit (boucle vers le test suivant) -->
+    <section class="card hp-cont" id="full-continue" style="margin-top:18px">
+      <div class="hp-cont-head">
+        <span class="kicker" style="margin:0"><span class="kd"></span>Ta carte intérieure</span>
+        <span class="statpill" id="full-cont-badge">1 / 16</span>
+      </div>
+      <h2 class="hp-cont-title">Ta carte s'agrandit.</h2>
+      <p class="hp-cont-lead">Ce test vient d'allumer une partie de toi. Chaque test que tu passes révèle un trait de plus.</p>
+      <svg id="full-cont-svg" class="hp-cont-svg" viewBox="-26 40 452 432" aria-label="Aperçu de ta carte intérieure"></svg>
+      <button class="hp-cont-go" id="full-cont-go"></button>
+      <button class="btn ghost hp-cont-all" onclick="App.openHome()">Voir ma carte complète</button>
+    </section>
+
+    <!-- CTA : décrypter les résultats avec Charles -->
+    <section class="cta-c">
+      <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
+      <h2>Tes résultats sont riches. Décryptons-les ensemble.</h2>
+      <p class="cta-lead">On reprend chaque signal en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
+      <div class="cta-act">
+        <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
+        <span class="cta-meta">30 min · visio · gratuit</span>
+      </div>
+      <div class="cta-chips">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Lecture croisée des tests</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan d'action concret</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sans engagement</span>
+      </div>
+    </section>
+
     <p class="disclaimer" id="full-disclaimer"></p>
 
     <button class="restart" onclick="App.reset()">Recommencer ce test</button>
@@ -573,6 +874,36 @@
     <p class="disclaimer" id="cl-disclaimer"></p>
 
     <button class="restart" onclick="App.reset()">Recommencer ce test</button>
+  </section>
+
+  <!-- ÉCRAN 7 : SYNTHÈSE CROSS-TESTS (seul produit payant) -->
+  <section class="screen" id="s-synthese">
+    <button class="crumb" onclick="App.openHome()">‹ Retour à ma carte</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px">
+      <span class="kicker" style="margin:0"><span class="kd"></span>Ta Synthèse</span>
+      <span class="statpill">Lecture croisée</span>
+    </div>
+    <h1>Tout ce que tes tests<br><span class="hl">disent ensemble.</span></h1>
+    <p class="lead">Un test éclaire un axe de toi. La Synthèse les croise tous pour en sortir une seule lecture, claire, avec les pistes qui en découlent.</p>
+
+    <div id="syn-head"></div>
+    <div id="syn-body"></div>
+
+    <!-- CTA : décrypter la synthèse avec Charles -->
+    <section class="cta-c" style="margin-top:18px">
+      <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
+      <h2>Ta Synthèse en main, passons à l'action.</h2>
+      <p class="cta-lead">On reprend ta lecture croisée en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
+      <div class="cta-act">
+        <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
+        <span class="cta-meta">30 min · visio · gratuit</span>
+      </div>
+    </section>
+
+    <p class="disclaimer">
+      <b>Proxxie Lab propose des outils psychométriques à visée de connaissance de soi.</b>
+      Il ne s'agit ni de diagnostics, ni d'avis médicaux ou psychologiques. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
+    </p>
   </section>
 
 </div>
@@ -2027,6 +2358,86 @@
     return html;
   }
 
+  // ----- Portrait IA enrichi : sections colorées, avatars, fusion parent/ado -----
+  var NAV_COLORS=["#1320CE","#FD6936","#2E8B6E","#7A5AF8","#C2892B","#1B9AAA"];
+
+  function nInline(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"); }
+
+  // métadonnées d'une section selon son titre (couleur, pictogramme, type de rendu)
+  function nSectionMeta(title){
+    var t=title.toLowerCase();
+    if(t.indexOf("parent")>=0) return null; // masquée : fusionnée dans "cette semaine"
+    if(t.indexOf("profils")>=0 && (t.indexOf("ressemb")>=0 || t.indexOf("qui te")>=0))
+      return {label:title, color:"#7A5AF8", glyph:"👥", kind:"profiles"};
+    if(t.indexOf("ado")>=0 || t.indexOf("cette semaine")>=0)
+      return {label:"Cette semaine, ton plan", color:"#FD6936", glyph:"📅", kind:"todo"};
+    if(t.indexOf("professionn")>=0)
+      return {label:"Orientation professionnelle", color:"#5B6CFF", glyph:"💼", kind:"body"};
+    if(t.indexOf("orientation")>=0)
+      return {label:(t.indexOf("scolaire")>=0?title:"Orientation scolaire"), color:"#1B9AAA", glyph:"🎓", kind:"body"};
+    if(t.indexOf("force")>=0)
+      return {label:title, color:"#2E8B6E", glyph:"💪", kind:"body"};
+    if(t.indexOf("vigilan")>=0)
+      return {label:title, color:"#C2892B", glyph:"🌱", kind:"body"};
+    if(t.indexOf("ressource")>=0)
+      return {label:title, color:"#54566E", glyph:"📚", kind:"body"};
+    return {label:title, color:"#1320CE", glyph:"🔍", kind:"body"}; // vue d'ensemble / défaut
+  }
+
+  function nProfilesHtml(body){
+    var lines=body.split(/\n/), out='<div class="nprofs">', n=0;
+    for(var i=0;i<lines.length;i++){
+      var ln=lines[i].trim(); if(!ln) continue;
+      ln=ln.replace(/^[-*]\s+/,"");
+      var m=ln.match(/^\*\*(.+?)\*\*\s*:?\s*(.*)$/);
+      var nameFull = m ? m[1] : "";
+      var desc = m ? m[2] : ln;
+      var initial=(nameFull||desc||"?").trim().charAt(0).toUpperCase();
+      var col=NAV_COLORS[n%NAV_COLORS.length]; n++;
+      out+='<div class="nprof">'
+        +'<span class="npav" style="background:'+col+'">'+esc(initial)+'</span>'
+        +'<div class="npbody">'
+        +(nameFull?'<b>'+nInline(nameFull)+'</b> ':'')
+        +'<span>'+nInline(desc)+'</span>'
+        +'</div></div>';
+    }
+    return out+'</div>';
+  }
+
+  function nBodyHtml(body, todo){
+    var lines=body.split(/\n/), html="", inList=false;
+    function closeList(){ if(inList){ html+="</ul>"; inList=false; } }
+    for(var i=0;i<lines.length;i++){
+      var ln=lines[i].trim();
+      if(!ln){ closeList(); continue; }
+      if(/^###\s+/.test(ln)){ closeList(); html+="<h3>"+nInline(ln.replace(/^###\s+/,""))+"</h3>"; }
+      else if(/^[-*]\s+/.test(ln)){ if(!inList){ html+='<ul'+(todo?' class="ntodo"':'')+'>'; inList=true; } html+="<li>"+nInline(ln.replace(/^[-*]\s+/,""))+"</li>"; }
+      else { closeList(); html+="<p>"+nInline(ln)+"</p>"; }
+    }
+    closeList();
+    return html;
+  }
+
+  function narrativeToHtml(md){
+    var src=String(md||"").replace(/\r/g,"");
+    var parts=src.split(/^(##\s+.*)$/m); // [intro, "## t1", body1, "## t2", body2, ...]
+    var out="";
+    var introBody=(parts[0]||"").replace(/^#\s+.*$/m,"").trim();
+    if(introBody) out+='<div class="nlead">'+nBodyHtml(introBody,false)+'</div>';
+    for(var i=1;i<parts.length;i+=2){
+      var title=parts[i].replace(/^##\s+/,"").trim();
+      var body=(parts[i+1]||"").trim();
+      var meta=nSectionMeta(title);
+      if(!meta) continue; // section masquée
+      out+='<section class="nsec" style="--nac:'+meta.color+'">'
+        +'<div class="nsec-h"><span class="nbadge">'+meta.glyph+'</span><h2>'+esc(meta.label)+'</h2></div>'
+        +'<div class="nsec-b">'
+        +(meta.kind==="profiles" ? nProfilesHtml(body) : nBodyHtml(body, meta.kind==="todo"))
+        +'</div></section>';
+    }
+    return out || mdToHtml(md);
+  }
+
   // renvoie le markdown complet, ou null en cas d'échec/timeout
   function generatePortrait(T, sc, onChunk){
     var ctrl = ("AbortController" in window) ? new AbortController() : null;
@@ -2056,6 +2467,8 @@
   var KEY="proxxie.lab.v2";
   var state = load() || {email:"", current:null, tests:{}};
   if(!state.tests) state.tests={};
+  if(!state.reflect) state.reflect={}; // réponses aux questions à se poser
+  if(state.synthesisPaid===undefined) state.synthesisPaid=false; // produit payant global : la Synthèse cross-tests
   var curId = null;
 
   function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
@@ -2129,8 +2542,7 @@
     if(!s) return {chip:"Nouveau", cls:"new"};
     var freeDone = answeredCount(t, s, t.freeCount)===t.freeCount;
     var allDone  = answeredCount(t, s, t.items.length)===t.items.length;
-    if(s.paid && allDone && s.narrative!==undefined) return {chip:"Terminé", cls:"done"};
-    if(s.long && allDone) return {chip:"À débloquer", cls:"prog"};
+    if(allDone) return {chip:"Terminé", cls:"done"};       // version longue finie : portrait + pistes, gratuits
     if(s.long) return {chip:"En cours", cls:"prog"};
     if(freeDone) return {chip:"Résultat prêt", cls:"prog"};
     if(s.idx>0)  return {chip:"En cours", cls:"prog"};
@@ -2171,7 +2583,7 @@
     var c=document.createElement("button"); c.type="button";
     c.className="tcard"+(m.feat?" feat":"")+(clin?" clin":"");
     if(!clin){ c.style.setProperty('--ac',m.ac); c.style.setProperty('--tint',m.ti); }
-    c.onclick=function(){ openTest(id); };
+    c.onclick=(!clin && stt.cls==="done") ? function(){ reviewResults(id); } : function(){ openTest(id); };
     var icon=clin?ICONS.scan:(ICONS[m.ic]||ICONS.grid);
     var kick=clin?'Dépistage':(m.kick||'');
     var chips=clin
@@ -2218,10 +2630,28 @@
     curId=null; state.current=null; save();
     openHome();
   }
-  function openHome(){ gFocus=null; renderGraph(); show("s-home"); }
+  function openHome(){ renderGraph(); show("s-home"); }
   function openList(){ renderCatalog(); show("s-list"); }
 
   // ---------- INTRO (par test) ----------
+  // "Revoir mes résultats" : route DIRECTEMENT vers l'écran de résultats au lieu
+  // de repasser par la logique de reprise de quiz d'openTest (fix bug #0b). On
+  // réplique le branchement "fini" complet : payé+long => rapport complet + pistes,
+  // long fini => narration complète + paywall, sinon 15 gratuites => aperçu gratuit.
+  function reviewResults(id){
+    curId=id; state.current=id; save();
+    var t=T(), s=st();
+    if(isClin(t)){
+      if(answeredCount(t,s,t.items.length)===t.items.length){ showClinical(); return; }
+      openTest(id); return; // dépistage pas fini : reprise normale
+    }
+    var longDone = answeredCount(t,s,t.items.length)===t.items.length;
+    // version longue finie : portrait + pistes métiers, désormais gratuites (Approche A)
+    if(longDone){ runNarrative(t.items.length, function(){ runAction(showFull); }); return; }
+    if(answeredCount(t,s,t.freeCount)===t.freeCount){ runNarrative(t.freeCount, showSimple); return; }
+    openTest(id); // sécurité : pas réellement fini, reprise normale
+  }
+
   function openTest(id){
     curId=id; state.current=id; save();
     var t=T(), s=st();
@@ -2233,11 +2663,10 @@
     } else {
       // si déjà en cours / terminé, on reprend au bon endroit
       var longDone = answeredCount(t,s,t.items.length)===t.items.length;
-      if(s.paid && longDone){
-        runNarrative(t.items.length, function(){ runAction(showFull); }); // payé : narration + pistes (cache => instantané)
+      if(longDone){
+        runNarrative(t.items.length, function(){ runAction(showFull); }); // longue finie : narration + pistes, gratuites (cache => instantané)
         return;
       }
-      if(s.long && longDone){ runNarrative(t.items.length, showFull); return; } // longue finie : narration gratuite + paywall
       if(s.long){ show("s-quiz"); renderQuestion(); return; } // au milieu de la version longue
       if(answeredCount(t,s,t.freeCount)===t.freeCount){ runNarrative(t.freeCount, showSimple); return; } // 15 gratuites finies
       if(s.idx>0){ show("s-quiz"); renderQuestion(); return; } // au milieu des 15 gratuites
@@ -2252,7 +2681,7 @@
     document.getElementById("intro-lead").textContent=t.introLead;
     document.getElementById("intro-how").textContent= isClin(t)
       ? "Ce test est un outil de repérage, gratuit et sans inscription. Il ne pose aucun diagnostic. À la fin, tu obtiens un résultat indicatif et des pistes pour en parler à un professionnel si besoin."
-      : t.freeCount+" questions gratuites, sans inscription, pour un premier résultat. Crée ensuite un compte gratuit pour accéder à la version longue de "+t.items.length+" questions. L'analyse détaillée, rédigée pour toi, se débloque pour 4,99 €.";
+      : t.freeCount+" questions gratuites, sans inscription, pour un premier résultat. Crée ensuite un compte gratuit pour la version longue de "+t.items.length+" questions : portrait détaillé et pistes métiers, entièrement gratuits.";
 
     var pv=document.getElementById("intro-preview");
     if(pv){
@@ -2262,6 +2691,15 @@
       var on=Math.min(4,t.scale.length), cells="";
       for(var n=1;n<=t.scale.length;n++){ cells+='<span class="'+(n===on?"on":"")+'">'+n+'</span>'; }
       pv.innerHTML='<span class="qptag">Aperçu</span><div class="qpk"><span class="d"></span>'+dname+'</div><div class="qpq">'+q0+'</div><div class="qps">'+cells+'</div><div class="qphint"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+    }
+
+    // choix version longue : seulement pour les tests non cliniques
+    var il=document.getElementById("intro-long");
+    if(il){
+      il.hidden=isClin(t);
+      var ilc=document.getElementById("il-count"); if(ilc) ilc.textContent=t.items.length;
+      var reg=document.getElementById("intro-longreg"); if(reg) reg.hidden=true;
+      var em=document.getElementById("intro-reg-email"); if(em) em.value=state.email||"";
     }
 
     show("s-intro");
@@ -2326,7 +2764,7 @@
     } else {
       if(isClin(t)){ showClinical(); }                          // dépistage : résultat direct
       else if(!s.long){ runNarrative(t.freeCount, showSimple); } // 15 gratuites : narration gratuite (aperçu)
-      else { runNarrative(t.items.length, showFull); }           // version longue : narration complète gratuite + paywall "quoi en faire"
+      else { runNarrative(t.items.length, function(){ runAction(showFull); }); } // version longue : portrait complet + pistes métiers, gratuits
     }
   }
 
@@ -2347,8 +2785,8 @@
     var host=document.getElementById("free-portrait");
     host.innerHTML="";
     if(s.narrative){
-      var llm=document.createElement("div"); llm.className="card portrait llm"; llm.style.marginTop="0";
-      llm.innerHTML=mdToHtml(s.narrative);
+      var llm=document.createElement("div"); llm.className="narrative"; llm.style.marginTop="0";
+      llm.innerHTML=narrativeToHtml(s.narrative);
       host.appendChild(llm);
     } else {
       // repli déterministe : le trait dominant puis les plus distinctifs
@@ -2369,51 +2807,19 @@
       host.innerHTML=html;
     }
 
-    var rest=t.items.length - t.freeCount;
-    var restTxt = rest>1 ? (rest+" questions") : "1 question";
-    var host=document.getElementById("free-next");
-    if(registered()){
-      host.innerHTML =
-        '<div class="card" style="margin-top:14px">'+
-          '<h2 style="margin-top:4px">Passe à la version longue</h2>'+
-          '<p style="color:var(--ink-soft);margin:0 0 14px">Ton compte est déjà créé. Il te reste '+restTxt+' pour compléter la version longue ('+t.items.length+' au total), puis tu pourras débloquer ton analyse détaillée.</p>'+
-          '<button class="btn" onclick="App.startLong()">Continuer, '+restTxt+'</button>'+
-        '</div>';
-    } else {
-      host.innerHTML =
-        '<div class="card" style="margin-top:14px">'+
-          '<span class="kicker"><span class="kd"></span>Inscription gratuite</span>'+
-          '<h2 style="margin-top:2px">Crée ton compte pour la version longue</h2>'+
-          '<p style="color:var(--ink-soft);margin:0 0 14px">L\'inscription est gratuite. Elle débloque '+restTxt+' de plus pour atteindre la version longue ('+t.items.length+' au total). L\'analyse détaillée rédigée pour toi se débloque plus tard, pour 4,99 €.</p>'+
-          '<div class="field" style="margin:0"><input id="reg-email" type="email" placeholder="ton@email.com" autocomplete="email"></div>'+
-          '<div style="height:12px"></div>'+
-          '<button class="btn" onclick="App.registerContinue()">Créer mon compte gratuit et continuer</button>'+
-          '<div class="reassure">'+LOCKICON+'Tes données restent stockées en local, aucune carte bancaire à cette étape.</div>'+
-        '</div>';
-    }
+    // Plus d'upsell "version longue / créer un compte" dans les résultats :
+    // la suite passe par la carte (« Ta carte s'agrandit » + test suivant).
+    document.getElementById("free-next").innerHTML="";
+    renderContinue('free');
     show("s-free");
-  }
-
-  function startLong(){
-    var t=T(), s=st();
-    s.long=true;
-    s.idx=t.freeCount;       // reprise à la première question de la version longue
-    save();
-    show("s-quiz"); renderQuestion();
-  }
-  function registerContinue(){
-    var e=document.getElementById("reg-email").value.trim();
-    if(!e || e.indexOf("@")<0){ toast("Indique un email valide"); return; }
-    state.email=e; save();
-    toast("Compte créé (démo)");
-    startLong();
   }
 
   // ---------- CHECKOUT SIMULÉ ----------
   var subMode=false;
+  // Checkout désormais dédié au seul produit payant : la Synthèse cross-tests.
   function openCheckout(sub){
     subMode=!!sub;
-    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton analyse complète";
+    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ta Synthèse";
     document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
     document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
     if(state.email) document.getElementById("chk-email").value=state.email;
@@ -2422,21 +2828,36 @@
   function closeCheckout(){ document.getElementById("checkout").classList.remove("open"); }
 
   function pay(){
-    var s=st();
     var email=document.getElementById("chk-email").value.trim();
     if(email) state.email=email;
-    s.paid=true;
+    state.synthesisPaid=true;   // débloque la Synthèse cross-tests (l'abonnement la débloque aussi)
     save();
     closeCheckout();
     toast("Paiement confirmé (démo)");
-    // narration déjà en cache (version longue terminée) : on génère la couche "quoi en faire"
+    openSynthese();
+  }
+
+  // bouton DEV (temporaire) : débloque la Synthèse et l'ouvre directement
+  function devGenerate(){
+    var s=st(); s.paid=true; state.synthesisPaid=true; save();
     runNarrative(T().items.length, function(){ runAction(showFull); });
   }
 
-  // bouton DEV (temporaire) : simule le parcours payant complet sur les réponses actuelles
-  function devGenerate(){
-    var s=st(); s.paid=true; save();
-    runNarrative(T().items.length, function(){ runAction(showFull); });
+  // dev: remplit les réponses gratuites de plusieurs tests pour visualiser la carte
+  function devFill(ids){
+    ids.forEach(function(id){
+      var t=TESTS[id]; if(!t) return;
+      var lim=(t.freeCount!=null?t.freeCount:t.items.length);
+      var s=state.tests[id]||(state.tests[id]={answers:{},idx:0,paid:false,long:false});
+      for(var i=0;i<lim;i++){
+        var it=t.items[i];
+        // valeur variée pour produire une dimension dominante nette
+        var v=1+((i*2+ (it.dim?it.dim.charCodeAt(0):0))%5);
+        s.answers[it.id]=v;
+      }
+      s.idx=lim;
+    });
+    save(); if(typeof renderGraph==='function') renderGraph();
   }
 
   // ---------- DONNÉES MÉTIERS (repli de démo si le JSON LLM est indisponible) ----------
@@ -2644,8 +3065,8 @@
     host.innerHTML="";
 
     if(s.narrative){
-      var llm=document.createElement("div"); llm.className="card portrait llm"; llm.style.marginTop="0";
-      llm.innerHTML=mdToHtml(s.narrative);
+      var llm=document.createElement("div"); llm.className="narrative"; llm.style.marginTop="0";
+      llm.innerHTML=narrativeToHtml(s.narrative);
       host.appendChild(llm);
     } else {
       var intro=document.createElement("div"); intro.className="card portrait"; intro.style.marginTop="0";
@@ -2661,12 +3082,13 @@
       });
     }
 
-    // couche "quoi en faire" : débloquée si payé, sinon teaser + paywall
-    if(s.paid && s.action){
+    // couche "quoi en faire" : métiers / secteurs / forces, désormais gratuits par test (Approche A).
+    // Le seul produit payant est la Synthèse cross-tests (écran #s-synthese).
+    if(s.action){
       var sep=document.createElement("div");
       sep.style.cssText="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:28px 0 2px";
       sep.innerHTML='<span class="kicker" style="margin:0"><span class="kd"></span>Quoi en faire</span>'
-        +'<span class="statpill">Pistes débloquées</span>';
+        +'<span class="statpill">Inclus, gratuit</span>';
       host.appendChild(sep);
       var ttl=document.createElement("h2"); ttl.style.cssText="font-family:var(--serif);font-size:22px;margin:6px 0 0";
       ttl.textContent="Tes métiers et secteurs.";
@@ -2674,27 +3096,15 @@
       var act=document.createElement("div"); act.id="full-action";
       host.appendChild(act);
       renderActionLayer(act, s.action);
-    } else {
-      var pw=document.createElement("div"); pw.className="paywall"; pw.style.marginTop="26px";
-      pw.innerHTML=
-        '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Quoi en faire</span>'+
-        '<h2 style="font-family:var(--serif);margin:12px 0 4px">Passe du portrait à l\'action.</h2>'+
-        '<div class="price"><b>4,99 €</b><s>14,99 €</s></div>'+
-        '<p style="color:var(--ink-soft);margin:0 0 4px">Ton portrait te dit qui tu es. Débloque ce que tu peux en faire.</p>'+
-        '<ul class="ulist">'+
-          '<li>'+CHK+' Les métiers les plus compatibles avec ton profil</li>'+
-          '<li>'+CHK+' Les secteurs d\'activité où tu t\'épanouis</li>'+
-          '<li>'+CHK+' Tes forces concrètes et tes points de vigilance</li>'+
-          '<li>'+CHK+' Un résumé partageable de tout ton portrait</li>'+
-        '</ul>'+
-        '<button class="btn pay" onclick="App.openCheckout()">Débloquer mes pistes, 4,99 €</button>'+
-        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, tous les tests et le suivi dans le temps</p>';
-      host.appendChild(pw);
     }
+
+    // amorce vers le produit payant : la Synthèse qui relie ce test à tous les autres
+    renderSyntheseTease(host);
 
     document.getElementById("full-disclaimer").innerHTML = "<b>À propos de ces résultats.</b> "+t.about;
 
     if(state.email) document.getElementById("acc-email").value=state.email;
+    renderContinue('full');
     show("s-full");
   }
 
@@ -2811,6 +3221,23 @@
 
   // ---------- DIVERS ----------
   function start(){
+    var s=st(); s.long=false; save();   // parcours gratuit (15 questions)
+    show("s-quiz"); renderQuestion();
+  }
+  // choix "version longue" depuis l'intro : compte gratuit puis 48 questions
+  function chooseLong(){
+    if(registered()){ startLongFromIntro(); return; }
+    var reg=document.getElementById("intro-longreg");
+    if(reg){ reg.hidden=false; var em=document.getElementById("intro-reg-email"); if(em) em.focus(); }
+  }
+  function startLongFromIntro(){
+    if(!registered()){
+      var em=document.getElementById("intro-reg-email");
+      var e=(em?em.value:"").trim();
+      if(!e || e.indexOf("@")<0){ toast("Indique un email valide"); return; }
+      state.email=e; save(); toast("Compte créé (démo)");
+    }
+    var s=st(); s.long=true; if(s.idx<0||s.idx==null) s.idx=0; save(); // version longue depuis le départ
     show("s-quiz"); renderQuestion();
   }
   function reset(){
@@ -2828,7 +3255,7 @@
       openTest(state.current); // openTest gère la reprise au bon écran
       return;
     }
-    openCatalog();
+    openHome(); // 1er passage : on atterrit sur l'invitation (carte intérieure)
   }
 
   // ---------- CARTE INTÉRIEURE (graphe d'accueil) ----------
@@ -2857,8 +3284,7 @@
     aq10:   {name:"Spectre aut.",tag:"Repère court sur le fonctionnement autistique.",dims:1},
     dys:    {name:"Dyslexie",  tag:"Un repère sur la lecture chez l'adulte.",dims:1}
   };
-  var G_CENTER=[200,270], G_FOCUS=[200,240], GNS="http://www.w3.org/2000/svg";
-  var gFocus=null;
+  var GNS="http://www.w3.org/2000/svg";
 
   function gName(id){ return (GMETA[id]&&GMETA[id].name) || (TESTS[id]&&TESTS[id].name) || id; }
   function gTag(id){ return (GMETA[id]&&GMETA[id].tag) || (TESTS[id]&&TESTS[id].tagline) || ""; }
@@ -2884,81 +3310,415 @@
       'stroke-dasharray':C,'stroke-dashoffset':C*(1-frac),transform:'rotate(-90 '+x+' '+y+')',style:'transition:stroke-dashoffset .9s'},g);
   }
 
+  // ----- carte à 3 modes : Carte / Radar / Potentiel -----
+  var GORDER=['perso','aspir','carr','equi'];
+  var GRADAR=['bigfive','mbti','hpi','pcm','valeurs','besoins','drivers','riasec','caas','grit','brief'];
+  var PISTES={
+    perso:["Métiers de l'humain","Création & design","Communication"],
+    aspir:["Entreprendre","Projets à impact","Piloter une équipe"],
+    carr :["Recherche & analyse","Ingénierie","Conseil & stratégie"],
+    equi :["Coordination & soin","Gestion & qualité","Rôles d'appui"]
+  };
+  var gMode='map';
+
+  function hexA2(hex,a){ var h=hex.replace('#',''); var n=parseInt(h,16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+  function cubicPath(x1,y1,x2,y2){ var mx=(x1+x2)/2; return 'M '+x1+' '+y1+' C '+mx+' '+y1+', '+mx+' '+y2+', '+x2+' '+y2; }
+
+  // trait + position dérivés des vraies réponses
+  function gTrait(id){
+    var t=TESTS[id], s=state.tests[id];
+    if(!t||!s||!gDone(id)) return {done:false};
+    if(isClin(t)) return {done:true, clinical:true, label:gName(id), pos:.5};
+    var lim = (t.freeCount!=null? t.freeCount : t.items.length);
+    var sc = scores(t, s, lim);
+    var dom=t.order[0], best=-1;
+    t.order.forEach(function(d){ if(sc[d]>best){ best=sc[d]; dom=d; } });
+    var trait=(t.dims && t.dims[dom] && t.dims[dom].name) || gName(id);
+    return {done:true, clinical:false, dom:dom, trait:trait, label:trait, pos:Math.max(0,Math.min(1,sc[dom]/100)), score:sc[dom]};
+  }
+
   function renderGraph(){
     var svg=document.getElementById('grGraph'); if(!svg) return;
     svg.innerHTML='';
     var defs=gEl('defs',{},svg);
-    for(var fid in FACETS){ var fl=gEl('filter',{id:'grglow-'+fid,x:'-60%',y:'-60%',width:'220%',height:'220%'},defs); gEl('feGaussianBlur',{stdDeviation:'5','in':'SourceGraphic'},fl); }
-    var gL=gEl('g',{},svg), gN=gEl('g',{},svg);
-    gFocus ? gRenderFocus(svg,gL,gN) : gRenderOverview(svg,gL,gN);
-    document.getElementById('grBack').classList.toggle('on',!!gFocus);
+    for(var fid in FACETS){ var fl=gEl('filter',{id:'grglow-'+fid,x:'-60%',y:'-60%',width:'220%',height:'220%'},defs); gEl('feGaussianBlur',{stdDeviation:'4','in':'SourceGraphic'},fl); }
+    if(gMode==='radar') renderRadarSVG(svg);
+    else if(gMode==='flow') renderFlowSVG(svg);
+    else renderMapSVG(svg);
     // progression globale
     var done=gTotalDone(), tot=gTotal();
+    var nFac=0, totFac=0; for(var fk in FACETS){ totFac++; if(gFacetDone(fk)>0) nFac++; }
+    svg.setAttribute('aria-label','Carte : '+nFac+' facette'+(nFac>1?'s':'')+' sur '+totFac+' révélée'+(nFac>1?'s':'')+', '+done+' test'+(done>1?'s':'')+' sur '+tot+'.');
     var pf=document.getElementById('grPf'), pt=document.getElementById('grPt');
     if(pf) pf.style.width=(tot?Math.round(done/tot*100):0)+'%';
     if(pt) pt.textContent=done+' / '+tot+' explorées';
-    gSetHint();
+    var bk=document.getElementById('grBack'); if(bk) bk.classList.remove('on');
+    updateSign(); gSetHint(); updateHomeMode(); renderHomeSynthese();
   }
 
-  function gRenderOverview(svg,gL,gN){
-    var fid;
-    for(fid in FACETS){ var p=FACETS[fid].pos; gEl('line',{x1:G_CENTER[0],y1:G_CENTER[1],x2:p[0],y2:p[1],'class':'gr-lnk'},gL); }
+  // ----- accueil : bascule 1er passage (invitation) vs retour (carte) -----
+  function homeHasProgress(){
+    for(var id in state.tests){ var s=state.tests[id]; if(s&&s.answers){ for(var k in s.answers){ return true; } } }
+    return false;
+  }
+  function updateHomeMode(){
+    var home=document.getElementById('s-home'); if(!home) return;
+    home.classList.toggle('fresh', gTotalDone()===0);
+    var rep=document.getElementById('homeResume'); if(rep) rep.hidden=!homeHasProgress();
+  }
+  // reprendre le dernier test commencé mais pas terminé (sinon le dernier touché)
+  function resumeLast(){
+    var inprog=null, any=null;
+    for(var id in state.tests){
+      var s=state.tests[id]; if(!s||!s.answers) continue;
+      var n=0; for(var k in s.answers){ n++; }
+      if(!n||!TESTS[id]) continue;
+      any=id; if(!gDone(id)) inprog=id;
+    }
+    var target=inprog||any;
+    if(target) openTest(target); else openList();
+  }
+
+  // ----- suite résultat : suggestion du test suivant + mini-carte -----
+  function suggestNext(){
+    var starters=['bigfive','valeurs','riasec'];
+    for(var i=0;i<starters.length;i++){ var id=starters[i]; if(TESTS[id]&&id!==curId&&!gDone(id)) return id; }
+    var order=['perso','aspir','carr','equi'];
+    for(var f=0;f<order.length;f++){
+      var tests=FACETS[order[f]].tests;
+      for(var j=0;j<tests.length;j++){ var id2=tests[j]; if(!TESTS[id2]||id2===curId) continue; if(isClin(TESTS[id2])) continue; if(!gDone(id2)) return id2; }
+    }
+    return null;
+  }
+  function renderContinue(prefix){
+    var sec=document.getElementById(prefix+'-continue'); if(!sec) return;
+    var badge=document.getElementById(prefix+'-cont-badge'); if(badge) badge.textContent=gTotalDone()+' / '+gTotal();
+    var svg=document.getElementById(prefix+'-cont-svg');
+    if(svg){
+      svg.innerHTML='';
+      var defs=gEl('defs',{},svg);
+      for(var fid in FACETS){ var fl=gEl('filter',{id:'grglow-'+fid,x:'-60%',y:'-60%',width:'220%',height:'220%'},defs); gEl('feGaussianBlur',{stdDeviation:'4','in':'SourceGraphic'},fl); }
+      var prev=gMode; gMode='map'; renderMapSVG(svg); gMode=prev;
+    }
+    var nxt=suggestNext(), go=document.getElementById(prefix+'-cont-go');
+    if(go){
+      if(nxt){ go.style.display=''; go.textContent='Continue avec '+gName(nxt)+' →'; go.onclick=function(){ openTest(nxt); }; }
+      else { go.style.display='none'; }
+    }
+  }
+
+  // ====================================================================
+  // SYNTHÈSE CROSS-TESTS · seul produit payant (Approche A)
+  // Contenu déterministe maintenant, moteur LLM branché plus tard.
+  // ====================================================================
+  var SYNTH_MIN=2; // nb minimum de tests passés pour une synthèse utile
+
+  function synthDoneIds(){
+    var ids=[];
+    GORDER.forEach(function(fid){ gFacetTests(fid).forEach(function(id){ if(gDone(id)) ids.push(id); }); });
+    return ids;
+  }
+  function synthEligible(){ return synthDoneIds().length>=SYNTH_MIN; }
+
+  // agrège les vraies réponses en une structure déterministe
+  function buildSynthese(){
+    var facets=[], allTraits=[], pistes=[];
+    GORDER.forEach(function(fid){
+      var F=FACETS[fid], traits=[];
+      gFacetTests(fid).forEach(function(id){
+        if(!gDone(id)) return;
+        var tr=gTrait(id); if(!tr.done) return;
+        traits.push({label:tr.label, testName:gName(id), score:(tr.score!=null?tr.score:null), clinical:!!tr.clinical});
+        if(!tr.clinical && tr.score!=null) allTraits.push({label:tr.label, score:tr.score, facet:F.name, testName:gName(id)});
+      });
+      if(traits.length){
+        facets.push({fid:fid, name:F.name, kicker:F.kicker, hex:F.hex, traits:traits});
+        (PISTES[fid]||[]).forEach(function(p){ if(pistes.indexOf(p)<0) pistes.push(p); });
+      }
+    });
+    allTraits.sort(function(a,b){ return b.score-a.score; });
+    var reflectCount=0; for(var k in state.reflect){ if(state.reflect[k] && (''+state.reflect[k]).trim()) reflectCount++; }
+    return {facets:facets, fils:allTraits.slice(0,3), pistes:pistes.slice(0,6), nTests:synthDoneIds().length, reflectCount:reflectCount};
+  }
+
+  // routeur de l'écran Synthèse : éligibilité -> paywall -> contenu
+  function openSynthese(){
+    var head=document.getElementById('syn-head'), body=document.getElementById('syn-body');
+    if(!body){ show('s-synthese'); return; }
+    if(!synthEligible()){ renderSyntheseLocked(head, body, 'few'); show('s-synthese'); return; }
+    if(!state.synthesisPaid){ renderSyntheseLocked(head, body, 'pay'); show('s-synthese'); return; }
+    if(head) head.innerHTML='';
+    renderSynthese();
+    show('s-synthese');
+  }
+
+  // états verrouillés : pas assez de tests, ou pas encore payé
+  function renderSyntheseLocked(head, body, mode){
+    if(head) head.innerHTML='';
+    var d=buildSynthese();
+    if(mode==='few'){
+      var need=SYNTH_MIN-d.nTests;
+      body.innerHTML=
+        '<div class="card" style="margin-top:0">'+
+        '<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Bientôt disponible</span>'+
+        '<h2 style="font-family:var(--serif);margin:0 0 6px">Encore un test, et on relie tout.</h2>'+
+        '<p style="color:var(--ink-soft);margin:0 0 14px">La Synthèse croise tes différents tests pour en sortir une lecture d\'ensemble. Il te faut au moins '+SYNTH_MIN+' tests. Tu en as '+d.nTests+', plus que '+need+' à passer.</p>'+
+        '<button class="btn" onclick="App.openHome()">Choisir un test à passer</button>'+
+        '</div>';
+      return;
+    }
+    // mode 'pay' : aperçu flouté + offre
+    var names=d.fils.map(function(f){return f.label;});
+    var teaser = names.length>=2
+      ? 'Tes tests pointent déjà vers <b>'+esc(names[0])+'</b> et <b>'+esc(names[1])+'</b>. La Synthèse en fait une lecture d\'ensemble.'
+      : 'Tu as passé assez de tests pour une vraie lecture croisée.';
+    body.innerHTML=
+      '<div class="paywall" style="margin-top:0">'+
+        '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Ta Synthèse</span>'+
+        '<h2 style="font-family:var(--serif);margin:12px 0 4px">Relie tous tes tests en une seule lecture.</h2>'+
+        '<div class="price"><b>4,99 €</b><s>14,99 €</s></div>'+
+        '<p style="color:var(--ink-soft);margin:0 0 4px">'+teaser+' Un test te dit qui tu es sur un axe. La Synthèse fait parler tes '+d.nTests+' tests ensemble.</p>'+
+        '<ul class="ulist">'+
+          '<li>'+CHK+' Le fil rouge qui traverse tous tes tests</li>'+
+          '<li>'+CHK+' Ce que tes quatre dimensions disent, mises bout à bout</li>'+
+          '<li>'+CHK+' Les directions de carrière déduites du croisement</li>'+
+          '<li>'+CHK+' Un résumé partageable de l\'ensemble de ton profil</li>'+
+        '</ul>'+
+        '<button class="btn pay" onclick="App.openCheckout()">Débloquer ma Synthèse, 4,99 €</button>'+
+        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, la Synthèse, tous les tests et le suivi dans le temps</p>'+
+      '</div>';
+  }
+
+  // contenu complet (payé)
+  function renderSynthese(){
+    var host=document.getElementById('syn-body'); if(!host) return;
+    var d=buildSynthese();
+    host.innerHTML='';
+
+    var lead=document.createElement('div'); lead.className='card'; lead.style.marginTop='0';
+    var names=d.fils.map(function(f){return f.label;}), phrase;
+    if(names.length>=2){
+      phrase='À travers tes '+d.nTests+' tests, trois signaux ressortent plus que les autres : <b>'+esc(names[0])+'</b>, <b>'+esc(names[1])+'</b>'+(names[2]?' et <b>'+esc(names[2])+'</b>':'')+'. Pris ensemble, ils dessinent une même direction.';
+    } else if(names.length===1){
+      phrase='Le signal le plus net de tes tests, c\'est <b>'+esc(names[0])+'</b>. Voici comment il se relie au reste de ton profil.';
+    } else {
+      phrase='Tes repères se recoupent. Voici ce qu\'ils racontent quand on les lit ensemble.';
+    }
+    if(d.reflectCount>0) phrase+=' On y ajoute ce que tu as écrit dans tes '+d.reflectCount+' réflexion'+(d.reflectCount>1?'s':'')+'.';
+    lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ce qui relie tout</span><p style="margin:0">'+phrase+'</p>';
+    host.appendChild(lead);
+
+    if(d.fils.length){
+      var fr=document.createElement('div'); fr.className='card';
+      var rows=d.fils.map(function(f){
+        return '<div class="crow"><span class="cbadge">&#10022;</span><div class="cmain"><div class="ctop"><span class="cname">'+esc(f.label)+'</span><span class="cpct" style="color:var(--blue)">'+f.score+'%</span></div><p class="csub">'+esc(f.facet)+' · '+esc(f.testName)+'</p><div class="ctrack"><div class="cfill" data-w="'+f.score+'" style="background:var(--blue)"></div></div></div></div>';
+      }).join('');
+      fr.innerHTML='<h2 class="secttl">Ton fil rouge</h2><p class="sectsub">Les traits les plus marqués, tous tests confondus.</p>'+rows;
+      host.appendChild(fr);
+    }
+
+    var fc=document.createElement('div'); fc.className='card';
+    var fhtml='<h2 class="secttl">Tes dimensions, mises bout à bout</h2><p class="sectsub">Ce que chaque partie de toi a révélé.</p>';
+    d.facets.forEach(function(f){
+      var chips=f.traits.map(function(t){ return '<span class="chip">'+esc(t.label)+(t.score!=null?' · '+t.score+'%':'')+'</span>'; }).join('');
+      fhtml+='<div class="fv"><span class="fvic up" style="background:'+f.hex+'1a;color:'+f.hex+'">&#9650;</span><div><p class="fvb">'+esc(f.name)+'</p><div class="chips" style="margin-top:6px">'+chips+'</div></div></div>';
+    });
+    fc.innerHTML=fhtml; host.appendChild(fc);
+
+    if(d.pistes.length){
+      var pc=document.createElement('div'); pc.className='card';
+      pc.innerHTML='<h2 class="secttl">Vers quoi ça pointe</h2><p class="sectsub">Des directions déduites du croisement de tes tests. Des pistes, pas un verdict.</p><div class="chips">'+d.pistes.map(function(p){return '<span class="chip">'+esc(p)+'</span>';}).join('')+'</div>';
+      host.appendChild(pc);
+    }
+
+    setTimeout(function(){ host.querySelectorAll('.cfill').forEach(function(f){ f.style.width=(f.getAttribute('data-w')||0)+'%'; }); },120);
+  }
+
+  // amorce affichée en bas d'un portrait de test : pousse vers la Synthèse
+  function renderSyntheseTease(host){
+    if(synthDoneIds().length<1) return;
+    var paid=!!state.synthesisPaid, elig=synthEligible();
+    var sec=document.createElement('section'); sec.className='card'; sec.style.marginTop='18px';
+    var body, btn;
+    if(paid){
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ta Synthèse relie ce test à tous les autres que tu as passés.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Voir ma Synthèse</button>';
+    } else if(elig){
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ce portrait éclaire un axe. La Synthèse croise tes '+synthDoneIds().length+' tests en une seule lecture, avec les pistes carrière qui en découlent.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Débloquer ma Synthèse, 4,99 €</button>';
+    } else {
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Passe un test de plus et débloque ta Synthèse : une lecture qui croise tous tes tests.</p>';
+      btn='<button class="btn ghost" onclick="App.openSynthese()">En savoir plus sur la Synthèse</button>';
+    }
+    sec.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Aller plus loin · ta Synthèse</span>'+
+      '<h2 style="font-family:var(--serif);font-size:21px;margin:0 0 6px">Et si on reliait tous tes tests ?</h2>'+body+btn;
+    host.appendChild(sec);
+  }
+
+  // bloc d'accueil : entrée vers la Synthèse, état selon progression + achat
+  function renderHomeSynthese(){
+    var sec=document.getElementById('homeSynthese'); if(!sec) return;
+    var n=synthDoneIds().length;
+    if(n<1){ sec.hidden=true; return; }
+    sec.hidden=false;
+    var paid=!!state.synthesisPaid, elig=synthEligible();
+    var badge, title, lead, btn;
+    if(paid){
+      badge='Débloquée'; title='Ta Synthèse est prête.';
+      lead='Une lecture d\'ensemble qui croise tes '+n+' tests. Reviens-y à chaque nouveau test.';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Voir ma Synthèse →</button>';
+    } else if(elig){
+      badge=n+' tests reliés'; title='Relie tous tes tests.';
+      lead='Tu as passé assez de tests pour une vraie lecture croisée : fil rouge, dimensions, pistes carrière.';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Débloquer ma Synthèse, 4,99 € →</button>';
+    } else {
+      badge=n+' / '+SYNTH_MIN; title='Bientôt ta Synthèse.';
+      lead='Encore '+(SYNTH_MIN-n)+' test'+((SYNTH_MIN-n)>1?'s':'')+' et la Synthèse croise tout ton profil en une lecture.';
+      btn='<button class="btn ghost hp-cont-all" onclick="App.openSynthese()">En savoir plus</button>';
+    }
+    sec.innerHTML='<div class="hp-cont-head"><span class="kicker" style="margin:0"><span class="kd"></span>Ta Synthèse</span><span class="statpill">'+badge+'</span></div>'+
+      '<h2 class="hp-cont-title">'+title+'</h2>'+
+      '<p class="hp-cont-lead">'+lead+'</p>'+btn;
+  }
+
+  // ---- MODE CARTE : tout en vue, les traits s'allument ----
+  function renderMapSVG(svg){
+    var cx=200, cy=256;
+    var anchors={perso:[104,150],aspir:[296,150],carr:[104,362],equi:[296,362]};
+    var gL=gEl('g',{},svg), gN=gEl('g',{},svg);
+    GORDER.forEach(function(fid){ var a=anchors[fid]; gEl('line',{x1:cx,y1:cy,x2:a[0],y2:a[1],'class':'gr-lnk'},gL); });
+    var leafPos={};
+    GORDER.forEach(function(fid){
+      var a=anchors[fid], tests=gFacetTests(fid), n=tests.length;
+      var base=Math.atan2(a[1]-cy,a[0]-cx);
+      var step=(n>4?25:32)*Math.PI/180, R=(n>4?70:78);
+      tests.forEach(function(id,i){
+        var off=(i-(n-1)/2)*step, ang=base+off;
+        var lx=a[0]+Math.cos(ang)*R, ly=a[1]+Math.sin(ang)*R;
+        leafPos[id]={x:lx,y:ly,ang:ang};
+        gEl('line',{x1:a[0],y1:a[1],x2:lx,y2:ly,'class':'gr-lnk'+(gDone(id)?' live':'')},gL);
+      });
+    });
+    // centre
     var cg=gEl('g',{'class':'gr-node center gr-fade'},gN);
-    gEl('circle',{cx:G_CENTER[0],cy:G_CENTER[1],r:30,fill:'#fff',stroke:'#0A0E2C','stroke-width':'2'},cg);
-    gEl('circle',{cx:G_CENTER[0],cy:G_CENTER[1],r:30,fill:'#0A0E2C',opacity:'.06'},cg);
-    var ct=gEl('text',{x:G_CENTER[0],y:G_CENTER[1]+4,'class':'gr-lbl'},cg); ct.textContent='Toi';
-    for(fid in FACETS){ (function(fid){
-      var F=FACETS[fid],p=F.pos,dc=gFacetDone(fid),tot=gFacetTests(fid).length;
+    gEl('circle',{cx:cx,cy:cy,r:28,fill:'#fff',stroke:'#0A0E2C','stroke-width':'2'},cg);
+    gEl('circle',{cx:cx,cy:cy,r:28,fill:'#0A0E2C',opacity:'.06'},cg);
+    var ct=gEl('text',{x:cx,y:cy+4,'class':'gr-lbl'},cg); ct.textContent='Toi';
+    // facettes
+    GORDER.forEach(function(fid){
+      var F=FACETS[fid], a=anchors[fid], dc=gFacetDone(fid), tot=gFacetTests(fid).length;
       var hg=gEl('g',{'class':'gr-node hub gr-fade'},gN);
-      gEl('circle',{cx:p[0],cy:p[1],r:25,fill:F.hex,opacity:'.07'},hg);
-      gRing(hg,p[0],p[1],23,F.hex,tot?dc/tot:0,3.6);
-      gEl('circle',{cx:p[0],cy:p[1],r:16,fill:F.hex,opacity:'.16'},hg);
-      var ht=gEl('text',{x:p[0],y:p[1]+1.5,'class':'gr-lbl',fill:F.tHex,'font-size':'13','font-weight':'800'},hg); ht.textContent=dc+'/'+tot;
-      var by=p[1]<G_CENTER[1]? p[1]-34 : p[1]+40;
-      var hn=gEl('text',{x:p[0],y:by,'class':'gr-lbl',fill:F.tHex,'font-weight':'800'},hg); hn.textContent=F.name;
-      gEl('circle',{cx:p[0],cy:p[1],r:24,fill:'transparent'},hg);
-      hg.onclick=function(ev){ ev.stopPropagation(); gOpenFocus(fid); };
-    })(fid); }
+      gEl('circle',{cx:a[0],cy:a[1],r:22,fill:F.hex,opacity:'.07'},hg);
+      gRing(hg,a[0],a[1],20,F.hex,tot?dc/tot:0,3.4);
+      gEl('circle',{cx:a[0],cy:a[1],r:14,fill:F.hex,opacity:'.16'},hg);
+      var hc=gEl('text',{x:a[0],y:a[1]+1.5,'class':'gr-lbl',fill:F.tHex,'font-size':'12','font-weight':'800'},hg); hc.textContent=dc+'/'+tot;
+      var by=(a[1]<cy)? a[1]+38 : a[1]-30;
+      var hn=gEl('text',{x:a[0],y:by,'class':'gr-lbl',fill:F.tHex,'font-weight':'800'},hg); hn.textContent=F.name;
+    });
+    // feuilles
+    GORDER.forEach(function(fid){
+      var F=FACETS[fid];
+      gFacetTests(fid).forEach(function(id){
+        var p=leafPos[id], tr=gTrait(id);
+        var lg=gEl('g',{'class':'gr-node leaf gr-pop'},gN);
+        gEl('circle',{cx:p.x,cy:p.y,r:20,fill:'transparent'},lg);
+        var ttl=gEl('title',{},lg); ttl.textContent=gName(id);
+        if(tr.done){
+          gEl('circle',{cx:p.x,cy:p.y,r:13,fill:F.hex,filter:'url(#grglow-'+fid+')',opacity:'.42','class':'gr-pulse'},lg);
+          gEl('circle',{cx:p.x,cy:p.y,r:10,fill:F.hex},lg);
+          if(tr.clinical){ var ck=gEl('text',{x:p.x,y:p.y+3.5,'text-anchor':'middle','font-size':'11','font-weight':'800',style:'fill:#fff'},lg); ck.textContent='✓'; }
+          var dx=Math.cos(p.ang), dy=Math.sin(p.ang);
+          var ox=p.x+dx*(13+Math.abs(dx)*18), oy=p.y+dy*16+4;
+          var lt=gEl('text',{x:ox,y:oy,'class':'gr-lbl'+(tr.clinical?' soft':'')},lg); lt.textContent=tr.clinical?gName(id):tr.trait;
+          lt.setAttribute('text-anchor', dx<-0.2?'end':(dx>0.2?'start':'middle'));
+        } else {
+          gEl('circle',{cx:p.x,cy:p.y,r:9,fill:F.hex,opacity:'.10'},lg);
+          gEl('circle',{cx:p.x,cy:p.y,r:9,fill:'none',stroke:F.hex,'stroke-width':'1.8',opacity:'.55'},lg);
+          gEl('circle',{cx:p.x,cy:p.y,r:3,fill:F.hex,opacity:'.6'},lg);
+        }
+        lg.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
+      });
+    });
     svg.onclick=null;
   }
 
-  function gRenderFocus(svg,gL,gN){
-    var F=FACETS[gFocus], leaves=gFacetTests(gFocus), n=leaves.length, hub=G_FOCUS;
-    var rad=n>4?150:120;
-    leaves.forEach(function(id,i){ var a=-Math.PI/2+i*(2*Math.PI/n),lx=hub[0]+Math.cos(a)*rad,ly=hub[1]+Math.sin(a)*rad;
-      gEl('line',{x1:hub[0],y1:hub[1],x2:lx,y2:ly,'class':'gr-lnk live'},gL); });
-    var dc=gFacetDone(gFocus);
-    var hg=gEl('g',{'class':'gr-node gr-fade'},gN);
-    gRing(hg,hub[0],hub[1],30,F.hex,n?dc/n:0,4);
-    gEl('circle',{cx:hub[0],cy:hub[1],r:21,fill:F.hex,opacity:'.12'},hg);
-    var hc=gEl('text',{x:hub[0],y:hub[1]-1,'class':'gr-lbl',fill:F.tHex,'font-size':'15','font-weight':'800'},hg); hc.textContent=dc+'/'+n;
-    var hs=gEl('text',{x:hub[0],y:hub[1]+14,'class':'gr-lbl soft','font-size':'9.5'},hg); hs.textContent='passés';
-    var ttl=gEl('text',{x:hub[0],y:hub[1]-44,'class':'gr-lbl',fill:F.tHex,'font-size':'13','font-weight':'800'},hg); ttl.textContent=F.name;
-    leaves.forEach(function(id,i){
-      var a=-Math.PI/2+i*(2*Math.PI/n),lx=hub[0]+Math.cos(a)*rad,ly=hub[1]+Math.sin(a)*rad;
-      var lg=gEl('g',{'class':'gr-node leaf gr-pop',style:'animation-delay:'+(i*55)+'ms'},gN);
-      gEl('circle',{cx:lx,cy:ly,r:22,fill:'transparent'},lg);
-      if(gDone(id)){
-        gEl('circle',{cx:lx,cy:ly,r:15,fill:F.hex,'class':'gr-pulse',filter:'url(#grglow-'+gFocus+')',opacity:'.5'},lg);
-        gEl('circle',{cx:lx,cy:ly,r:12,fill:F.hex},lg);
-        var ck=gEl('text',{x:lx,y:ly+4,'text-anchor':'middle','font-size':'12','font-weight':'800',fill:'#fff'},lg); ck.textContent='✓';
-      } else {
-        gEl('circle',{cx:lx,cy:ly,r:12,fill:F.hex,opacity:'.12'},lg);
-        gEl('circle',{cx:lx,cy:ly,r:12,fill:'none',stroke:F.hex,'stroke-width':'2'},lg);
-        gEl('circle',{cx:lx,cy:ly,r:3.4,fill:F.hex,opacity:'.7'},lg);
-      }
-      var dx=Math.cos(a),dy=Math.sin(a);
-      var ox=lx+dx*(15+Math.abs(dx)*40), oy=ly+dy*(15+Math.abs(dy)*14)+4;
-      var lt=gEl('text',{x:ox,y:oy,'class':'gr-lbl'+(gDone(id)?'':' soft')},lg); lt.textContent=gName(id);
-      lt.setAttribute('text-anchor',dx<-0.2?'end':(dx>0.2?'start':'middle'));
-      lg.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
+  // ---- MODE RADAR : dimensions mesurables ----
+  function renderRadarSVG(svg){
+    var cx=200, cy=258, R=145, n=GRADAR.length, g=gEl('g',{},svg);
+    [0.25,0.5,0.75,1].forEach(function(rr){
+      var pts=[];
+      for(var i=0;i<n;i++){ var a=-Math.PI/2+i*2*Math.PI/n; pts.push((cx+Math.cos(a)*R*rr).toFixed(1)+','+(cy+Math.sin(a)*R*rr).toFixed(1)); }
+      gEl('polygon',{points:pts.join(' '),'class':'gr-rgrid'},g);
     });
-    svg.onclick=function(){ gCloseFocus(); };
+    for(var i=0;i<n;i++){ var a=-Math.PI/2+i*2*Math.PI/n; gEl('line',{x1:cx,y1:cy,x2:cx+Math.cos(a)*R,y2:cy+Math.sin(a)*R,'class':'gr-rspoke'},g); }
+    var anyDone=false, vpts=[];
+    GRADAR.forEach(function(id,i){ var a=-Math.PI/2+i*2*Math.PI/n; var tr=gTrait(id); var v=(tr.done&&!tr.clinical)?tr.pos:0; if(tr.done&&!tr.clinical)anyDone=true; vpts.push({x:cx+Math.cos(a)*R*v,y:cy+Math.sin(a)*R*v}); });
+    if(anyDone){
+      var poly=vpts.map(function(p){return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ');
+      gEl('polygon',{points:poly,style:'fill:rgba(19,32,206,.13);stroke:#1320CE;stroke-width:1.6;stroke-linejoin:round'},g);
+      GRADAR.forEach(function(id,i){ var tr=gTrait(id); if(tr.done&&!tr.clinical){ gEl('circle',{cx:vpts[i].x,cy:vpts[i].y,r:'3.4',style:'fill:'+FACETS[gFacetOf(id)].hex},g); } });
+    }
+    GRADAR.forEach(function(id,i){
+      var a=-Math.PI/2+i*2*Math.PI/n, lx=cx+Math.cos(a)*(R+15), ly=cy+Math.sin(a)*(R+15)+3, tr=gTrait(id), F=FACETS[gFacetOf(id)];
+      var tx=gEl('text',{x:lx.toFixed(1),y:ly.toFixed(1),'class':'gr-rlbl',style:'fill:'+((tr.done&&!tr.clinical)?F.tHex:'#A89B82')},g);
+      tx.setAttribute('text-anchor', Math.cos(a)<-0.25?'end':(Math.cos(a)>0.25?'start':'middle'));
+      tx.textContent=(tr.done&&!tr.clinical)?tr.trait:gName(id);
+    });
+    svg.onclick=null;
   }
 
-  function gOpenFocus(fid){ gFocus=fid; renderGraph(); }
-  function gCloseFocus(){ if(gFocus){ gFocus=null; renderGraph(); } }
-  function gSetHint(){ var h=document.getElementById('grHint'); if(h) h.textContent=gFocus?('Touche un test de « '+FACETS[gFocus].name+' » pour le passer.'):'Touche une zone pour l\'explorer.'; }
+  // ---- MODE POTENTIEL : tes traits ouvrent des pistes ----
+  function renderFlowSVG(svg){
+    var x0=26, x1=176, x2=300, cardW=128, vt=72, vb=452, g=gEl('g',{},svg);
+    var rows=[]; GORDER.forEach(function(fid){ PISTES[fid].forEach(function(label){ rows.push({fid:fid,label:label}); }); });
+    var nR=rows.length, step=(vb-vt)/nR;
+    rows.forEach(function(r,i){ r.y=vt+step*(i+0.5); });
+    var facetY={};
+    GORDER.forEach(function(fid){ var ys=rows.filter(function(r){return r.fid===fid;}).map(function(r){return r.y;}); facetY[fid]=ys.reduce(function(a,b){return a+b;},0)/ys.length; });
+    var toiY=(vt+vb)/2;
+    GORDER.forEach(function(fid){ var lit=gFacetDone(fid)>0; gEl('path',{d:cubicPath(x0+24,toiY,x1-50,facetY[fid]),'class':'gr-fconn',style:'stroke:'+FACETS[fid].hex+';stroke-width:'+(lit?2:1.4)+';opacity:'+(lit?.55:.3)},g); });
+    rows.forEach(function(r){ gEl('path',{d:cubicPath(x1+50,facetY[r.fid],x2,r.y),'class':'gr-fconn',style:'stroke:'+FACETS[r.fid].hex+';stroke-width:1.2;opacity:.3'},g); });
+    gEl('circle',{cx:x0,cy:toiY,r:24,fill:'#0A0E2C'},g);
+    var tt=gEl('text',{x:x0,y:toiY+4,'text-anchor':'middle','font-size':'12','font-weight':'800',style:'fill:#fff;font-family:var(--sans)'},g); tt.textContent='Toi';
+    GORDER.forEach(function(fid){
+      var F=FACETS[fid], y=facetY[fid], lit=gFacetDone(fid)>0;
+      gEl('rect',{x:x1-50,y:y-16,width:100,height:32,style:'fill:'+hexA2(F.hex,lit?.12:.05)+';stroke:'+F.hex+';stroke-width:1.4'},g);
+      gEl('circle',{cx:x1-36,cy:y,r:4,fill:F.hex},g);
+      var ft=gEl('text',{x:x1-26,y:y,'class':'gr-flbl','font-size':'10.5',style:'fill:'+F.tHex},g); ft.setAttribute('text-anchor','start'); ft.textContent=F.name;
+    });
+    rows.forEach(function(r){
+      var F=FACETS[r.fid];
+      gEl('rect',{x:x2,y:r.y-13,width:cardW,height:26,style:'fill:#fff;stroke:'+hexA2(F.hex,.4)+';stroke-width:1'},g);
+      gEl('rect',{x:x2,y:r.y-13,width:3,height:26,fill:F.hex},g);
+      var pt=gEl('text',{x:x2+11,y:r.y,'class':'gr-flbl'},g); pt.setAttribute('text-anchor','start'); pt.textContent=r.label;
+    });
+    svg.onclick=null;
+  }
+
+  function setGraphMode(m){
+    gMode=m;
+    Array.prototype.forEach.call(document.querySelectorAll('.gr-mode'),function(b){ b.classList.toggle('on', b.getAttribute('data-mode')===m); });
+    renderGraph();
+  }
+
+  function updateSign(){
+    var el=document.getElementById('grSign'); if(!el) return;
+    if(gMode!=='map'){ el.hidden=true; return; }
+    var traits=[];
+    GORDER.forEach(function(fid){ FACETS[fid].tests.forEach(function(id){ if(!TESTS[id])return; var tr=gTrait(id); if(tr.done&&!tr.clinical&&tr.trait) traits.push(tr.trait); }); });
+    if(!traits.length){ el.hidden=true; return; }
+    var show=traits.slice(0,6).map(function(t){return '<b>'+t+'</b>';});
+    el.innerHTML='Tes traits dominants : '+show.join(', ')+(traits.length>6?' …':'')+'.';
+    el.hidden=false;
+  }
+
+  function gCloseFocus(){}
+  function gSetHint(){
+    var h=document.getElementById('grHint'); if(!h) return;
+    h.textContent = gMode==='radar' ? 'Tes dimensions mesurables, d\'un seul coup d\'œil.'
+      : gMode==='flow' ? 'Là où tes traits peuvent te porter.'
+      : 'Touche un point pour passer un test ou revoir tes résultats.';
+  }
 
   var gCurSheet=null;
   function gFacetOf(id){ for(var fid in FACETS){ if(FACETS[fid].tests.indexOf(id)>=0) return fid; } return 'perso'; }
@@ -2976,20 +3736,112 @@
     var m2=document.createElement('span'); m2.className='gr-mp'; m2.textContent=gMin(id); sm.appendChild(m2);
     if(done){ var m3=document.createElement('span'); m3.className='gr-mp done'; m3.textContent='✓ Déjà passé'; sm.appendChild(m3); }
     var go=document.getElementById('grSgo'); go.style.background=F.hex; go.textContent=done?'Revoir mes résultats':'Commencer ce test';
-    go.onclick=function(){ gCloseSheet(); openTest(id); };
+    go.onclick=function(){ gCloseSheet(); if(done){ reviewResults(id); } else { openTest(id); } };
     document.getElementById('grScrim').classList.add('on');
     document.getElementById('grSheet').classList.add('on');
   }
   function gCloseSheet(){ document.getElementById('grScrim').classList.remove('on'); document.getElementById('grSheet').classList.remove('on'); }
+
+  // ---------- RÉFLEXION : se poser des questions à soi-même ----------
+  // Questions pré-écrites, rattachées aux 4 facettes. N'apparaissent que pour
+  // les facettes déjà révélées (au moins un test passé). Réponses en localStorage.
+  var REFLECT={
+    perso:[
+      {id:"perso1", q:"Quand te sens-tu le plus toi-même ?"},
+      {id:"perso2", q:"Quelle facette de ta personnalité montres-tu rarement aux autres ?"},
+      {id:"perso3", q:"Qu'est-ce qui te ressource vraiment après une journée difficile ?"},
+      {id:"perso4", q:"Quelle qualité aimerais-tu qu'on remarque davantage chez toi ?"}
+    ],
+    aspir:[
+      {id:"aspir1", q:"Qu'est-ce qui te donne de l'énergie sans que personne n'ait à te le demander ?"},
+      {id:"aspir2", q:"Quelle valeur refuserais-tu de sacrifier, même sous pression ?"},
+      {id:"aspir3", q:"À quel moment récent t'es-tu senti vraiment aligné avec toi-même ?"},
+      {id:"aspir4", q:"Si tu avais une journée entièrement libre, à quoi la consacrerais-tu ?"}
+    ],
+    carr:[
+      {id:"carr1", q:"Quel problème aimerais-tu contribuer à résoudre dans ta vie ?"},
+      {id:"carr2", q:"Dans quel type d'environnement donnes-tu le meilleur de toi ?"},
+      {id:"carr3", q:"Quelle compétence aimerais-tu vraiment développer cette année ?"},
+      {id:"carr4", q:"Dans 5 ans, qu'est-ce qui te ferait dire que tu as pris le bon chemin ?"}
+    ],
+    equi:[
+      {id:"equi1", q:"Qu'est-ce qui t'épuise le plus en ce moment ?"},
+      {id:"equi2", q:"De quoi as-tu besoin pour te sentir en équilibre ?"},
+      {id:"equi3", q:"Quel signal t'indique que tu en fais trop ?"},
+      {id:"equi4", q:"Qu'est-ce qui t'aide à reprendre pied quand tout déborde ?"}
+    ]
+  };
+
+  function openReflect(){ renderReflect(); show("s-reflect"); }
+
+  function renderReflect(){
+    var body=document.getElementById('reflect-body');
+    if(!body) return;
+    body.innerHTML='';
+    var any=false;
+    GORDER.forEach(function(fid){
+      if(gFacetDone(fid)===0) return;       // facette non révélée : on saute
+      var F=FACETS[fid], qs=REFLECT[fid]; if(!qs) return;
+      any=true;
+      var sec=document.createElement('div'); sec.className='rf-facet';
+      var head=document.createElement('div'); head.className='rf-fhead';
+      var dot=document.createElement('span'); dot.className='rf-fdot'; dot.style.background=F.hex; head.appendChild(dot);
+      var nm=document.createElement('span'); nm.className='rf-fname'; nm.textContent=F.name; head.appendChild(nm);
+      sec.appendChild(head);
+      var kick=document.createElement('p'); kick.className='rf-fkick'; kick.textContent=F.kicker; sec.appendChild(kick);
+      qs.forEach(function(item){
+        var card=document.createElement('div'); card.className='rf-q';
+        var p=document.createElement('p'); p.textContent=item.q; card.appendChild(p);
+        var ta=document.createElement('textarea');
+        ta.setAttribute('rows','2');
+        ta.placeholder='Écris ce qui te vient…';
+        ta.value=(state.reflect && state.reflect[item.id]) || '';
+        var saved=document.createElement('span'); saved.className='rf-saved'; saved.textContent='Enregistré ✓';
+        var tmr=null;
+        ta.addEventListener('input',function(){
+          if(!state.reflect) state.reflect={};
+          var v=ta.value.trim();
+          if(v) state.reflect[item.id]=ta.value; else delete state.reflect[item.id];
+          save();
+          saved.classList.add('on');
+          if(tmr) clearTimeout(tmr);
+          tmr=setTimeout(function(){ saved.classList.remove('on'); }, 1400);
+        });
+        card.appendChild(ta);
+        card.appendChild(saved);
+        sec.appendChild(card);
+      });
+      body.appendChild(sec);
+    });
+    if(!any){
+      var e=document.createElement('div'); e.className='rf-empty';
+      e.innerHTML='Passe un premier test pour débloquer tes questions de réflexion. Elles s\'ouvrent au fur et à mesure que ta carte se révèle.';
+      body.appendChild(e);
+    }
+  }
+
   document.getElementById('grBack').onclick=gCloseFocus;
   document.getElementById('grScrim').onclick=gCloseSheet;
+  Array.prototype.forEach.call(document.querySelectorAll('.gr-mode'),function(b){
+    b.addEventListener('click',function(){ setGraphMode(b.getAttribute('data-mode')); });
+  });
+
+  // RDV Charles : une seule source d'URL, câblée sur tous les CTA [data-cta="rdv-charles"].
+  // TODO Charles : remplace par ta vraie URL Calendly (ex. https://calendly.com/charles-proxxie/30min).
+  var CALENDLY_URL="https://calendly.com/charles-proxxie/decryptage-30min";
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cta="rdv-charles"]'),function(a){
+    a.setAttribute('href',CALENDLY_URL);
+    a.setAttribute('target','_blank');
+    a.setAttribute('rel','noopener');
+  });
 
   // expose
   window.App={openCatalog:openCatalog,openHome:openHome,openList:openList,openTest:openTest,start:start,back:back,
-    startLong:startLong,registerContinue:registerContinue,
+    chooseLong:chooseLong,startLongFromIntro:startLongFromIntro,
     openCheckout:openCheckout,closeCheckout:closeCheckout,
     pay:pay,share:share,saveAccount:saveAccount,reset:reset,
-    devGenerate:devGenerate};
+    devGenerate:devGenerate,devFill:devFill,setGraphMode:setGraphMode,resumeLast:resumeLast,
+    openSynthese:openSynthese,openReflect:openReflect};
 
   resume();
 })();
