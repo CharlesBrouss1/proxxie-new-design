@@ -19,6 +19,7 @@
     --line:#E4DCCB;
     --card:#FFFFFF;
     --ok:#1f9d6b;
+    --green:#2E8B6E;
     --radius:20px;
     --sans:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --serif:"Mulish",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -314,6 +315,46 @@
   .disclaimer{font-size:12.5px;color:var(--ink-soft);line-height:1.55;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
   .disclaimer b{color:var(--ink)}
 
+  /* ---------- CARTE INTÉRIEURE (graphe d'accueil) ---------- */
+  .gr-top{display:flex;justify-content:flex-end;margin:-4px 0 2px}
+  .gr-listbtn{background:none;border:1px solid var(--line);color:var(--ink-soft);font-size:13px;font-weight:700;padding:7px 13px;border-radius:999px;font-family:inherit;cursor:pointer}
+  .gr-listbtn:hover{color:var(--ink);border-color:#D9CDB4}
+  .gr-lead{font-size:16px;color:var(--ink-soft);margin:0 0 16px;line-height:1.5;max-width:560px}
+  .gr-prog{display:flex;align-items:center;gap:11px;margin-bottom:4px;max-width:560px}
+  .gr-progbar{flex:1;height:7px;border-radius:99px;background:#EAE1D0;overflow:hidden}
+  .gr-progfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--orange));transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .gr-progtxt{font-size:12.5px;font-weight:800;color:var(--ink-soft);white-space:nowrap}
+  .gr-stage{position:relative;width:100%;max-width:460px;margin:6px auto 0}
+  .gr-backchip{position:absolute;top:2px;left:0;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:700;padding:7px 14px 7px 11px;border-radius:999px;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(20,18,8,.07);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .3s,transform .3s;z-index:5}
+  .gr-backchip.on{opacity:1;transform:translateY(0);pointer-events:auto}
+  .gr-hint{font-size:13px;color:var(--ink-soft);text-align:center;margin:8px 0 4px;min-height:18px;transition:opacity .3s}
+  #grGraph{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
+  .gr-lnk{stroke:var(--line);stroke-width:1.6}
+  .gr-lnk.live{stroke:#D9CDB4}
+  .gr-node{cursor:pointer}
+  .gr-lbl{font-size:11px;font-weight:700;fill:var(--ink);text-anchor:middle;pointer-events:none;font-family:var(--sans)}
+  .gr-lbl.soft{fill:var(--ink-soft);font-weight:650}
+  .gr-node.center .gr-lbl{font-size:13.5px;font-weight:800}
+  .gr-fade{animation:grfade .5s ease both}
+  @keyframes grfade{from{opacity:0}to{opacity:1}}
+  .gr-pop{transform-box:fill-box;transform-origin:center;animation:grpop .5s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes grpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+  .gr-pulse{transform-box:fill-box;transform-origin:center;animation:grpulse 3.4s ease-in-out infinite}
+  @keyframes grpulse{0%,100%{opacity:.5}50%{opacity:.92}}
+  .gr-scrim{position:fixed;inset:0;background:rgba(10,14,44,.32);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
+  .gr-scrim.on{opacity:1;pointer-events:auto}
+  .gr-sheet{position:fixed;left:0;right:0;bottom:0;max-width:600px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;box-shadow:0 -18px 50px rgba(20,18,8,.18);padding:8px 22px calc(28px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .36s cubic-bezier(.2,.8,.2,1);z-index:50}
+  .gr-sheet.on{transform:translateY(0)}
+  .gr-grab{width:40px;height:5px;border-radius:99px;background:#E4DCCB;margin:6px auto 16px}
+  .gr-skick{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;margin:0 0 8px}
+  .gr-skick .kd{width:8px;height:8px;border-radius:50%}
+  .gr-stitle{font-family:var(--serif);font-weight:800;font-size:21px;margin:0 0 6px;line-height:1.2}
+  .gr-stag{font-size:14.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.5}
+  .gr-smeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .gr-mp{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:#F1ECDF;color:var(--ink)}
+  .gr-mp.done{background:#E7F6EF;color:var(--green)}
+  .gr-go{width:100%;border:0;border-radius:14px;padding:15px;font-size:15.5px;font-weight:800;font-family:inherit;color:#fff;cursor:pointer}
+
   .sharebar{display:flex;gap:10px;margin-top:10px}
   .sharebar .btn{flex:1}
 
@@ -355,8 +396,26 @@
     <div class="brand">Proxxie<small>Lab</small></div>
   </div>
 
-  <!-- ÉCRAN 0 : CATALOGUE -->
+  <!-- ÉCRAN 0 : CARTE INTÉRIEURE (graphe, accueil par défaut) -->
   <section class="screen active" id="s-home">
+    <div class="gr-top"><button class="gr-listbtn" onclick="App.openList()">Voir en liste</button></div>
+    <h1>Ta carte <span class="hl">intérieure</span>.</h1>
+    <p class="gr-lead">Chaque partie de toi est un point. Touche une zone pour révéler ses tests, passe-les, et regarde ta carte s'allumer.</p>
+    <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 16 explorées</span></div>
+    <div class="gr-stage">
+      <button class="gr-backchip" id="grBack">‹ Vue d'ensemble</button>
+      <svg id="grGraph" viewBox="-26 -18 452 520" aria-label="Carte des parties de toi"></svg>
+    </div>
+    <p class="gr-hint" id="grHint">Touche une zone pour l'explorer.</p>
+    <p class="disclaimer">
+      <b>Proxxie Lab propose des outils psychométriques à visée de connaissance de soi.</b>
+      Il ne s'agit ni de diagnostics, ni d'avis médicaux ou psychologiques. Les résultats ne remplacent pas l'accompagnement d'un professionnel de santé.
+    </p>
+  </section>
+
+  <!-- ÉCRAN 0b : CATALOGUE EN LISTE (repli) -->
+  <section class="screen" id="s-list">
+    <button class="crumb" onclick="App.openHome()">‹ Voir la carte</button>
     <h1>Explore <span class="hl">qui tu es</span>, un test à la fois.</h1>
     <p class="hero-sub">Des tests fondés sur la recherche en psychologie, et pour chacun un portrait rédigé rien que pour toi. Commence librement, tu décides ensuite.</p>
     <div class="catalog" id="catalog"></div>
@@ -541,6 +600,17 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- FEUILLE DÉTAIL D'UN TEST (depuis la carte) -->
+<div class="gr-scrim" id="grScrim"></div>
+<div class="gr-sheet" id="grSheet">
+  <div class="gr-grab"></div>
+  <p class="gr-skick" id="grSk"><span class="kd"></span><span id="grSkt"></span></p>
+  <h2 class="gr-stitle" id="grSt"></h2>
+  <p class="gr-stag" id="grSg"></p>
+  <div class="gr-smeta" id="grSm"></div>
+  <button class="gr-go" id="grSgo"></button>
+</div>
 
 <script>
 (function(){
@@ -2138,9 +2208,10 @@
 
   function openCatalog(){
     curId=null; state.current=null; save();
-    renderCatalog();
-    show("s-home");
+    openHome();
   }
+  function openHome(){ gFocus=null; renderGraph(); show("s-home"); }
+  function openList(){ renderCatalog(); show("s-list"); }
 
   // ---------- INTRO (par test) ----------
   function openTest(id){
@@ -2752,8 +2823,157 @@
     openCatalog();
   }
 
+  // ---------- CARTE INTÉRIEURE (graphe d'accueil) ----------
+  var FACETS={
+    perso:{name:"Qui tu es",   hex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm"]},
+    aspir:{name:"Ce qui te meut",hex:"#FD6936", pos:[280,135], kicker:"Aspirations", tests:["valeurs","besoins","drivers"]},
+    carr: {name:"Où tu vas",    hex:"#2E8B6E", pos:[120,405], kicker:"Carrière",    tests:["riasec","caas","grit"]},
+    equi: {name:"Ton équilibre",hex:"#C2892B", pos:[280,405], kicker:"Équilibre",   tests:["brief","phq9","gad7","asrs","aq10","dys"]}
+  };
+  // libellés courts + nombre de dimensions pour la carte (les longs restent dans TESTS)
+  var GMETA={
+    bigfive:{name:"Big Five",  tag:"Les cinq grands traits qui dessinent ta personnalité.",dims:5},
+    mbti:   {name:"Profil MBTI",tag:"Ton style cognitif, version repensée.",dims:4},
+    hpi:    {name:"Intensités", tag:"La forme particulière de ton intensité intérieure.",dims:5},
+    pcm:    {name:"Process Com",tag:"Ta façon de communiquer et de réagir.",dims:6},
+    valeurs:{name:"Valeurs",   tag:"Ce qui compte vraiment pour toi, et te guide.",dims:5},
+    besoins:{name:"Besoins",   tag:"Les moteurs profonds derrière tes décisions.",dims:5},
+    drivers:{name:"Messages",  tag:"Les automatismes qui te poussent sous pression.",dims:5},
+    riasec: {name:"RIASEC",    tag:"Tes domaines d'intérêt professionnels.",dims:6},
+    caas:   {name:"Adaptabilité",tag:"Ta capacité à rebondir et t'adapter dans ton parcours.",dims:4},
+    grit:   {name:"Ténacité",  tag:"Ta force à tenir l'effort vers ce qui compte.",dims:2},
+    brief:  {name:"Fonctions exé.",tag:"Organisation, mémoire, concentration au quotidien.",dims:3},
+    phq9:   {name:"Moral",     tag:"Un repère sur ton humeur récente.",dims:1},
+    gad7:   {name:"Anxiété",   tag:"Un repère sur ton niveau d'anxiété.",dims:1},
+    asrs:   {name:"Attention", tag:"Repère court sur l'attention et l'agitation.",dims:1},
+    aq10:   {name:"Spectre aut.",tag:"Repère court sur le fonctionnement autistique.",dims:1},
+    dys:    {name:"Dyslexie",  tag:"Un repère sur la lecture chez l'adulte.",dims:1}
+  };
+  var G_CENTER=[200,270], G_FOCUS=[200,240], GNS="http://www.w3.org/2000/svg";
+  var gFocus=null;
+
+  function gName(id){ return (GMETA[id]&&GMETA[id].name) || (TESTS[id]&&TESTS[id].name) || id; }
+  function gTag(id){ return (GMETA[id]&&GMETA[id].tag) || (TESTS[id]&&TESTS[id].tagline) || ""; }
+  function gDims(id){ return (GMETA[id]&&GMETA[id].dims) || (TESTS[id]?TESTS[id].order.length:1); }
+  function gMin(id){ return TESTS[id]?TESTS[id].minutes:""; }
+  // un point est "allumé" dès qu'un premier résultat est disponible
+  function gDone(id){
+    var t=TESTS[id], s=state.tests[id];
+    if(!t||!s) return false;
+    if(isClin(t)) return answeredCount(t,s,t.items.length)===t.items.length;
+    return answeredCount(t,s,t.freeCount)===t.freeCount;
+  }
+  function gFacetTests(fid){ return FACETS[fid].tests.filter(function(id){return !!TESTS[id];}); }
+  function gFacetDone(fid){ return gFacetTests(fid).filter(gDone).length; }
+  function gTotalDone(){ var n=0; for(var fid in FACETS){ n+=gFacetDone(fid); } return n; }
+  function gTotal(){ var n=0; for(var fid in FACETS){ n+=gFacetTests(fid).length; } return n; }
+
+  function gEl(tag,a,p){ var e=document.createElementNS(GNS,tag); for(var k in a) e.setAttribute(k,a[k]); if(p) p.appendChild(e); return e; }
+  function gRing(g,x,y,R,hex,frac,w){
+    gEl('circle',{cx:x,cy:y,r:R,fill:'#FFFDF8',stroke:'#EADFCB','stroke-width':w},g);
+    var C=2*Math.PI*R;
+    gEl('circle',{cx:x,cy:y,r:R,fill:'none',stroke:hex,'stroke-width':w,'stroke-linecap':'round',
+      'stroke-dasharray':C,'stroke-dashoffset':C*(1-frac),transform:'rotate(-90 '+x+' '+y+')',style:'transition:stroke-dashoffset .9s'},g);
+  }
+
+  function renderGraph(){
+    var svg=document.getElementById('grGraph'); if(!svg) return;
+    svg.innerHTML='';
+    var defs=gEl('defs',{},svg);
+    for(var fid in FACETS){ var fl=gEl('filter',{id:'grglow-'+fid,x:'-60%',y:'-60%',width:'220%',height:'220%'},defs); gEl('feGaussianBlur',{stdDeviation:'5','in':'SourceGraphic'},fl); }
+    var gL=gEl('g',{},svg), gN=gEl('g',{},svg);
+    gFocus ? gRenderFocus(svg,gL,gN) : gRenderOverview(svg,gL,gN);
+    document.getElementById('grBack').classList.toggle('on',!!gFocus);
+    // progression globale
+    var done=gTotalDone(), tot=gTotal();
+    var pf=document.getElementById('grPf'), pt=document.getElementById('grPt');
+    if(pf) pf.style.width=(tot?Math.round(done/tot*100):0)+'%';
+    if(pt) pt.textContent=done+' / '+tot+' explorées';
+    gSetHint();
+  }
+
+  function gRenderOverview(svg,gL,gN){
+    var fid;
+    for(fid in FACETS){ var p=FACETS[fid].pos; gEl('line',{x1:G_CENTER[0],y1:G_CENTER[1],x2:p[0],y2:p[1],'class':'gr-lnk'},gL); }
+    var cg=gEl('g',{'class':'gr-node center gr-fade'},gN);
+    gEl('circle',{cx:G_CENTER[0],cy:G_CENTER[1],r:30,fill:'#fff',stroke:'#0A0E2C','stroke-width':'2'},cg);
+    gEl('circle',{cx:G_CENTER[0],cy:G_CENTER[1],r:30,fill:'#0A0E2C',opacity:'.06'},cg);
+    var ct=gEl('text',{x:G_CENTER[0],y:G_CENTER[1]+4,'class':'gr-lbl'},cg); ct.textContent='Toi';
+    for(fid in FACETS){ (function(fid){
+      var F=FACETS[fid],p=F.pos,dc=gFacetDone(fid),tot=gFacetTests(fid).length;
+      var hg=gEl('g',{'class':'gr-node hub gr-fade'},gN);
+      gRing(hg,p[0],p[1],23,F.hex,tot?dc/tot:0,3.4);
+      gEl('circle',{cx:p[0],cy:p[1],r:16,fill:F.hex,opacity:'.1'},hg);
+      var ht=gEl('text',{x:p[0],y:p[1]+1,'class':'gr-lbl',fill:F.hex,'font-size':'12','font-weight':'800'},hg); ht.textContent=dc+'/'+tot;
+      var by=p[1]<G_CENTER[1]? p[1]-32 : p[1]+38;
+      var hn=gEl('text',{x:p[0],y:by,'class':'gr-lbl'},hg); hn.textContent=F.name;
+      hg.onclick=function(ev){ ev.stopPropagation(); gOpenFocus(fid); };
+    })(fid); }
+    svg.onclick=null;
+  }
+
+  function gRenderFocus(svg,gL,gN){
+    var F=FACETS[gFocus], leaves=gFacetTests(gFocus), n=leaves.length, hub=G_FOCUS;
+    var rad=n>4?150:120;
+    leaves.forEach(function(id,i){ var a=-Math.PI/2+i*(2*Math.PI/n),lx=hub[0]+Math.cos(a)*rad,ly=hub[1]+Math.sin(a)*rad;
+      gEl('line',{x1:hub[0],y1:hub[1],x2:lx,y2:ly,'class':'gr-lnk live'},gL); });
+    var dc=gFacetDone(gFocus);
+    var hg=gEl('g',{'class':'gr-node gr-fade'},gN);
+    gRing(hg,hub[0],hub[1],30,F.hex,n?dc/n:0,4);
+    gEl('circle',{cx:hub[0],cy:hub[1],r:21,fill:F.hex,opacity:'.12'},hg);
+    var hc=gEl('text',{x:hub[0],y:hub[1]-1,'class':'gr-lbl',fill:F.hex,'font-size':'15','font-weight':'800'},hg); hc.textContent=dc+'/'+n;
+    var hs=gEl('text',{x:hub[0],y:hub[1]+14,'class':'gr-lbl soft','font-size':'9.5'},hg); hs.textContent='passés';
+    var ttl=gEl('text',{x:hub[0],y:hub[1]-44,'class':'gr-lbl',fill:F.hex,'font-size':'13','font-weight':'800'},hg); ttl.textContent=F.name;
+    leaves.forEach(function(id,i){
+      var a=-Math.PI/2+i*(2*Math.PI/n),lx=hub[0]+Math.cos(a)*rad,ly=hub[1]+Math.sin(a)*rad;
+      var lg=gEl('g',{'class':'gr-node leaf gr-pop',style:'animation-delay:'+(i*55)+'ms'},gN);
+      if(gDone(id)){
+        gEl('circle',{cx:lx,cy:ly,r:15,fill:F.hex,'class':'gr-pulse',filter:'url(#grglow-'+gFocus+')',opacity:'.5'},lg);
+        gEl('circle',{cx:lx,cy:ly,r:12,fill:F.hex},lg);
+        var ck=gEl('text',{x:lx,y:ly+4,'text-anchor':'middle','font-size':'12','font-weight':'800',fill:'#fff'},lg); ck.textContent='✓';
+      } else {
+        gEl('circle',{cx:lx,cy:ly,r:12,fill:'#FFFDF8',stroke:F.hex,'stroke-width':'2','stroke-dasharray':'3 3'},lg);
+        gEl('circle',{cx:lx,cy:ly,r:3.2,fill:F.hex,opacity:'.55'},lg);
+      }
+      var dx=Math.cos(a),dy=Math.sin(a);
+      var ox=lx+dx*(14+Math.abs(dx)*34), oy=ly+dy*(14+Math.abs(dy)*10)+4;
+      var lt=gEl('text',{x:ox,y:oy,'class':'gr-lbl'+(gDone(id)?'':' soft')},lg); lt.textContent=gName(id);
+      lt.setAttribute('text-anchor',dx<-0.2?'end':(dx>0.2?'start':'middle'));
+      lg.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
+    });
+    svg.onclick=function(){ gCloseFocus(); };
+  }
+
+  function gOpenFocus(fid){ gFocus=fid; renderGraph(); }
+  function gCloseFocus(){ if(gFocus){ gFocus=null; renderGraph(); } }
+  function gSetHint(){ var h=document.getElementById('grHint'); if(h) h.textContent=gFocus?('Touche un test de « '+FACETS[gFocus].name+' » pour le passer.'):'Touche une zone pour l\'explorer.'; }
+
+  var gCurSheet=null;
+  function gFacetOf(id){ for(var fid in FACETS){ if(FACETS[fid].tests.indexOf(id)>=0) return fid; } return 'perso'; }
+  function gOpenSheet(id){
+    gCurSheet=id;
+    var F=FACETS[gFacetOf(id)], done=gDone(id);
+    document.getElementById('grSk').style.color=F.hex;
+    document.querySelector('#grSk .kd').style.background=F.hex;
+    document.getElementById('grSkt').textContent=F.kicker;
+    document.getElementById('grSt').textContent=gName(id);
+    document.getElementById('grSg').textContent=gTag(id);
+    var sm=document.getElementById('grSm'); sm.innerHTML='';
+    var d=gDims(id);
+    var m1=document.createElement('span'); m1.className='gr-mp'; m1.textContent=d+' dimension'+(d>1?'s':''); sm.appendChild(m1);
+    var m2=document.createElement('span'); m2.className='gr-mp'; m2.textContent=gMin(id); sm.appendChild(m2);
+    if(done){ var m3=document.createElement('span'); m3.className='gr-mp done'; m3.textContent='✓ Déjà passé'; sm.appendChild(m3); }
+    var go=document.getElementById('grSgo'); go.style.background=F.hex; go.textContent=done?'Revoir mes résultats':'Commencer ce test';
+    go.onclick=function(){ gCloseSheet(); openTest(id); };
+    document.getElementById('grScrim').classList.add('on');
+    document.getElementById('grSheet').classList.add('on');
+  }
+  function gCloseSheet(){ document.getElementById('grScrim').classList.remove('on'); document.getElementById('grSheet').classList.remove('on'); }
+  document.getElementById('grBack').onclick=gCloseFocus;
+  document.getElementById('grScrim').onclick=gCloseSheet;
+
   // expose
-  window.App={openCatalog:openCatalog,openTest:openTest,start:start,back:back,
+  window.App={openCatalog:openCatalog,openHome:openHome,openList:openList,openTest:openTest,start:start,back:back,
     startLong:startLong,registerContinue:registerContinue,
     openCheckout:openCheckout,closeCheckout:closeCheckout,
     pay:pay,share:share,saveAccount:saveAccount,reset:reset,
