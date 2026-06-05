@@ -21,6 +21,7 @@ import json
 import base64
 import gzip
 import pathlib
+import _bridge_common
 import shutil
 
 REPO = pathlib.Path(__file__).parent
@@ -339,25 +340,71 @@ const buildEmailSummary = (results) => {
 };
 
 const TestApp = () => {
-  const [mode, setMode] = React.useState("landing");
+  // Ponts statiques (zéro backend) · #predict= (parent→ado) et #results= (ado→parent).
+  // Même pattern canonique que les autres tests. Définis dans le préfixe du bundle.
+  const PARENT_PREDICT = React.useMemo(() => readPredictHash(), []);
+  const RESULTS_HASH = React.useMemo(() => readResultsHash(), []);
   const [persona, setPersona] = React.useState(null);
-  const [answers, setAnswers] = React.useState([]);
-  const [results, setResults] = React.useState(null);
-  const PARENT_PREDICT = null;
-
-  const goPicker = () => setMode("picker");
-  const pickPersona = (p) => { setPersona(p); setMode("test"); };
-  const exitTest = () => setMode("landing");
+  const [mode, setMode] = React.useState(RESULTS_HASH ? "results" : (PARENT_PREDICT ? "compare-intro" : "landing"));
+  const [results, setResults] = React.useState(RESULTS_HASH ? computeResults(RESULTS_HASH.a) : null);
+  const [answers, setAnswers] = React.useState(RESULTS_HASH ? RESULTS_HASH.a : null);
+  const goPicker = () => { setMode("picker"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const pickPersona = (p) => {
+    var testType = window.__proxxie_test_type || 'via';
+    var consentKey = 'proxxie_test_consent_' + testType;
+    var hasConsent = false;
+    try { hasConsent = !!window.localStorage.getItem(consentKey); } catch(e) {}
+    if (window.trackEvent) window.trackEvent('test_initiated', { test_type: testType, persona: p });
+    function startNow() {
+      setPersona(p);
+      setMode("test");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (window.trackEvent) window.trackEvent('test_started', { test_type: testType, persona: p });
+      window.__proxxie_test_in_progress = { startedAt: Date.now(), questionIndex: 0, totalQuestions: 0, completionPct: 0, testType: testType, persona: p };
+    }
+    if (hasConsent) { startNow(); return; }
+    if (window.trackEvent) window.trackEvent('test_consent_shown', { test_type: testType });
+    var overlay = document.createElement('div');
+    overlay.id = '__proxxie_test_consent';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(10,14,44,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px';
+    overlay.innerHTML = '<div style="background:#fff;border-radius:18px;padding:28px 32px;max-width:520px;font-family:Montserrat,system-ui,sans-serif;box-shadow:0 24px 60px -16px rgba(19,32,206,.28)"><div style="font-family:Mulish,Goldplay,system-ui,sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#0A0E2C;margin-bottom:10px">Avant de commencer ce test</div><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 14px">Vos réponses sont confidentielles et stockées <strong>uniquement sur votre appareil</strong>. Elles ne sortent jamais sans votre action.</p><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 18px">En continuant, vous acceptez que vos réponses soient analysées par notre algorithme pour générer un rapport. <strong>Elles ne servent jamais à entraîner un modèle d\'IA.</strong></p><div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button id="__proxxie_decline" style="background:transparent;border:1.5px solid rgba(10,14,44,.16);border-radius:99px;padding:10px 18px;font-size:13px;font-weight:600;color:#0A0E2C;cursor:pointer;font-family:inherit">Refuser</button><button id="__proxxie_accept" style="background:#FD6936;color:#fff;border:none;border-radius:99px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px -6px rgba(253,105,54,.55)">Commencer le test →</button></div></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('__proxxie_accept').onclick = function() {
+      try { window.localStorage.setItem(consentKey, 'granted_' + Date.now()); } catch(e) {}
+      if (window.trackEvent) window.trackEvent('test_consent_granted', { test_type: testType });
+      overlay.remove();
+      startNow();
+    };
+    document.getElementById('__proxxie_decline').onclick = function() {
+      if (window.trackEvent) window.trackEvent('test_consent_declined', { test_type: testType });
+      overlay.remove();
+    };
+  };
+  const exitTest = () => { setMode(PARENT_PREDICT ? "compare-intro" : "landing"); setPersona(null); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const onComplete = (ans) => {
     setAnswers(ans);
     setResults(computeResults(ans));
     setMode("results");
+    window.scrollTo({ top: 0, behavior: "smooth" });
     try { window.localStorage.setItem("proxxie.tests.via", "done"); } catch(e){}
+    if (window.trackEvent) {
+      var inProgress = window.__proxxie_test_in_progress;
+      var elapsed = inProgress && inProgress.startedAt ? (Date.now() - inProgress.startedAt) : null;
+      window.trackEvent('test_completed', {
+        test_type: window.__proxxie_test_type || 'via',
+        total_questions: (ans || []).length,
+        time_total_ms: elapsed,
+        persona: inProgress ? inProgress.persona : null
+      });
+    }
+    window.__proxxie_test_in_progress = null;
   };
-  const restart = () => { setAnswers([]); setResults(null); setMode("landing"); };
+  const restart = () => { try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) {} setResults(null); setAnswers(null); setMode("test"); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
-  const effectivePersona = persona;
-  const storageKeyEffective = persona === "predict" ? STORAGE_KEY + ":predict" : STORAGE_KEY;
+  const effectivePersona = PARENT_PREDICT ? "self_compare" : persona;
+  const storageKeyEffective = effectivePersona === "predict" ? STORAGE_KEY + ":predict" : STORAGE_KEY;
   return (
     <>
       <ProxxieNav />
@@ -415,7 +462,7 @@ def build(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     )
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[: boundary_match.start()] + VIA_BLOCK
+    new_src = src[: boundary_match.start()] + _bridge_common.wire_bridge(VIA_BLOCK, "via", "Proxxie%20Test%20VIA.html")
 
     nd = new_src.encode("utf-8")
     if comp:

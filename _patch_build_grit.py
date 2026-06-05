@@ -8,6 +8,7 @@ Source psychométrique : Grit-S (Duckworth & Quinn 2009), 8 items, Likert 1-5.
 Pas un screening clinique, pas de disclaimer médical.
 """
 import re, json, base64, gzip, pathlib, shutil
+import _bridge_common
 
 REPO = pathlib.Path(__file__).parent
 SOURCE = REPO / "Proxxie Test Anxiete.html"
@@ -702,7 +703,7 @@ def build_grit(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     boundary_match = re.search(r'(/\*\s*Test Proxxie Anxi[^/]*\*/\s*\n)?const QUESTIONS\s*=', src)
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[:boundary_match.start()] + GRIT_BLOCK
+    new_src = src[:boundary_match.start()] + _bridge_common.wire_bridge(GRIT_BLOCK, "grit", "Proxxie%20Test%20Grit.html")
 
     nd = new_src.encode('utf-8')
     if comp:

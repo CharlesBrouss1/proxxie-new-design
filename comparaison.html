@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Comparaison parent ↔ ado · Proxxie</title>
+  <title>Comparaison parent · ado · Proxxie</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -19,6 +19,7 @@
       --c-orange: #FD6936;
       --c-yellow: #F5EB3F;
       --c-green: #22A06B;
+      --c-red: #D8472B;
       --font-display: 'Fraunces', Georgia, serif;
       --font-num: 'JetBrains Mono', ui-monospace, monospace;
     }
@@ -29,10 +30,10 @@
       color: var(--c-ink);
       line-height: 1.5;
     }
-    .shell { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .shell { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
     a { color: inherit; }
 
-    /* Header (mimics dashboard) */
+    /* Header */
     .topbar {
       position: sticky; top: 0; z-index: 50;
       background: rgba(247, 242, 233, 0.85);
@@ -49,133 +50,168 @@
     .role-pill { padding: 6px 12px; border-radius: 999px; background: rgba(72,122,255,.10); color: var(--c-blue-2); font-size: 12px; font-weight: 600; }
 
     /* Hero */
-    .hero { padding: 48px 0 24px; }
+    .hero { padding: 48px 0 16px; }
     .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-orange); }
     .eyebrow .dot { width: 6px; height: 6px; background: var(--c-orange); border-radius: 50%; }
     h1.title { font-family: var(--font-display); font-size: 44px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 12px; max-width: 760px; line-height: 1.1; }
     .lead { font-size: 17px; color: var(--c-muted); max-width: 700px; line-height: 1.55; }
 
-    /* Pair card */
-    .pair {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
-      margin: 32px 0;
-    }
-    .person-card {
-      background: white; border: 1px solid var(--c-line); border-radius: 20px;
-      padding: 24px; position: relative;
-    }
+    /* Pair header */
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 30px 0 8px; }
+    .person-card { background: white; border: 1px solid var(--c-line); border-radius: 20px; padding: 22px; position: relative; }
     .person-card.parent { border-top: 3px solid var(--c-blue); }
     .person-card.enfant { border-top: 3px solid var(--c-orange); }
-    .person-card .who { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .person-card .who { display: flex; align-items: center; gap: 12px; }
     .avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: white; font-size: 16px; }
     .avatar.p { background: var(--c-blue); }
     .avatar.e { background: var(--c-orange); }
     .who .meta { font-size: 12px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
     .who .name { font-family: var(--font-display); font-size: 22px; font-weight: 600; line-height: 1.1; }
-    .scores { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 18px; }
-    .scores .trait { text-align: center; }
-    .scores .label { font-size: 10px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
-    .scores .val { font-family: var(--font-num); font-size: 22px; font-weight: 700; color: var(--c-ink); }
+    .person-sub { font-size: 13px; color: var(--c-muted); margin-top: 10px; }
 
-    /* Radar comparison */
-    .radar-section {
-      background: white; border: 1px solid var(--c-line); border-radius: 24px;
-      padding: 36px; margin-bottom: 32px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;
+    /* Section nav (sticky test jump) */
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+    .toc a { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: white; border: 1px solid var(--c-line); color: var(--c-ink-2); text-decoration: none; transition: border-color .15s, color .15s; }
+    .toc a:hover { border-color: var(--c-blue); color: var(--c-blue); }
+    .toc a .gated { color: var(--c-orange); }
+
+    /* Test block (one per comparable test) */
+    .test-block {
+      background: white; border: 1px solid var(--c-line); border-radius: 22px;
+      padding: 30px; margin: 18px 0; scroll-margin-top: 88px;
     }
-    @media (max-width: 900px) {
-      .pair, .radar-section { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 640px) {
-      nav.topnav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; gap: 16px; }
-      body { overflow-x: hidden; }
-    }
-    .radar-svg { width: 100%; max-width: 520px; margin: 0 auto; display: block; aspect-ratio: 1 / 1; }
-    .radar-legend { display: flex; gap: 18px; align-items: center; justify-content: center; margin-top: 10px; font-size: 12px; color: var(--c-muted); }
-    .legend-dot { display: inline-flex; align-items: center; gap: 6px; }
+    .test-block[data-framing="perception"] { border-left: 3px solid rgba(253,105,54,.5); }
+    .test-head { margin-bottom: 22px; }
+    .test-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-blue-2); }
+    .test-block[data-framing="perception"] .test-eyebrow { color: var(--c-orange); }
+    .test-head h2 { font-family: var(--font-display); font-size: 27px; font-weight: 600; letter-spacing: -0.02em; margin: 6px 0 8px; }
+    .framing-line { font-size: 14px; color: var(--c-muted); max-width: 640px; }
+    .legend { display: flex; gap: 18px; align-items: center; margin-top: 14px; font-size: 12px; color: var(--c-muted); flex-wrap: wrap; }
+    .legend-dot { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
     .legend-dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; }
-    .legend-dot.p::before { background: var(--c-blue); }
-    .legend-dot.e::before { background: var(--c-orange); }
-    .radar-side h2 { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-    .radar-side p { color: var(--c-muted); font-size: 14px; }
+    .legend-dot.p { color: var(--c-blue); } .legend-dot.p::before { background: var(--c-blue); }
+    .legend-dot.e { color: var(--c-orange); } .legend-dot.e::before { background: var(--c-orange); }
 
-    /* Trait deltas */
-    .deltas-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 28px;
-    }
-    @media (max-width: 720px) { .deltas-grid { grid-template-columns: repeat(2, 1fr); } }
-    .delta {
-      padding: 16px; background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 14px;
-    }
-    .delta .name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); margin-bottom: 8px; }
-    .delta .vals { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
-    .delta .v { font-family: var(--font-num); font-size: 18px; font-weight: 700; }
-    .delta .v.p { color: var(--c-blue); }
-    .delta .v.e { color: var(--c-orange); }
-    .delta .v.diff { font-size: 14px; color: var(--c-muted); }
-    .delta .takeaway { font-size: 12px; color: var(--c-ink-2); line-height: 1.45; }
-    .delta.high { border-color: rgba(253,105,54,.35); background: rgba(253,105,54,.05); }
+    /* Waiting placeholder */
+    .waiting { padding: 22px; background: #FAFAF6; border: 1px dashed var(--c-line); border-radius: 14px; font-size: 14px; color: var(--c-muted); text-align: center; }
 
-    /* Tests comparison list */
-    .tests-list {
-      background: white; border: 1px solid var(--c-line); border-radius: 20px;
-      padding: 28px; margin-bottom: 32px;
+    /* Renderer · radar */
+    .render-radar { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; align-items: center; }
+    .radar-svg { width: 100%; max-width: 460px; margin: 0 auto; display: block; aspect-ratio: 1 / 1; }
+    .dim-deltas { display: grid; gap: 10px; }
+    .dim-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 12px; }
+    .dim-row.high { border-color: rgba(253,105,54,.35); background: rgba(253,105,54,.05); }
+    .dim-row .dname { font-size: 13px; font-weight: 600; }
+    .dim-row .dvals { display: flex; align-items: baseline; gap: 7px; font-family: var(--font-num); font-weight: 700; font-size: 15px; }
+    .dim-row .dvals .p { color: var(--c-blue); }
+    .dim-row .dvals .e { color: var(--c-orange); }
+    .dim-row .dvals .d { font-size: 12px; color: var(--c-muted); }
+
+    /* Renderer · gauge */
+    .gauge-pair { display: grid; gap: 18px; max-width: 720px; }
+    .gauge-row { display: grid; grid-template-columns: 130px 1fr 64px; gap: 14px; align-items: center; }
+    .gauge-row .glabel { font-size: 13px; font-weight: 600; color: var(--c-ink-2); }
+    .gauge-track { height: 12px; border-radius: 999px; background: rgba(10,14,44,.07); position: relative; overflow: hidden; }
+    .gauge-fill { height: 100%; border-radius: 999px; transition: width .6s cubic-bezier(.16,1,.3,1); }
+    .gauge-fill.p { background: var(--c-blue); }
+    .gauge-fill.e { background: var(--c-orange); }
+    .gauge-badge { font-family: var(--font-num); font-weight: 700; font-size: 16px; text-align: right; }
+    .gauge-badge.p { color: var(--c-blue); }
+    .gauge-badge.e { color: var(--c-orange); }
+    .gauge-scale { font-size: 11px; color: var(--c-muted); margin-top: 4px; }
+    .gauge-band { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; margin-left: 8px; }
+    .band-low { background: rgba(34,160,107,.12); color: var(--c-green); }
+    .band-mid { background: rgba(245,166,35,.14); color: #B5790B; }
+    .band-high { background: rgba(216,71,43,.12); color: var(--c-red); }
+
+    /* Renderer · type cards */
+    .typecards { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; }
+    .type-card { border: 1px solid var(--c-line); border-radius: 16px; padding: 22px; text-align: center; }
+    .type-card.p { border-top: 3px solid var(--c-blue); }
+    .type-card.e { border-top: 3px solid var(--c-orange); }
+    .type-card .tc-role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); }
+    .type-card .tc-value { font-family: var(--font-display); font-size: 34px; font-weight: 700; letter-spacing: -0.01em; margin: 8px 0 4px; }
+    .type-card.p .tc-value { color: var(--c-blue); }
+    .type-card.e .tc-value { color: var(--c-orange); }
+    .type-card .tc-desc { font-size: 12px; color: var(--c-muted); }
+    .match-chip { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2; }
+    .match-chip.same { background: rgba(34,160,107,.12); color: var(--c-green); }
+    .match-chip.diff { background: rgba(72,122,255,.10); color: var(--c-blue-2); }
+
+    /* Renderer · ranked */
+    .ranked { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .ranked-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .ranked-col.p h4 { color: var(--c-blue); }
+    .ranked-col.e h4 { color: var(--c-orange); }
+    .ranked-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: #FAFAF6; border: 1px solid var(--c-line); margin-bottom: 8px; }
+    .ranked-item.shared { background: rgba(34,160,107,.06); border-color: rgba(34,160,107,.30); }
+    .rank-num { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-family: var(--font-num); font-weight: 700; font-size: 12px; color: white; flex-shrink: 0; }
+    .ranked-col.p .rank-num { background: var(--c-blue); }
+    .ranked-col.e .rank-num { background: var(--c-orange); }
+    .ranked-item .rlabel { font-size: 14px; font-weight: 600; }
+    .ranked-item .rscore { margin-left: auto; font-family: var(--font-num); font-size: 13px; color: var(--c-muted); }
+    .ranked-item .shared-tag { margin-left: auto; font-size: 10px; font-weight: 700; color: var(--c-green); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Safety banner (3114) */
+    .safety-banner {
+      margin-top: 20px; padding: 18px 20px; border-radius: 14px;
+      background: rgba(216,71,43,.06); border: 1px solid rgba(216,71,43,.25);
+      display: flex; gap: 14px; align-items: flex-start;
     }
-    .tests-list h3 { font-family: var(--font-display); font-size: 22px; font-weight: 600; margin-bottom: 4px; }
-    .tests-list .lead-2 { color: var(--c-muted); font-size: 14px; margin-bottom: 22px; }
-    table.tests { width: 100%; border-collapse: collapse; }
-    table.tests th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-muted); font-weight: 600; padding: 10px 8px; border-bottom: 1px solid var(--c-line); }
-    table.tests td { padding: 12px 8px; border-bottom: 1px solid rgba(10,14,44,.04); font-size: 14px; }
-    table.tests td.test-name { font-weight: 600; }
-    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-    .pill.done { background: rgba(34,160,107,.10); color: var(--c-green); }
-    .pill.wip  { background: rgba(253,105,54,.10); color: var(--c-orange); }
-    .pill.todo { background: rgba(72,122,255,.08); color: var(--c-blue-2); }
+    .safety-banner .si { font-size: 22px; line-height: 1; }
+    .safety-banner h5 { font-size: 14px; font-weight: 700; color: var(--c-red); margin-bottom: 4px; }
+    .safety-banner p { font-size: 13px; color: var(--c-ink-2); line-height: 1.5; }
+    .safety-banner a { font-weight: 700; color: var(--c-red); text-decoration: none; }
 
     /* Conversation prompts */
     .prompts {
       background: linear-gradient(135deg, #1320CE 0%, #0A0E2C 100%);
-      color: white; border-radius: 24px; padding: 36px; margin-bottom: 40px;
+      color: white; border-radius: 24px; padding: 36px; margin: 28px 0;
       position: relative; overflow: hidden;
     }
-    .prompts::before {
-      content: ""; position: absolute; top: -60px; right: -60px;
-      width: 240px; height: 240px; border-radius: 50%; background: rgba(245,235,63,.10);
-    }
+    .prompts::before { content: ""; position: absolute; top: -60px; right: -60px; width: 240px; height: 240px; border-radius: 50%; background: rgba(245,235,63,.10); }
     .prompts h3 { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; position: relative; z-index: 1; }
     .prompts p.lead-3 { color: rgba(255,255,255,.75); font-size: 14px; max-width: 620px; margin-bottom: 22px; position: relative; z-index: 1; }
     .prompt-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; position: relative; z-index: 1; }
-    @media (max-width: 720px) { .prompt-list { grid-template-columns: 1fr; } }
-    .prompt {
-      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10);
-      border-radius: 14px; padding: 18px;
-    }
+    .prompt { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); border-radius: 14px; padding: 18px; }
     .prompt .icon { font-size: 22px; margin-bottom: 8px; }
     .prompt .q { font-size: 14px; font-weight: 600; line-height: 1.4; }
 
-    /* CTA empty-state */
-    .empty {
-      background: white; border: 1px dashed rgba(10,14,44,.18); border-radius: 24px;
-      padding: 48px; text-align: center; margin: 32px 0 48px;
-    }
+    /* Lead capture (soft, parent) */
+    .lead-capture { background: white; border: 1px solid var(--c-line); border-radius: 24px; padding: 32px; margin: 0 0 40px; }
+    .lead-capture h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+    .lead-capture p.lc-lead { color: var(--c-muted); font-size: 14px; max-width: 560px; margin-bottom: 20px; }
+    .lc-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .lc-form input[type=email] { flex: 1; min-width: 240px; padding: 13px 16px; border-radius: 12px; border: 1px solid var(--c-line); font-size: 14px; font-family: inherit; }
+    .lc-form input[type=email]:focus { outline: none; border-color: var(--c-blue); }
+    .lc-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; font-size: 12px; color: var(--c-muted); max-width: 640px; line-height: 1.5; }
+    .lc-consent input { margin-top: 2px; }
+    .lc-ok { margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--c-green); display: none; }
+
+    /* Empty state */
+    .empty { background: white; border: 1px dashed rgba(10,14,44,.18); border-radius: 24px; padding: 48px; text-align: center; margin: 32px 0 48px; }
     .empty h3 { font-family: var(--font-display); font-size: 28px; font-weight: 600; margin-bottom: 10px; }
     .empty p { color: var(--c-muted); max-width: 560px; margin: 0 auto 20px; }
     .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: transform .15s, box-shadow .15s; }
     .btn-orange { background: var(--c-orange); color: white; }
     .btn-orange:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(253,105,54,.30); }
-    .btn-ghost { background: transparent; color: var(--c-ink); border: 1px solid var(--c-line); }
+    .btn-blue { background: var(--c-blue); color: white; }
+    .btn-blue:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(19,32,206,.30); }
 
-    footer.foot {
-      border-top: 1px solid var(--c-line); padding: 32px 0;
-      font-size: 12px; color: var(--c-muted);
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    footer.foot { border-top: 1px solid var(--c-line); padding: 32px 0; font-size: 12px; color: var(--c-muted); display: flex; justify-content: space-between; align-items: center; }
     footer.foot a { text-decoration: none; color: inherit; }
 
-    /* Empty-state condition: hide comparison contents when no parent data */
-    body.no-parent .comparison-content,
-    body.no-enfant .comparison-content { display: none; }
-    body:not(.no-parent):not(.no-enfant) .empty { display: none; }
+    @media (max-width: 900px) {
+      .pair, .render-radar, .ranked { grid-template-columns: 1fr; }
+      .typecards { grid-template-columns: 1fr; }
+      .match-chip { margin: 0 auto; }
+    }
+    @media (max-width: 640px) {
+      nav.topnav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; gap: 16px; }
+      body { overflow-x: hidden; }
+      h1.title { font-size: 34px; }
+      .gauge-row { grid-template-columns: 100px 1fr 52px; }
+    }
   </style>
 </head>
 <body>
@@ -191,21 +227,20 @@
         <a href="Proxxie Documents.html">Documents</a>
         <a href="Proxxie Ressources Hub.html">Ressources</a>
       </nav>
-      <a class="role-pill" id="rolePill" href="Proxxie Compte.html" title="Mon compte" style="text-decoration: none; cursor: pointer;">Parent · Arthur</a>
+      <a class="role-pill" id="rolePill" href="Proxxie Compte.html" title="Mon compte" style="text-decoration: none; cursor: pointer;">Parent</a>
     </div>
   </header>
 
   <section class="hero">
     <div class="shell">
-      <span class="eyebrow"><span class="dot"></span>Comparaison parent ↔ ado</span>
+      <span class="eyebrow"><span class="dot"></span>Comparaison parent · ado</span>
       <h1 class="title" id="heroTitle">Là où vos profils convergent, là où ils s'éloignent.</h1>
-      <p class="lead" id="heroLead">Les deux profils OCEAN-X côte à côte, trait par trait. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation.</p>
+      <p class="lead" id="heroLead">Chaque test côte à côte, dans son propre format. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation.</p>
     </div>
   </section>
 
   <main class="shell">
 
-    <!-- Empty state if one side hasn't done OCEAN-X -->
     <div class="empty" id="emptyState" style="display:none">
       <span class="eyebrow"><span class="dot"></span>En attente</span>
       <h3 id="emptyTitle">Il manque encore un profil</h3>
@@ -213,100 +248,31 @@
       <a class="btn btn-orange" href="Proxxie Dashboard.html#invitation">Inviter →</a>
     </div>
 
-    <div class="comparison-content">
+    <div id="comparisonContent" style="display:none">
+      <div class="pair" id="pairCards"></div>
+      <nav class="toc" id="toc"></nav>
+      <div id="testSections"></div>
 
-      <!-- Pair quick view -->
-      <div class="pair">
-        <div class="person-card parent">
-          <div class="who">
-            <div class="avatar p">J</div>
-            <div>
-              <div class="meta">Parent</div>
-              <div class="name">Julie M.</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--c-muted);">Profil détecté · <strong style="color:var(--c-ink)">Coordinatrice empathique</strong></div>
-          <div class="scores">
-            <div class="trait"><div class="label">Ouv.</div><div class="val">72</div></div>
-            <div class="trait"><div class="label">Cons.</div><div class="val">81</div></div>
-            <div class="trait"><div class="label">Extr.</div><div class="val">64</div></div>
-            <div class="trait"><div class="label">Conv.</div><div class="val">86</div></div>
-            <div class="trait"><div class="label">Stab.</div><div class="val">70</div></div>
-          </div>
-        </div>
-        <div class="person-card enfant">
-          <div class="who">
-            <div class="avatar e">A</div>
-            <div>
-              <div class="meta">Ado</div>
-              <div class="name">Arthur · Terminale</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--c-muted);">Profil détecté · <strong style="color:var(--c-ink)">Exploratrice analytique</strong></div>
-          <div class="scores">
-            <div class="trait"><div class="label">Ouv.</div><div class="val">88</div></div>
-            <div class="trait"><div class="label">Cons.</div><div class="val">62</div></div>
-            <div class="trait"><div class="label">Extr.</div><div class="val">48</div></div>
-            <div class="trait"><div class="label">Conv.</div><div class="val">71</div></div>
-            <div class="trait"><div class="label">Stab.</div><div class="val">76</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Radar -->
-      <section class="radar-section">
-        <div class="radar-side">
-          <h2 id="radarTitle">5 traits, 2 angles</h2>
-          <p id="radarLead">Le tracé bleu, c'est le profil parent. L'orange, l'ado. Les écarts les plus larges sont vos endroits de différence cognitive, pas vos endroits de conflit.</p>
-          <div class="radar-legend">
-            <span class="legend-dot p">Parent · Julie</span>
-            <span class="legend-dot e">Ado · Arthur</span>
-          </div>
-        </div>
-        <svg class="radar-svg" viewBox="-260 -260 520 520" aria-label="Radar OCEAN-X parent vs ado">
-          <!-- Grid -->
-          <g fill="none" stroke="rgba(10,14,44,.08)" stroke-width="1">
-            <polygon id="grid1" points=""></polygon>
-            <polygon id="grid2" points=""></polygon>
-            <polygon id="grid3" points=""></polygon>
-            <polygon id="grid4" points=""></polygon>
-            <polygon id="grid5" points=""></polygon>
-          </g>
-          <!-- Axes & labels -->
-          <g id="axesLayer"></g>
-          <!-- Parent polygon -->
-          <polygon id="parentPoly" fill="rgba(19,32,206,.18)" stroke="#1320CE" stroke-width="2.5"></polygon>
-          <!-- Enfant polygon -->
-          <polygon id="enfantPoly" fill="rgba(253,105,54,.18)" stroke="#FD6936" stroke-width="2.5"></polygon>
-          <!-- Points -->
-          <g id="pointsLayer"></g>
-        </svg>
-      </section>
-
-      <!-- Deltas per trait -->
-      <h2 style="font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:16px;">Trait par trait</h2>
-      <div class="deltas-grid" id="deltasGrid"></div>
-
-      <!-- Tests comparison list -->
-      <div class="tests-list" style="margin-top:32px;">
-        <h3>Tous les tests</h3>
-        <p class="lead-2" id="testsLead">Sur les 11 tests psychométriques disponibles, voici qui a passé quoi.</p>
-        <table class="tests">
-          <thead>
-            <tr><th>Test</th><th>Parent · Julie</th><th>Ado · Arthur</th><th>Comparaison</th></tr>
-          </thead>
-          <tbody id="testsBody"></tbody>
-        </table>
-      </div>
-
-      <!-- Conversation prompts -->
       <section class="prompts">
         <h3 id="promptsTitle">3 questions à se poser ensemble</h3>
-        <p class="lead-3" id="promptsLead">Les écarts ci-dessus suggèrent quelques sujets à explorer. Pas pour trancher · pour comprendre.</p>
+        <p class="lead-3" id="promptsLead">Les écarts ci-dessus suggèrent quelques sujets à explorer. Pas pour trancher, pour comprendre.</p>
         <div class="prompt-list" id="promptList"></div>
       </section>
 
-    </div><!-- /comparison-content -->
+      <section class="lead-capture" id="leadCapture" style="display:none">
+        <h3>Envie d'en discuter avec un coach Proxxie ?</h3>
+        <p class="lc-lead">Laissez votre email. Quand <span id="lcPrenom">votre ado</span> aura répondu de son côté, on vous prévient et on vous propose un point d'orientation, sans engagement.</p>
+        <form class="lc-form" id="lcForm">
+          <input type="email" id="lcEmail" placeholder="vous@exemple.com" required>
+          <button type="submit" class="btn btn-blue">Me prévenir →</button>
+        </form>
+        <label class="lc-consent">
+          <input type="checkbox" id="lcConsent" required>
+          <span>J'accepte que Proxxie conserve mon email pour me recontacter au sujet de l'orientation de mon ado. Données hébergées en Europe, désinscription à tout moment.</span>
+        </label>
+        <div class="lc-ok" id="lcOk">Merci, c'est noté. On revient vers vous dès que possible.</div>
+      </section>
+    </div>
   </main>
 
   <footer class="foot shell">
@@ -315,283 +281,613 @@
   </footer>
 
   <script>
-    (function () {
-      // Detect role from URL or localStorage
-      function getRole() {
-        try {
-          var u = new URLSearchParams(location.search).get("role");
-          if (u === "parent" || u === "enfant") return u;
-          var s = localStorage.getItem("proxxie.role");
-          if (s === "parent" || s === "enfant") return s;
-        } catch (e) {}
-        return "parent";
-      }
-      var role = getRole();
-      var isEnfant = role === "enfant";
+  (function () {
+    "use strict";
 
-      // Localize header copy
-      document.getElementById("rolePill").textContent = isEnfant ? "Ado · Arthur" : "Parent · Arthur";
-      if (isEnfant) {
-        document.getElementById("heroTitle").textContent = "Là où vos profils convergent, là où ils s'éloignent.";
-        document.getElementById("heroLead").textContent = "Vos deux profils OCEAN-X côte à côte, trait par trait. Les écarts ne sont pas un problème, ce sont des ouvertures de conversation avec ton parent.";
-      }
+    // Backend (Vercel). Override with ?api= for local testing.
+    var API_BASE = new URLSearchParams(location.search).get("api")
+      || "https://proxxie-app-seven.vercel.app";
+    var SVGNS = "http://www.w3.org/2000/svg";
 
-      // Read real Big Five scores from dual storage (parent + ado).
-      // Fallback to demo defaults so the design still renders before either
-      // side has done the test in localStorage.
-      function readBig5(role) {
-        try {
-          var raw = localStorage.getItem("proxxie.tests.big5." + role + ".results");
-          if (raw) return JSON.parse(raw);
-        } catch (e) {}
+    // ── Test registry · single source of truth for display ────────────────
+    // archetype · radar | gauge | typecards | ranked
+    // framing   · prediction | perception (mirrors backend KNOWN_TESTS)
+    // Mood/clinical tests (perception) are never gamified; safety-gated ones
+    // surface the 3114 crisis line on a high score.
+    var REGISTRY = {
+      ocean:       { label: "Big Five · OCEAN", archetype: "radar", framing: "prediction", max: 100,
+                     dims: [["O","Ouverture"],["C","Conscienciosité"],["E","Extraversion"],["A","Convivialité"],["N","Stabilité"]] },
+      riasec:      { label: "RIASEC · intérêts", archetype: "radar", framing: "prediction", max: 100,
+                     dims: [["R","Réaliste"],["I","Investigateur"],["A","Artistique"],["S","Social"],["E","Entreprenant"],["C","Conventionnel"]] },
+      caas:        { label: "CAAS · adaptabilité", archetype: "radar", framing: "prediction", max: 100,
+                     dims: [["concern","Préoccupation"],["control","Contrôle"],["curiosity","Curiosité"],["confidence","Confiance"]] },
+      brief:       { label: "BRIEF · fonctions exécutives", archetype: "radar", framing: "prediction", max: 100,
+                     dims: [["org","Organisation"],["time","Gestion du temps"],["emo","Régulation émo."],["wm","Mémoire de travail"]] },
+      futureproof: { label: "Future-Proof · compétences", archetype: "radar", framing: "prediction", max: 100 },
+      qe:          { label: "QE · intelligence émotionnelle", archetype: "radar", framing: "prediction", max: 100 },
+      hpi:         { label: "HPI · profil cognitif", archetype: "radar", framing: "perception", max: 100 },
+
+      mbti:        { label: "MBTI · type", archetype: "typecards", framing: "prediction" },
+      pcm:         { label: "PCM · base de personnalité", archetype: "typecards", framing: "prediction" },
+      dweck:       { label: "Dweck · état d'esprit", archetype: "typecards", framing: "prediction",
+                     dict: { fixed: "Fixe", growth: "Évolutif", mixed: "Mixte" } },
+
+      via:         { label: "VIA · forces de caractère", archetype: "ranked", framing: "prediction", topN: 5 },
+      valeurs:     { label: "Valeurs", archetype: "ranked", framing: "prediction", topN: 5 },
+      besoins:     { label: "Besoins", archetype: "ranked", framing: "prediction", topN: 5 },
+      drivers:     { label: "Drivers", archetype: "ranked", framing: "prediction", topN: 5 },
+      young:       { label: "Schémas de Young", archetype: "ranked", framing: "perception", topN: 5 },
+
+      grit:        { label: "Grit · persévérance", archetype: "gauge", framing: "prediction", max: 5,
+                     bands: [[2.5,"Variable","band-low"],[4,"Soutenu","band-mid"],[5,"Très élevé","band-high"]] },
+      qi:          { label: "Raisonnement", archetype: "gauge", framing: "prediction", max: 100 },
+      autisme:     { label: "Spectre autistique · indices", archetype: "gauge", framing: "perception", max: 50,
+                     bands: [[16,"Peu d'indices","band-low"],[26,"Indices modérés","band-mid"],[50,"Indices marqués","band-high"]] },
+      tdah:        { label: "TDAH · indices attentionnels", archetype: "gauge", framing: "perception", max: 24,
+                     bands: [[8,"Peu d'indices","band-low"],[14,"Indices modérés","band-mid"],[24,"Indices marqués","band-high"]] },
+      dys:         { label: "Indices dys", archetype: "gauge", framing: "perception", max: 100,
+                     bands: [[33,"Peu d'indices","band-low"],[60,"Indices modérés","band-mid"],[100,"Indices marqués","band-high"]] },
+      anxiete:     { label: "GAD-7 · anxiété", archetype: "gauge", framing: "perception", max: 21, gated: true,
+                     bands: [[5,"Minime","band-low"],[10,"Légère","band-mid"],[21,"Modérée à sévère","band-high"]] },
+      phq9:        { label: "PHQ-9 · humeur", archetype: "gauge", framing: "perception", max: 27, gated: true,
+                     bands: [[5,"Minime","band-low"],[10,"Légère","band-mid"],[27,"Modérée à sévère","band-high"]] }
+    };
+
+    // Proto localStorage uses "big5" for OCEAN; backend uses "ocean".
+    var ID_ALIAS = { big5: "ocean" };
+    function canonId(id) { id = String(id).toLowerCase(); return ID_ALIAS[id] || id; }
+
+    // ── Role / pronouns ───────────────────────────────────────────────────
+    function getRole() {
+      try {
+        var u = new URLSearchParams(location.search).get("role");
+        if (u === "parent" || u === "enfant") return u;
+        var s = localStorage.getItem("proxxie.role");
+        if (s === "parent" || s === "enfant") return s;
+      } catch (e) {}
+      return "parent";
+    }
+    var role = getRole();
+    var isEnfant = role === "enfant";
+
+    // ── Normalizers · tolerate whatever shape each test stored ─────────────
+    function asNumber(v) {
+      if (typeof v === "number") return v;
+      if (v && typeof v === "object") {
+        var keys = ["score", "total", "value", "raw", "sum"];
+        for (var i = 0; i < keys.length; i++) if (typeof v[keys[i]] === "number") return v[keys[i]];
+      }
+      return null;
+    }
+    function lowerMap(raw) {
+      var m = {};
+      if (raw && typeof raw === "object") Object.keys(raw).forEach(function (k) { m[k.toLowerCase()] = raw[k]; });
+      return m;
+    }
+    function dimValues(raw, dims) {
+      if (!raw || typeof raw !== "object") return null;
+      var m = lowerMap(raw);
+      return dims.map(function (d) {
+        var v = m[d[0].toLowerCase()];
+        var n = asNumber(v);
+        return n == null ? 0 : n;
+      });
+    }
+    // Derive dims when registry doesn't declare them (futureproof/qe/hpi).
+    function inferDims(raw) {
+      if (!raw || typeof raw !== "object") return null;
+      var dims = [];
+      Object.keys(raw).forEach(function (k) {
+        if (typeof asNumber(raw[k]) === "number" && asNumber(raw[k]) != null) {
+          var label = k.charAt(0).toUpperCase() + k.slice(1);
+          dims.push([k, label]);
+        }
+      });
+      return dims.length >= 3 ? dims : null;
+    }
+    function asCategory(raw) {
+      if (typeof raw === "string") return raw;
+      if (raw && typeof raw === "object") {
+        var keys = ["type", "value", "code", "label", "result", "mindset"];
+        for (var i = 0; i < keys.length; i++) if (typeof raw[keys[i]] === "string") return raw[keys[i]];
+      }
+      return null;
+    }
+    function asRanked(raw) {
+      function norm(it) {
+        if (typeof it === "string") return { label: it, score: null };
+        if (it && typeof it === "object") return { label: it.label || it.name || it.key || it.id || "?", score: asNumber(it) };
         return null;
       }
-      var p5 = readBig5("parent");
-      var e5 = readBig5("enfant");
-      // Empty-state detection: if a side has no .results saved, treat as missing.
-      // ?missing=parent|enfant override kept below for design preview.
-      var parentMissing = !p5;
-      var enfantMissing = !e5;
-      // Demo defaults if both are missing (so the design page still works
-      // standalone as a marketing/preview page)
-      var DEMO_P = { O: 72, C: 81, E: 64, A: 86, N: 70, profile: "Coordinatrice empathique" };
-      var DEMO_E = { O: 88, C: 62, E: 48, A: 71, N: 76, profile: "Exploratrice analytique" };
-      if (parentMissing && enfantMissing) { p5 = DEMO_P; e5 = DEMO_E; parentMissing = enfantMissing = false; }
-      else if (parentMissing) p5 = DEMO_P;
-      else if (enfantMissing) e5 = DEMO_E;
+      var out = null;
+      if (Array.isArray(raw)) out = raw.map(norm);
+      else if (raw && typeof raw === "object") {
+        if (Array.isArray(raw.top5)) out = raw.top5.map(norm);
+        else if (Array.isArray(raw.items)) out = raw.items.map(norm);
+        else if (Array.isArray(raw.ranked)) out = raw.ranked.map(norm);
+        else {
+          out = Object.keys(raw)
+            .filter(function (k) { return asNumber(raw[k]) != null; })
+            .map(function (k) { return { label: k.charAt(0).toUpperCase() + k.slice(1), score: asNumber(raw[k]) }; });
+        }
+      }
+      if (!out) return null;
+      out = out.filter(Boolean);
+      if (out.length && out.every(function (i) { return typeof i.score === "number"; })) {
+        out.sort(function (a, b) { return b.score - a.score; });
+      }
+      return out;
+    }
 
-      var TRAITS = [
-        { key: "O", label: "Ouverture",      parent: p5.O, enfant: e5.O, descShort: "Curiosité, créativité, ouverture à la nouveauté." },
-        { key: "C", label: "Conscienciosité", parent: p5.C, enfant: e5.C, descShort: "Organisation, persévérance, planification." },
-        { key: "E", label: "Extraversion",   parent: p5.E, enfant: e5.E, descShort: "Énergie sociale, recherche de stimulation." },
-        { key: "A", label: "Convivialité",   parent: p5.A, enfant: e5.A, descShort: "Coopération, empathie, confiance." },
-        { key: "N", label: "Stabilité",      parent: p5.N, enfant: e5.N, descShort: "Régulation émotionnelle, calme sous stress." }
-      ];
-      // Update profile labels in DOM if we have real data
-      var parentProfileEl = document.querySelector(".person-card.parent .who + div strong");
-      var enfantProfileEl = document.querySelector(".person-card.enfant .who + div strong");
-      if (parentProfileEl && p5.profile) parentProfileEl.textContent = p5.profile;
-      if (enfantProfileEl && e5.profile) enfantProfileEl.textContent = e5.profile;
-      // Update the scores grid values in DOM directly
-      var pTraitCells = document.querySelectorAll(".person-card.parent .scores .val");
-      var eTraitCells = document.querySelectorAll(".person-card.enfant .scores .val");
-      ["O","C","E","A","N"].forEach(function (k, i) {
-        if (pTraitCells[i]) pTraitCells[i].textContent = p5[k];
-        if (eTraitCells[i]) eTraitCells[i].textContent = e5[k];
+    // ── DOM helpers ─────────────────────────────────────────────────────────
+    function el(tag, cls, html) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (html != null) n.innerHTML = html;
+      return n;
+    }
+    function svg(tag, attrs) {
+      var n = document.createElementNS(SVGNS, tag);
+      Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      return n;
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
       });
-      // Auto-trigger empty state if either side is missing in localStorage
-      // (and ?missing= wasn't already in URL)
-      if ((parentMissing || enfantMissing) && !new URLSearchParams(location.search).get("missing")) {
-        var which = parentMissing ? "parent" : "enfant";
-        var url = new URL(location.href);
-        url.searchParams.set("missing", which);
-        history.replaceState({}, "", url.toString());
-      }
+    }
 
-      // Build radar SVG
-      function poly(values, scale) {
-        var R = 200; // radius
-        var pts = [];
-        for (var i = 0; i < values.length; i++) {
-          var angle = (-Math.PI / 2) + (i * 2 * Math.PI / values.length);
-          var r = R * (values[i] / 100) * (scale || 1);
-          pts.push((r * Math.cos(angle)).toFixed(1) + "," + (r * Math.sin(angle)).toFixed(1));
-        }
-        return pts.join(" ");
+    // ── Framing labels per test ─────────────────────────────────────────────
+    function sideLabels(meta, childPrenom) {
+      var who = childPrenom || "votre ado";
+      if (meta.framing === "perception") {
+        return { p: "Votre perception", e: "Ce que " + who + " ressent" };
       }
-      function gridPoly(scale) {
-        var pts = [];
-        for (var i = 0; i < TRAITS.length; i++) {
-          var angle = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
-          var r = 200 * scale;
-          pts.push((r * Math.cos(angle)).toFixed(1) + "," + (r * Math.sin(angle)).toFixed(1));
-        }
-        return pts.join(" ");
+      return { p: "Ce que vous avez deviné", e: "Le vrai profil de " + who };
+    }
+    function framingLine(meta, childPrenom) {
+      var who = childPrenom || "votre ado";
+      if (meta.framing === "perception") {
+        return "Pas un jeu de devinette. À gauche votre ressenti, à droite ce que " + who + " a exprimé. L'écart se discute, en douceur.";
       }
-      for (var i = 1; i <= 5; i++) {
-        document.getElementById("grid" + i).setAttribute("points", gridPoly(i / 5));
-      }
-      // Axes + labels
-      var axes = document.getElementById("axesLayer");
-      for (var i = 0; i < TRAITS.length; i++) {
-        var a = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
-        var x = 200 * Math.cos(a), y = 200 * Math.sin(a);
-        var lx = 230 * Math.cos(a), ly = 230 * Math.sin(a);
-        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", 0); line.setAttribute("y1", 0);
-        line.setAttribute("x2", x.toFixed(1)); line.setAttribute("y2", y.toFixed(1));
-        line.setAttribute("stroke", "rgba(10,14,44,.06)");
-        line.setAttribute("stroke-width", "1");
-        axes.appendChild(line);
-        var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        text.setAttribute("x", lx.toFixed(1)); text.setAttribute("y", ly.toFixed(1));
-        text.setAttribute("text-anchor", "middle");
-        text.setAttribute("dominant-baseline", "middle");
-        text.setAttribute("font-size", "13");
-        text.setAttribute("font-weight", "600");
-        text.setAttribute("fill", "#0A0E2C");
-        text.setAttribute("font-family", "Inter, sans-serif");
-        text.textContent = TRAITS[i].label;
-        axes.appendChild(text);
-      }
-      document.getElementById("parentPoly").setAttribute("points", poly(TRAITS.map(function(t){return t.parent;})));
-      document.getElementById("enfantPoly").setAttribute("points", poly(TRAITS.map(function(t){return t.enfant;})));
+      return "À gauche ce que vous aviez imaginé pour " + who + ", à droite ses vraies réponses. Les surprises sont les plus intéressantes.";
+    }
 
-      // Points dots
-      var pl = document.getElementById("pointsLayer");
-      TRAITS.forEach(function (t, i) {
-        var a = (-Math.PI / 2) + (i * 2 * Math.PI / TRAITS.length);
-        ["parent", "enfant"].forEach(function (k) {
-          var r = 200 * (t[k] / 100);
-          var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          c.setAttribute("cx", (r * Math.cos(a)).toFixed(1));
-          c.setAttribute("cy", (r * Math.sin(a)).toFixed(1));
-          c.setAttribute("r", "5");
-          c.setAttribute("fill", k === "parent" ? "#1320CE" : "#FD6936");
-          c.setAttribute("stroke", "white");
-          c.setAttribute("stroke-width", "2");
-          pl.appendChild(c);
+    // ── Renderers ───────────────────────────────────────────────────────────
+    function renderRadar(meta, pRaw, eRaw, labels, hasChild) {
+      var dims = meta.dims
+        ? meta.dims.map(function (d) { return d; })
+        : (inferDims(pRaw) || inferDims(eRaw));
+      if (!dims) return renderRanked(meta, pRaw, eRaw, labels, hasChild); // graceful fallback
+
+      var pVals = dimValues(pRaw, dims) || dims.map(function () { return 0; });
+      var eVals = hasChild ? (dimValues(eRaw, dims) || dims.map(function () { return 0; })) : null;
+      var max = meta.max || Math.max.apply(null, pVals.concat(eVals || []).concat([1]));
+
+      var wrap = el("div", "render-radar");
+      var svgEl = svg("svg", { class: "radar-svg", viewBox: "-260 -260 520 520", "aria-label": "Radar " + meta.label });
+      var R = 200, n = dims.length;
+      function pt(val, i) {
+        var a = (-Math.PI / 2) + (i * 2 * Math.PI / n);
+        var r = R * (Math.max(0, Math.min(val, max)) / max);
+        return [(r * Math.cos(a)).toFixed(1), (r * Math.sin(a)).toFixed(1)];
+      }
+      // grid rings
+      var gridG = svg("g", { fill: "none", stroke: "rgba(10,14,44,.08)", "stroke-width": "1" });
+      for (var ring = 1; ring <= 4; ring++) {
+        var rpts = [];
+        for (var i = 0; i < n; i++) {
+          var a = (-Math.PI / 2) + (i * 2 * Math.PI / n);
+          var r = R * ring / 4;
+          rpts.push((r * Math.cos(a)).toFixed(1) + "," + (r * Math.sin(a)).toFixed(1));
+        }
+        gridG.appendChild(svg("polygon", { points: rpts.join(" ") }));
+      }
+      svgEl.appendChild(gridG);
+      // axes + labels
+      var axG = svg("g", {});
+      for (var i = 0; i < n; i++) {
+        var a = (-Math.PI / 2) + (i * 2 * Math.PI / n);
+        axG.appendChild(svg("line", { x1: 0, y1: 0, x2: (R * Math.cos(a)).toFixed(1), y2: (R * Math.sin(a)).toFixed(1), stroke: "rgba(10,14,44,.06)", "stroke-width": "1" }));
+        var t = svg("text", { x: (232 * Math.cos(a)).toFixed(1), y: (232 * Math.sin(a)).toFixed(1), "text-anchor": "middle", "dominant-baseline": "middle", "font-size": "12", "font-weight": "600", fill: "#0A0E2C", "font-family": "Inter, sans-serif" });
+        t.textContent = dims[i][1];
+        axG.appendChild(t);
+      }
+      svgEl.appendChild(axG);
+      // polygons
+      svgEl.appendChild(svg("polygon", { points: pVals.map(function (v, i) { return pt(v, i).join(","); }).join(" "), fill: "rgba(19,32,206,.18)", stroke: "#1320CE", "stroke-width": "2.5" }));
+      if (eVals) svgEl.appendChild(svg("polygon", { points: eVals.map(function (v, i) { return pt(v, i).join(","); }).join(" "), fill: "rgba(253,105,54,.18)", stroke: "#FD6936", "stroke-width": "2.5" }));
+      // dots
+      [["parent", pVals, "#1320CE"], ["enfant", eVals, "#FD6936"]].forEach(function (set) {
+        if (!set[1]) return;
+        set[1].forEach(function (v, i) {
+          var c = pt(v, i);
+          svgEl.appendChild(svg("circle", { cx: c[0], cy: c[1], r: "5", fill: set[2], stroke: "white", "stroke-width": "2" }));
         });
       });
+      wrap.appendChild(svgEl);
 
-      // Deltas grid
-      var dg = document.getElementById("deltasGrid");
-      function takeaway(t) {
-        var d = t.enfant - t.parent;
-        var who = isEnfant ? "toi" : "votre ado";
-        var your = isEnfant ? "ton" : "votre";
-        var youHave = isEnfant ? "tu as" : "vous avez";
-        if (Math.abs(d) >= 15) {
-          if (t.key === "O" && d > 0) return "Côté " + who + ", la curiosité est très forte. " + (isEnfant ? "Bon levier pour proposer de nouvelles pistes d'orientation." : "Bon levier pour proposer de nouvelles pistes d'orientation à votre ado.");
-          if (t.key === "C" && d < 0) return (isEnfant ? "Tu fonctionnes par sprints plus que par plan structuré. À canaliser, pas à blâmer." : "Votre ado fonctionne par sprints plus que par plan structuré. À canaliser, pas à blâmer.");
-          if (t.key === "E" && d < 0) return (isEnfant ? "Tu charges tes batteries en solo. Des formations avec gros effectifs peuvent fatiguer." : "Votre ado se ressource en solo. Méfiance avec les formations à très gros effectifs.");
-          if (t.key === "A" && d < 0) return (isEnfant ? "Tu négocies plus que tu n'acquiesces. Atout pour des métiers où il faut tenir position." : "Votre ado négocie plus qu'il n'acquiesce. Atout pour des métiers où il faut tenir position.");
-          if (t.key === "N" && d > 0) return (isEnfant ? "Tu encaisses bien le stress. Les filières exigeantes (prépa, etc.) restent jouables." : "Votre ado encaisse bien le stress. Les filières exigeantes (prépa, etc.) restent jouables.");
-          return "Écart marqué sur ce trait — à explorer en RDV coach.";
-        }
-        if (Math.abs(d) >= 5) return "Proche, avec une nuance — utile à connaître.";
-        return "Très proche. " + (isEnfant ? "Vous vous comprenez instinctivement sur ce point." : "Votre ado et vous vous comprenez instinctivement sur ce point.");
-      }
-      TRAITS.forEach(function (t) {
-        var d = t.enfant - t.parent;
-        var sign = d > 0 ? "+" : d < 0 ? "" : "·";
-        var isHigh = Math.abs(d) >= 15;
-        var el = document.createElement("div");
-        el.className = "delta" + (isHigh ? " high" : "");
-        el.innerHTML =
-          '<div class="name">' + t.label + '</div>' +
-          '<div class="vals">' +
-            '<span class="v p" title="Parent">' + t.parent + '</span>' +
-            '<span class="v diff">' + (d === 0 ? "·" : sign + d) + '</span>' +
-            '<span class="v e" title="Ado">' + t.enfant + '</span>' +
-          '</div>' +
-          '<div class="takeaway">' + takeaway(t) + '</div>';
-        dg.appendChild(el);
-      });
-
-      // Tests comparison list · reads role-scoped storage from each test
-      function readTestStatus(id, role) {
-        try { return localStorage.getItem("proxxie.tests." + id + "." + role) || "todo"; }
-        catch (e) { return "todo"; }
-      }
-      var TEST_NAMES = [
-        { id: "big5",    name: "Big Five / OCEAN-X" },
-        { id: "riasec",  name: "RIASEC" },
-        { id: "mbti",    name: "MBTI" },
-        { id: "pcm",     name: "PCM" },
-        { id: "hpi",     name: "HPI" },
-        { id: "tdah",    name: "TDAH" },
-        { id: "dys",     name: "DYS" },
-        { id: "autisme", name: "Autisme" },
-        { id: "anxiete", name: "Anxiété" },
-        { id: "besoins", name: "Besoins" },
-        { id: "drivers", name: "Drivers" },
-        { id: "valeurs", name: "Valeurs" }
-      ];
-      // Demo defaults · used when no localStorage data exists (preview mode)
-      var DEMO_TESTS = {
-        big5:    { parent: "done", enfant: "done" },
-        riasec:  { parent: "todo", enfant: "wip"  },
-        mbti:    { parent: "done", enfant: "todo" },
-        pcm:     { parent: "todo", enfant: "todo" },
-        hpi:     { parent: "todo", enfant: "done" },
-        tdah:    { parent: "todo", enfant: "todo" },
-        dys:     { parent: "todo", enfant: "todo" },
-        autisme: { parent: "todo", enfant: "todo" },
-        anxiete: { parent: "todo", enfant: "todo" },
-        besoins: { parent: "todo", enfant: "todo" },
-        drivers: { parent: "done", enfant: "todo" },
-        valeurs: { parent: "done", enfant: "wip"  }
-      };
-      var anyLocalData = TEST_NAMES.some(function (t) {
-        return readTestStatus(t.id, "parent") !== "todo" || readTestStatus(t.id, "enfant") !== "todo";
-      });
-      var TESTS = TEST_NAMES.map(function (t) {
-        if (anyLocalData) {
-          return { id: t.id, name: t.name,
-                   parent: readTestStatus(t.id, "parent"),
-                   enfant: readTestStatus(t.id, "enfant") };
-        }
-        return { id: t.id, name: t.name,
-                 parent: DEMO_TESTS[t.id].parent,
-                 enfant: DEMO_TESTS[t.id].enfant };
-      });
-      var labels = { done: "Passé", wip: "En cours", todo: "À passer" };
-      var tb = document.getElementById("testsBody");
-      TESTS.forEach(function (t) {
-        var both = t.parent === "done" && t.enfant === "done";
-        var compare = both ? "Comparable ✓" :
-          (t.parent === "done" ? (isEnfant ? "Invite-toi à passer ce test" : "Ado pas encore passé") :
-          (t.enfant === "done" ? (isEnfant ? "Ton parent ne l'a pas passé" : "Vous ne l'avez pas passé") :
-          "Aucun des deux"));
-        var tr = document.createElement("tr");
-        tr.innerHTML =
-          '<td class="test-name">' + t.name + '</td>' +
-          '<td><span class="pill ' + t.parent + '">' + labels[t.parent] + '</span></td>' +
-          '<td><span class="pill ' + t.enfant + '">' + labels[t.enfant] + '</span></td>' +
-          '<td style="color:var(--c-muted);font-size:13px;">' + compare + '</td>';
-        tb.appendChild(tr);
-      });
-
-      // Conversation prompts
-      var PROMPTS_PARENT = [
-        { icon: "🎯", q: "Arthur a +16 en Ouverture · quel projet « pas évident » mérite qu'il l'explore ?" },
-        { icon: "📐", q: "Vous avez +19 en Conscienciosité · comment l'aider à structurer sans étouffer son rythme ?" },
-        { icon: "🔋", q: "Il a -16 en Extraversion · une filière avec petits effectifs serait-elle plus juste ?" }
-      ];
-      var PROMPTS_ENFANT = [
-        { icon: "🎯", q: "+16 en Ouverture côté toi · de quel projet bizarre tu rêves que tu n'oses pas dire ?" },
-        { icon: "📐", q: "Ton parent score +19 en Conscienciosité · qu'est-ce qui t'aide à structurer sans étouffer ?" },
-        { icon: "🔋", q: "-16 en Extraversion · une filière à petit effectif te conviendrait-elle mieux ?" }
-      ];
-      var pl2 = document.getElementById("promptList");
-      var promptsData = isEnfant ? PROMPTS_ENFANT : PROMPTS_PARENT;
-      promptsData.forEach(function (p) {
-        var el = document.createElement("div");
-        el.className = "prompt";
-        el.innerHTML = '<div class="icon">' + p.icon + '</div><div class="q">' + p.q + '</div>';
-        pl2.appendChild(el);
-      });
-
-      // Empty-state demo override via ?missing=parent|enfant
-      var missing = new URLSearchParams(location.search).get("missing");
-      if (missing === "parent" || missing === "enfant") {
-        document.body.classList.add("no-" + missing);
-        var es = document.getElementById("emptyState");
-        es.style.display = "block";
-        if (missing === "parent") {
-          document.getElementById("emptyTitle").textContent = isEnfant ? "Ton parent n'a pas encore passé OCEAN-X" : "Le parent n'a pas encore passé OCEAN-X";
-          document.getElementById("emptyText").textContent = isEnfant
-            ? "Invite ton parent à passer le Big Five pour qu'on puisse comparer. Quelques minutes, et la conversation s'ouvre."
-            : "Invitez l'autre parent à passer le Big Five pour comparer. Quelques minutes, et la conversation s'ouvre.";
+      // per-dim deltas
+      var side = el("div", null);
+      var leg = el("div", "legend");
+      leg.appendChild(el("span", "legend-dot p", labels.p));
+      if (eVals) leg.appendChild(el("span", "legend-dot e", labels.e));
+      side.appendChild(leg);
+      var rows = el("div", "dim-deltas");
+      rows.style.marginTop = "14px";
+      dims.forEach(function (d, i) {
+        var p = Math.round(pVals[i]);
+        var hasE = !!eVals;
+        var e = hasE ? Math.round(eVals[i]) : null;
+        var diff = hasE ? e - p : null;
+        var high = hasE && Math.abs(diff) >= Math.max(1, max * 0.15);
+        var row = el("div", "dim-row" + (high ? " high" : ""));
+        row.appendChild(el("div", "dname", d[1]));
+        var vals = el("div", "dvals");
+        vals.appendChild(el("span", "p", p));
+        if (hasE) {
+          vals.appendChild(el("span", "d", diff > 0 ? "+" + diff : diff < 0 ? "" + diff : "·"));
+          vals.appendChild(el("span", "e", e));
         } else {
-          document.getElementById("emptyTitle").textContent = isEnfant ? "Tu n'as pas encore passé OCEAN-X" : "Votre ado n'a pas encore passé OCEAN-X";
-          document.getElementById("emptyText").textContent = isEnfant
-            ? "Passe le Big Five (10 min) pour débloquer la comparaison avec ton parent."
-            : "Demandez à votre ado de passer le Big Five (10 min) pour débloquer la comparaison.";
+          vals.appendChild(el("span", "d", "· en attente"));
         }
+        row.appendChild(vals);
+        rows.appendChild(row);
+      });
+      side.appendChild(rows);
+      wrap.appendChild(side);
+      return wrap;
+    }
+
+    function bandFor(meta, val) {
+      if (!meta.bands) return null;
+      for (var i = 0; i < meta.bands.length; i++) if (val <= meta.bands[i][0]) return meta.bands[i];
+      return meta.bands[meta.bands.length - 1];
+    }
+    function renderGauge(meta, pRaw, eRaw, labels, hasChild) {
+      var max = meta.max || 100;
+      var p = asNumber(pRaw); if (p == null) p = 0;
+      var e = hasChild ? asNumber(eRaw) : null;
+      var wrap = el("div", null);
+      var leg = el("div", "legend");
+      leg.appendChild(el("span", "legend-dot p", labels.p));
+      if (e != null) leg.appendChild(el("span", "legend-dot e", labels.e));
+      wrap.appendChild(leg);
+      var gp = el("div", "gauge-pair");
+      gp.style.marginTop = "16px";
+      function row(cls, label, val) {
+        var r = el("div", "gauge-row");
+        r.appendChild(el("div", "glabel", label));
+        var track = el("div", "gauge-track");
+        var fill = el("div", "gauge-fill " + cls);
+        fill.style.width = Math.max(0, Math.min(100, (val / max) * 100)) + "%";
+        track.appendChild(fill);
+        r.appendChild(track);
+        var badge = el("div", "gauge-badge " + cls, fmt(val) + " / " + max);
+        r.appendChild(badge);
+        return r;
       }
-    })();
+      function fmt(v) { return Number.isInteger(v) ? v : v.toFixed(1); }
+      gp.appendChild(row("p", labels.p, p));
+      if (e != null) gp.appendChild(row("e", labels.e, e));
+      wrap.appendChild(gp);
+      var band = bandFor(meta, e != null ? e : p);
+      var scale = el("div", "gauge-scale");
+      scale.innerHTML = "Échelle 0 à " + max + ".";
+      if (band) {
+        var bspan = el("span", "gauge-band " + band[2], band[1]);
+        scale.appendChild(bspan);
+      }
+      wrap.appendChild(scale);
+      // safety gate · high score on PHQ-9 / GAD-7 surfaces 3114
+      var checkVal = e != null ? e : p;
+      if (meta.gated && band && band[2] === "band-high") {
+        wrap.appendChild(safetyBanner());
+      }
+      return wrap;
+    }
+
+    function renderTypeCards(meta, pRaw, eRaw, labels, hasChild) {
+      function disp(raw) {
+        var c = asCategory(raw);
+        if (c == null) return null;
+        if (meta.dict && meta.dict[String(c).toLowerCase()]) return meta.dict[String(c).toLowerCase()];
+        return c;
+      }
+      var p = disp(pRaw);
+      var e = hasChild ? disp(eRaw) : null;
+      var wrap = el("div", "typecards");
+      var cardP = el("div", "type-card p");
+      cardP.appendChild(el("div", "tc-role", labels.p));
+      cardP.appendChild(el("div", "tc-value", escapeHtml(p != null ? p : "—")));
+      wrap.appendChild(cardP);
+      var same = e != null && p != null && String(p).toLowerCase() === String(e).toLowerCase();
+      var chip = el("div", "match-chip " + (same ? "same" : "diff"), e == null ? "en<br>attente" : same ? "même<br>profil" : "profils<br>différents");
+      wrap.appendChild(chip);
+      var cardE = el("div", "type-card e");
+      cardE.appendChild(el("div", "tc-role", labels.e));
+      cardE.appendChild(el("div", "tc-value", escapeHtml(e != null ? e : "…")));
+      wrap.appendChild(cardE);
+      return wrap;
+    }
+
+    function renderRanked(meta, pRaw, eRaw, labels, hasChild) {
+      var topN = meta.topN || 5;
+      var p = (asRanked(pRaw) || []).slice(0, topN);
+      var e = hasChild ? (asRanked(eRaw) || []).slice(0, topN) : null;
+      var eLabels = (e || []).map(function (i) { return String(i.label).toLowerCase(); });
+      var pLabels = p.map(function (i) { return String(i.label).toLowerCase(); });
+      var wrap = el("div", "ranked");
+      function col(cls, label, items, otherLabels) {
+        var c = el("div", "ranked-col " + cls);
+        c.appendChild(el("h4", null, label));
+        if (!items || !items.length) { c.appendChild(el("div", "waiting", "En attente.")); return c; }
+        items.forEach(function (it, i) {
+          var shared = otherLabels && otherLabels.indexOf(String(it.label).toLowerCase()) !== -1;
+          var row = el("div", "ranked-item" + (shared ? " shared" : ""));
+          row.appendChild(el("div", "rank-num", i + 1));
+          row.appendChild(el("div", "rlabel", escapeHtml(it.label)));
+          if (shared) row.appendChild(el("div", "shared-tag", "commun"));
+          else if (typeof it.score === "number") row.appendChild(el("div", "rscore", Number.isInteger(it.score) ? it.score : it.score.toFixed(1)));
+          c.appendChild(row);
+        });
+        return c;
+      }
+      wrap.appendChild(col("p", labels.p, p, e ? eLabels : null));
+      wrap.appendChild(col("e", labels.e, e, pLabels));
+      return wrap;
+    }
+
+    function safetyBanner() {
+      var b = el("div", "safety-banner");
+      b.appendChild(el("div", "si", "🟠"));
+      var body = el("div", null);
+      body.appendChild(el("h5", null, "Un score élevé ici mérite de l'attention, pas de la panique."));
+      body.appendChild(el("p", null,
+        "Ce résultat n'est pas un diagnostic. Si " + (escapeHtml(window.__childPrenom || "votre ado")) +
+        " traverse une période difficile, parlez-en avec un professionnel. En cas de souffrance, le " +
+        '<a href="tel:3114">3114</a> (numéro national de prévention du suicide) est joignable 24h/24, gratuitement.'));
+      b.appendChild(body);
+      return b;
+    }
+
+    var RENDERERS = { radar: renderRadar, gauge: renderGauge, typecards: renderTypeCards, ranked: renderRanked };
+
+    // ── Build one test block ────────────────────────────────────────────────
+    function buildTestBlock(id, meta, parentResults, childResults, childPrenom, childShared) {
+      var pRaw = parentResults ? parentResults[id] : null;
+      var hasChild = !!(childShared && childResults && childResults[id] != null);
+      var eRaw = hasChild ? childResults[id] : null;
+      var labels = sideLabels(meta, childPrenom);
+
+      var block = el("section", "test-block");
+      block.id = "test-" + id;
+      block.setAttribute("data-framing", meta.framing);
+
+      var head = el("div", "test-head");
+      head.appendChild(el("span", "test-eyebrow", meta.framing === "perception" ? "Ressenti · perception" : "Prédiction · profil"));
+      head.appendChild(el("h2", null, escapeHtml(meta.label)));
+      head.appendChild(el("p", "framing-line", framingLine(meta, childPrenom)));
+      block.appendChild(head);
+
+      if (pRaw == null && !hasChild) {
+        block.appendChild(el("div", "waiting", "Aucun résultat enregistré pour ce test."));
+        return block;
+      }
+
+      var renderer = RENDERERS[meta.archetype] || renderRanked;
+      try {
+        block.appendChild(renderer(meta, pRaw, eRaw, labels, hasChild));
+      } catch (err) {
+        block.appendChild(el("div", "waiting", "Ce test ne peut pas être affiché ici."));
+      }
+
+      if (!hasChild && childResults == null) {
+        var note = el("div", "waiting", childShared === false
+          ? "Profil reçu mais non partagé par " + (childPrenom || "votre ado") + "."
+          : "En attente des réponses de " + (childPrenom || "votre ado") + ".");
+        note.style.marginTop = "16px";
+        block.appendChild(note);
+      }
+      return block;
+    }
+
+    // ── Page assembly ───────────────────────────────────────────────────────
+    function renderPair(childPrenom, tests) {
+      var pc = document.getElementById("pairCards");
+      pc.innerHTML = "";
+      var who = childPrenom || "votre ado";
+      var p = el("div", "person-card parent");
+      p.innerHTML =
+        '<div class="who"><div class="avatar p">V</div><div>' +
+        '<div class="meta">Parent</div><div class="name">Vous</div></div></div>' +
+        '<div class="person-sub">Vos prédictions et perceptions sur ' + escapeHtml(who) + '.</div>';
+      var e = el("div", "person-card enfant");
+      e.innerHTML =
+        '<div class="who"><div class="avatar e">' + escapeHtml((who[0] || "A").toUpperCase()) + '</div><div>' +
+        '<div class="meta">Ado</div><div class="name">' + escapeHtml(who) + '</div></div></div>' +
+        '<div class="person-sub">' + tests.length + ' test' + (tests.length > 1 ? "s" : "") + ' à comparer.</div>';
+      pc.appendChild(p);
+      pc.appendChild(e);
+    }
+
+    function renderToc(tests) {
+      var toc = document.getElementById("toc");
+      toc.innerHTML = "";
+      tests.forEach(function (id) {
+        var meta = REGISTRY[id];
+        var a = el("a", null);
+        a.href = "#test-" + id;
+        a.innerHTML = escapeHtml(meta.label.split(" · ")[0]) + (meta.gated ? ' <span class="gated">·</span>' : "");
+        toc.appendChild(a);
+      });
+    }
+
+    function renderPrompts(childPrenom) {
+      var who = childPrenom || "votre ado";
+      var list = document.getElementById("promptList");
+      list.innerHTML = "";
+      var prompts = [
+        { icon: "🔍", q: "Sur quel test l'écart vous a le plus surpris ? Pourquoi, à votre avis ?" },
+        { icon: "🤝", q: "Où vos deux profils se rejoignent-ils ? C'est souvent un terrain d'entente naturel." },
+        { icon: "🧭", q: "Quelle réponse de " + escapeHtml(who) + " ouvre une piste d'orientation à explorer ensemble ?" }
+      ];
+      prompts.forEach(function (p) {
+        list.appendChild(el("div", "prompt", '<div class="icon">' + p.icon + '</div><div class="q">' + p.q + '</div>'));
+      });
+    }
+
+    function showEmpty(title, text) {
+      document.getElementById("comparisonContent").style.display = "none";
+      var es = document.getElementById("emptyState");
+      es.style.display = "block";
+      document.getElementById("emptyTitle").textContent = title;
+      document.getElementById("emptyText").textContent = text;
+    }
+
+    function renderAll(data) {
+      // data · { tests:[ids], childPrenom, parentResults, childResults|null, childShared }
+      var childPrenom = data.childPrenom;
+      window.__childPrenom = childPrenom;
+      var tests = (data.tests || [])
+        .map(canonId)
+        .filter(function (id, i, arr) { return REGISTRY[id] && arr.indexOf(id) === i; });
+
+      if (!tests.length) {
+        showEmpty("Aucun test à comparer", "Quand un test comparable aura été passé des deux côtés, il s'affichera ici.");
+        return;
+      }
+
+      document.getElementById("emptyState").style.display = "none";
+      document.getElementById("comparisonContent").style.display = "block";
+      document.getElementById("rolePill").textContent = isEnfant ? ("Ado · " + (childPrenom || "")) : "Parent";
+
+      renderPair(childPrenom, tests);
+      renderToc(tests);
+
+      var container = document.getElementById("testSections");
+      container.innerHTML = "";
+      tests.forEach(function (id) {
+        container.appendChild(buildTestBlock(id, REGISTRY[id], data.parentResults, data.childResults, childPrenom, data.childShared));
+      });
+
+      renderPrompts(childPrenom);
+
+      // Lead capture · parent only, with a code to attach to.
+      if (!isEnfant && data.code) {
+        wireLeadCapture(data.code, childPrenom);
+      }
+    }
+
+    function wireLeadCapture(code, childPrenom) {
+      var box = document.getElementById("leadCapture");
+      box.style.display = "block";
+      document.getElementById("lcPrenom").textContent = childPrenom || "votre ado";
+      var form = document.getElementById("lcForm");
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var email = document.getElementById("lcEmail").value.trim();
+        var consent = document.getElementById("lcConsent").checked;
+        if (!email || !consent) return;
+        fetch(API_BASE + "/api/comparison/" + encodeURIComponent(code) + "/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email, consent: consent })
+        }).then(function () {
+          form.style.display = "none";
+          document.querySelector(".lc-consent").style.display = "none";
+          document.getElementById("lcOk").style.display = "block";
+        }).catch(function (e) {
+          // eslint-disable-next-line no-console
+          console.error("Lead submit failed", e);
+        });
+      });
+    }
+
+    // ── Data loading ────────────────────────────────────────────────────────
+    function loadFromApi(code) {
+      return fetch(API_BASE + "/api/comparison/" + encodeURIComponent(code))
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(function (j) {
+          return {
+            code: code,
+            tests: j.tests || [],
+            childPrenom: j.childPrenom,
+            parentResults: j.parentResults || {},
+            childResults: j.childShared ? (j.childResults || {}) : null,
+            childShared: !!j.childShared
+          };
+        });
+    }
+
+    function loadFromLocalStorage() {
+      // Standalone proto · read role-scoped storage. Only big5/OCEAN stores
+      // structured results today, so the page degrades gracefully.
+      function readResults(role) {
+        var out = {};
+        try {
+          var raw = localStorage.getItem("proxxie.tests.big5." + role + ".results");
+          if (raw) out.ocean = JSON.parse(raw);
+        } catch (e) {}
+        return out;
+      }
+      var p = readResults("parent");
+      var e = readResults("enfant");
+      var hasP = Object.keys(p).length > 0;
+      var hasE = Object.keys(e).length > 0;
+      if (!hasP && !hasE) return null; // signal · use demo
+      return {
+        code: null,
+        tests: Object.keys(Object.assign({}, p, e)),
+        childPrenom: null,
+        parentResults: p,
+        childResults: hasE ? e : null,
+        childShared: hasE
+      };
+    }
+
+    function demoData() {
+      return {
+        code: null,
+        tests: ["ocean", "riasec", "mbti", "via", "grit", "dweck", "phq9"],
+        childPrenom: "Arthur",
+        childShared: true,
+        parentResults: {
+          ocean: { O: 72, C: 81, E: 64, A: 86, N: 70 },
+          riasec: { R: 40, I: 75, A: 55, S: 82, E: 60, C: 70 },
+          mbti: { type: "ENFJ" },
+          via: { top5: [{ label: "Bienveillance", score: 92 }, { label: "Leadership", score: 88 }, { label: "Persévérance", score: 84 }, { label: "Prudence", score: 80 }, { label: "Honnêteté", score: 78 }] },
+          grit: { score: 4.1 },
+          dweck: { type: "growth" },
+          phq9: { score: 3 }
+        },
+        childResults: {
+          ocean: { O: 88, C: 62, E: 48, A: 71, N: 76 },
+          riasec: { R: 35, I: 88, A: 80, S: 50, E: 45, C: 40 },
+          mbti: { type: "INTP" },
+          via: { top5: [{ label: "Curiosité", score: 95 }, { label: "Créativité", score: 90 }, { label: "Honnêteté", score: 82 }, { label: "Amour du savoir", score: 80 }, { label: "Persévérance", score: 74 }] },
+          grit: { score: 3.2 },
+          dweck: { type: "growth" },
+          phq9: { score: 11 }
+        }
+      };
+    }
+
+    // ── Boot ─────────────────────────────────────────────────────────────────
+    var code = new URLSearchParams(location.search).get("code");
+    if (code) {
+      loadFromApi(code)
+        .then(renderAll)
+        .catch(function (err) {
+          // eslint-disable-next-line no-console
+          console.error("Comparaison load failed", err);
+          showEmpty("Comparaison introuvable", "Ce code de comparaison n'existe pas ou a expiré. Vérifiez le lien reçu.");
+        });
+    } else {
+      var local = loadFromLocalStorage();
+      renderAll(local || demoData());
+    }
+  })();
   </script>
 
 </body>
