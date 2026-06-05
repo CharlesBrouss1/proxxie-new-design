@@ -46,6 +46,7 @@ TARGETS = [
     "Proxxie Test Grit.html",
     "Proxxie Test CAAS.html",
     "Proxxie Test BRIEF.html",
+    "Proxxie Test FuturProof.html",
     # Twins lowercase (cf. convention _patch_test_pages_phase1.py)
     "test-riasec.html",
     "test-pcm.html",
@@ -62,6 +63,7 @@ TARGETS = [
     "test-grit.html",
     "test-caas.html",
     "test-brief.html",
+    "test-futureproof.html",
 ]
 
 # Sentinelles JS-context (module top level) · plain block comments OK
