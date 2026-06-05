@@ -373,7 +373,8 @@
   .gr-backchip{position:absolute;top:2px;left:0;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:700;padding:7px 14px 7px 11px;border-radius:999px;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(20,18,8,.07);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .3s,transform .3s;z-index:5}
   .gr-backchip.on{opacity:1;transform:translateY(0);pointer-events:auto}
   .gr-hint{font-size:13px;color:var(--ink-soft);text-align:center;margin:8px 0 4px;min-height:18px;transition:opacity .3s}
-  #grGraph{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
+  #grGraph{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation;transition:opacity .24s ease,transform .24s ease;transform-origin:50% 56%}
+  #grGraph.gr-switching{opacity:0;transform:scale(.96)}
   .gr-lnk{stroke:#CDBFA3;stroke-width:1.8;stroke-linecap:round}
   .gr-lnk.live{stroke:#BFAE8E;stroke-width:2}
   .gr-node{cursor:pointer}
@@ -4027,9 +4028,15 @@
   }
 
   function setGraphMode(m){
+    if(m===gMode){ renderGraph(); return; }
     gMode=m;
     Array.prototype.forEach.call(document.querySelectorAll('.gr-mode'),function(b){ b.classList.toggle('on', b.getAttribute('data-mode')===m); });
-    renderGraph();
+    var svg=document.getElementById('grGraph');
+    var noMotion=window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(!svg || noMotion){ renderGraph(); return; }
+    // crossfade + léger zoom entre les modes (carte / radar / potentiel)
+    svg.classList.add('gr-switching');
+    setTimeout(function(){ renderGraph(); svg.classList.remove('gr-switching'); }, 240);
   }
 
   function updateSign(){
