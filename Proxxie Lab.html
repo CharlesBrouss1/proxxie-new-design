@@ -186,6 +186,27 @@
   .scaleitem.sel .noptcap{color:var(--qac,var(--blue))}
   .noptcap{font-size:10px;font-weight:600;color:var(--ink-soft);text-align:center;line-height:1.18;letter-spacing:.1px}
   .scalehint{display:none}
+  /* test d'aptitude : figure + choix multiples */
+  .scale.aptscale{flex-direction:column;gap:16px;align-items:stretch}
+  .aptfig{display:flex;justify-content:center;align-items:center;padding:14px;background:var(--tan);border:1.5px solid var(--tan-line);border-radius:14px}
+  .aptfig svg{max-width:100%;height:auto}
+  .aptopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .aptopt{
+    min-height:54px;padding:12px 16px;
+    background:var(--tan);border:1.5px solid var(--tan-line);border-radius:13px;
+    font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;gap:8px;
+    transition:transform .1s ease,border-color .12s ease,background .12s ease,color .12s ease,box-shadow .2s ease;
+  }
+  .aptopt svg{width:52px;height:52px}
+  .aptopt:hover{border-color:var(--qac,var(--blue));transform:translateY(-2px)}
+  .aptopt:active{transform:scale(.98)}
+  .aptopt.sel{background:var(--qac,var(--blue));border-color:var(--qac,var(--blue));color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}
+  .aptopt.sel svg rect{fill:rgba(255,255,255,.18)}
+  .aptscore{margin-top:10px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .qps.qpsapt{display:flex;flex-wrap:wrap;gap:6px}
+  .qps.qpsapt span{flex:0 0 auto;padding:4px 10px;border-radius:8px;font-size:12px}
+  @media(max-width:420px){ .aptopts{grid-template-columns:1fr} }
 
   .qpreview{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 18px;box-shadow:0 14px 34px rgba(0,0,0,.07);overflow:hidden}
   .qpreview::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pac,var(--blue))}
@@ -2380,24 +2401,212 @@
         signpost:"<p>Ce repérage ne remplace pas un bilan. Le diagnostic de dyslexie se fait avec un(e) orthophoniste, parfois un(e) neuropsychologue. Si l'écrit te gêne vraiment, parles-en à ton médecin pour une orientation, à tout âge.</p>"
       },
       about:"Ce repérage rassemble des signes fréquemment associés à la dyslexie chez l'adulte, à partir de questionnaires d'auto-repérage reconnus. Il ne pose aucun diagnostic et ne remplace pas un bilan orthophonique. Les niveaux indiquent seulement la fréquence des signes rapportés."
+    },
+
+    schemas:{
+      id:"schemas", code:"SCHEMAS", short:"Schémas de Young", kind:"self",
+      name:"Tes schémas de vie",
+      tagline:"Les schémas précoces de Jeffrey Young, ces scénarios qui se rejouent en toi.",
+      meta:["Schéma-thérapie","5 grands domaines","~12 min"],
+      minutes:"~12 min",
+      introTitle:"Quels scénarios reviennent, encore et encore, dans ta vie ?",
+      introLead:"Inspiré de la schéma-thérapie de Jeffrey Young. Cinq domaines regroupent les schémas qui se sont installés tôt et continuent de teinter ta façon de vivre les liens et toi-même. Réponds selon ce que tu ressens vraiment, il n'y a pas de bonne réponse.",
+      freeCount:15,
+      scale:["Pas du tout moi","Plutôt non","Un peu","Plutôt oui","Tout à fait moi"],
+      hint:["Faux pour moi","Vrai pour moi"],
+      order:["SR","MA","LI","DA","SI"],
+      dims:{
+        SR:{name:"Séparation et rejet", sub:"abandon, méfiance, sentiment d'être à part"},
+        MA:{name:"Manque d'autonomie", sub:"dépendance, vulnérabilité, doute de soi"},
+        LI:{name:"Limites défaillantes", sub:"impulsivité, droit acquis, faible autocontrôle"},
+        DA:{name:"Don de soi excessif", sub:"sacrifice, recherche d'approbation, soumission"},
+        SI:{name:"Survigilance et exigence", sub:"perfectionnisme, contrôle, dureté envers soi"}
+      },
+      items:[
+        {id:"SR1",dim:"SR",key:+1,t:"J'ai souvent peur que les gens que j'aime finissent par me quitter."},
+        {id:"MA1",dim:"MA",key:+1,t:"Sans le soutien des autres, je me sens vite perdu face au quotidien."},
+        {id:"LI1",dim:"LI",key:+1,t:"J'ai du mal à me retenir quand une envie me prend."},
+        {id:"DA1",dim:"DA",key:+1,t:"Je fais souvent passer les besoins des autres avant les miens."},
+        {id:"SI1",dim:"SI",key:+1,t:"Je m'en veux durement dès que je ne suis pas à la hauteur."},
+        {id:"SR2",dim:"SR",key:+1,t:"Au fond, je me méfie : on pourrait me trahir ou me faire du mal."},
+        {id:"MA2",dim:"MA",key:+1,t:"Je doute de pouvoir m'en sortir seul si les choses tournent mal."},
+        {id:"LI2",dim:"LI",key:+1,t:"Les règles et les contraintes, je trouve normal qu'elles ne s'appliquent pas vraiment à moi."},
+        {id:"DA2",dim:"DA",key:+1,t:"J'ai besoin qu'on m'approuve pour me sentir vraiment bien."},
+        {id:"SI2",dim:"SI",key:+1,t:"Je dois tout faire parfaitement, sinon j'ai l'impression d'avoir échoué."},
+        {id:"SR3",dim:"SR",key:+1,t:"Je me sens souvent différent, à l'écart, comme si je n'étais pas vraiment à ma place."},
+        {id:"MA3",dim:"MA",key:+1,t:"Je crains qu'une catastrophe ou une maladie puisse arriver à tout moment."},
+        {id:"LI3",dim:"LI",key:+1,t:"J'ai du mal à terminer les tâches ennuyeuses ou à tenir mes engagements dans la durée."},
+        {id:"DA3",dim:"DA",key:+1,t:"Je préfère céder plutôt que risquer un conflit ou une colère."},
+        {id:"SI3",dim:"SI",key:+1,t:"J'ai du mal à me détendre tant que tout n'est pas sous contrôle."},
+        {id:"SR4",dim:"SR",key:+1,t:"Même entouré, il m'arrive de me sentir seul ou incompris au fond."},
+        {id:"MA4",dim:"MA",key:+1,t:"J'ai souvent l'impression de ne pas être à la hauteur des autres."},
+        {id:"LI4",dim:"LI",key:+1,t:"Je supporte mal qu'on me dise non ou qu'on me fasse attendre."},
+        {id:"DA4",dim:"DA",key:+1,t:"Je devine et je comble les attentes des autres, parfois sans même qu'on me les exprime."},
+        {id:"SI4",dim:"SI",key:+1,t:"Montrer mes émotions me met mal à l'aise, je préfère garder le contrôle."}
+      ],
+      portrait:{
+        SR:{hi:"Le lien est, pour toi, traversé d'une crainte sourde : être abandonné, trahi, ou rester à part. Tu peux t'attacher fort tout en guettant les signes d'un départ. Reconnaître ce schéma, c'est commencer à distinguer la peur ancienne de la réalité d'aujourd'hui.",
+           mid:"Tu connais des moments de doute dans tes liens, sans qu'ils dictent toute ta vie affective. Cette sensibilité te rend attentif aux autres ; veille seulement à ne pas la laisser interpréter à charge.",
+           lo:"Tu te sens globalement en sécurité dans tes relations. La confiance vient assez naturellement, ce qui te permet de t'attacher sans guetter en permanence le signe d'une rupture."},
+        MA:{hi:"Tu doutes souvent de ta capacité à tenir debout seul. Le monde peut sembler menaçant, et l'autonomie, hors de portée. Pourtant, chaque petite épreuve traversée par toi-même vient peu à peu démentir ce schéma.",
+           mid:"Tu oscilles entre élans d'autonomie et besoins d'appui, selon les moments. C'est humain ; l'enjeu est de repérer quand le doute parle plus fort que la réalité de tes compétences.",
+           lo:"Tu te sens capable de faire face. L'autonomie ne t'effraie pas, et tu abordes les imprévus avec un sentiment de solidité intérieure plutôt qu'avec de l'appréhension."},
+        LI:{hi:"Les limites, les tiennes comme celles du cadre, te pèsent. Tu peux suivre tes impulsions ou attendre que les règles s'effacent devant toi. Apprivoiser la frustration, par petits pas, est ici ton meilleur levier de liberté réelle.",
+           mid:"Tu sais te cadrer, même si l'impatience ou l'envie du moment prennent parfois le dessus. Cet équilibre te rend vivant ; quelques repères sur les choses qui comptent suffisent à le tenir.",
+           lo:"Tu te fixes des limites sans difficulté et tu tiens tes engagements dans la durée. Cette discipline intérieure te rend fiable, à condition de t'autoriser aussi de la souplesse."},
+        DA:{hi:"Tu t'effaces souvent pour les autres : tu devines leurs attentes, tu cèdes, tu cherches leur approbation. Cette générosité a une face cachée, l'oubli de toi. Te demander « et moi, qu'est-ce que je veux ? » est un acte de soin, pas d'égoisme.",
+           mid:"Tu es attentif aux autres sans toujours t'oublier. Ce souci de l'autre fait ta délicatesse ; garde simplement un œil sur tes propres besoins, ils comptent autant.",
+           lo:"Tu prends soin des autres sans te sacrifier. Tu sais dire non et poser ce dont tu as besoin, un équilibre sain qui rend tes relations plus justes."},
+        SI:{hi:"Tu vis sous une exigence intérieure forte : tout doit être parfait, maîtrisé, irréprochable. Cette tension te pousse loin, mais peut t'épuiser et te couper de tes émotions. T'autoriser l'imperfection, c'est te rendre un peu de douceur.",
+           mid:"Tu tiens à bien faire sans te broyer pour autant. Cette rigueur te sert quand tu sais la relâcher ; veille à ce qu'elle reste un moteur, pas un juge permanent.",
+           lo:"Tu avances sans te mettre une pression écrasante. Tu acceptes l'imperfection et tu laisses de la place à tes émotions, ce qui te garde souple et disponible."}
+      },
+      about:"Ce portrait s'inspire de la schéma-thérapie de Jeffrey Young, qui décrit des schémas précoces inadaptés regroupés en grands domaines. Il décrit des tendances et des ressentis, pas un diagnostic, et n'a aucune visée clinique. Les niveaux se lisent sur l'échelle interne du test, comme des repères pour mieux te comprendre."
+    },
+
+    qe:{
+      id:"qe", code:"QE", short:"Quotient émotionnel", kind:"self",
+      name:"Ton intelligence émotionnelle",
+      tagline:"Ta capacité à reconnaître, comprendre et réguler les émotions, les tiennes et celles des autres.",
+      meta:["Intelligence émotionnelle","4 dimensions","~12 min"],
+      minutes:"~12 min",
+      introTitle:"Quel est ton rapport aux émotions ?",
+      introLead:"Un portrait de ton intelligence émotionnelle sur quatre dimensions, inspiré du modèle de Mayer et Salovey et des travaux de Daniel Goleman. Réponds spontanément, selon ce que tu vis le plus souvent.",
+      freeCount:15,
+      scale:["Pas du tout","Plutôt non","Neutre","Plutôt oui","Tout à fait"],
+      hint:["Pas du tout","Tout à fait"],
+      order:["CS","CA","UT","RE"],
+      dims:{
+        CS:{name:"Conscience de soi", sub:"reconnaître et nommer ses propres émotions"},
+        CA:{name:"Conscience des autres", sub:"empathie, lecture des émotions d'autrui"},
+        UT:{name:"Utilisation des émotions", sub:"s'appuyer sur ses émotions pour agir et décider"},
+        RE:{name:"Régulation émotionnelle", sub:"apaiser, canaliser et gérer ce que l'on ressent"}
+      },
+      items:[
+        {id:"CS1",dim:"CS",key:+1,t:"Je sais reconnaître précisément l'émotion que je ressens sur le moment."},
+        {id:"CA1",dim:"CA",key:+1,t:"Je perçois vite quand quelqu'un ne va pas bien, même s'il ne dit rien."},
+        {id:"UT1",dim:"UT",key:+1,t:"Je sais m'appuyer sur ce que je ressens pour prendre de bonnes décisions."},
+        {id:"RE1",dim:"RE",key:+1,t:"Quand une émotion forte monte, j'arrive à me calmer par moi-même."},
+        {id:"CS2",dim:"CS",key:-1,t:"Il m'arrive d'être de mauvaise humeur sans comprendre pourquoi."},
+        {id:"CA2",dim:"CA",key:+1,t:"Je devine assez bien ce que ressent quelqu'un à son ton ou son visage."},
+        {id:"UT2",dim:"UT",key:+1,t:"Quand je suis motivé, je sais canaliser cette énergie vers ce que j'ai à faire."},
+        {id:"RE2",dim:"RE",key:-1,t:"Quand je suis contrarié, je mets longtemps à retrouver mon calme."},
+        {id:"CS3",dim:"CS",key:+1,t:"Je remarque les sensations physiques qui accompagnent mes émotions."},
+        {id:"CA3",dim:"CA",key:-1,t:"J'ai du mal à comprendre pourquoi les autres réagissent comme ils le font."},
+        {id:"UT3",dim:"UT",key:+1,t:"Je sais me mettre dans le bon état d'esprit avant une tâche importante."},
+        {id:"RE3",dim:"RE",key:+1,t:"Sous le coup de la colère, j'arrive à ne pas dire ou faire ce que je regretterais."},
+        {id:"CS4",dim:"CS",key:+1,t:"Je sais distinguer des émotions proches, comme l'anxiété et l'excitation."},
+        {id:"CA4",dim:"CA",key:+1,t:"Je sais adapter ma façon de parler selon l'état émotionnel de mon interlocuteur."},
+        {id:"UT4",dim:"UT",key:-1,t:"Mes émotions me semblent surtout une gêne plutôt qu'une aide pour avancer."},
+        {id:"RE4",dim:"RE",key:+1,t:"Face au stress, je trouve des moyens efficaces pour faire baisser la pression."},
+        {id:"CS5",dim:"CS",key:+1,t:"Je prends le temps de réfléchir à ce que je ressens et à pourquoi."},
+        {id:"CA5",dim:"CA",key:+1,t:"Je ressens facilement de l'empathie pour ce que traverse quelqu'un."},
+        {id:"UT5",dim:"UT",key:+1,t:"Je sais transformer une émotion difficile en moteur pour agir."},
+        {id:"RE5",dim:"RE",key:+1,t:"Je sais réconforter quelqu'un et l'aider à apaiser ses émotions."}
+      ],
+      portrait:{
+        CS:{hi:"Tu as une fine conscience de ta vie intérieure. Tu nommes ce que tu ressens, tu en repères les nuances et les signaux corporels. Cette lucidité émotionnelle est une vraie boussole, à condition de ne pas trop analyser au point de t'y perdre.",
+           mid:"Tu perçois tes émotions sans toujours en saisir tous les détails. Cette conscience suffisante te guide ; prendre quelques instants pour nommer ce que tu vis l'affinera encore.",
+           lo:"Tes émotions te traversent parfois sans que tu les identifies clairement. Mettre des mots dessus, même approximatifs, est le premier pas pour mieux te comprendre et te sentir plus en phase avec toi."},
+        CA:{hi:"Tu lis les autres avec finesse. Un ton, un visage, un silence te renseignent vite sur ce qu'ils traversent. Cette empathie crée du lien et de la confiance ; garde juste de l'énergie pour toi, car tout ressentir peut fatiguer.",
+           mid:"Tu perçois assez bien l'état des autres, surtout quand tu y prêtes attention. Cette sensibilité te rend ajusté dans tes relations ; elle gagne à être cultivée par la curiosité plutôt que la supposition.",
+           lo:"Les émotions des autres ne te sautent pas toujours aux yeux. Poser des questions, observer, vérifier ce que tu crois comprendre t'aidera à te rapprocher de ce qu'ils vivent réellement."},
+        UT:{hi:"Tu sais faire de tes émotions un carburant. Tu t'en sers pour te motiver, te mettre dans le bon état d'esprit, décider avec justesse. Cette intelligence pratique des émotions est un atout rare, dans le travail comme dans la vie.",
+           mid:"Tu t'appuies sur tes émotions par moments, sans en faire encore un levier systématique. Repérer celles qui te portent et celles qui te freinent t'aidera à mieux orienter ton énergie.",
+           lo:"Tu vis parfois tes émotions comme une interférence plutôt qu'une ressource. Pourtant elles portent une information utile : apprendre à t'en servir, plutôt qu'à les écarter, peut devenir un vrai moteur."},
+        RE:{hi:"Tu sais traverser les tempêtes émotionnelles sans te laisser emporter. Tu te calmes, tu canalises, et tu sais aussi apaiser les autres. Cette régulation est précieuse ; veille seulement à ne pas étouffer ce que tu ressens au nom du contrôle.",
+           mid:"Tu régules tes émotions de façon globalement efficace, avec des moments plus difficiles. Quelques stratégies simples, respiration, pause, recul, renforceront cette capacité quand la pression monte.",
+           lo:"Les émotions fortes mettent du temps à redescendre chez toi, et c'est éprouvant. Apprivoiser quelques techniques d'apaisement, à froid, te donnera plus de marge quand l'intensité revient."}
+      },
+      about:"Ce portrait s'appuie sur les modèles de l'intelligence émotionnelle de Mayer et Salovey et de Daniel Goleman. Il décrit des tendances et des compétences qui se développent, pas des vérités figées, et n'a aucune visée diagnostique. Les niveaux se lisent sur l'échelle interne du test."
+    },
+
+    qi:{
+      id:"qi", code:"QI", short:"Aptitudes cognitives", kind:"aptitude",
+      name:"Ton profil d'aptitudes",
+      tagline:"Un vrai test d'aptitude : logique, verbal, numérique et spatial, avec de bonnes réponses.",
+      meta:["Aptitudes cognitives","4 domaines","~10 min"],
+      minutes:"~10 min",
+      introTitle:"Mets tes aptitudes à l'épreuve.",
+      introLead:"Contrairement aux autres tests, ici il y a de bonnes réponses. Tu enchaînes des questions de logique, de raisonnement verbal, de calcul et de visualisation spatiale. Prends ton temps, réponds du mieux que tu peux. Ce profil est indicatif, ce n'est pas une mesure clinique de QI.",
+      order:["LO","VE","NU","SP"],
+      dims:{
+        LO:{name:"Raisonnement logique", sub:"suites, règles, déduction"},
+        VE:{name:"Raisonnement verbal", sub:"analogies, vocabulaire, intrus"},
+        NU:{name:"Raisonnement numérique", sub:"calcul, proportions, pourcentages"},
+        SP:{name:"Raisonnement spatial", sub:"figures, rotations, matrices"}
+      },
+      items:[
+        {id:"LO1",dim:"LO",t:"Quel nombre complète la suite : 2, 4, 8, 16, ?",options:["20","24","32","64"],correct:2},
+        {id:"LO2",dim:"LO",t:"Quel nombre complète la suite : 1, 4, 9, 16, ?",options:["20","25","24","36"],correct:1},
+        {id:"LO3",dim:"LO",t:"Si tous les A sont des B, et tous les B sont des C, alors :",options:["Tous les A sont des C","Tous les C sont des A","Aucun A n'est un C","On ne peut rien conclure"],correct:0},
+        {id:"VE1",dim:"VE",t:"Chaud est à froid ce que jour est à :",options:["matin","soleil","nuit","clair"],correct:2},
+        {id:"VE2",dim:"VE",t:"Quel mot est l'intrus dans cette liste ?",options:["rose","tulipe","chêne","marguerite"],correct:2},
+        {id:"VE3",dim:"VE",t:"Médecin est à hôpital ce que professeur est à :",options:["élève","école","cahier","savoir"],correct:1},
+        {id:"NU1",dim:"NU",t:"Un article coûte 80 € après une remise de 20 %. Quel était son prix initial ?",options:["96 €","100 €","88 €","120 €"],correct:1},
+        {id:"NU2",dim:"NU",t:"Quel nombre, divisé par 3, donne 7 ?",options:["18","21","24","27"],correct:1},
+        {id:"NU3",dim:"NU",t:"Combien font 15 % de 200 ?",options:["15","20","30","45"],correct:2},
+        {id:"SP1",dim:"SP",t:"Combien de points devrait contenir la figure manquante ?",
+          fig:'<svg viewBox="0 0 268 64" width="100%" height="64" role="img" aria-label="Suite de figures : 1 point, 2 points, 3 points, puis figure inconnue"><g>'
+            +'<rect x="3" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><circle cx="32" cy="32" r="5" fill="#1320CE"/>'
+            +'<rect x="71" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><circle cx="90" cy="32" r="5" fill="#1320CE"/><circle cx="110" cy="32" r="5" fill="#1320CE"/>'
+            +'<rect x="139" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><circle cx="158" cy="22" r="5" fill="#1320CE"/><circle cx="178" cy="22" r="5" fill="#1320CE"/><circle cx="168" cy="42" r="5" fill="#1320CE"/>'
+            +'<rect x="207" y="3" width="58" height="58" rx="8" fill="#F4ECFB" stroke="#7A4FB5" stroke-width="2" stroke-dasharray="5 4"/><text x="236" y="40" font-size="26" font-weight="700" fill="#7A4FB5" text-anchor="middle">?</text>'
+            +'</g></svg>',
+          options:["3","4","5","6"],correct:1},
+        {id:"SP2",dim:"SP",t:"Si on fait pivoter la flèche d'un quart de tour vers la droite, vers où pointe-t-elle ?",
+          fig:'<svg viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Flèche pointant vers le haut"><rect x="3" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><path d="M32 48 V20 M32 20 L24 28 M32 20 L40 28" fill="none" stroke="#1320CE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+          options:["Vers le haut","Vers la droite","Vers le bas","Vers la gauche"],correct:1},
+        {id:"SP3",dim:"SP",t:"Quelle figure est différente des trois autres ?",
+          fig:'<svg viewBox="0 0 268 64" width="100%" height="64" role="img" aria-label="Quatre figures : trois triangles pointant vers le haut, un vers le bas"><g fill="none" stroke="#2E8B82" stroke-width="3" stroke-linejoin="round">'
+            +'<rect x="3" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><path d="M32 18 L46 46 L18 46 Z" stroke="#2E8B82"/>'
+            +'<rect x="71" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><path d="M100 18 L114 46 L86 46 Z" stroke="#2E8B82"/>'
+            +'<rect x="139" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><path d="M168 46 L182 18 L154 18 Z" stroke="#2E8B82"/>'
+            +'<rect x="207" y="3" width="58" height="58" rx="8" fill="#FFFDF8" stroke="#D9CDB5" stroke-width="2"/><path d="M236 18 L250 46 L222 46 Z" stroke="#2E8B82"/>'
+            +'</g></svg>',
+          options:["La 1re","La 2e","La 3e","La 4e"],correct:2}
+      ],
+      result:{
+        kicker:"Test d'aptitude cognitive",
+        resultTitle:"Ton profil d'aptitudes",
+        scoreLabel:"Bonnes réponses",
+        lead:"Voici ta réussite sur chacun des quatre domaines, et un indice global. C'est un repère ludique de tes aptitudes, pas un quotient intellectuel clinique.",
+        dimLevels:[
+          {min:67,label:"Solide",tone:"high"},
+          {min:34,label:"Correct",tone:"mid"},
+          {min:0,label:"À renforcer",tone:"low"}
+        ],
+        levels:[
+          {min:80,label:"Profil très performant",tone:"high",text:"Tu enchaînes les bonnes réponses sur l'ensemble des domaines. Tu raisonnes vite et juste, avec une vraie polyvalence cognitive. Garde en tête qu'un test court reste un échantillon, mais le signal est net."},
+          {min:55,label:"Profil solide",tone:"high",text:"Tu obtiens de bons résultats, avec sans doute un ou deux domaines de prédilection. Une base cognitive fiable sur laquelle tu peux t'appuyer au quotidien."},
+          {min:30,label:"Profil équilibré",tone:"mid",text:"Tes réponses se répartissent de façon contrastée selon les domaines. Regarde lesquels te réussissent le mieux : ils pointent souvent vers tes façons préférées de raisonner."},
+          {min:0,label:"Profil à explorer",tone:"low",text:"Certaines questions t'ont sans doute déstabilisé. C'est normal, ce format ne reflète qu'une partie de l'intelligence, et l'entraînement change beaucoup les résultats. Regarde le domaine où tu t'en sors le mieux, c'est un point d'appui."}
+        ],
+        signpostTitle:"Comment lire ce résultat ?",
+        signpost:"<p>Ce test mesure quelques aptitudes de raisonnement sur un format court. Il ne remplace pas un bilan psychométrique réalisé par un(e) psychologue (WAIS, etc.), seul à même de produire un QI fiable. Vois-le comme un miroir de tes façons de raisonner, et un terrain de jeu pour les muscler.</p>"
+      },
+      about:"Ce test rassemble des questions d'aptitude de quatre familles classiques : logique, verbal, numérique et spatial. Chaque question a une bonne réponse. Le score reflète ta réussite sur ce format court et précis : c'est un repère indicatif, non un quotient intellectuel mesuré en conditions cliniques."
     }
 
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","brief","phq9","gad7","asrs","aq10","dys"];
+  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","schemas","qe","qi","brief","phq9","gad7","asrs","aq10","dys"];
   var SOON = [];
 
   // Version gratuite normalisée : 15 questions pour tous les tests self.
   var FREE_COUNT = 15;
   CATALOG.forEach(function(id){
     var t=TESTS[id];
-    if(t && t.kind!=="clinical"){ t.freeCount = Math.min(FREE_COUNT, t.items.length); }
+    if(t && t.kind!=="clinical" && t.kind!=="aptitude"){ t.freeCount = Math.min(FREE_COUNT, t.items.length); }
   });
 
   function band(v){ return v>=62?"hi":(v<=38?"lo":"mid"); }
   function bandLabel(v){ return v>=62?"élevé":(v<=38?"plus discret":"équilibré"); }
   function isClin(t){ return t && t.kind==="clinical"; }
+  function isApt(t){ return t && t.kind==="aptitude"; }
+  // tests "fixes" : pas de paywall ni version longue, on répond à tout, résultat direct
+  function isFixed(t){ return isClin(t) || isApt(t); }
   // palette : une couleur par dimension (évite le rendu monochrome)
   var DIMPAL=['#1320CE','#C2603A','#2E8B82','#7A4FB5','#C24A6B','#4E8A3A','#B8842A'];
   function dimColor(t,d){
@@ -2572,7 +2781,7 @@
     Object.keys(state.tests).forEach(function(id){
       var t=TESTS[id], s=state.tests[id];
       if(!t||!s||s.complete) return;
-      var lim = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
+      var lim = isFixed(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
       if(s.idx!=null && s.idx >= lim-1 && answeredCount(t,s,lim) > 0){ s.complete=true; changed=true; }
     });
     if(changed) save();
@@ -2617,6 +2826,22 @@
     return out;
   }
 
+  // ---------- SCORING APTITUDE (bonnes réponses) ----------
+  // l'index choisi est stocké en 1..N dans s.answers ; correct est 0-based.
+  // renvoie {dimPct:{d:%}, ok, tot, pct} pour le test d'aptitude.
+  function scoresApt(t, s){
+    var ok={},tot={},okAll=0,totAll=0;
+    t.order.forEach(function(d){ ok[d]=0; tot[d]=0; });
+    t.items.forEach(function(it){
+      tot[it.dim]++; totAll++;
+      var v=s.answers[it.id];
+      if(v!=null && (v-1)===it.correct){ ok[it.dim]++; okAll++; }
+    });
+    var dimPct={};
+    t.order.forEach(function(d){ dimPct[d]= tot[d]? Math.round(ok[d]/tot[d]*100) : 0; });
+    return {dimPct:dimPct, ok:okAll, tot:totAll, pct: totAll? Math.round(okAll/totAll*100) : 0};
+  }
+
   // ---------- RENDU EMPREINTE ----------
   function empreinte(el, t, sc, animate, labelFn){
     el.innerHTML="";
@@ -2640,11 +2865,11 @@
   // ---------- CATALOGUE ----------
   function statusOf(id){
     var t=TESTS[id], s=state.tests[id];
-    if(isClin(t)){
+    if(isFixed(t)){
       var cdone = s && answeredCount(t, s, t.items.length)===t.items.length;
       if(cdone) return {chip:"Terminé", cls:"done"};
       if(s && s.idx>0) return {chip:"En cours", cls:"prog"};
-      return {chip:"Gratuit", cls:"new"};
+      return {chip:isApt(t)?"Nouveau":"Gratuit", cls:"new"};
     }
     if(!s) return {chip:"Nouveau", cls:"new"};
     var freeDone = answeredCount(t, s, t.freeCount)===t.freeCount;
@@ -2680,7 +2905,10 @@
     besoins:{ic:'seed',   ac:'#4E8A3A', ti:'#ECF4E7', kick:'Besoins profonds'},
     mbti:   {ic:'grid',   ac:'#2C6FB5', ti:'#E8F0F9', kick:'Style cognitif'},
     pcm:    {ic:'chat',   ac:'#D2722E', ti:'#FBEFE2', kick:'Communication'},
-    hpi:    {ic:'wave',   ac:'#9B4070', ti:'#F8EAF1', kick:'Sensibilité'}
+    hpi:    {ic:'wave',   ac:'#9B4070', ti:'#F8EAF1', kick:'Sensibilité'},
+    schemas:{ic:'seed',   ac:'#7A4FB5', ti:'#F2ECFA', kick:'Schémas de vie'},
+    qe:     {ic:'heart',  ac:'#C24A6B', ti:'#FBEAEF', kick:'Émotions'},
+    qi:     {ic:'bolt',   ac:'#2C6FB5', ti:'#E8F0F9', kick:'Aptitudes'}
   };
   var GOARR='<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -2850,6 +3078,10 @@
   function reviewResults(id){
     curId=id; state.current=id; save();
     var t=T(), s=st();
+    if(isApt(t)){
+      if(answeredCount(t,s,t.items.length)===t.items.length){ showAptitude(); return; }
+      openTest(id); return; // test pas fini : reprise normale
+    }
     if(isClin(t)){
       if(answeredCount(t,s,t.items.length)===t.items.length){ showClinical(); return; }
       openTest(id); return; // dépistage pas fini : reprise normale
@@ -2865,8 +3097,11 @@
     curId=id; state.current=id; save();
     var t=T(), s=st();
 
-    // tests cliniques : pas de paywall, on reprend au bon endroit
-    if(isClin(t)){
+    // test d'aptitude : pas de paywall ni version longue, on reprend au bon endroit
+    if(isApt(t)){
+      if(answeredCount(t,s,t.items.length)===t.items.length){ showAptitude(); return; }
+      if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
+    } else if(isClin(t)){
       if(answeredCount(t,s,t.items.length)===t.items.length){ showClinical(); return; }
       if(s.idx>0){ show("s-quiz"); renderQuestion(); return; }
     } else {
@@ -2888,7 +3123,9 @@
     document.getElementById("intro-meta").innerHTML=metaHtml;
     document.getElementById("intro-title").textContent=t.introTitle;
     document.getElementById("intro-lead").textContent=t.introLead;
-    document.getElementById("intro-how").textContent= isClin(t)
+    document.getElementById("intro-how").textContent= isApt(t)
+      ? t.items.length+" questions avec, cette fois, de bonnes réponses : logique, verbal, numérique et spatial. Gratuit et sans inscription. À la fin, tu obtiens ton profil d'aptitudes et un indice global, indicatif et non clinique."
+      : isClin(t)
       ? "Ce test est un outil de repérage, gratuit et sans inscription. Il ne pose aucun diagnostic. À la fin, tu obtiens un résultat indicatif et des pistes pour en parler à un professionnel si besoin."
       : t.freeCount+" questions gratuites, sans inscription, pour un premier résultat. Crée ensuite un compte gratuit pour la version longue de "+t.items.length+" questions : portrait détaillé et pistes métiers, entièrement gratuits.";
 
@@ -2897,15 +3134,20 @@
       var pm=META[id]||{}; var pac=isClin(t)?'#5B6B72':(pm.ac||'#1320CE'); var pti=isClin(t)?'#EDF1F0':(pm.ti||'#F1ECDF');
       pv.style.setProperty('--pac',pac); pv.style.setProperty('--ptint',pti);
       var d0=t.items[0].dim, dname=t.dims[d0].name, q0=t.items[0].t;
-      var on=Math.min(4,t.scale.length), cells="";
-      for(var n=1;n<=t.scale.length;n++){ cells+='<span class="'+(n===on?"on":"")+'">'+n+'</span>'; }
-      pv.innerHTML='<span class="qptag">Aperçu</span><div class="qpk"><span class="d"></span>'+dname+'</div><div class="qpq">'+q0+'</div><div class="qps">'+cells+'</div><div class="qphint"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+      if(isApt(t)){
+        var aopts=(t.items[0].options||[]).map(function(o,oi){ return '<span class="'+(oi===0?"on":"")+'">'+esc(o)+'</span>'; }).join("");
+        pv.innerHTML='<span class="qptag">Aperçu</span><div class="qpk"><span class="d"></span>'+dname+'</div><div class="qpq">'+esc(q0)+'</div><div class="qps qpsapt">'+aopts+'</div><div class="qphint"><span>Une seule bonne réponse</span></div>';
+      } else {
+        var on=Math.min(4,t.scale.length), cells="";
+        for(var n=1;n<=t.scale.length;n++){ cells+='<span class="'+(n===on?"on":"")+'">'+n+'</span>'; }
+        pv.innerHTML='<span class="qptag">Aperçu</span><div class="qpk"><span class="d"></span>'+dname+'</div><div class="qpq">'+q0+'</div><div class="qps">'+cells+'</div><div class="qphint"><span>'+t.hint[0]+'</span><span>'+t.hint[1]+'</span></div>';
+      }
     }
 
     // choix version longue : seulement pour les tests non cliniques
     var il=document.getElementById("intro-long");
     if(il){
-      il.hidden=isClin(t);
+      il.hidden=isFixed(t);
       var ilc=document.getElementById("il-count"); if(ilc) ilc.textContent=t.items.length;
       var reg=document.getElementById("intro-longreg"); if(reg) reg.hidden=true;
       var em=document.getElementById("intro-reg-email"); if(em) em.value=state.email||"";
@@ -2917,20 +3159,44 @@
   // ---------- QUIZ ----------
   function renderQuestion(){
     var t=T(), s=st(), i=s.idx, it=t.items[i];
-    var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
+    var limit = isFixed(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
     var ac=dimColor(t, it.dim);
     document.getElementById("qdim").innerHTML = '<span class="qd"></span>'+t.dims[it.dim].name;
     document.getElementById("qtext").textContent = it.t;
-    document.getElementById("qhint-lo").textContent = t.hint[0];
-    document.getElementById("qhint-hi").textContent = t.hint[1];
+    document.getElementById("qhint-lo").textContent = t.hint ? t.hint[0] : "";
+    document.getElementById("qhint-hi").textContent = t.hint ? t.hint[1] : "";
     document.getElementById("pcount").textContent = "Question "+(i+1)+" / "+limit;
-    document.getElementById("pphase").textContent = isClin(t) ? "Dépistage" : (s.long ? "Version longue" : "15 gratuites");
+    document.getElementById("pphase").textContent = isApt(t) ? "Test d'aptitude" : (isClin(t) ? "Dépistage" : (s.long ? "Version longue" : "15 gratuites"));
     document.getElementById("pfill").style.width = ((i)/limit*100)+"%";
     document.getElementById("qback").style.visibility = i>0 ? "visible":"hidden";
 
     var scale=document.getElementById("scale");
     document.getElementById("s-quiz").style.setProperty('--qac', ac);
     scale.innerHTML="";
+
+    if(isApt(t)){
+      scale.className="scale aptscale";
+      if(it.fig){
+        var fig=document.createElement("div"); fig.className="aptfig"; fig.innerHTML=it.fig;
+        scale.appendChild(fig);
+      }
+      var opts=document.createElement("div"); opts.className="aptopts";
+      it.options.forEach(function(opt,oi){
+        var val=oi+1;
+        var b=document.createElement("button");
+        b.type="button";
+        b.className="aptopt"+(s.answers[it.id]===val?" sel":"");
+        var isSvg = String(opt).trim().charAt(0)==="<";
+        if(isSvg){ b.innerHTML=opt; } else { b.textContent=opt; }
+        b.setAttribute("aria-label","Réponse "+val);
+        b.onclick=function(){ choose(val); };
+        opts.appendChild(b);
+      });
+      scale.appendChild(opts);
+      return;
+    }
+
+    scale.className="scale";
     for(var k=1;k<=t.scale.length;k++){
       (function(val){
         var wrap=document.createElement("div");
@@ -2954,6 +3220,13 @@
   function choose(val){
     var t=T(), s=st(), it=t.items[s.idx];
     s.answers[it.id]=val; save();
+    var aopts=document.querySelectorAll("#scale .aptopt");
+    if(aopts.length){
+      aopts.forEach(function(o){o.classList.remove("sel");});
+      if(aopts[val-1]) aopts[val-1].classList.add("sel");
+      setTimeout(next,220);
+      return;
+    }
     var opts=document.querySelectorAll("#scale .nopt");
     opts.forEach(function(o){o.classList.remove("sel");});
     if(opts[val-1]) opts[val-1].classList.add("sel");
@@ -2967,12 +3240,13 @@
 
   function next(){
     var t=T(), s=st();
-    var limit = isClin(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
+    var limit = isFixed(t) ? t.items.length : (s.long ? t.items.length : t.freeCount);
     if(s.idx < limit-1){
       s.idx++; save(); renderQuestion();
     } else {
       s.complete=true; save();                                  // résultat atteint : test « passé » (compté pour la Synthèse)
-      if(isClin(t)){ showClinical(); }                          // dépistage : résultat direct
+      if(isApt(t)){ showAptitude(); }                           // aptitude : profil direct
+      else if(isClin(t)){ showClinical(); }                     // dépistage : résultat direct
       else if(!s.long){ runNarrative(t.freeCount, showSimple); } // 15 gratuites : narration gratuite (aperçu)
       else { runNarrative(t.items.length, function(){ runAction(showFull); }); } // version longue : portrait complet + pistes métiers, gratuits
     }
@@ -3389,6 +3663,32 @@
     show("s-clinical");
   }
 
+  // ---------- RÉSULTAT APTITUDE (réutilise l'écran clinique) ----------
+  function showAptitude(){
+    var t=T(), s=st(), R=t.result;
+    document.getElementById("cl-safety").innerHTML="";
+    document.getElementById("cl-kicker").textContent = R.kicker || "Test d'aptitude";
+    document.getElementById("cl-title").textContent  = R.resultTitle || ("Ton profil, "+t.name.toLowerCase()+".");
+    document.getElementById("cl-lead").textContent   = R.lead || "";
+
+    var res=scoresApt(t, s);
+    function dimLabel(d){ return pickLevel(R.dimLevels, res.dimPct[d]).label; }
+    empreinte(document.getElementById("cl-empreinte"), t, res.dimPct, true, dimLabel);
+
+    var bands=document.getElementById("cl-bands"); bands.innerHTML="";
+    var glv=pickLevel(R.levels, res.pct);
+    var g=document.createElement("div"); g.className="clband";
+    g.innerHTML='<div class="crow"><h3>'+glv.label+'</h3><span class="lvl t-'+glv.tone+'">Indice global '+res.pct+'%</span></div>'+
+      '<p>'+glv.text+'</p><div class="aptscore">'+res.ok+(res.ok>1?' bonnes réponses':' bonne réponse')+' sur '+res.tot+'</div>';
+    bands.appendChild(g);
+
+    var sp=document.getElementById("cl-signpost"); sp.className="signpost";
+    sp.innerHTML='<h3>'+(R.signpostTitle||"Comment lire ce résultat ?")+'</h3>'+R.signpost;
+
+    document.getElementById("cl-disclaimer").innerHTML = "<b>À propos de ce test.</b> "+t.about;
+    show("s-clinical");
+  }
+
   // ---------- PARTAGE ----------
   function share(){
     var t=T(), s=st();
@@ -3448,20 +3748,23 @@
 
   // ---------- CARTE INTÉRIEURE (graphe d'accueil) ----------
   var FACETS={
-    perso:{name:"Qui tu es",   hex:"#1320CE", tHex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm"]},
+    perso:{name:"Qui tu es",   hex:"#1320CE", tHex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm","schemas","qi"]},
     aspir:{name:"Ce qui te meut",hex:"#FD6936", tHex:"#B83E0C", pos:[280,135], kicker:"Aspirations", tests:["valeurs","besoins","drivers"]},
     carr: {name:"Où tu vas",    hex:"#2E8B6E", tHex:"#1F6B53", pos:[120,405], kicker:"Carrière",    tests:["riasec","caas","grit"]},
-    equi: {name:"Ton équilibre",hex:"#C2892B", tHex:"#8A5E12", pos:[280,405], kicker:"Équilibre",   tests:["brief","phq9","gad7","asrs","aq10","dys"]}
+    equi: {name:"Ton équilibre",hex:"#C2892B", tHex:"#8A5E12", pos:[280,405], kicker:"Équilibre",   tests:["qe","brief","phq9","gad7","asrs","aq10","dys"]}
   };
   // libellés courts + nombre de dimensions pour la carte (les longs restent dans TESTS)
   var GMETA={
     bigfive:{name:"Big Five",  tag:"Les cinq grands traits qui dessinent ta personnalité.",dims:5},
     mbti:   {name:"Profil MBTI",tag:"Ton style cognitif, version repensée.",dims:4},
-    hpi:    {name:"Intensités", tag:"La forme particulière de ton intensité intérieure.",dims:5},
+    hpi:    {name:"Hypersensibilités", tag:"La forme particulière de ton intensité intérieure.",dims:5},
     pcm:    {name:"Process Com",tag:"Ta façon de communiquer et de réagir.",dims:6},
+    schemas:{name:"Schémas",   tag:"Les scénarios précoces qui se rejouent en toi.",dims:5},
+    qi:     {name:"Aptitudes", tag:"Logique, verbal, numérique et spatial, avec de vraies réponses.",dims:4},
+    qe:     {name:"Émotionnel",tag:"Reconnaître, comprendre et réguler les émotions.",dims:4},
     valeurs:{name:"Valeurs",   tag:"Ce qui compte vraiment pour toi, et te guide.",dims:5},
     besoins:{name:"Besoins",   tag:"Les moteurs profonds derrière tes décisions.",dims:5},
-    drivers:{name:"Messages",  tag:"Les automatismes qui te poussent sous pression.",dims:5},
+    drivers:{name:"Moteurs",   tag:"Les automatismes qui te poussent sous pression.",dims:5},
     riasec: {name:"RIASEC",    tag:"Tes domaines d'intérêt professionnels.",dims:6},
     caas:   {name:"Adaptabilité",tag:"Ta capacité à rebondir et t'adapter dans ton parcours.",dims:4},
     grit:   {name:"Ténacité",  tag:"Ta force à tenir l'effort vers ce qui compte.",dims:2},
@@ -3470,7 +3773,7 @@
     gad7:   {name:"Anxiété",   tag:"Un repère sur ton niveau d'anxiété.",dims:1},
     asrs:   {name:"Attention", tag:"Repère court sur l'attention et l'agitation.",dims:1},
     aq10:   {name:"Spectre aut.",tag:"Repère court sur le fonctionnement autistique.",dims:1},
-    dys:    {name:"Dyslexie",  tag:"Un repère sur la lecture chez l'adulte.",dims:1}
+    dys:    {name:"Troubles dys",tag:"Un repère sur la lecture et l'écrit chez l'adulte.",dims:1}
   };
   // infos riches affichées dans la fiche d'un test (modèle scientifique, ce que tu obtiens, durée · questions)
   var GINFO={
@@ -3490,6 +3793,18 @@
       sci:"Le modèle Process Communication de Taibi Kahler, utilisé par la NASA. 6 types : Empathique, Travaillomane, Persévérant, Rêveur, Promoteur, Rebelle.",
       gains:["Ta base et ta phase parmi les 6 types PCM","Ta façon préférée de communiquer","Ce qui te motive, et ce qui te met sous stress","Comment mieux te faire comprendre des autres"],
       min:"8 min",q:30},
+    schemas:{model:"Schéma-thérapie · Jeffrey Young",
+      sci:"Inspiré de la schéma-thérapie de Jeffrey Young, qui décrit les schémas précoces inadaptés regroupés en 5 grands domaines.",
+      gains:["Tes schémas dominants sur 5 grands domaines","Les scénarios qui se rejouent dans tes liens","Ce qui s'est installé tôt et te teinte encore","Des pistes pour t'en distancier en douceur"],
+      min:"12 min",q:20},
+    qi:{model:"Aptitudes cognitives · logique, verbal, numérique, spatial",
+      sci:"Un vrai test d'aptitude : chaque question a une bonne réponse, sur quatre familles classiques de raisonnement.",
+      gains:["Ta réussite sur 4 domaines de raisonnement","Un indice global indicatif (non clinique)","Tes domaines de prédilection cognitive","Un terrain de jeu pour muscler ton raisonnement"],
+      min:"10 min",q:12},
+    qe:{model:"Intelligence émotionnelle · Mayer-Salovey · Goleman",
+      sci:"Inspiré des modèles d'intelligence émotionnelle de Mayer et Salovey et de Daniel Goleman, sur 4 dimensions.",
+      gains:["Ton profil émotionnel sur 4 dimensions","Ta conscience de toi et des autres","Ta façon d'utiliser et de réguler tes émotions","Des leviers concrets pour la développer"],
+      min:"12 min",q:20},
     valeurs:{model:"Modèle Schwartz · 10 valeurs universelles",
       sci:"Le modèle de Schwartz décrit 10 valeurs universelles : autonomie, sécurité, réussite, bienveillance, et d'autres.",
       gains:["Tes 3 valeurs cardinales","Ce qui oriente vraiment tes choix de vie","Les tensions possibles entre tes valeurs","Comment aligner tes décisions sur ce qui compte"],
@@ -3550,7 +3865,7 @@
     var t=TESTS[id], s=state.tests[id];
     if(!t||!s) return false;
     if(s.complete) return true; // source de vérité : l'utilisateur a vu son résultat
-    if(isClin(t)) return answeredCount(t,s,t.items.length)===t.items.length;
+    if(isFixed(t)) return answeredCount(t,s,t.items.length)===t.items.length;
     return answeredCount(t,s,t.freeCount)===t.freeCount;
   }
   function gFacetTests(fid){ return FACETS[fid].tests.filter(function(id){return !!TESTS[id];}); }
@@ -3568,7 +3883,7 @@
 
   // ----- carte à 3 modes : Carte / Radar / Potentiel -----
   var GORDER=['perso','aspir','carr','equi'];
-  var GRADAR=['bigfive','mbti','hpi','pcm','valeurs','besoins','drivers','riasec','caas','grit','brief'];
+  var GRADAR=['bigfive','mbti','hpi','pcm','schemas','qe','valeurs','besoins','drivers','riasec','caas','grit','brief'];
   var PISTES={
     perso:["Métiers de l'humain","Création & design","Communication"],
     aspir:["Entreprendre","Projets à impact","Piloter une équipe"],
@@ -3584,7 +3899,7 @@
   function gTrait(id){
     var t=TESTS[id], s=state.tests[id];
     if(!t||!s||!gDone(id)) return {done:false};
-    if(isClin(t)) return {done:true, clinical:true, label:gName(id), pos:.5};
+    if(isFixed(t)) return {done:true, clinical:true, label:gName(id), pos:.5};
     var lim = (t.freeCount!=null? t.freeCount : t.items.length);
     var sc = scores(t, s, lim);
     var dom=t.order[0], best=-1;
