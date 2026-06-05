@@ -491,7 +491,6 @@
   #s-home.fresh #homeCarteHead,
   #s-home.fresh .gr-hint,
   #s-home.fresh #grSign,
-  #s-home.fresh #homeReflect,
   #s-home.fresh #homeCharlesCta{display:none}
   #s-home:not(.fresh) #homeInvite,
   #s-home:not(.fresh) #homeInviteCap{display:none}
@@ -523,31 +522,6 @@
   .ob-skip{background:none;border:0;color:var(--ink-soft);font-family:inherit;font-size:13px;cursor:pointer;text-decoration:underline;padding:6px 2px}
   @media(max-width:520px){.ob-q{font-size:22px}}
 
-  /* ===== Entrée + panneau réflexion (se poser des questions) ===== */
-  .reflect-entry{display:flex;align-items:center;gap:14px;width:100%;max-width:560px;margin:18px auto 4px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;text-align:left;cursor:pointer;font-family:inherit;box-shadow:0 12px 30px rgba(20,18,8,.05);transition:border-color .15s,transform .08s}
-  .reflect-entry:hover{border-color:#D4C7AC}
-  .reflect-entry:active{transform:scale(.995)}
-  .reflect-entry .re-ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(19,32,206,.08);color:var(--blue)}
-  .reflect-entry .re-tx{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
-  .reflect-entry .re-tx b{font-family:var(--head);font-size:15.5px;color:var(--ink);font-weight:800}
-  .reflect-entry .re-tx span{font-size:13px;color:var(--ink-soft)}
-  .reflect-entry .re-go{flex:0 0 auto;color:var(--ink-soft);font-size:18px}
-  .rf-intro{color:var(--ink-soft);font-size:15px;max-width:34em;margin-bottom:8px}
-  .rf-empty{background:rgba(19,32,206,.04);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink-soft);font-size:14px;max-width:36em}
-  .rf-facet{margin-top:26px}
-  .rf-facet:first-of-type{margin-top:14px}
-  .rf-fhead{display:flex;align-items:center;gap:9px;margin-bottom:4px}
-  .rf-fdot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
-  .rf-fname{font-family:var(--head);font-weight:800;font-size:17px;color:var(--ink)}
-  .rf-fkick{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px 20px}
-  .rf-q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:12px;box-shadow:0 10px 26px rgba(20,18,8,.04)}
-  .rf-q p{font-family:var(--head);font-weight:700;font-size:15px;color:var(--ink);margin-bottom:9px;line-height:1.35}
-  .rf-q textarea{width:100%;min-height:64px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:14.5px;color:var(--ink);background:#FFFEFB;line-height:1.5}
-  .rf-q textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(19,32,206,.10)}
-  .rf-q textarea::placeholder{color:#A9A28F}
-  .rf-saved{display:block;margin-top:6px;font-size:11.5px;font-weight:700;color:var(--green);opacity:0;transition:opacity .2s}
-  .rf-saved.on{opacity:1}
-
   /* ===== Choix version longue sur l'intro ===== */
   .intro-long{margin-top:16px}
   .il-or{display:flex;align-items:center;gap:12px;color:var(--ink-soft);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:4px 0 14px}
@@ -572,6 +546,11 @@
   .nlead{font-size:16px;color:var(--ink);line-height:1.6}
   .nlead p{margin:0 0 9px} .nlead p:last-child{margin-bottom:0}
   .nlead b{color:var(--ink)}
+  /* bilan détaillé : chaque section séparée par un filet, façon bilan de compétences */
+  .nlead h2{font-family:var(--serif);font-size:19px;font-weight:800;letter-spacing:-.2px;color:var(--ink);margin:22px 0 9px;padding-top:18px;border-top:1px solid var(--line)}
+  .nlead h2:first-child{margin-top:0;padding-top:0;border-top:0}
+  .nlead h3{font-family:var(--head);font-size:15.5px;font-weight:800;color:var(--ink);margin:15px 0 6px}
+  .nlead ul{margin:2px 0 11px;padding-left:19px} .nlead li{margin:0 0 5px;line-height:1.5}
   .nsec{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px 16px 14px 18px;position:relative;overflow:hidden}
   .nsec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nac)}
   .nsec-h{display:flex;align-items:center;gap:11px;margin-bottom:11px}
@@ -683,15 +662,6 @@
     <!-- ENTRÉE SYNTHÈSE : le produit payant, lecture croisée de tous les tests -->
     <section class="card hp-cont" id="homeSynthese" hidden style="margin-top:18px;text-align:left"></section>
 
-    <!-- ENTRÉE RÉFLEXION : se poser des questions à soi-même -->
-    <button type="button" class="reflect-entry" id="homeReflect" onclick="App.openReflect()">
-      <span class="re-ic" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5l1-3.6L15.4 5.5a1.8 1.8 0 0 1 2.5 0l.6.6a1.8 1.8 0 0 1 0 2.5L8.1 19l-3.6 1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 7.1l2.6 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </span>
-      <span class="re-tx"><b>Te poser des questions</b><span>Des questions guidées pour réfléchir sur toi, à ton rythme.</span></span>
-      <span class="re-go" aria-hidden="true">→</span>
-    </button>
-
     <!-- CTA : décrypter les résultats avec Charles -->
     <section class="cta-c" id="homeCharlesCta">
       <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
@@ -714,14 +684,6 @@
     </p>
   </section>
 
-  <!-- ÉCRAN RÉFLEXION : se poser des questions à soi-même -->
-  <section class="screen" id="s-reflect">
-    <button class="crumb" onclick="App.openHome()">‹ Retour à ma carte</button>
-    <span class="kicker"><span class="kd"></span>Te poser des questions</span>
-    <h1>Réfléchis sur <span class="hl">toi</span>.</h1>
-    <p class="rf-intro">Des questions guidées, reliées aux parties de toi que tu as déjà explorées. Écris ce qui te vient, c'est gardé pour toi sur cet appareil. Reviens quand tu veux.</p>
-    <div id="reflect-body"></div>
-  </section>
 
   <!-- ÉCRAN 0b : CATALOGUE EN LISTE (repli) -->
   <section class="screen" id="s-list">
@@ -3689,9 +3651,36 @@
   }
 
   // signature de l'ensemble des tests passés : sert de clé de cache du fil rouge LLM
-  function synthKey(){ return synthDoneIds().slice().sort().join(','); }
+  // 'b2' = version du format de bilan : bumper invalide les bilans courts en cache
+  // et force une régénération au format détaillé. Inclut aussi le profil (le ton
+  // et les pistes en dépendent), pour régénérer si l'utilisateur change de profil.
+  function synthKey(){
+    var p=state.profile||{}, ptag=(p.for||'-')+'/'+(p.segment||'-')+'/'+(p.goal||'-');
+    return 'b2|'+ptag+'|'+synthDoneIds().slice().sort().join(',');
+  }
 
-  // résumé textuel envoyé au LLM pour rédiger le fil rouge cross-tests
+  // consigne de format : un bilan long et structuré, façon bilan de compétences.
+  // Titres adaptés à la perspective (soi / accompagnant). Le backend honore ces
+  // sections (testé) et produit une réponse markdown multi-sections détaillée.
+  function synthFormatInstr(){
+    var other = state.profile && state.profile.for==='other';
+    var secs = other ? [
+      "Synthèse générale","Son fil rouge","Sa personnalité en détail",
+      "Ses moteurs et ses valeurs","Ses forces","Ses points de vigilance",
+      "Ses environnements idéaux","Pistes d'orientation et de carrière",
+      "Prochaines étapes pour l'accompagner"
+    ] : [
+      "Synthèse générale","Ton fil rouge","Ta personnalité en détail",
+      "Tes moteurs et tes valeurs","Tes forces","Tes points de vigilance",
+      "Tes environnements idéaux","Pistes d'orientation et de carrière",
+      "Tes prochaines étapes"
+    ];
+    return "\n\nFORMAT ATTENDU, TRÈS IMPORTANT : rédige un bilan complet et très détaillé, dans l'esprit d'un bilan de compétences professionnel (long, riche, nuancé, plusieurs pages). Structure ta réponse avec un titre markdown '## ' pour chacune de ces sections, exactement dans cet ordre :\n"
+      + secs.map(function(s){ return "## "+s; }).join("\n")
+      + "\nPour chaque section, écris plusieurs paragraphes nourris (et des listes à puces quand c'est pertinent), avec des exemples concrets et des recommandations actionnables, en t'appuyant fidèlement sur les scores ci-dessus. N'invente aucun chiffre. Sois généreux en détails et en nuances.";
+  }
+
+  // résumé textuel envoyé au LLM pour rédiger le bilan cross-tests détaillé
   function synthSummary(d){
     var lines=[];
     var pl=profileLine();
@@ -3702,13 +3691,13 @@
     });
     if(d.fils.length) lines.push('Traits dominants : '+d.fils.map(function(f){return f.label+' '+f.score+'/100';}).join(', '));
     if(d.reflectCount>0) lines.push(d.reflectCount+' réflexion(s) personnelle(s) écrite(s) par la personne.');
-    return lines.join('\n');
+    return lines.join('\n') + synthFormatInstr();
   }
 
   // couche LLM : rédige le "fil rouge" cross-tests (prose courte). Repli => "" => gabarit déterministe.
   function generateSynthese(d){
     var ctrl=("AbortController" in window)?new AbortController():null;
-    var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 45000);
+    var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 70000); // bilan long => plus de marge
     return fetch(AI_URL,{
       method:"POST", headers:{"Content-Type":"application/json"},
       body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Audit de personnalité, d'aspiration et de carrière (cross-tests)", summary:synthSummary(d), mode:"synthesis"}),
@@ -3734,12 +3723,13 @@
     }
     // sinon on (re)génère : loader, puis rendu avec le fil rouge LLM (ou repli déterministe)
     var d=buildSynthese();
-    startGenLoader("On relie tes tests", [
+    startGenLoader("On rédige ton bilan", [
       "On rassemble tes "+d.nTests+" tests...",
       "On cherche le fil rouge entre tes dimensions...",
       "On croise tes traits les plus marquants...",
+      "On détaille tes forces et tes points de vigilance...",
       "On en déduit des directions de carrière...",
-      "On rédige ta lecture d'ensemble..."
+      "On rédige ton bilan complet, section par section..."
     ]);
     generateSynthese(d).then(function(md){
       stopGenLoader();
@@ -3821,7 +3811,7 @@
     var lead=document.createElement('div'); lead.className='card'; lead.style.marginTop='0';
     if(md && md.trim()){
       // fil rouge rédigé par le LLM, à partir des vrais scores cross-tests
-      lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ce qui relie tout</span><div class="nlead" style="margin:0">'+mdToHtml(md)+'</div>';
+      lead.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Ton bilan détaillé</span><div class="nlead" style="margin:0">'+mdToHtml(md)+'</div>';
     } else {
       // repli déterministe : on tisse une phrase à partir des traits dominants
       var names=d.fils.map(function(f){return f.label;}), phrase;
@@ -3842,7 +3832,7 @@
       var rows=d.fils.map(function(f){
         return '<div class="crow"><span class="cbadge">&#10022;</span><div class="cmain"><div class="ctop"><span class="cname">'+esc(f.label)+'</span><span class="cpct" style="color:var(--blue)">'+f.score+'%</span></div><p class="csub">'+esc(f.facet)+' · '+esc(f.testName)+'</p><div class="ctrack"><div class="cfill" data-w="'+f.score+'" style="background:var(--blue)"></div></div></div></div>';
       }).join('');
-      fr.innerHTML='<h2 class="secttl">Ton fil rouge</h2><p class="sectsub">Les traits les plus marqués, tous tests confondus.</p>'+rows;
+      fr.innerHTML='<h2 class="secttl">Tes traits dominants, en un coup d\'œil</h2><p class="sectsub">Les scores les plus marqués, tous tests confondus.</p>'+rows;
       host.appendChild(fr);
     }
 
@@ -4086,81 +4076,6 @@
   // ---------- RÉFLEXION : se poser des questions à soi-même ----------
   // Questions pré-écrites, rattachées aux 4 facettes. N'apparaissent que pour
   // les facettes déjà révélées (au moins un test passé). Réponses en localStorage.
-  var REFLECT={
-    perso:[
-      {id:"perso1", q:"Quand te sens-tu le plus toi-même ?"},
-      {id:"perso2", q:"Quelle facette de ta personnalité montres-tu rarement aux autres ?"},
-      {id:"perso3", q:"Qu'est-ce qui te ressource vraiment après une journée difficile ?"},
-      {id:"perso4", q:"Quelle qualité aimerais-tu qu'on remarque davantage chez toi ?"}
-    ],
-    aspir:[
-      {id:"aspir1", q:"Qu'est-ce qui te donne de l'énergie sans que personne n'ait à te le demander ?"},
-      {id:"aspir2", q:"Quelle valeur refuserais-tu de sacrifier, même sous pression ?"},
-      {id:"aspir3", q:"À quel moment récent t'es-tu senti vraiment aligné avec toi-même ?"},
-      {id:"aspir4", q:"Si tu avais une journée entièrement libre, à quoi la consacrerais-tu ?"}
-    ],
-    carr:[
-      {id:"carr1", q:"Quel problème aimerais-tu contribuer à résoudre dans ta vie ?"},
-      {id:"carr2", q:"Dans quel type d'environnement donnes-tu le meilleur de toi ?"},
-      {id:"carr3", q:"Quelle compétence aimerais-tu vraiment développer cette année ?"},
-      {id:"carr4", q:"Dans 5 ans, qu'est-ce qui te ferait dire que tu as pris le bon chemin ?"}
-    ],
-    equi:[
-      {id:"equi1", q:"Qu'est-ce qui t'épuise le plus en ce moment ?"},
-      {id:"equi2", q:"De quoi as-tu besoin pour te sentir en équilibre ?"},
-      {id:"equi3", q:"Quel signal t'indique que tu en fais trop ?"},
-      {id:"equi4", q:"Qu'est-ce qui t'aide à reprendre pied quand tout déborde ?"}
-    ]
-  };
-
-  function openReflect(){ renderReflect(); show("s-reflect"); }
-
-  function renderReflect(){
-    var body=document.getElementById('reflect-body');
-    if(!body) return;
-    body.innerHTML='';
-    var any=false;
-    GORDER.forEach(function(fid){
-      if(gFacetDone(fid)===0) return;       // facette non révélée : on saute
-      var F=FACETS[fid], qs=REFLECT[fid]; if(!qs) return;
-      any=true;
-      var sec=document.createElement('div'); sec.className='rf-facet';
-      var head=document.createElement('div'); head.className='rf-fhead';
-      var dot=document.createElement('span'); dot.className='rf-fdot'; dot.style.background=F.hex; head.appendChild(dot);
-      var nm=document.createElement('span'); nm.className='rf-fname'; nm.textContent=F.name; head.appendChild(nm);
-      sec.appendChild(head);
-      var kick=document.createElement('p'); kick.className='rf-fkick'; kick.textContent=F.kicker; sec.appendChild(kick);
-      qs.forEach(function(item){
-        var card=document.createElement('div'); card.className='rf-q';
-        var p=document.createElement('p'); p.textContent=item.q; card.appendChild(p);
-        var ta=document.createElement('textarea');
-        ta.setAttribute('rows','2');
-        ta.placeholder='Écris ce qui te vient…';
-        ta.value=(state.reflect && state.reflect[item.id]) || '';
-        var saved=document.createElement('span'); saved.className='rf-saved'; saved.textContent='Enregistré ✓';
-        var tmr=null;
-        ta.addEventListener('input',function(){
-          if(!state.reflect) state.reflect={};
-          var v=ta.value.trim();
-          if(v) state.reflect[item.id]=ta.value; else delete state.reflect[item.id];
-          save();
-          saved.classList.add('on');
-          if(tmr) clearTimeout(tmr);
-          tmr=setTimeout(function(){ saved.classList.remove('on'); }, 1400);
-        });
-        card.appendChild(ta);
-        card.appendChild(saved);
-        sec.appendChild(card);
-      });
-      body.appendChild(sec);
-    });
-    if(!any){
-      var e=document.createElement('div'); e.className='rf-empty';
-      e.innerHTML='Passe un premier test pour débloquer tes questions de réflexion. Elles s\'ouvrent au fur et à mesure que ta carte se révèle.';
-      body.appendChild(e);
-    }
-  }
-
   document.getElementById('grBack').onclick=gCloseFocus;
   document.getElementById('grScrim').onclick=gCloseSheet;
   Array.prototype.forEach.call(document.querySelectorAll('.gr-mode'),function(b){
@@ -4183,7 +4098,7 @@
     pay:pay,share:share,saveAccount:saveAccount,reset:reset,
     setGraphMode:setGraphMode,resumeLast:resumeLast,
     obPick:obPick,obBack:obBack,obSkip:obSkip,
-    openSynthese:openSynthese,openReflect:openReflect};
+    openSynthese:openSynthese};
 
   resume();
 })();
