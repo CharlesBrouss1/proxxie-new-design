@@ -361,26 +361,116 @@ const Results = ({ results, onRestart }) => {
   );
 };
 
+// Likert 1-5 en mots · pour rendre les écarts lisibles dans la comparaison.
+const LIKERT_WORDS = ["", "pas du tout", "plutôt non", "moyen", "plutôt oui", "tout à fait"];
+
+// Une barre 0-100 légendée · réutilisée pour parent et ado dans chaque pilier.
+const DualBar = ({ label, value, color }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+    <span style={{ width: 104, fontSize: 12, color: "var(--c-muted)", flexShrink: 0 }}>{label}</span>
+    <div style={{ flex: 1, height: 9, background: "var(--c-cream)", borderRadius: 5, overflow: "hidden" }}>
+      <div style={{ width: value + "%", height: "100%", background: color, transition: "width .8s cubic-bezier(.2,.8,.2,1)" }} />
+    </div>
+    <span style={{ width: 30, textAlign: "right", fontSize: 12.5, fontWeight: 700, color: color, fontFamily: "var(--font-num)" }}>{value}</span>
+  </div>
+);
+
 const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
   const parentResults = computeResults(parentAnswers);
   const teenResults = computeResults(teenAnswers);
   const gapTotal = Math.abs(parentResults.total - teenResults.total);
+
+  const pillars = [
+    { code: "A", meta: TYPE_META.A, p: parentResults.a, t: teenResults.a },
+    { code: "B", meta: TYPE_META.B, p: parentResults.b, t: teenResults.b },
+    { code: "C", meta: TYPE_META.C, p: parentResults.c, t: teenResults.c },
+  ];
+
+  const pillarPrompt = (gap) => {
+    const g = Math.abs(gap);
+    if (g <= 8) return "Vous voyez ce point de la même façon. Bonne base pour avancer.";
+    if (gap > 0) return parentName + " t'a sous-estimé ici. Qu'est-ce qui te rend solide sur ce pilier, selon toi ?";
+    return parentName + " te voyait plus à l'aise ici. Où est l'écart entre ce que tu ressens et ce qu'il ou elle perçoit ?";
+  };
+
+  // Points de finesse · les items où la prédiction parent et la réponse ado
+  // divergent le plus. C'est la matière concrète d'une conversation.
+  const itemDiffs = QUESTIONS.map((q, idx) => ({
+    q: q.q,
+    type: q.type,
+    p: parentAnswers[idx] || 0,
+    t: teenAnswers[idx] || 0,
+  })).filter((x) => x.p > 0 && x.t > 0);
+  const divergences = [...itemDiffs]
+    .sort((x, y) => Math.abs(y.p - y.t) - Math.abs(x.p - x.t))
+    .slice(0, 3)
+    .filter((x) => Math.abs(x.p - x.t) >= 1);
+
   return (
-    <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 30 }}>
-      <h2 style={{ fontSize: 20, marginBottom: 18 }}>Comparaison avec la prédiction parent</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-        <div style={{ padding: 18, background: "var(--c-cream-light, #FAF6EE)", borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{parentName} pense</div>
-          <div style={{ fontSize: 32, fontWeight: 700, color: "var(--c-ink)", fontFamily: "var(--font-display)" }}>{parentResults.total}<span style={{ fontSize: 14, color: "var(--c-muted)" }}>/100</span></div>
+    <div style={{ marginBottom: 30 }}>
+      {/* En-tête global */}
+      <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 18 }}>
+        <h2 style={{ fontSize: 20, marginBottom: 6 }}>Ce que {parentName} avait deviné · ce que tu réponds</h2>
+        <p style={{ fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55, marginBottom: 20 }}>
+          Pas un jugement, un point de départ pour parler. Regardez d'abord les écarts les plus grands.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+          <div style={{ padding: 18, background: "var(--c-cream-light, #FAF6EE)", borderRadius: 12 }}>
+            <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{parentName} pensait</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: "var(--c-ink)", fontFamily: "var(--font-display)" }}>{parentResults.total}<span style={{ fontSize: 14, color: "var(--c-muted)" }}>/100</span></div>
+          </div>
+          <div style={{ padding: 18, background: "rgba(253,105,54,.08)", borderRadius: 12 }}>
+            <div style={{ fontSize: 12, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Toi, pour de vrai</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: "#C2410C", fontFamily: "var(--font-display)" }}>{teenResults.total}<span style={{ fontSize: 14 }}>/100</span></div>
+          </div>
         </div>
-        <div style={{ padding: 18, background: "rgba(253,105,54,.08)", borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Tu réponds</div>
-          <div style={{ fontSize: 32, fontWeight: 700, color: "#C2410C", fontFamily: "var(--font-display)" }}>{teenResults.total}<span style={{ fontSize: 14 }}>/100</span></div>
+        <p style={{ marginTop: 16, fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55 }}>
+          Écart global de <strong>{gapTotal} points</strong>. {gapTotal <= 10 ? "Vos visions sont proches, c'est plutôt rare." : gapTotal <= 25 ? "Écart modéré · les détails ci-dessous montrent où." : "Écart important · une vraie matière à discussion."}
+        </p>
+      </div>
+
+      {/* Détail pilier par pilier */}
+      <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 18 }}>
+        <h3 style={{ fontSize: 17, marginBottom: 18, color: "var(--c-ink)" }}>Pilier par pilier</h3>
+        <div style={{ display: "grid", gap: 22 }}>
+          {pillars.map((row) => {
+            const gap = row.t - row.p;
+            const sign = gap > 0 ? "+" : "";
+            const aligned = Math.abs(gap) <= 8;
+            return (
+              <div key={row.code}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                  <span style={{ width: 26, height: 26, borderRadius: 7, background: row.meta.c, color: "white", textAlign: "center", lineHeight: "26px", fontWeight: 700, fontFamily: "var(--font-display)", fontSize: 13 }}>{row.code}</span>
+                  <strong style={{ color: "var(--c-ink)", fontSize: 15 }}>{row.meta.l}</strong>
+                  <span style={{ marginLeft: "auto", fontSize: 13, fontWeight: 700, color: aligned ? "#0E7490" : row.meta.c }}>{aligned ? "aligné" : sign + gap + " pts"}</span>
+                </div>
+                <DualBar label={parentName + " pensait"} value={row.p} color="#9CA3AF" />
+                <DualBar label="Toi" value={row.t} color={row.meta.c} />
+                <p style={{ fontSize: 13, color: "var(--c-muted)", lineHeight: 1.5, marginTop: 8 }}>{pillarPrompt(gap)}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
-      <p style={{ marginTop: 18, fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55 }}>
-        Écart de <strong>{gapTotal} points</strong>. {gapTotal <= 10 ? "Vous voyez à peu près la même chose, c'est rare." : gapTotal <= 25 ? "Écart modéré · à creuser sur quels piliers exactement." : "Écart important · vraie occasion de discuter ce que chacun voit différemment."}
-      </p>
+
+      {/* Points de finesse · plus grands écarts item par item */}
+      {divergences.length > 0 && (
+        <div style={{ background: "linear-gradient(160deg, #FFF7ED, #FAF6EE)", borderRadius: 20, padding: 28, border: "1px solid #FED7AA" }}>
+          <h3 style={{ fontSize: 17, marginBottom: 6, color: "var(--c-ink)" }}>Vos plus grands écarts · à discuter ensemble</h3>
+          <p style={{ fontSize: 13.5, color: "var(--c-muted)", marginBottom: 18, lineHeight: 1.5 }}>Les affirmations où ta réponse s'éloigne le plus de ce que {parentName} avait imaginé.</p>
+          <div style={{ display: "grid", gap: 12 }}>
+            {divergences.map((d, i) => (
+              <div key={i} style={{ background: "white", borderRadius: 12, padding: "16px 18px", border: "1px solid var(--c-line)" }}>
+                <div style={{ fontSize: 14.5, color: "var(--c-ink)", lineHeight: 1.5, marginBottom: 10 }}>{d.q}</div>
+                <div style={{ display: "flex", gap: 16, flexWrap: "wrap", fontSize: 13 }}>
+                  <span style={{ color: "var(--c-muted)" }}>{parentName} : <strong style={{ color: "var(--c-ink-2)" }}>{LIKERT_WORDS[d.p]}</strong></span>
+                  <span style={{ color: "#C2410C" }}>Toi : <strong>{LIKERT_WORDS[d.t]}</strong></span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -411,6 +501,25 @@ const getUrlParam = (name) => {
   try { return new URLSearchParams(window.location.search).get(name); } catch (e) { return null; }
 };
 
+// Lit un jeu de réponses déjà complété en localStorage (plusieurs formats
+// possibles selon le moteur). Renvoie un tableau Likert complet, ou null si
+// rien d'exploitable · sert à proposer « garder » plutôt que tout refaire.
+const readCompletedAnswers = (key) => {
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    let arr = Array.isArray(parsed) ? parsed
+      : (parsed && Array.isArray(parsed.answers)) ? parsed.answers
+      : (parsed && Array.isArray(parsed.a)) ? parsed.a
+      : null;
+    if (!arr || arr.length < QUESTIONS.length) return null;
+    arr = arr.slice(0, QUESTIONS.length);
+    if (arr.some((v) => v == null)) return null;
+    return arr;
+  } catch (e) { return null; }
+};
+
 const apiPost = (path, body) =>
   fetch(API_BASE + path, {
     method: "POST",
@@ -423,6 +532,26 @@ const BridgeScreen = ({ title, sub }) => (
     <div className="shell" style={{ maxWidth: 560, textAlign: "center" }}>
       <h1 style={{ fontSize: 28, marginBottom: 14, color: "var(--c-ink)" }}>{title}</h1>
       <p style={{ fontSize: 16, color: "var(--c-muted)", lineHeight: 1.6 }}>{sub}</p>
+    </div>
+  </section>
+);
+
+// L'ado a déjà passé ce test · on propose de garder ses réponses (zéro effort,
+// la comparaison part directement) ou de tout repasser à neuf.
+const CompareResumeScreen = ({ parentName, onKeep, onRetake }) => (
+  <section style={{ paddingTop: 80, paddingBottom: 110 }}>
+    <div className="shell" style={{ maxWidth: 560, textAlign: "center" }}>
+      <span className="chip" style={{ background: "rgba(253,105,54,.15)", color: "#C2410C" }}>
+        <Icon.spark style={{ width: 14, height: 14 }} /> Tu as déjà passé ce test
+      </span>
+      <h1 style={{ fontSize: 28, marginTop: 18, marginBottom: 14, color: "var(--c-ink)" }}>On garde tes réponses ?</h1>
+      <p style={{ fontSize: 16, color: "var(--c-muted)", lineHeight: 1.6, marginBottom: 28 }}>
+        Tu as déjà répondu à ce test. On peut comparer tout de suite avec ce que {parentName} avait deviné, ou tu peux repasser le test si tu préfères répondre à nouveau.
+      </p>
+      <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+        <button className="btn btn-orange btn-lg" onClick={onKeep} style={{ background: "#C2410C" }}>Garder mes réponses · voir la comparaison</button>
+        <button className="btn btn-ghost btn-lg" onClick={onRetake}>Repasser le test</button>
+      </div>
     </div>
   </section>
 );
@@ -535,6 +664,8 @@ const TestApp = () => {
   const [mode, setMode] = React.useState(CODE ? "bridge-loading" : "landing");
   const [results, setResults] = React.useState(null);
   const [answers, setAnswers] = React.useState(null);
+  // Réponses déjà complétées détectées pour l'écran « garder ou repasser ».
+  const [keepCandidate, setKeepCandidate] = React.useState(null);
 
   React.useEffect(() => {
     if (!CODE) return;
@@ -572,6 +703,19 @@ const TestApp = () => {
   const PARENT_PREDICT = (isTeenBridge || isParentReturn) ? { n: bridge.parentName, a: bridge.parentAnswers } : null;
   const goPicker = () => { setMode("picker"); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const pickPersona = (p) => {
+    // Pont ado · si le test a déjà été complété, proposer garder ou repasser
+    // avant de relancer tout le questionnaire (l'ado ne refait pas l'effort).
+    if (isTeenBridge) {
+      var alreadyDone = false;
+      try { alreadyDone = window.localStorage.getItem("proxxie.tests.futureproof") === "done"; } catch (e) {}
+      var existing = alreadyDone ? readCompletedAnswers(STORAGE_KEY) : null;
+      if (existing) {
+        setKeepCandidate(existing);
+        setMode("compare-resume");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
     var testType = window.__proxxie_test_type || 'futureproof';
     var consentKey = 'proxxie_test_consent_' + testType;
     var hasConsent = false;
@@ -633,14 +777,43 @@ const TestApp = () => {
   };
   const restart = () => { try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) {} setResults(null); setAnswers(null); setMode("test"); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
+  // Garder les réponses déjà passées · on file direct à la comparaison et on
+  // renvoie les vraies réponses au parent via l'API (retour automatique).
+  const keepExisting = () => {
+    const ans = keepCandidate;
+    if (!ans) return;
+    setAnswers(ans);
+    setResults(computeResults(ans));
+    setMode("results");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isTeenBridge && bridge && bridge.code) {
+      apiPost("/api/comparison/" + encodeURIComponent(bridge.code) + "/child", {
+        childResults: { [TEST_ID]: { a: ans } },
+        consent: true,
+      }).catch(() => {});
+    }
+  };
+  // Repasser à neuf · on efface la copie isolée du flux comparaison et on relance.
+  const retakeFresh = () => {
+    try { window.localStorage.removeItem(STORAGE_KEY + ":compare"); } catch (e) {}
+    setPersona("self");
+    setMode("test");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const effectivePersona = (isTeenBridge || isParentReturn) ? "self_compare" : persona;
-  const storageKeyEffective = effectivePersona === "predict" ? STORAGE_KEY + ":predict" : STORAGE_KEY;
+  // self_compare a sa propre clé · ne jamais hériter en silence des réponses
+  // d'un test normal déjà passé sur le même appareil (cf garder/repasser).
+  const storageKeyEffective = effectivePersona === "predict" ? STORAGE_KEY + ":predict"
+    : effectivePersona === "self_compare" ? STORAGE_KEY + ":compare"
+    : STORAGE_KEY;
   return (
     <>
       <ProxxieNav />
       {mode === "bridge-loading" && <BridgeScreen title="Chargement…" sub="On récupère le test qu'on t'a partagé." />}
       {mode === "bridge-error" && <BridgeScreen title="Lien introuvable" sub="Ce lien de comparaison n'existe plus ou a expiré. Demande à la personne de t'en renvoyer un." />}
       {mode === "bridge-waiting" && <BridgeScreen title="Ton ado n'a pas encore répondu" sub="Dès qu'il aura passé le test, la comparaison s'affichera ici. On t'envoie un email si tu as laissé ton adresse." />}
+      {mode === "compare-resume" && <CompareResumeScreen parentName={(PARENT_PREDICT && PARENT_PREDICT.n) || "Le parent"} onKeep={keepExisting} onRetake={retakeFresh} />}
       {mode === "landing" && (<><TestHero onStart={goPicker} /><HowItWorks /></>)}
       {mode === "picker" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={null} onPick={pickPersona} />}
       {mode === "compare-intro" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={PARENT_PREDICT} onPick={pickPersona} />}
