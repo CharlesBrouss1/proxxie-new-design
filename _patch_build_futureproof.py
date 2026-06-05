@@ -398,29 +398,249 @@ const buildEmailSummary = (results) => {
   return summary;
 };
 
-const TestApp = () => {
-  const [mode, setMode] = React.useState("landing");
-  const [persona, setPersona] = React.useState(null);
-  const [answers, setAnswers] = React.useState([]);
-  const [results, setResults] = React.useState(null);
-  const PARENT_PREDICT = null;
+// === Pont backend Proxxie · retour automatique (l'ado ne fait pas l'effort) ===
+// Remplace l'ancien pont statique #predict=/#results= par l'API comparison.
+// Flux : parent prédit → POST create → lien ?code=PXC-XXXX. L'ado ouvre le lien
+//   → GET → test en self_compare → POST child (déclenche la relance mail). Le
+//   parent revient via ?code=…&role=parent → GET les deux → ComparePanel.
+const API_BASE = "https://proxxie-app-seven.vercel.app";
+const PAGE_URL = "https://charlesbrouss1.github.io/proxxie-new-design/Proxxie%20Test%20FuturProof.html";
+const TEST_ID = "futureproof";
 
-  const goPicker = () => setMode("picker");
-  const pickPersona = (p) => { setPersona(p); setMode("test"); };
-  const exitTest = () => setMode("landing");
+const getUrlParam = (name) => {
+  try { return new URLSearchParams(window.location.search).get(name); } catch (e) { return null; }
+};
+
+const apiPost = (path, body) =>
+  fetch(API_BASE + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  }).then((r) => r.json());
+
+const BridgeScreen = ({ title, sub }) => (
+  <section style={{ paddingTop: 90, paddingBottom: 120 }}>
+    <div className="shell" style={{ maxWidth: 560, textAlign: "center" }}>
+      <h1 style={{ fontSize: 28, marginBottom: 14, color: "var(--c-ink)" }}>{title}</h1>
+      <p style={{ fontSize: 16, color: "var(--c-muted)", lineHeight: 1.6 }}>{sub}</p>
+    </div>
+  </section>
+);
+
+// Panneau parent · crée le code de comparaison + capture l'email pour la relance.
+const ApiShareLinkPanel = ({ answers, accent }) => {
+  const [name, setName] = React.useState("");
+  const [status, setStatus] = React.useState("idle"); // idle | loading | done | error
+  const [link, setLink] = React.useState("");
+  const [code, setCode] = React.useState("");
+  const [copied, setCopied] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const [emailStatus, setEmailStatus] = React.useState("idle"); // idle | loading | done | error
+
+  const createCode = () => {
+    setStatus("loading");
+    apiPost("/api/comparison", {
+      parentResults: { [TEST_ID]: { a: answers, n: name || "Le parent" } },
+      tests: [TEST_ID],
+    })
+      .then((data) => {
+        if (!data || !data.ok || !data.code) { setStatus("error"); return; }
+        setCode(data.code);
+        setLink(PAGE_URL + "?code=" + encodeURIComponent(data.code));
+        setStatus("done");
+      })
+      .catch(() => setStatus("error"));
+  };
+
+  const copyLink = () => {
+    try {
+      navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {}
+  };
+
+  const sendLead = () => {
+    if (!email || !code) return;
+    setEmailStatus("loading");
+    apiPost("/api/comparison/" + encodeURIComponent(code) + "/lead", { email: email, consent: true })
+      .then((data) => setEmailStatus(data && data.ok ? "done" : "error"))
+      .catch(() => setEmailStatus("error"));
+  };
+
+  return (
+    <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 30 }}>
+      <h2 style={{ fontSize: 20, marginBottom: 8 }}>Envoie le test à ton ado</h2>
+      <p style={{ fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55, marginBottom: 18 }}>
+        Il répond pour de vrai, et la comparaison avec ta prédiction revient ici automatiquement. Pas de copier-coller, pas d'effort de sa part.
+      </p>
+
+      {status !== "done" && (
+        <div style={{ display: "grid", gap: 12 }}>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Comment ton ado te connaît (Papa, Maman…)"
+            style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid var(--c-line)", fontSize: 15, fontFamily: "inherit" }}
+          />
+          <button className="btn btn-orange btn-lg" onClick={createCode} disabled={status === "loading"} style={{ background: accent }}>
+            {status === "loading" ? "Création du lien…" : "Générer le lien à partager"}
+          </button>
+          {status === "error" && <div style={{ color: "#C2410C", fontSize: 13.5 }}>Une erreur est survenue. Réessaie dans un instant.</div>}
+        </div>
+      )}
+
+      {status === "done" && (
+        <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ display: "grid", gap: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: accent }}>Lien à envoyer à ton ado</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <input readOnly value={link} style={{ flex: 1, minWidth: 220, padding: "11px 13px", borderRadius: 10, border: "1px solid var(--c-line)", fontSize: 13.5, fontFamily: "inherit", color: "var(--c-ink-2)" }} />
+              <button className="btn btn-ghost" onClick={copyLink}>{copied ? "Copié ✓" : "Copier"}</button>
+            </div>
+          </div>
+          <div style={{ borderTop: "1px solid var(--c-line)", paddingTop: 16, display: "grid", gap: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--c-ink)" }}>Reçois un email quand il a répondu</div>
+            <p style={{ fontSize: 13, color: "var(--c-muted)", margin: 0, lineHeight: 1.5 }}>On te prévient dès que la comparaison est prête.</p>
+            {emailStatus !== "done" && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ton@email.com"
+                  style={{ flex: 1, minWidth: 200, padding: "11px 13px", borderRadius: 10, border: "1px solid var(--c-line)", fontSize: 14, fontFamily: "inherit" }}
+                />
+                <button className="btn btn-orange" onClick={sendLead} disabled={emailStatus === "loading"} style={{ background: accent }}>
+                  {emailStatus === "loading" ? "…" : "Me prévenir"}
+                </button>
+              </div>
+            )}
+            {emailStatus === "done" && <div style={{ fontSize: 13.5, color: "#0E7490", fontWeight: 600 }}>C'est noté, on te prévient par email ✓</div>}
+            {emailStatus === "error" && <div style={{ color: "#C2410C", fontSize: 13 }}>Email non enregistré, réessaie.</div>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const TestApp = () => {
+  // Pont backend · ?code=PXC-XXXX (+ ?role=parent au retour). Sans code → flux normal.
+  const CODE = React.useMemo(() => getUrlParam("code"), []);
+  const ROLE = React.useMemo(() => getUrlParam("role"), []);
+  // bridge null = pas de pont. Sinon {status, parentName?, parentAnswers?, code}.
+  const [bridge, setBridge] = React.useState(null);
+  const [persona, setPersona] = React.useState(null);
+  const [mode, setMode] = React.useState(CODE ? "bridge-loading" : "landing");
+  const [results, setResults] = React.useState(null);
+  const [answers, setAnswers] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!CODE) return;
+    let cancelled = false;
+    fetch(API_BASE + "/api/comparison/" + encodeURIComponent(CODE))
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (!data || !data.ok) { setBridge({ status: "error" }); setMode("bridge-error"); return; }
+        const pr = data.parentResults && data.parentResults[TEST_ID];
+        const parentAnswers = pr && pr.a ? pr.a : null;
+        const parentName = (pr && pr.n) || "Le parent";
+        if (ROLE === "parent") {
+          const cr = data.childResults && data.childResults[TEST_ID];
+          if (data.childDone && cr && cr.a) {
+            setBridge({ status: "parent-return", code: CODE, parentName: parentName, parentAnswers: parentAnswers, teenAnswers: cr.a });
+            setAnswers(cr.a);
+            setResults(computeResults(cr.a));
+            setMode("results");
+          } else {
+            setBridge({ status: "parent-waiting", code: CODE });
+            setMode("bridge-waiting");
+          }
+        } else {
+          setBridge({ status: "teen", code: CODE, parentName: parentName, parentAnswers: parentAnswers });
+          setMode("compare-intro");
+        }
+      })
+      .catch(() => { if (!cancelled) { setBridge({ status: "error" }); setMode("bridge-error"); } });
+    return () => { cancelled = true; };
+  }, [CODE, ROLE]);
+
+  const isTeenBridge = bridge && bridge.status === "teen";
+  const isParentReturn = bridge && bridge.status === "parent-return";
+  const PARENT_PREDICT = (isTeenBridge || isParentReturn) ? { n: bridge.parentName, a: bridge.parentAnswers } : null;
+  const goPicker = () => { setMode("picker"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const pickPersona = (p) => {
+    var testType = window.__proxxie_test_type || 'futureproof';
+    var consentKey = 'proxxie_test_consent_' + testType;
+    var hasConsent = false;
+    try { hasConsent = !!window.localStorage.getItem(consentKey); } catch(e) {}
+    if (window.trackEvent) window.trackEvent('test_initiated', { test_type: testType, persona: p });
+    function startNow() {
+      setPersona(p);
+      setMode("test");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (window.trackEvent) window.trackEvent('test_started', { test_type: testType, persona: p });
+      window.__proxxie_test_in_progress = { startedAt: Date.now(), questionIndex: 0, totalQuestions: 0, completionPct: 0, testType: testType, persona: p };
+    }
+    if (hasConsent) { startNow(); return; }
+    if (window.trackEvent) window.trackEvent('test_consent_shown', { test_type: testType });
+    var overlay = document.createElement('div');
+    overlay.id = '__proxxie_test_consent';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(10,14,44,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px';
+    overlay.innerHTML = '<div style="background:#fff;border-radius:18px;padding:28px 32px;max-width:520px;font-family:Montserrat,system-ui,sans-serif;box-shadow:0 24px 60px -16px rgba(19,32,206,.28)"><div style="font-family:Mulish,Goldplay,system-ui,sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#0A0E2C;margin-bottom:10px">Avant de commencer ce test</div><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 14px">Vos réponses sont confidentielles et stockées <strong>uniquement sur votre appareil</strong>. Elles ne sortent jamais sans votre action.</p><p style="font-size:14px;line-height:1.55;color:#2A2F4F;margin:0 0 18px">En continuant, vous acceptez que vos réponses soient analysées par notre algorithme pour générer un rapport. <strong>Elles ne servent jamais à entraîner un modèle d\'IA.</strong></p><div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button id="__proxxie_decline" style="background:transparent;border:1.5px solid rgba(10,14,44,.16);border-radius:99px;padding:10px 18px;font-size:13px;font-weight:600;color:#0A0E2C;cursor:pointer;font-family:inherit">Refuser</button><button id="__proxxie_accept" style="background:#FD6936;color:#fff;border:none;border-radius:99px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px -6px rgba(253,105,54,.55)">Commencer le test →</button></div></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('__proxxie_accept').onclick = function() {
+      try { window.localStorage.setItem(consentKey, 'granted_' + Date.now()); } catch(e) {}
+      if (window.trackEvent) window.trackEvent('test_consent_granted', { test_type: testType });
+      overlay.remove();
+      startNow();
+    };
+    document.getElementById('__proxxie_decline').onclick = function() {
+      if (window.trackEvent) window.trackEvent('test_consent_declined', { test_type: testType });
+      overlay.remove();
+    };
+  };
+  const exitTest = () => { setMode(PARENT_PREDICT ? "compare-intro" : "landing"); setPersona(null); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const onComplete = (ans) => {
     setAnswers(ans);
     setResults(computeResults(ans));
     setMode("results");
+    window.scrollTo({ top: 0, behavior: "smooth" });
     try { window.localStorage.setItem("proxxie.tests.futureproof", "done"); } catch(e){}
+    // Retour automatique · l'ado renvoie ses vraies réponses au parent via l'API
+    // (déclenche la relance mail côté backend si le parent a laissé son email).
+    if (isTeenBridge && bridge && bridge.code) {
+      apiPost("/api/comparison/" + encodeURIComponent(bridge.code) + "/child", {
+        childResults: { [TEST_ID]: { a: ans } },
+        consent: true,
+      }).catch(() => {});
+    }
+    if (window.trackEvent) {
+      var inProgress = window.__proxxie_test_in_progress;
+      var elapsed = inProgress && inProgress.startedAt ? (Date.now() - inProgress.startedAt) : null;
+      window.trackEvent('test_completed', {
+        test_type: window.__proxxie_test_type || 'futureproof',
+        total_questions: (ans || []).length,
+        time_total_ms: elapsed,
+        persona: inProgress ? inProgress.persona : null
+      });
+    }
+    window.__proxxie_test_in_progress = null;
   };
-  const restart = () => { setAnswers([]); setResults(null); setMode("landing"); };
+  const restart = () => { try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) {} setResults(null); setAnswers(null); setMode("test"); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
-  const effectivePersona = persona;
-  const storageKeyEffective = persona === "predict" ? STORAGE_KEY + ":predict" : STORAGE_KEY;
+  const effectivePersona = (isTeenBridge || isParentReturn) ? "self_compare" : persona;
+  const storageKeyEffective = effectivePersona === "predict" ? STORAGE_KEY + ":predict" : STORAGE_KEY;
   return (
     <>
       <ProxxieNav />
+      {mode === "bridge-loading" && <BridgeScreen title="Chargement…" sub="On récupère le test qu'on t'a partagé." />}
+      {mode === "bridge-error" && <BridgeScreen title="Lien introuvable" sub="Ce lien de comparaison n'existe plus ou a expiré. Demande à la personne de t'en renvoyer un." />}
+      {mode === "bridge-waiting" && <BridgeScreen title="Ton ado n'a pas encore répondu" sub="Dès qu'il aura passé le test, la comparaison s'affichera ici. On t'envoie un email si tu as laissé ton adresse." />}
       {mode === "landing" && (<><TestHero onStart={goPicker} /><HowItWorks /></>)}
       {mode === "picker" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={null} onPick={pickPersona} />}
       {mode === "compare-intro" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={PARENT_PREDICT} onPick={pickPersona} />}
@@ -432,8 +652,8 @@ const TestApp = () => {
       )}
       {mode === "results" && results && (
         <>
-          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
-          {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="FuturProof" accent="#C2410C" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
+          {effectivePersona === "self_compare" && PARENT_PREDICT && PARENT_PREDICT.a && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
+          {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ApiShareLinkPanel answers={answers} accent="#C2410C" /></div></section>)}
           <EmailResultsActions testCode="FuturProof" testName="Future-Proof 2035" accent="#C2410C" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
           <RichAnalysisSection pillars={results} families={results.topFamilies} topItems={results.topItems} lowItems={results.lowItems} level={results.level} />
