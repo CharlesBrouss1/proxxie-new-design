@@ -490,8 +490,7 @@
   /* bascule fraîche : on masque la carte-héros, on montre l'invitation */
   #s-home.fresh #homeCarteHead,
   #s-home.fresh .gr-hint,
-  #s-home.fresh #grSign,
-  #s-home.fresh #homeCharlesCta{display:none}
+  #s-home.fresh #grSign{display:none}
   #s-home:not(.fresh) #homeInvite,
   #s-home:not(.fresh) #homeInviteCap{display:none}
   @media(max-width:520px){.hi-h1{font-size:29px}.hi-chip{min-width:calc(50% - 5px)}}
@@ -661,22 +660,6 @@
 
     <!-- ENTRÉE SYNTHÈSE : le produit payant, lecture croisée de tous les tests -->
     <section class="card hp-cont" id="homeSynthese" hidden style="margin-top:18px;text-align:left"></section>
-
-    <!-- CTA : décrypter les résultats avec Charles -->
-    <section class="cta-c" id="homeCharlesCta">
-      <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
-      <h2>Tes résultats sont riches. Décryptons-les ensemble.</h2>
-      <p class="cta-lead">Une fois tes tests passés, on reprend chaque signal en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
-      <div class="cta-act">
-        <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
-        <span class="cta-meta">30 min · visio · gratuit</span>
-      </div>
-      <div class="cta-chips">
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Lecture croisée des tests</span>
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan d'action concret</span>
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F5EB3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sans engagement</span>
-      </div>
-    </section>
 
     <p class="disclaimer">
       <b>Proxxie Lab propose des outils psychométriques à visée de connaissance de soi.</b>
