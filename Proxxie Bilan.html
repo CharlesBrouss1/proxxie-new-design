@@ -122,6 +122,94 @@
       .voeu-row { grid-template-columns: 28px 1fr; gap: 8px; }
       .voeu-row .cat, .voeu-row .status { grid-column: 2; justify-self: start; }
     }
+
+    /* ===== Section 01 · carte gamifiée (analyse croisée) ===== */
+    .axs-pcard { position: relative; border-radius: 22px; padding: 2px; background: linear-gradient(120deg,#F5C53F,#FD6936 42%,#1320CE 88%); box-shadow: 0 22px 50px -28px rgba(10,14,44,.35); margin: 4px 0 28px; overflow: hidden; }
+    .axs-pcard-in { background: linear-gradient(180deg,#fff,#FFFDF8); border-radius: 20px; padding: 28px 30px; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center; }
+    .axs-emblem { position: relative; width: 116px; height: 116px; flex: none; }
+    .axs-emblem svg { position: absolute; inset: 0; }
+    .axs-emblem .face { position: absolute; inset: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%,#fff,#FBEFD8); display: grid; place-items: center; box-shadow: inset 0 2px 8px rgba(224,165,22,.25); }
+    .axs-emblem .face span { font-size: 42px; line-height: 1; }
+    .axs-emblem .lvl { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); background: var(--c-ink); color: #fff; font-family: var(--font-num); font-weight: 700; font-size: 10px; letter-spacing: .04em; padding: 4px 11px; border-radius: 99px; white-space: nowrap; box-shadow: 0 4px 12px rgba(10,14,44,.3); }
+    .axs-mid .axs-arch { font-family: var(--font-display); font-weight: 600; font-size: clamp(24px,3.6vw,34px); line-height: 1.05; letter-spacing: -.02em; margin: 8px 0; }
+    .axs-rarity { display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; letter-spacing: .03em; color: #5B53A6; background: rgba(91,83,166,.10); border: 1px solid rgba(91,83,166,.22); border-radius: 99px; padding: 5px 12px; }
+    .axs-rarity::before { content: "\25C6"; font-size: 9px; }
+    .axs-lead { font-size: 14px; color: var(--c-ink-2); max-width: 48ch; margin: 10px 0 16px; }
+    .axs-xpwrap { max-width: 400px; }
+    .axs-xptop { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600; color: var(--c-muted); margin-bottom: 6px; }
+    .axs-xptop b { color: var(--c-ink); }
+    .axs-xptrack { height: 10px; border-radius: 99px; background: #EFE7D6; overflow: hidden; }
+    .axs-xpfill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#F5C53F,#FD6936 55%,#1320CE); box-shadow: 0 0 12px rgba(253,105,54,.4); }
+    .axs-side { display: flex; flex-direction: column; gap: 10px; }
+    .axs-pill { background: var(--c-cream-light); border: 1px solid var(--c-line); border-radius: 14px; padding: 10px 16px; min-width: 92px; text-align: center; }
+    .axs-pill .n { font-family: var(--font-num); font-weight: 700; font-size: 20px; line-height: 1; }
+    .axs-pill .l { font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--c-muted); margin-top: 4px; }
+    .axs-pill.blue .n { color: var(--c-blue); }
+    .axs-pill.green .n { color: var(--c-green); }
+
+    .axs-block-label { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin: 28px 0 14px; }
+    .axs-block-label span { font-size: 13px; color: var(--c-muted); font-weight: 400; }
+
+    .axs-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .axs-bdg { display: flex; align-items: center; gap: 11px; background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 14px; padding: 11px 16px 11px 11px; min-width: 166px; }
+    .axs-bdg .em { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 20px; flex: none; }
+    .axs-bdg .nm { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+    .axs-bdg .tg { font-size: 11px; font-weight: 600; }
+
+    .axs-combos { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .axs-sig { border: 1px solid var(--c-line); border-radius: 14px; padding: 14px 16px; background: #FAFAF6; border-top: 3px solid var(--c-blue); }
+    .axs-sig .src { font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .axs-sig .val { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-top: 4px; }
+    .axs-sig .why { font-size: 12px; color: var(--c-muted); margin-top: 5px; }
+    .axs-combo-pill { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; background: rgba(34,160,107,.10); border: 1px solid rgba(34,160,107,.25); border-radius: 99px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--c-green); }
+    .axs-combo-pill b { color: var(--c-ink); }
+    .axs-cross-note { font-size: 13px; color: var(--c-muted); margin-top: 12px; }
+    .axs-cross-note b { color: var(--c-ink); font-weight: 600; }
+
+    .axs-stats { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: start; }
+    .axs-curseurs { display: flex; flex-direction: column; gap: 18px; background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 16px; padding: 22px 24px; }
+    .axs-srow-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 9px; }
+    .axs-srow-name { font-family: var(--font-display); font-weight: 600; font-size: 14.5px; }
+    .axs-srow-ess { font-size: 11.5px; color: var(--c-muted); }
+    .axs-srow-score { margin-left: auto; font-family: var(--font-num); font-weight: 700; font-size: 15px; }
+    .axs-spectrum { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+    .axs-pole { font-size: 11.5px; font-weight: 600; color: var(--c-muted); white-space: nowrap; }
+    .axs-pole.hi { text-align: right; }
+    .axs-track { position: relative; height: 9px; border-radius: 999px; background: #EFE7D6; }
+    .axs-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
+    .axs-marker { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; transform: translate(-50%,-50%); box-shadow: 0 3px 8px rgba(10,14,44,.2); }
+    .axs-map { background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 16px; padding: 20px; display: grid; place-items: center; }
+    .axs-map-cap { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c-muted); margin-bottom: 8px; text-align: center; }
+    .axs-mapsvg { width: 100%; max-width: 280px; height: auto; display: block; }
+
+    .axs-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 6px; }
+    .axs-panel { background: #FAFAF6; border: 1px solid var(--c-line); border-radius: 16px; padding: 20px 22px; }
+    .axs-panel h4 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+    .axs-panel .psub { font-size: 12px; color: var(--c-muted); margin-bottom: 14px; }
+    .axs-panel h4 .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .axs-panel.up h4 .dot { background: var(--c-green); }
+    .axs-panel.watch h4 .dot { background: var(--c-orange); }
+    .axs-prow { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--c-line); }
+    .axs-prow:first-of-type { border-top: 0; }
+    .axs-prow .ic { font-size: 16px; flex: none; line-height: 1.4; }
+    .axs-prow b { font-weight: 600; font-size: 13.5px; }
+    .axs-prow p { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+
+    @media (max-width: 820px) {
+      .axs-pcard-in { grid-template-columns: auto 1fr; gap: 22px; }
+      .axs-side { flex-direction: row; grid-column: 1 / -1; }
+      .axs-combos { grid-template-columns: 1fr 1fr; }
+      .axs-stats { grid-template-columns: 1fr; }
+      .axs-duo { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .axs-pcard-in { grid-template-columns: 1fr; text-align: center; padding: 24px 20px; }
+      .axs-emblem { margin: 0 auto; }
+      .axs-lead { margin-left: auto; margin-right: auto; }
+      .axs-xpwrap { margin: 0 auto; }
+      .axs-side { justify-content: center; }
+      .axs-combos { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -178,40 +266,125 @@
     <main style="padding-bottom: 60px;">
       <div class="shell">
 
-        <!-- Section 1 · Profil consolidé -->
+        <!-- Section 1 · Profil consolidé (carte gamifiée · analyse croisée) -->
         <section class="section">
           <h2><span class="num-prefix">01</span>Profil consolidé</h2>
-          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">Les 5 traits OCEAN-X croisés avec les 11 tests psychométriques et tes activités.</p>
+          <p style="font-size: 14px; color: var(--c-muted); margin-bottom: 18px;">Ta carte de profil, construite en croisant tes 11 tests psychométriques, tes activités et tes bulletins.</p>
 
-          <h3 style="margin-top: 0;">Big Five OCEAN-X</h3>
-          <div class="trait-grid">
-            <div class="trait"><div class="trait-label">Ouverture</div><div class="trait-val">88</div></div>
-            <div class="trait"><div class="trait-label">Conscienc.</div><div class="trait-val">62</div></div>
-            <div class="trait"><div class="trait-label">Extraversion</div><div class="trait-val">48</div></div>
-            <div class="trait"><div class="trait-label">Convivialité</div><div class="trait-val">71</div></div>
-            <div class="trait"><div class="trait-label">Stabilité</div><div class="trait-val">76</div></div>
+          <!-- Carte de personnage -->
+          <div class="axs-pcard">
+            <div class="axs-pcard-in">
+              <div class="axs-emblem">
+                <svg viewBox="0 0 128 128">
+                  <circle cx="64" cy="64" r="58" fill="none" stroke="#EFE7D6" stroke-width="8" />
+                  <circle cx="64" cy="64" r="58" fill="none" stroke="url(#axsRing)" stroke-width="8" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="21.9" transform="rotate(-90 64 64)" />
+                  <defs><linearGradient id="axsRing" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#F5C53F" /><stop offset=".5" stop-color="#FD6936" /><stop offset="1" stop-color="#1320CE" />
+                  </linearGradient></defs>
+                </svg>
+                <div class="face"><span>🧭</span></div>
+                <div class="lvl">NIVEAU 5</div>
+              </div>
+
+              <div class="axs-mid">
+                <span class="axs-rarity">Rare · 12% des profils</span>
+                <div class="axs-arch">Exploratrice analytique</div>
+                <p class="axs-lead">On a croisé tes 11 tests, tes activités et tes bulletins. Tu pars des idées, tu creuses pour comprendre, et tu donnes ton meilleur quand tu gardes ta liberté.</p>
+                <div class="axs-xpwrap">
+                  <div class="axs-xptop"><span>Fiabilité du profil</span><span><b>94%</b> · profil complet</span></div>
+                  <div class="axs-xptrack"><div class="axs-xpfill" style="width:94%"></div></div>
+                </div>
+              </div>
+
+              <div class="axs-side">
+                <div class="axs-pill blue"><div class="n">11</div><div class="l">Tests croisés</div></div>
+                <div class="axs-pill green"><div class="n">4</div><div class="l">Badges</div></div>
+              </div>
+            </div>
           </div>
 
-          <h3>Profil dominant détecté</h3>
-          <p style="font-size: 16px; line-height: 1.6;"><strong>Exploratrice analytique</strong> · curiosité forte (Ouverture 88), réflexion structurée (analyse RIASEC = Investigateur dominant), travail solo plutôt qu'en grand effectif (Extraversion 48), bonne tolérance au stress (Stabilité 76).</p>
+          <!-- Badges -->
+          <p class="axs-block-label">Tes badges <span>· 4 débloqués</span></p>
+          <div class="axs-badges">
+            <div class="axs-bdg"><div class="em" style="background:rgba(253,105,54,.14)">🧭</div><div><div class="nm">Curieux</div><div class="tg" style="color:#FD6936">Ouverture 88</div></div></div>
+            <div class="axs-bdg"><div class="em" style="background:rgba(19,32,206,.12)">🔬</div><div><div class="nm">Investigateur</div><div class="tg" style="color:#1320CE">RIASEC dominant</div></div></div>
+            <div class="axs-bdg"><div class="em" style="background:rgba(34,160,107,.14)">🌱</div><div><div class="nm">Endurant</div><div class="tg" style="color:#22A06B">Stabilité 76</div></div></div>
+            <div class="axs-bdg"><div class="em" style="background:rgba(72,122,255,.14)">🤝</div><div><div class="nm">Conciliant</div><div class="tg" style="color:#487AFF">Convivialité 71</div></div></div>
+          </div>
 
-          <div class="strengths-row">
-            <div class="strengths-card">
-              <div class="label">★ Forces</div>
-              <ul>
-                <li>Curiosité, capacité à explorer des sujets nouveaux</li>
-                <li>Pensée analytique, gestion de la complexité</li>
-                <li>Résilience face aux deadlines (prépa, examens jouables)</li>
-                <li>Goût pour l'autonomie</li>
-              </ul>
+          <!-- Combos · signaux croisés -->
+          <p class="axs-block-label">Les combos qui te définissent <span>· un signal par source</span></p>
+          <div class="axs-combos">
+            <div class="axs-sig" style="border-top-color:#FD6936"><div class="src" style="color:#FD6936">OCEAN-X</div><div class="val">Exploratrice</div><div class="why">Ouverture très haute (88)</div></div>
+            <div class="axs-sig" style="border-top-color:#1320CE"><div class="src" style="color:#1320CE">RIASEC</div><div class="val">Investigateur</div><div class="why">Comprendre avant d'agir</div></div>
+            <div class="axs-sig" style="border-top-color:#22A06B"><div class="src" style="color:#22A06B">Profil</div><div class="val">Marathonien solo</div><div class="why">Extraversion 48 × Stabilité 76</div></div>
+            <div class="axs-sig" style="border-top-color:#487AFF"><div class="src" style="color:#487AFF">Bulletins</div><div class="val">Sciences confirmées</div><div class="why">Tes notes collent au profil</div></div>
+          </div>
+          <div style="margin-top:16px"><span class="axs-combo-pill">⚡ Combo détecté&nbsp;: <b>Curiosité × Autonomie</b> → tu apprends mieux en explorant librement</span></div>
+          <p class="axs-cross-note"><b>L'analyse croisée, c'est ça</b>&nbsp;: quand plusieurs tests pointent dans la même direction, le signal devient un combo, et ton portrait devient fiable.</p>
+
+          <!-- Stats · curseurs OCEAN + boussole -->
+          <p class="axs-block-label">Tes stats <span>· modèle de personnalité OCEAN-X</span></p>
+          <div class="axs-stats">
+            <div class="axs-curseurs">
+              <div>
+                <div class="axs-srow-top"><span class="axs-srow-name">Ouverture</span><span class="axs-srow-ess">Curiosité, idées neuves</span><span class="axs-srow-score" style="color:#FD6936">88</span></div>
+                <div class="axs-spectrum"><span class="axs-pole">Conventionnel</span><div class="axs-track"><span class="axs-fill" style="width:88%;background:#FD6936"></span><span class="axs-marker" style="left:88%;border:4px solid #FD6936"></span></div><span class="axs-pole hi">Explorateur</span></div>
+              </div>
+              <div>
+                <div class="axs-srow-top"><span class="axs-srow-name">Conscienciosité</span><span class="axs-srow-ess">Ordre, discipline</span><span class="axs-srow-score" style="color:#1320CE">62</span></div>
+                <div class="axs-spectrum"><span class="axs-pole">Spontané</span><div class="axs-track"><span class="axs-fill" style="width:62%;background:#1320CE"></span><span class="axs-marker" style="left:62%;border:4px solid #1320CE"></span></div><span class="axs-pole hi">Méthodique</span></div>
+              </div>
+              <div>
+                <div class="axs-srow-top"><span class="axs-srow-name">Extraversion</span><span class="axs-srow-ess">Énergie sociale</span><span class="axs-srow-score" style="color:#22A06B">48</span></div>
+                <div class="axs-spectrum"><span class="axs-pole">Réservé</span><div class="axs-track"><span class="axs-fill" style="width:48%;background:#22A06B"></span><span class="axs-marker" style="left:48%;border:4px solid #22A06B"></span></div><span class="axs-pole hi">Expansif</span></div>
+              </div>
+              <div>
+                <div class="axs-srow-top"><span class="axs-srow-name">Convivialité</span><span class="axs-srow-ess">Coopération, écoute</span><span class="axs-srow-score" style="color:#487AFF">71</span></div>
+                <div class="axs-spectrum"><span class="axs-pole">Indépendant</span><div class="axs-track"><span class="axs-fill" style="width:71%;background:#487AFF"></span><span class="axs-marker" style="left:71%;border:4px solid #487AFF"></span></div><span class="axs-pole hi">Conciliant</span></div>
+              </div>
+              <div>
+                <div class="axs-srow-top"><span class="axs-srow-name">Stabilité</span><span class="axs-srow-ess">Gestion du stress</span><span class="axs-srow-score" style="color:#E0A516">76</span></div>
+                <div class="axs-spectrum"><span class="axs-pole">Réactif</span><div class="axs-track"><span class="axs-fill" style="width:76%;background:#E0A516"></span><span class="axs-marker" style="left:76%;border:4px solid #E0A516"></span></div><span class="axs-pole hi">Serein</span></div>
+              </div>
             </div>
-            <div class="strengths-card warn">
-              <div class="label">⚠ Points d'attention</div>
-              <ul>
-                <li>Conscienciosité moyenne · gérer le rythme des révisions</li>
-                <li>Recharge en solo · éviter les amphis surdimensionnés</li>
-                <li>Procrastination quand le projet manque de cadre</li>
-              </ul>
+            <div class="axs-map">
+              <div class="axs-map-cap">Comment tu fonctionnes</div>
+              <svg class="axs-mapsvg" viewBox="0 0 300 300" role="img" aria-label="Boussole de fonctionnement">
+                <circle cx="150" cy="150" r="110" fill="#FBF7EF" stroke="#E4DCCB" stroke-width="1" />
+                <circle cx="150" cy="150" r="73" fill="none" stroke="#EFE7D6" stroke-width="1" />
+                <circle cx="150" cy="150" r="36" fill="none" stroke="#EFE7D6" stroke-width="1" />
+                <line x1="40" y1="150" x2="260" y2="150" stroke="#E4DCCB" stroke-width="1" />
+                <line x1="150" y1="40" x2="150" y2="260" stroke="#E4DCCB" stroke-width="1" />
+                <text x="150" y="32" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="12" fill="#54566E">Idées</text>
+                <text x="150" y="278" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="12" fill="#54566E">Action</text>
+                <text x="8" y="154" text-anchor="start" font-family="Fraunces, serif" font-weight="600" font-size="12" fill="#54566E">Solo</text>
+                <text x="292" y="154" text-anchor="end" font-family="Fraunces, serif" font-weight="600" font-size="12" fill="#54566E">Groupe</text>
+                <line x1="150" y1="150" x2="126" y2="96" stroke="#1320CE" stroke-width="2" stroke-dasharray="3 3" opacity="0.5" />
+                <circle cx="126" cy="96" r="9" fill="#1320CE" opacity="0.18" />
+                <circle cx="126" cy="96" r="6.5" fill="#fff" stroke="#1320CE" stroke-width="3" />
+                <text x="126" y="80" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="12" fill="#1320CE">Toi</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Pouvoirs / quêtes perso -->
+          <p class="axs-block-label">Tes leviers <span>· forces et zones à faire progresser</span></p>
+          <div class="axs-duo">
+            <div class="axs-panel up">
+              <h4><span class="dot"></span>Tes pouvoirs</h4>
+              <p class="psub">Ce sur quoi tu peux t'appuyer, dès maintenant.</p>
+              <div class="axs-prow"><span class="ic">🧭</span><div><b>Tu cadres vite un problème flou</b><p>Ouverture + analyse : tu explores large puis tu structures.</p></div></div>
+              <div class="axs-prow"><span class="ic">🔬</span><div><b>Tu gères la complexité</b><p>Pensée analytique : tu démontes les sujets touffus sans te perdre.</p></div></div>
+              <div class="axs-prow"><span class="ic">🏃</span><div><b>Tu tiens la distance</b><p>Résilience face aux deadlines : prépa et examens jouables.</p></div></div>
+              <div class="axs-prow"><span class="ic">🦅</span><div><b>Tu avances en autonomie</b><p>Goût pour la liberté : tu n'as pas besoin qu'on te pousse.</p></div></div>
+            </div>
+            <div class="axs-panel watch">
+              <h4><span class="dot"></span>Tes quêtes perso</h4>
+              <p class="psub">Pas des défauts&nbsp;: des zones à faire progresser.</p>
+              <div class="axs-prow"><span class="ic">⚡</span><div><b>Une priorité à la fois</b><p>Conscienciosité moyenne : cadre ton rythme de révisions.</p></div></div>
+              <div class="axs-prow"><span class="ic">🔋</span><div><b>Recharge en solo</b><p>Évite les amphis surdimensionnés, prévois des temps calmes.</p></div></div>
+              <div class="axs-prow"><span class="ic">🎯</span><div><b>Donne-toi un cadre</b><p>Sans structure, la procrastination guette : fixe-toi des jalons.</p></div></div>
             </div>
           </div>
         </section>
