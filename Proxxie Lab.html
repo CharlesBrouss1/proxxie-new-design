@@ -380,6 +380,8 @@
   .gr-mode{appearance:none;border:0;background:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;color:var(--ink-soft);padding:8px 18px;border-radius:999px;transition:background .18s,color .18s}
   .gr-mode.on{background:var(--blue);color:#fff}
   .gr-mode:not(.on):hover{color:var(--ink)}
+  .gr-modesrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0 2px}
+  .gr-modesrow .gr-modes{margin:0}
   /* signature line under the map */
   .gr-sign{max-width:560px;font-family:var(--serif);font-weight:650;font-size:16px;line-height:1.5;color:var(--ink);margin:6px 0 2px}
   .gr-sign b{font-weight:800}
@@ -402,6 +404,14 @@
   .gr-lbl{font-size:11px;font-weight:700;fill:var(--ink);text-anchor:middle;pointer-events:none;font-family:var(--sans)}
   .gr-lbl.soft{fill:var(--ink-soft);font-weight:650}
   .gr-node.center .gr-lbl{font-size:13.5px;font-weight:800}
+  /* territoires (carte zones) */
+  .gr-zname{font-family:var(--sans);font-weight:800;font-size:12.5px}
+  .gr-zkick{font-family:var(--sans);font-weight:700;font-size:9px;fill:#A89B82;letter-spacing:.05em;text-transform:uppercase}
+  .gr-zct{font-family:var(--sans);font-weight:800;font-size:9.5px}
+  .gr-rname{font-family:var(--sans);font-size:11.5px;dominant-baseline:middle;pointer-events:none}
+  .gr-rval{font-family:var(--sans);font-size:10px;dominant-baseline:middle;pointer-events:none}
+  .gr-row{cursor:pointer}
+  @media (hover:hover){.gr-row:hover>rect{fill:rgba(10,14,44,.05)}}
   .gr-fade{animation:grfade .5s ease both}
   @keyframes grfade{from{opacity:0}to{opacity:1}}
   .gr-pop{transform-box:fill-box;transform-origin:center;animation:grpop .5s cubic-bezier(.2,.8,.2,1) both}
@@ -515,6 +525,7 @@
   #s-home.fresh #grSign{display:none}
   #s-home:not(.fresh) #homeInvite,
   #s-home:not(.fresh) #homeInviteCap{display:none}
+  #s-home:not(.fresh) .gr-listbtn-top{display:none}
   @media(max-width:520px){.hi-h1{font-size:29px}.hi-chip{min-width:calc(50% - 5px)}}
 
   /* ===== Onboarding initial (pour qui · profil) ===== */
@@ -700,7 +711,7 @@
     <!-- barre haute : reprendre (si progrès) + voir en liste -->
     <div class="gr-top">
       <a class="hi-resume" id="homeResume" hidden onclick="App.resumeLast()">Reprendre où j'en étais <span aria-hidden="true">→</span></a>
-      <button class="gr-listbtn" onclick="App.openList()">Voir en liste</button>
+      <button class="gr-listbtn gr-listbtn-top" onclick="App.openList()">Voir en liste</button>
     </div>
 
     <!-- BLOC INVITATION : visible au tout premier passage (0 test fait) -->
@@ -723,13 +734,16 @@
     <!-- EN-TÊTE CARTE : visible dès qu'un test est fait -->
     <div id="homeCarteHead">
       <h1>Ta carte <span class="hl">intérieure</span>.</h1>
-      <p class="gr-lead">Chaque partie de toi est un point. Touche une zone pour révéler ses tests, passe-les, et regarde ta carte s'allumer.</p>
-      <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 16 explorées</span></div>
-      <nav class="gr-modes" id="grModes" aria-label="Mode d'affichage">
-        <button type="button" class="gr-mode on" data-mode="map">Carte</button>
-        <button type="button" class="gr-mode" data-mode="radar">Radar</button>
-        <button type="button" class="gr-mode" data-mode="flow">Potentiel</button>
-      </nav>
+      <p class="gr-lead">Chaque partie de toi est un territoire. Touche un test pour le passer ou revoir ton résultat, et regarde ta carte s'allumer.</p>
+      <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 22 explorées</span></div>
+      <div class="gr-modesrow">
+        <nav class="gr-modes" id="grModes" aria-label="Mode d'affichage">
+          <button type="button" class="gr-mode on" data-mode="map">Carte</button>
+          <button type="button" class="gr-mode" data-mode="radar">Radar</button>
+          <button type="button" class="gr-mode" data-mode="flow">Potentiel</button>
+        </nav>
+        <button class="gr-listbtn" onclick="App.openList()">Voir en liste</button>
+      </div>
     </div>
 
     <div class="gr-stage">
@@ -740,7 +754,7 @@
     <!-- légende d'aperçu : visible au premier passage -->
     <p class="hi-cap" id="homeInviteCap"><b>Ta carte est encore vierge.</b> Elle se construit à chaque test que tu passes. Touche un point pour commencer.</p>
 
-    <p class="gr-hint" id="grHint">Touche une zone pour l'explorer.</p>
+    <p class="gr-hint" id="grHint">Touche un test pour le passer ou revoir ton résultat.</p>
     <p class="gr-sign" id="grSign" hidden></p>
 
     <!-- ENTRÉE SYNTHÈSE : le produit payant, lecture croisée de tous les tests -->
@@ -4024,6 +4038,7 @@
   function gTag(id){ return (GMETA[id]&&GMETA[id].tag) || (TESTS[id]&&TESTS[id].tagline) || ""; }
   function gDims(id){ return (GMETA[id]&&GMETA[id].dims) || (TESTS[id]?TESTS[id].order.length:1); }
   function gMin(id){ return TESTS[id]?TESTS[id].minutes:""; }
+  function gTrunc(s,m){ s=''+s; return s.length>m ? s.slice(0,m-1).trim()+'…' : s; }
   // un point est "allumé" dès qu'un premier résultat est disponible
   function gDone(id){
     var t=TESTS[id], s=state.tests[id];
@@ -4528,63 +4543,60 @@
   }
 
   // ---- MODE CARTE : tout en vue, les traits s'allument ----
+  // ---- MODE CARTE / territoires : 4 zones autour de "Toi", chaque test lisible en rangée ----
   function renderMapSVG(svg){
-    var cx=200, cy=256;
-    var anchors={perso:[104,150],aspir:[296,150],carr:[104,362],equi:[296,362]};
-    var gL=gEl('g',{},svg), gN=gEl('g',{},svg);
-    GORDER.forEach(function(fid){ var a=anchors[fid]; gEl('line',{x1:cx,y1:cy,x2:a[0],y2:a[1],'class':'gr-lnk'},gL); });
-    var leafPos={};
+    var cx=200, cy=256, W=182, H=178;
+    var ZP={perso:[6,64], aspir:[212,64], carr:[6,270], equi:[212,270]};
+    // coin de chaque territoire le plus proche du centre (point d'ancrage du connecteur)
+    var CRN={perso:[188,242], aspir:[212,242], carr:[188,270], equi:[212,270]};
+    var gC=gEl('g',{},svg), gZ=gEl('g',{},svg);
+    // connecteurs Toi -> 4 territoires (sous les zones)
+    GORDER.forEach(function(fid){ var c=CRN[fid]; gEl('line',{x1:cx,y1:cy,x2:c[0],y2:c[1],'class':'gr-lnk'+(gFacetDone(fid)>0?' live':'')},gC); });
+    // territoires
     GORDER.forEach(function(fid){
-      var a=anchors[fid], tests=gFacetTests(fid), n=tests.length;
-      var base=Math.atan2(a[1]-cy,a[0]-cx);
-      var step=(n>4?25:32)*Math.PI/180, R=(n>4?70:78);
+      var F=FACETS[fid], z=ZP[fid], zx=z[0], zy=z[1];
+      var tests=gFacetTests(fid), n=tests.length, dc=gFacetDone(fid);
+      var zone=gEl('g',{'class':'gr-fade'},gZ);
+      gEl('rect',{x:zx,y:zy,width:W,height:H,rx:16,fill:hexA2(F.hex,.06),stroke:hexA2(F.hex,.22),'stroke-width':1.2},zone);
+      // en-tête : anneau de progression + nom + kicker
+      gRing(zone,zx+27,zy+28,13,F.hex,n?dc/n:0,3);
+      var rc=gEl('text',{x:zx+27,y:zy+31.5,'class':'gr-zct','text-anchor':'middle',fill:F.tHex},zone); rc.textContent=dc+'/'+n;
+      var nm=gEl('text',{x:zx+49,y:zy+24,'class':'gr-zname',fill:F.tHex},zone); nm.textContent=F.name;
+      var kk=gEl('text',{x:zx+49,y:zy+37,'class':'gr-zkick'},zone); kk.textContent=F.kicker;
+      gEl('line',{x1:zx+14,y1:zy+49,x2:zx+W-14,y2:zy+49,stroke:hexA2(F.hex,.18),'stroke-width':1},zone);
+      // densité adaptative : zones chargées (8 ou 7 tests) -> rangées + dots + textes plus petits
+      var top=zy+49, avail=H-49-10, pad=8, rowH=Math.min(24, (avail-pad)/n), startY=top+pad+rowH/2, rightX=zx+W-14;
+      var dense=rowH<18, vdense=rowH<15;
+      var dotO=vdense?6:(dense?6.5:8.5), dotI=vdense?3.5:(dense?4:5.5);
+      var fsName=vdense?9:(dense?9.5:11.5), fsVal=vdense?8.5:(dense?9:10), fsCk=vdense?6:(dense?6.5:8);
+      var nameTr=vdense?15:16, valTr=vdense?11:13, nameX=zx+33;
       tests.forEach(function(id,i){
-        var off=(i-(n-1)/2)*step, ang=base+off;
-        var lx=a[0]+Math.cos(ang)*R, ly=a[1]+Math.sin(ang)*R;
-        leafPos[id]={x:lx,y:ly,ang:ang};
-        gEl('line',{x1:a[0],y1:a[1],x2:lx,y2:ly,'class':'gr-lnk'+(gDone(id)?' live':'')},gL);
-      });
-    });
-    // centre
-    var cg=gEl('g',{'class':'gr-node center gr-fade'},gN);
-    gEl('circle',{cx:cx,cy:cy,r:28,fill:'#fff',stroke:'#0A0E2C','stroke-width':'2'},cg);
-    gEl('circle',{cx:cx,cy:cy,r:28,fill:'#0A0E2C',opacity:'.06'},cg);
-    var ct=gEl('text',{x:cx,y:cy+4,'class':'gr-lbl'},cg); ct.textContent='Toi';
-    // facettes
-    GORDER.forEach(function(fid){
-      var F=FACETS[fid], a=anchors[fid], dc=gFacetDone(fid), tot=gFacetTests(fid).length;
-      var hg=gEl('g',{'class':'gr-node hub gr-fade'},gN);
-      gEl('circle',{cx:a[0],cy:a[1],r:22,fill:F.hex,opacity:'.07'},hg);
-      gRing(hg,a[0],a[1],20,F.hex,tot?dc/tot:0,3.4);
-      gEl('circle',{cx:a[0],cy:a[1],r:14,fill:F.hex,opacity:'.16'},hg);
-      var hc=gEl('text',{x:a[0],y:a[1]+1.5,'class':'gr-lbl',fill:F.tHex,'font-size':'12','font-weight':'800'},hg); hc.textContent=dc+'/'+tot;
-      var by=(a[1]<cy)? a[1]+38 : a[1]-30;
-      var hn=gEl('text',{x:a[0],y:by,'class':'gr-lbl',fill:F.tHex,'font-weight':'800'},hg); hn.textContent=F.name;
-    });
-    // feuilles
-    GORDER.forEach(function(fid){
-      var F=FACETS[fid];
-      gFacetTests(fid).forEach(function(id){
-        var p=leafPos[id], tr=gTrait(id);
-        var lg=gEl('g',{'class':'gr-node leaf gr-pop'},gN);
-        gEl('circle',{cx:p.x,cy:p.y,r:20,fill:'transparent'},lg);
-        var ttl=gEl('title',{},lg); ttl.textContent=gName(id);
-        if(tr.done){
-          gEl('circle',{cx:p.x,cy:p.y,r:13,fill:F.hex,filter:'url(#grglow-'+fid+')',opacity:'.42','class':'gr-pulse'},lg);
-          gEl('circle',{cx:p.x,cy:p.y,r:10,fill:F.hex},lg);
-          if(tr.clinical){ var ck=gEl('text',{x:p.x,y:p.y+3.5,'text-anchor':'middle','font-size':'11','font-weight':'800',style:'fill:#fff'},lg); ck.textContent='✓'; }
-          var dx=Math.cos(p.ang), dy=Math.sin(p.ang);
-          var ox=p.x+dx*(13+Math.abs(dx)*18), oy=p.y+dy*16+4;
-          var lt=gEl('text',{x:ox,y:oy,'class':'gr-lbl'+(tr.clinical?' soft':'')},lg); lt.textContent=tr.clinical?gName(id):tr.trait;
-          lt.setAttribute('text-anchor', dx<-0.2?'end':(dx>0.2?'start':'middle'));
+        var ry=startY+i*rowH, tr=gTrait(id), done=tr.done;
+        var row=gEl('g',{'class':'gr-node gr-row'},zone);
+        gEl('rect',{x:zx,y:ry-rowH/2,width:W,height:rowH,fill:'transparent'},row);
+        var ttl=gEl('title',{},row); ttl.textContent=gName(id);
+        if(done){
+          gEl('circle',{cx:zx+19,cy:ry,r:dotO,fill:F.hex,opacity:'.2'},row);
+          gEl('circle',{cx:zx+19,cy:ry,r:dotI,fill:F.hex},row);
+          if(tr.clinical){ var ck=gEl('text',{x:zx+19,y:ry+fsCk*0.33,'text-anchor':'middle','font-size':fsCk,'font-weight':'800',style:'fill:#fff'},row); ck.textContent='✓'; }
         } else {
-          gEl('circle',{cx:p.x,cy:p.y,r:9,fill:F.hex,opacity:'.10'},lg);
-          gEl('circle',{cx:p.x,cy:p.y,r:9,fill:'none',stroke:F.hex,'stroke-width':'1.8',opacity:'.55'},lg);
-          gEl('circle',{cx:p.x,cy:p.y,r:3,fill:F.hex,opacity:'.6'},lg);
+          gEl('circle',{cx:zx+19,cy:ry,r:dotI+0.5,fill:'#FFFDF8',stroke:F.hex,'stroke-width':1.6,opacity:'.85'},row);
+          gEl('circle',{cx:zx+19,cy:ry,r:vdense?1.6:2,fill:F.hex,opacity:'.5'},row);
         }
-        lg.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
+        var nmr=gEl('text',{x:nameX,y:ry,'class':'gr-rname',style:'fill:'+(done?'var(--ink)':'var(--ink-soft)')+';font-weight:'+(done?700:600)+';font-size:'+fsName+'px'},row);
+        nmr.textContent=gTrunc(gName(id),nameTr);
+        var vt=gEl('text',{x:rightX,y:ry,'class':'gr-rval','text-anchor':'end'},row);
+        if(done&&!tr.clinical){ vt.setAttribute('style','fill:'+F.tHex+';font-weight:700;font-size:'+fsVal+'px'); vt.textContent=gTrunc(tr.trait,valTr); }
+        else if(done){ vt.setAttribute('style','fill:'+F.tHex+';font-weight:700;font-size:'+fsVal+'px'); vt.textContent='✓ fait'; }
+        else { vt.setAttribute('style','fill:#A89B82;font-weight:600;font-size:'+fsVal+'px'); vt.textContent=gMin(id)||''; }
+        row.onclick=function(ev){ ev.stopPropagation(); gOpenSheet(id); };
       });
     });
+    // centre "Toi" (au-dessus, sur le carrefour des connecteurs)
+    var ce=gEl('g',{'class':'gr-node center gr-fade'},gZ);
+    gEl('circle',{cx:cx,cy:cy,r:18,fill:'#0A0E2C',opacity:'.05'},ce);
+    gEl('circle',{cx:cx,cy:cy,r:18,fill:'#fff',stroke:'#0A0E2C','stroke-width':2},ce);
+    var ct=gEl('text',{x:cx,y:cy+4,'class':'gr-lbl'},ce); ct.textContent='Toi';
     svg.onclick=null;
   }
 
