@@ -593,6 +593,58 @@
   .tp-depth-lbl{font-size:13px;line-height:1.4;color:var(--ink-soft)}
   .tp-depth-lbl b{color:var(--ink);font-weight:700}
   @media(max-width:560px){.tp-row{flex-direction:column-reverse;align-items:flex-start}.tp-glyph-svg{width:96px;height:96px}}
+
+  /* ===== Fiche gamifiée · synthèse cross-tests (axs) ===== */
+  .axs-hero{position:relative;background:linear-gradient(150deg,#fff,#FBF7EE);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:0;box-shadow:0 18px 44px rgba(20,18,8,.05)}
+  .axs-hero::before{content:"";position:absolute;inset:0;padding:1.6px;border-radius:var(--radius);background:linear-gradient(140deg,var(--ac,#1320CE),transparent 55%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.55}
+  .axs-herotop{display:flex;gap:18px;align-items:center;padding:22px 24px 6px;flex-wrap:wrap;position:relative}
+  .axs-emblem{position:relative;width:74px;height:82px;flex:0 0 auto;display:grid;place-items:center}
+  .axs-emblem svg{position:absolute;inset:0}
+  .axs-emblem .lvl{position:relative;text-align:center;color:#fff;font-family:var(--serif);line-height:1;text-shadow:0 1px 4px rgba(0,0,0,.25)}
+  .axs-emblem .lvl small{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.92;font-weight:800}
+  .axs-emblem .lvl b{font-size:27px;font-weight:800}
+  .axs-idl{flex:1;min-width:150px}
+  .axs-idk{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ac,var(--blue))}
+  .axs-arch{font-family:var(--serif);font-weight:800;font-size:23px;line-height:1.12;margin:4px 0 5px;letter-spacing:-.3px}
+  .axs-archsub{font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+  .axs-archsub b{color:var(--ink);font-weight:700}
+  .axs-ring{flex:0 0 auto;width:84px;height:84px;position:relative;display:grid;place-items:center}
+  .axs-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .axs-ring .rv{position:relative;text-align:center;line-height:1}
+  .axs-ring .rv b{font-size:21px;font-weight:800;font-family:var(--serif)}
+  .axs-ring .rv small{display:block;font-size:8.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.07em;font-weight:800;margin-top:3px}
+  .axs-sig{display:inline-flex;align-items:center;gap:7px;margin:14px 24px 0;background:rgba(245,235,63,.42);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700}
+  .axs-sig .sx{color:var(--ac,var(--blue));font-weight:800}
+  .axs-xpwrap{padding:14px 24px 4px}
+  .axs-xptop{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:6px}
+  .axs-xptrack{height:9px;border-radius:99px;background:#EFE7D6;overflow:hidden}
+  .axs-xpfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ac,var(--blue)),var(--blue-soft))}
+  .axs-pills{display:flex;gap:8px;flex-wrap:wrap;padding:16px 24px 22px}
+  .axs-pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700}
+  .axs-pill b{font-family:var(--serif);font-weight:800;margin-right:1px}
+  .axs-pill .pd{width:7px;height:7px;border-radius:50%;background:var(--ac,var(--blue));flex:0 0 auto}
+  .axs-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
+  .axs-bdg{display:flex;gap:11px;align-items:center;background:#FBF8F1;border:1px solid var(--line);border-radius:14px;padding:11px 13px}
+  .axs-bdg .bic{width:34px;height:34px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-weight:800;font-family:var(--serif);font-size:16px}
+  .axs-bdg b{font-size:13.5px;display:block;line-height:1.15}
+  .axs-bdg span{font-size:11.5px;color:var(--ink-soft)}
+  .axs-combo{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+  .axs-combo:first-of-type{border-top:0;padding-top:2px}
+  .axs-cdia{flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;color:#fff;font-weight:800}
+  .axs-cmain{flex:1;min-width:0}
+  .axs-ctop{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+  .axs-cname{font-weight:800;font-size:15px}
+  .axs-cval{font-family:var(--serif);font-weight:800;font-size:15px;flex:0 0 auto}
+  .axs-cfrom{font-size:12.5px;color:var(--ink-soft);margin:2px 0 8px;line-height:1.4}
+  .axs-ctrack{height:9px;border-radius:99px;background:#EFE7D6;overflow:hidden}
+  .axs-cfill{height:100%;border-radius:99px}
+  @media(max-width:560px){
+    .axs-herotop{gap:14px;padding:18px 18px 4px}
+    .axs-arch{font-size:20px}
+    .axs-ring{order:3;width:74px;height:74px}
+    .axs-xpwrap,.axs-pills{padding-left:18px;padding-right:18px}
+    .axs-sig{margin-left:18px;margin-right:18px}
+  }
 </style>
 </head>
 <body>
@@ -3797,11 +3849,94 @@
       '</div>';
   }
 
+  // ----- Fiche de personnage gamifiée (en-tête de la synthèse) -----
+  // Tout est dérivé des vraies données cross-tests (buildSynthese), aucune valeur inventée.
+  function axsLighten(hex,a){ var h=hex.replace('#',''); var n=parseInt(h,16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+  function gameCard(d){
+    if(!d.facets.length) return '';
+    // table nom de facette -> couleur (les fils référencent la facette par son nom)
+    var hexByName={}; d.facets.forEach(function(f){ hexByName[f.name]=f.hex; });
+    var ac = (d.fils[0] && hexByName[d.fils[0].facet]) || d.facets[0].hex || '#1320CE';
+    var lvl = d.nTests, nFac = d.facets.length, coverage = Math.round(nFac/4*100);
+    var avg = d.fils.length ? Math.round(d.fils.reduce(function(s,f){return s+f.score;},0)/d.fils.length) : 50;
+
+    // archétype = trait dominant ; sous-titre = les suivants
+    var arch = d.fils[0] ? esc(d.fils[0].label) : esc(d.facets[0].name);
+    var sub;
+    if(d.fils.length>=3) sub='Porté par <b>'+esc(d.fils[1].label)+'</b> et <b>'+esc(d.fils[2].label)+'</b>, tous tests confondus.';
+    else if(d.fils.length===2) sub='Porté par <b>'+esc(d.fils[1].label)+'</b>, tous tests confondus.';
+    else sub='Ta dimension la plus marquée à ce stade de ton parcours.';
+
+    // emblème hexagonal + niveau
+    var emblem='<div class="axs-emblem">'+
+      '<svg viewBox="0 0 74 82" aria-hidden="true"><defs><linearGradient id="axsEmb" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0" stop-color="'+ac+'"/><stop offset="1" stop-color="'+axsLighten(ac,.78)+'"/></linearGradient></defs>'+
+      '<polygon points="37,3 70,22 70,60 37,79 4,60 4,22" fill="url(#axsEmb)"/>'+
+      '<polygon points="37,3 70,22 70,60 37,79 4,60 4,22" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/></svg>'+
+      '<span class="lvl"><small>Niv</small><b>'+lvl+'</b></span></div>';
+
+    // anneau de couverture des dimensions
+    var R=36, C=2*Math.PI*R, off=C*(1-nFac/4);
+    var ring='<div class="axs-ring">'+
+      '<svg viewBox="0 0 84 84" aria-hidden="true">'+
+      '<circle cx="42" cy="42" r="'+R+'" fill="none" stroke="#EFE7D6" stroke-width="7"/>'+
+      '<circle cx="42" cy="42" r="'+R+'" fill="none" stroke="'+ac+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg>'+
+      '<span class="rv"><b style="color:'+ac+'">'+nFac+'<small style="font-size:13px">/4</small></b><small>Couvert</small></span></div>';
+
+    var sig = d.fils.length>=2
+      ? '<div class="axs-sig">Ta signature&nbsp;: '+esc(d.fils[0].label)+' <span class="sx">×</span> '+esc(d.fils[1].label)+'</div>'
+      : '';
+
+    var pills='<div class="axs-pills">'+
+      '<span class="axs-pill"><span class="pd"></span><b>'+lvl+'</b> tests croisés</span>'+
+      '<span class="axs-pill"><span class="pd"></span><b>'+nFac+'</b>/4 dimensions</span>'+
+      (d.reflectCount>0?'<span class="axs-pill"><span class="pd"></span><b>'+d.reflectCount+'</b> réflexion'+(d.reflectCount>1?'s':'')+'</span>':'')+
+      '</div>';
+
+    var hero='<section class="axs-hero card" style="padding:0;--ac:'+ac+'">'+
+      '<div class="axs-herotop">'+emblem+
+        '<div class="axs-idl"><div class="axs-idk">Ta fiche · lecture croisée</div>'+
+          '<div class="axs-arch">'+arch+'</div><div class="axs-archsub">'+sub+'</div></div>'+
+        ring+
+      '</div>'+ sig +
+      '<div class="axs-xpwrap"><div class="axs-xptop"><span>Force du signal dominant</span><span>'+avg+' / 100</span></div>'+
+        '<div class="axs-xptrack"><div class="axs-xpfill" style="width:'+avg+'%"></div></div></div>'+
+      pills+
+    '</section>';
+
+    // badges = dimensions débloquées
+    var badges=d.facets.map(function(f){
+      var ini=(f.name||'?').trim().charAt(0).toUpperCase();
+      var n=f.traits.length;
+      return '<div class="axs-bdg"><span class="bic" style="background:'+f.hex+'">'+ini+'</span>'+
+        '<div><b>'+esc(f.name)+'</b><span>'+n+' test'+(n>1?'s':'')+' relié'+(n>1?'s':'')+'</span></div></div>';
+    }).join('');
+    var badgeCard='<section class="card"><h2 class="secttl">Dimensions débloquées</h2>'+
+      '<p class="sectsub">Chaque dimension explorée ajoute une pièce à ton portrait.</p>'+
+      '<div class="axs-badges">'+badges+'</div></section>';
+
+    // combos = signaux croisés (top traits), montre test/dimension -> trait
+    var combos=d.fils.map(function(f){
+      var c=hexByName[f.facet]||ac;
+      return '<div class="axs-combo"><span class="axs-cdia" style="background:'+c+'">&#10022;</span>'+
+        '<div class="axs-cmain"><div class="axs-ctop"><span class="axs-cname">'+esc(f.label)+'</span>'+
+          '<span class="axs-cval" style="color:'+c+'">'+f.score+'%</span></div>'+
+          '<p class="axs-cfrom">'+esc(f.facet)+' · révélé par '+esc(f.testName)+'</p>'+
+          '<div class="axs-ctrack"><div class="axs-cfill" style="width:'+f.score+'%;background:'+c+'"></div></div></div></div>';
+    }).join('');
+    var comboCard = d.fils.length ? '<section class="card"><h2 class="secttl">Tes combos · signaux croisés</h2>'+
+      '<p class="sectsub">Les traits qui ressortent le plus fort, et le test d\'où ils viennent. C\'est ça, lire tes tests ensemble.</p>'+
+      combos+'</section>' : '';
+
+    return hero+badgeCard+comboCard;
+  }
+
   // contenu complet (payé). `md` = fil rouge rédigé par le LLM ; vide => gabarit déterministe.
   function renderSynthese(md){
     var host=document.getElementById('syn-body'); if(!host) return;
     var d=buildSynthese();
     host.innerHTML='';
+    host.insertAdjacentHTML('beforeend', gameCard(d));
 
     var lead=document.createElement('div'); lead.className='card'; lead.style.marginTop='0';
     if(md && md.trim()){
