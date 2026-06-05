@@ -581,6 +581,17 @@
   .hp-cont-go:hover{filter:brightness(1.07)}
   .hp-cont-go:active{transform:scale(.99)}
   .hp-cont-all{margin-top:10px;width:100%}
+  .tp-row{display:flex;gap:16px;align-items:center}
+  .tp-main{flex:1 1 auto;min-width:0}
+  .tp-glyph{flex:0 0 auto}
+  .tp-glyph-svg{width:124px;height:124px;display:block}
+  .tp-depth{display:flex;align-items:center;gap:11px;margin:12px 0 16px}
+  .tp-pips{display:flex;gap:5px;flex:0 0 auto}
+  .tp-pip{width:22px;height:6px;border-radius:99px;background:rgba(19,32,206,.16);transition:background .25s ease}
+  .tp-pip.on{background:var(--blue)}
+  .tp-depth-lbl{font-size:13px;line-height:1.4;color:var(--ink-soft)}
+  .tp-depth-lbl b{color:var(--ink);font-weight:700}
+  @media(max-width:560px){.tp-row{flex-direction:column-reverse;align-items:flex-start}.tp-glyph-svg{width:96px;height:96px}}
 </style>
 </head>
 <body>
@@ -598,7 +609,7 @@
   </div>
 
   <!-- ÉCRAN 0 : CARTE INTÉRIEURE (graphe, accueil par défaut) -->
-  <!-- ÉCRAN 0a : ONBOARDING INITIAL (pour qui · profil, sert à adapter l'Audit) -->
+  <!-- ÉCRAN 0a : ONBOARDING INITIAL (pour qui · profil, sert à adapter le Portrait) -->
   <section class="screen" id="s-onboard">
     <div class="ob-prog" id="ob-prog"></div>
     <span class="ob-kick"><span class="kd"></span>Avant de commencer</span>
@@ -895,11 +906,11 @@
   <section class="screen" id="s-synthese">
     <button class="crumb" onclick="App.openHome()">‹ Retour à ma carte</button>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px">
-      <span class="kicker" style="margin:0"><span class="kd"></span>Ton Audit</span>
+      <span class="kicker" style="margin:0"><span class="kd"></span>Ton Portrait</span>
       <span class="statpill">Lecture croisée</span>
     </div>
-    <h1>Audit de personnalité, d'aspiration<br><span class="hl">et de carrière.</span></h1>
-    <p class="lead">Un test éclaire un seul axe de toi. Ton Audit les croise tous pour en sortir une seule lecture, claire, avec les pistes carrière qui en découlent.</p>
+    <h1>Portrait de personnalité, d'aspiration<br><span class="hl">et de carrière.</span></h1>
+    <p class="lead">Un test éclaire un seul axe de toi. Ton Portrait les croise tous pour en sortir une seule lecture, claire, avec les pistes carrière qui en découlent.</p>
 
     <div id="syn-head"></div>
     <div id="syn-body"></div>
@@ -907,7 +918,7 @@
     <!-- CTA : décrypter la synthèse avec Charles -->
     <section class="cta-c" style="margin-top:18px">
       <span class="cta-k"><span class="kd"></span>Étape suivante · Décrypter ensemble</span>
-      <h2>Ton Audit en main, passons à l'action.</h2>
+      <h2>Ton Portrait en main, passons à l'action.</h2>
       <p class="cta-lead">On reprend ta lecture croisée en 30 minutes pour en sortir un plan clair, filières à explorer, axes à creuser, prochaines étapes. C'est offert et sans engagement.</p>
       <div class="cta-act">
         <a class="cta-go" href="#rdv" data-cta="rdv-charles">Prendre RDV avec Charles <span aria-hidden="true">→</span></a>
@@ -2676,7 +2687,7 @@
   function openHome(){ renderGraph(); show("s-home"); }
 
   // ---------- ONBOARDING INITIAL ----------
-  // 1er passage : on demande pour qui + profil, afin d'adapter l'Audit (ton + pistes).
+  // 1er passage : on demande pour qui + profil, afin d'adapter le Portrait (ton + pistes).
   // Stocké dans state.profile ; gabarits de questions pilotés par le flux self/other.
   var obDraft={}, obStep=0;
   var OB_SEG=[
@@ -2698,14 +2709,14 @@
     var q="", sub="", opts=[];
     if(key==="for"){
       q="Pour qui passes-tu ces tests ?";
-      sub="Ça nous aide à adapter ton Audit, le ton et les pistes proposées.";
+      sub="Ça nous aide à adapter ton Portrait, le ton et les pistes proposées.";
       opts=[
         {v:"self",  emo:"🙂", n:"Pour moi", d:"Je veux mieux me comprendre."},
         {v:"other", emo:"🤝", n:"Pour quelqu'un que j'accompagne", d:"Mon enfant, un élève, un proche..."}
       ];
     } else if(key==="relation"){
       q="Quel est ton lien avec cette personne ?";
-      sub="Pour écrire l'Audit du bon point de vue.";
+      sub="Pour écrire le Portrait du bon point de vue.";
       opts=[
         {v:"parent",     emo:"👪", n:"Je suis son parent"},
         {v:"enseignant", emo:"🎓", n:"Enseignant·e / orientation"},
@@ -2718,7 +2729,7 @@
       opts=OB_SEG.map(function(s){ return {v:s.id, emo:s.emo, n:s.n}; });
     } else if(key==="goal"){
       q=other?"Qu'est-ce qui l'amène ?":"Qu'est-ce qui t'amène ?";
-      sub="On met l'Audit au service de ça.";
+      sub="On met le Portrait au service de ça.";
       opts=other?[
         {v:"orientation", emo:"🧭", n:"L'aider à s'orienter", d:"Études, filière, prochaine étape"},
         {v:"metier",      emo:"💼", n:"L'aider à trouver sa voie", d:"Quel métier lui correspond"},
@@ -2965,7 +2976,7 @@
   // Checkout désormais dédié au seul produit payant : la Synthèse cross-tests.
   function openCheckout(sub){
     subMode=!!sub;
-    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton Audit";
+    document.getElementById("chk-title").textContent = subMode? "Activer l'abonnement Lab" : "Débloquer ton Portrait";
     document.getElementById("chk-sub").textContent = subMode? "9,99 € / mois, résiliable à tout moment" : "Paiement unique de 4,99 €";
     document.getElementById("chk-amount").textContent = subMode? "9,99 €":"4,99 €";
     if(state.email) document.getElementById("chk-email").value=state.email;
@@ -3683,7 +3694,7 @@
     var to=setTimeout(function(){ if(ctrl) ctrl.abort(); }, 70000); // bilan long => plus de marge
     return fetch(AI_URL,{
       method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Audit de personnalité, d'aspiration et de carrière (cross-tests)", summary:synthSummary(d), mode:"synthesis"}),
+      body:JSON.stringify({testCode:"SYNTHESE", testName:"Proxxie Lab, Portrait de personnalité, d'aspiration et de carrière (cross-tests)", summary:synthSummary(d), mode:"synthesis"}),
       signal:ctrl?ctrl.signal:undefined
     }).then(function(r){ clearTimeout(to); if(!r.ok) throw 0; return r.text(); })
       .then(function(md){ return (md && md.trim().length>60) ? md : null; })
@@ -3734,7 +3745,7 @@
         '<div class="card" style="margin-top:0">'+
         '<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Bientôt disponible</span>'+
         '<h2 style="font-family:var(--serif);margin:0 0 6px">Encore un test, et on relie tout.</h2>'+
-        '<p style="color:var(--ink-soft);margin:0 0 14px">Ton Audit croise tes différents tests pour en sortir une lecture d\'ensemble. Il te faut au moins '+SYNTH_MIN+' tests. Tu en as '+d.nTests+', plus que '+need+' à passer.</p>'+
+        '<p style="color:var(--ink-soft);margin:0 0 14px">Ton Portrait croise tes différents tests pour en sortir une lecture d\'ensemble. Il te faut au moins '+SYNTH_MIN+' tests. Tu en as '+d.nTests+', plus que '+need+' à passer.</p>'+
         '<button class="btn" onclick="App.openHome()">Choisir un test à passer</button>'+
         '</div>';
       return;
@@ -3742,8 +3753,8 @@
     // mode 'pay' : page de valeur (ce que tu obtiens + exemple) puis l'offre en bas
     var names=d.fils.map(function(f){return f.label;});
     var teaser = names.length>=2
-      ? 'Tes tests pointent déjà vers <b>'+esc(names[0])+'</b> et <b>'+esc(names[1])+'</b>'+(names[2]?', et <b>'+esc(names[2])+'</b>':'')+'. Ton Audit en fait une lecture d\'ensemble, et en tire des directions concrètes.'
-      : 'Tu as passé assez de tests pour une vraie lecture croisée. Ton Audit fait parler tes '+d.nTests+' tests ensemble, et en tire des directions concrètes.';
+      ? 'Tes tests pointent déjà vers <b>'+esc(names[0])+'</b> et <b>'+esc(names[1])+'</b>'+(names[2]?', et <b>'+esc(names[2])+'</b>':'')+'. Ton Portrait en fait une lecture d\'ensemble, et en tire des directions concrètes.'
+      : 'Tu as passé assez de tests pour une vraie lecture croisée. Ton Portrait fait parler tes '+d.nTests+' tests ensemble, et en tire des directions concrètes.';
     body.innerHTML=
       '<div class="card" style="margin-top:0">'+
         '<p style="color:var(--ink-soft);margin:0;font-size:15px">'+teaser+'</p>'+
@@ -3759,7 +3770,7 @@
         '<div class="exrep">'+
           '<div class="exrep-top">'+
             '<div class="exrep-av">L</div>'+
-            '<div class="exrep-id"><p class="exrep-name">Léa, 24 ans</p><p class="exrep-meta">Audit · 5 tests reliés</p></div>'+
+            '<div class="exrep-id"><p class="exrep-name">Léa, 24 ans</p><p class="exrep-meta">Portrait · 5 tests reliés</p></div>'+
             '<span class="exrep-tag">Exemple</span>'+
           '</div>'+
           '<div class="exrep-body exrep-fade">'+
@@ -3773,15 +3784,15 @@
               '<span class="exrep-chip">Métiers à mission</span><span class="exrep-chip">Recherche, R&amp;D</span><span class="exrep-chip">Indépendante</span><span class="exrep-chip">Conseil</span><span class="exrep-chip">Design produit</span>'+
             '</div></div>'+
           '</div>'+
-          '<div class="exrep-foot">Aperçu · l\'Audit complet fait <b>&nbsp;~20 pages</b></div>'+
+          '<div class="exrep-foot">Aperçu · le Portrait complet fait <b>&nbsp;~20 pages</b></div>'+
         '</div>'+
       '</div>'+
       '<div class="paywall">'+
         '<span class="pill" style="border-color:var(--orange);color:var(--orange)"><span class="dot"></span>Débloquer la tienne</span>'+
         '<div class="price" style="margin-top:10px"><b>4,99 €</b><s>14,99 €</s></div>'+
-        '<p style="color:var(--ink-soft);margin:0 0 14px;font-size:14px">Un seul paiement. Ton Audit se met à jour à chaque nouveau test, sans repayer.</p>'+
-        '<button class="btn pay" onclick="App.openCheckout()">Débloquer mon Audit</button>'+
-        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, l\'Audit, tous les tests et le suivi dans le temps</p>'+
+        '<p style="color:var(--ink-soft);margin:0 0 14px;font-size:14px">Un seul paiement. Ton Portrait se met à jour à chaque nouveau test, sans repayer.</p>'+
+        '<button class="btn pay" onclick="App.openCheckout()">Débloquer mon Portrait</button>'+
+        '<p class="subnote">ou <span class="sublink" onclick="App.openCheckout(true)">l\'abonnement Lab à 9,99 €/mois</span>, le Portrait, tous les tests et le suivi dans le temps</p>'+
       '</div>';
   }
 
@@ -3843,16 +3854,16 @@
     var sec=document.createElement('section'); sec.className='card'; sec.style.marginTop='18px';
     var body, btn;
     if(paid){
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ton Audit relie ce test à tous les autres que tu as passés.</p>';
-      btn='<button class="btn" onclick="App.openSynthese()">Voir mon Audit</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ton Portrait relie ce test à tous les autres que tu as passés.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Voir mon Portrait</button>';
     } else if(elig){
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ce portrait éclaire un axe. Ton Audit croise tes '+synthDoneIds().length+' tests en une seule lecture, avec les pistes carrière qui en découlent.</p>';
-      btn='<button class="btn" onclick="App.openSynthese()">Découvrir mon Audit</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Ce portrait éclaire un axe. Ton Portrait croise tes '+synthDoneIds().length+' tests en une seule lecture, avec les pistes carrière qui en découlent.</p>';
+      btn='<button class="btn" onclick="App.openSynthese()">Découvrir mon Portrait</button>';
     } else {
-      body='<p style="color:var(--ink-soft);margin:0 0 12px">Passe un test de plus et débloque ton Audit : une lecture qui croise tous tes tests.</p>';
-      btn='<button class="btn ghost" onclick="App.openSynthese()">En savoir plus sur l\'Audit</button>';
+      body='<p style="color:var(--ink-soft);margin:0 0 12px">Passe un test de plus et débloque ton Portrait : une lecture qui croise tous tes tests.</p>';
+      btn='<button class="btn ghost" onclick="App.openSynthese()">En savoir plus sur le Portrait</button>';
     }
-    sec.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Aller plus loin · ton Audit</span>'+
+    sec.innerHTML='<span class="kicker" style="margin:0 0 8px"><span class="kd"></span>Aller plus loin · ton Portrait</span>'+
       '<h2 style="font-family:var(--serif);font-size:21px;margin:0 0 6px">Et si on reliait tous tes tests ?</h2>'+body+btn;
     host.appendChild(sec);
   }
@@ -3864,23 +3875,41 @@
     if(n<1){ sec.hidden=true; return; }
     sec.hidden=false;
     var paid=!!state.synthesisPaid, elig=synthEligible();
-    var badge, title, lead, btn;
+    var badge, title, lead, btn, depth='';
+    // glyphe : 3 cercles fondus = tes tests synthétisés en un seul portrait
+    var glyph='<svg class="tp-glyph-svg" viewBox="0 0 156 156" fill="none" aria-hidden="true">'+
+      '<circle cx="62" cy="62" r="40" fill="#1320CE" fill-opacity=".13"/><circle cx="94" cy="62" r="40" fill="#1320CE" fill-opacity=".13"/>'+
+      '<circle cx="78" cy="92" r="40" fill="#FD6936" fill-opacity=".16"/>'+
+      '<circle cx="62" cy="62" r="40" stroke="#1320CE" stroke-opacity=".4"/><circle cx="94" cy="62" r="40" stroke="#1320CE" stroke-opacity=".4"/>'+
+      '<circle cx="78" cy="92" r="40" stroke="#FD6936" stroke-opacity=".5"/><circle cx="78" cy="74" r="6" fill="#0A0E2C"/></svg>';
+    // pips : tests croisés + 2 fantômes pour signaler la profondeur encore à débloquer
+    function pipsHtml(done){
+      var f=Math.max(Math.min(done,8),0), h='';
+      for(var i=0;i<f;i++) h+='<span class="tp-pip on"></span>';
+      for(var j=0;j<2;j++) h+='<span class="tp-pip"></span>';
+      return '<div class="tp-pips" role="img" aria-label="'+done+' test'+(done>1?'s':'')+' croisé'+(done>1?'s':'')+'">'+h+'</div>';
+    }
     if(paid){
-      badge='Débloqué'; title='Ton Audit est prêt.';
-      lead='Une lecture d\'ensemble qui croise tes '+n+' tests. Reviens-y à chaque nouveau test.';
-      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Voir mon Audit →</button>';
+      badge='À jour'; title='Là où tes '+n+' tests se rejoignent, il y a toi.';
+      lead='Une lecture qui relie les fils de tes tests. Reviens-y : elle se précise à chaque nouveau test.';
+      depth='<div class="tp-depth">'+pipsHtml(n)+'<span class="tp-depth-lbl"><b>'+n+' test'+(n>1?'s':'')+' croisé'+(n>1?'s':'')+'.</b> Chaque test affine ton portrait.</span></div>';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Découvrir mon portrait →</button>';
     } else if(elig){
-      badge=n+' tests reliés'; title='Relie tous tes tests.';
-      lead='Tu as relié assez de tests pour une vraie lecture croisée. Ton Audit fait parler tes '+n+' tests ensemble : le fil rouge qui revient, tes dimensions mises bout à bout, et les pistes carrière qui en découlent.';
-      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Découvrir mon Audit →</button>';
+      badge=n+' tests reliés'; title='Et si tous tes tests parlaient de toi, ensemble ?';
+      lead='Tu as relié assez de tests pour une vraie lecture croisée : le fil rouge qui revient, tes dimensions mises bout à bout, et les pistes carrière qui en découlent.';
+      depth='<div class="tp-depth">'+pipsHtml(n)+'<span class="tp-depth-lbl"><b>'+n+' tests prêts à se croiser.</b></span></div>';
+      btn='<button class="hp-cont-go" onclick="App.openSynthese()">Découvrir mon portrait →</button>';
     } else {
-      badge=n+' / '+SYNTH_MIN; title='Bientôt ton Audit.';
-      lead='Encore '+(SYNTH_MIN-n)+' test'+((SYNTH_MIN-n)>1?'s':'')+' et ton Audit croise tout ton profil en une lecture.';
+      badge=n+' / '+SYNTH_MIN; title='Ton portrait se dessine.';
+      lead='Encore '+(SYNTH_MIN-n)+' test'+((SYNTH_MIN-n)>1?'s':'')+' et tes réponses se croisent en un seul portrait de toi.';
+      depth='<div class="tp-depth">'+pipsHtml(n)+'<span class="tp-depth-lbl"><b>'+n+' / '+SYNTH_MIN+'</b> · plus tu en passes, plus il se précise.</span></div>';
       btn='<button class="btn ghost hp-cont-all" onclick="App.openSynthese()">En savoir plus</button>';
     }
-    sec.innerHTML='<div class="hp-cont-head"><span class="kicker" style="margin:0"><span class="kd"></span>Ton Audit</span><span class="statpill">'+badge+'</span></div>'+
-      '<h2 class="hp-cont-title">'+title+'</h2>'+
-      '<p class="hp-cont-lead">'+lead+'</p>'+btn;
+    sec.innerHTML='<div class="hp-cont-head"><span class="kicker" style="margin:0"><span class="kd"></span>Ton Portrait</span><span class="statpill">'+badge+'</span></div>'+
+      '<div class="tp-row"><div class="tp-main">'+
+        '<h2 class="hp-cont-title">'+title+'</h2>'+
+        '<p class="hp-cont-lead">'+lead+'</p>'+depth+btn+
+      '</div><div class="tp-glyph">'+glyph+'</div></div>';
   }
 
   // ---- MODE CARTE : tout en vue, les traits s'allument ----
