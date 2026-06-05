@@ -14,6 +14,12 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+# Les actions Pages (configure-pages, deploy-pages, upload-pages-artifact)
+# n'ont pas encore de major sur Node 24 ; on les bascule via l'opt-in officiel
+# pour lever l'avertissement de dépréciation Node 20.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,7 +28,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
