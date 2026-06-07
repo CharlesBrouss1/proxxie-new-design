@@ -19,6 +19,7 @@ profil a un avantage durable.
 Pattern identique à _patch_build_grit.py · clone Anxiete + swap JSX.
 """
 import re, json, base64, gzip, pathlib, shutil
+import _bridge_common
 
 REPO = pathlib.Path(__file__).parent
 SOURCE = REPO / "Proxxie Test Anxiete.html"
@@ -375,10 +376,14 @@ const DualBar = ({ label, value, color }) => (
   </div>
 );
 
-const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
+const ComparePanel = ({ mode, peerName, peerLabel, selfLabel, parentAnswers, teenAnswers }) => {
   const parentResults = computeResults(parentAnswers);
   const teenResults = computeResults(teenAnswers);
   const gapTotal = Math.abs(parentResults.total - teenResults.total);
+  const isPredict = mode === "predict";
+  const who = peerName || (isPredict ? "Le parent" : "L'autre");
+  const colPeer = peerLabel || (isPredict ? (who + " pensait") : who);
+  const colSelf = selfLabel || "Toi";
 
   const pillars = [
     { code: "A", meta: TYPE_META.A, p: parentResults.a, t: teenResults.a },
@@ -389,8 +394,12 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
   const pillarPrompt = (gap) => {
     const g = Math.abs(gap);
     if (g <= 8) return "Vous voyez ce point de la même façon. Bonne base pour avancer.";
-    if (gap > 0) return parentName + " t'a sous-estimé ici. Qu'est-ce qui te rend solide sur ce pilier, selon toi ?";
-    return parentName + " te voyait plus à l'aise ici. Où est l'écart entre ce que tu ressens et ce qu'il ou elle perçoit ?";
+    if (isPredict) {
+      if (gap > 0) return who + " t'a sous-estimé ici. Qu'est-ce qui te rend solide sur ce pilier, selon toi ?";
+      return who + " te voyait plus à l'aise ici. Où est l'écart entre ce que tu ressens et ce qu'il ou elle perçoit ?";
+    }
+    if (gap > 0) return "Tu te places plus haut que " + who + " sur ce pilier. Qu'est-ce qui explique l'écart, selon vous ?";
+    return who + " se place plus haut que toi ici. D'où vient la différence ?";
   };
 
   // Points de finesse · les items où la prédiction parent et la réponse ado
@@ -410,17 +419,17 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
     <div style={{ marginBottom: 30 }}>
       {/* En-tête global */}
       <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 18 }}>
-        <h2 style={{ fontSize: 20, marginBottom: 6 }}>Ce que {parentName} avait deviné · ce que tu réponds</h2>
+        <h2 style={{ fontSize: 20, marginBottom: 6 }}>{isPredict ? ("Ce que " + who + " avait deviné · ce que tu réponds") : "Vos deux profils, côte à côte"}</h2>
         <p style={{ fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55, marginBottom: 20 }}>
           Pas un jugement, un point de départ pour parler. Regardez d'abord les écarts les plus grands.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
           <div style={{ padding: 18, background: "var(--c-cream-light, #FAF6EE)", borderRadius: 12 }}>
-            <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{parentName} pensait</div>
+            <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{colPeer}</div>
             <div style={{ fontSize: 32, fontWeight: 700, color: "var(--c-ink)", fontFamily: "var(--font-display)" }}>{parentResults.total}<span style={{ fontSize: 14, color: "var(--c-muted)" }}>/100</span></div>
           </div>
           <div style={{ padding: 18, background: "rgba(253,105,54,.08)", borderRadius: 12 }}>
-            <div style={{ fontSize: 12, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Toi, pour de vrai</div>
+            <div style={{ fontSize: 12, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{colSelf}</div>
             <div style={{ fontSize: 32, fontWeight: 700, color: "#C2410C", fontFamily: "var(--font-display)" }}>{teenResults.total}<span style={{ fontSize: 14 }}>/100</span></div>
           </div>
         </div>
@@ -444,8 +453,8 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
                   <strong style={{ color: "var(--c-ink)", fontSize: 15 }}>{row.meta.l}</strong>
                   <span style={{ marginLeft: "auto", fontSize: 13, fontWeight: 700, color: aligned ? "#0E7490" : row.meta.c }}>{aligned ? "aligné" : sign + gap + " pts"}</span>
                 </div>
-                <DualBar label={parentName + " pensait"} value={row.p} color="#9CA3AF" />
-                <DualBar label="Toi" value={row.t} color={row.meta.c} />
+                <DualBar label={colPeer} value={row.p} color="#9CA3AF" />
+                <DualBar label={colSelf} value={row.t} color={row.meta.c} />
                 <p style={{ fontSize: 13, color: "var(--c-muted)", lineHeight: 1.5, marginTop: 8 }}>{pillarPrompt(gap)}</p>
               </div>
             );
@@ -457,14 +466,14 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
       {divergences.length > 0 && (
         <div style={{ background: "linear-gradient(160deg, #FFF7ED, #FAF6EE)", borderRadius: 20, padding: 28, border: "1px solid #FED7AA" }}>
           <h3 style={{ fontSize: 17, marginBottom: 6, color: "var(--c-ink)" }}>Vos plus grands écarts · à discuter ensemble</h3>
-          <p style={{ fontSize: 13.5, color: "var(--c-muted)", marginBottom: 18, lineHeight: 1.5 }}>Les affirmations où ta réponse s'éloigne le plus de ce que {parentName} avait imaginé.</p>
+          <p style={{ fontSize: 13.5, color: "var(--c-muted)", marginBottom: 18, lineHeight: 1.5 }}>{isPredict ? ("Les affirmations où ta réponse s'éloigne le plus de ce que " + who + " avait imaginé.") : "Les affirmations où vos deux réponses s'éloignent le plus."}</p>
           <div style={{ display: "grid", gap: 12 }}>
             {divergences.map((d, i) => (
               <div key={i} style={{ background: "white", borderRadius: 12, padding: "16px 18px", border: "1px solid var(--c-line)" }}>
                 <div style={{ fontSize: 14.5, color: "var(--c-ink)", lineHeight: 1.5, marginBottom: 10 }}>{d.q}</div>
                 <div style={{ display: "flex", gap: 16, flexWrap: "wrap", fontSize: 13 }}>
-                  <span style={{ color: "var(--c-muted)" }}>{parentName} : <strong style={{ color: "var(--c-ink-2)" }}>{LIKERT_WORDS[d.p]}</strong></span>
-                  <span style={{ color: "#C2410C" }}>Toi : <strong>{LIKERT_WORDS[d.t]}</strong></span>
+                  <span style={{ color: "var(--c-muted)" }}>{colPeer} : <strong style={{ color: "var(--c-ink-2)" }}>{LIKERT_WORDS[d.p]}</strong></span>
+                  <span style={{ color: "#C2410C" }}>{colSelf} : <strong>{LIKERT_WORDS[d.t]}</strong></span>
                 </div>
               </div>
             ))}
@@ -538,7 +547,7 @@ const BridgeScreen = ({ title, sub }) => (
 
 // L'ado a déjà passé ce test · on propose de garder ses réponses (zéro effort,
 // la comparaison part directement) ou de tout repasser à neuf.
-const CompareResumeScreen = ({ parentName, onKeep, onRetake }) => (
+const CompareResumeScreen = ({ parentName, isPredict, onKeep, onRetake }) => (
   <section style={{ paddingTop: 80, paddingBottom: 110 }}>
     <div className="shell" style={{ maxWidth: 560, textAlign: "center" }}>
       <span className="chip" style={{ background: "rgba(253,105,54,.15)", color: "#C2410C" }}>
@@ -546,7 +555,7 @@ const CompareResumeScreen = ({ parentName, onKeep, onRetake }) => (
       </span>
       <h1 style={{ fontSize: 28, marginTop: 18, marginBottom: 14, color: "var(--c-ink)" }}>On garde tes réponses ?</h1>
       <p style={{ fontSize: 16, color: "var(--c-muted)", lineHeight: 1.6, marginBottom: 28 }}>
-        Tu as déjà répondu à ce test. On peut comparer tout de suite avec ce que {parentName} avait deviné, ou tu peux repasser le test si tu préfères répondre à nouveau.
+        Tu as déjà répondu à ce test. On peut comparer tout de suite avec {isPredict ? ("ce que " + parentName + " avait deviné") : ("les réponses de " + parentName)}, ou tu peux repasser le test si tu préfères répondre à nouveau.
       </p>
       <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
         <button className="btn btn-orange btn-lg" onClick={onKeep} style={{ background: "#C2410C" }}>Garder mes réponses · voir la comparaison</button>
@@ -557,7 +566,8 @@ const CompareResumeScreen = ({ parentName, onKeep, onRetake }) => (
 );
 
 // Panneau parent · crée le code de comparaison + capture l'email pour la relance.
-const ApiShareLinkPanel = ({ answers, accent }) => {
+const ApiShareLinkPanel = ({ answers, accent, mode = "predict" }) => {
+  const isPredict = mode === "predict";
   const [name, setName] = React.useState("");
   const [status, setStatus] = React.useState("idle"); // idle | loading | done | error
   const [link, setLink] = React.useState("");
@@ -569,13 +579,13 @@ const ApiShareLinkPanel = ({ answers, accent }) => {
   const createCode = () => {
     setStatus("loading");
     apiPost("/api/comparison", {
-      parentResults: { [TEST_ID]: { a: answers, n: name || "Le parent" } },
+      parentResults: { [TEST_ID]: { a: answers, n: name || (isPredict ? "Le parent" : "Moi") } },
       tests: [TEST_ID],
     })
       .then((data) => {
         if (!data || !data.ok || !data.code) { setStatus("error"); return; }
         setCode(data.code);
-        setLink(PAGE_URL + "?code=" + encodeURIComponent(data.code));
+        setLink(PAGE_URL + "?code=" + encodeURIComponent(data.code) + "&m=" + mode);
         setStatus("done");
       })
       .catch(() => setStatus("error"));
@@ -599,9 +609,9 @@ const ApiShareLinkPanel = ({ answers, accent }) => {
 
   return (
     <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 30 }}>
-      <h2 style={{ fontSize: 20, marginBottom: 8 }}>Envoie le test à ton ado</h2>
+      <h2 style={{ fontSize: 20, marginBottom: 8 }}>{isPredict ? "Envoie le test à ton ado" : "Compare avec quelqu'un"}</h2>
       <p style={{ fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55, marginBottom: 18 }}>
-        Il répond pour de vrai, et la comparaison avec ta prédiction revient ici automatiquement. Pas de copier-coller, pas d'effort de sa part.
+        {isPredict ? "Il répond pour de vrai, et la comparaison avec ta prédiction revient ici automatiquement. Pas de copier-coller, pas d'effort de sa part." : "Partage ce lien. La personne passe le test à son tour, et la comparaison de vos deux résultats s'affiche automatiquement, des deux côtés."}
       </p>
 
       {status !== "done" && (
@@ -609,11 +619,11 @@ const ApiShareLinkPanel = ({ answers, accent }) => {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Comment ton ado te connaît (Papa, Maman…)"
+            placeholder={isPredict ? "Comment ton ado te connaît (Papa, Maman…)" : "Ton prénom (pour la comparaison)"}
             style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid var(--c-line)", fontSize: 15, fontFamily: "inherit" }}
           />
           <button className="btn btn-orange btn-lg" onClick={createCode} disabled={status === "loading"} style={{ background: accent }}>
-            {status === "loading" ? "Création du lien…" : "Générer le lien à partager"}
+            {status === "loading" ? "Création du lien…" : (isPredict ? "Générer le lien à partager" : "Créer mon lien de comparaison")}
           </button>
           {status === "error" && <div style={{ color: "#C2410C", fontSize: 13.5 }}>Une erreur est survenue. Réessaie dans un instant.</div>}
         </div>
@@ -622,14 +632,14 @@ const ApiShareLinkPanel = ({ answers, accent }) => {
       {status === "done" && (
         <div style={{ display: "grid", gap: 16 }}>
           <div style={{ display: "grid", gap: 8 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: accent }}>Lien à envoyer à ton ado</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: accent }}>{isPredict ? "Lien à envoyer à ton ado" : "Lien à partager"}</div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <input readOnly value={link} style={{ flex: 1, minWidth: 220, padding: "11px 13px", borderRadius: 10, border: "1px solid var(--c-line)", fontSize: 13.5, fontFamily: "inherit", color: "var(--c-ink-2)" }} />
               <button className="btn btn-ghost" onClick={copyLink}>{copied ? "Copié ✓" : "Copier"}</button>
             </div>
           </div>
           <div style={{ borderTop: "1px solid var(--c-line)", paddingTop: 16, display: "grid", gap: 8 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--c-ink)" }}>Reçois un email quand il a répondu</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--c-ink)" }}>{isPredict ? "Reçois un email quand il a répondu" : "Reçois un email quand l'autre a répondu"}</div>
             <p style={{ fontSize: 13, color: "var(--c-muted)", margin: 0, lineHeight: 1.5 }}>On te prévient dès que la comparaison est prête.</p>
             {emailStatus !== "done" && (
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -658,6 +668,7 @@ const TestApp = () => {
   // Pont backend · ?code=PXC-XXXX (+ ?role=parent au retour). Sans code → flux normal.
   const CODE = React.useMemo(() => getUrlParam("code"), []);
   const ROLE = React.useMemo(() => getUrlParam("role"), []);
+  const SHARE_MODE = React.useMemo(() => (getUrlParam("m") === "predict" ? "predict" : "peer"), []);
   // bridge null = pas de pont. Sinon {status, parentName?, parentAnswers?, code}.
   const [bridge, setBridge] = React.useState(null);
   const [persona, setPersona] = React.useState(null);
@@ -700,7 +711,11 @@ const TestApp = () => {
 
   const isTeenBridge = bridge && bridge.status === "teen";
   const isParentReturn = bridge && bridge.status === "parent-return";
-  const PARENT_PREDICT = (isTeenBridge || isParentReturn) ? { n: bridge.parentName, a: bridge.parentAnswers } : null;
+  const BRIDGE_MODE = (bridge && bridge.mode) || SHARE_MODE;
+  const _pn = bridge ? bridge.parentName : null;
+  const _peerLabel = BRIDGE_MODE === "predict" ? ((_pn || "Parent") + " pensait") : (isParentReturn ? "L'autre personne" : (_pn || "L'autre"));
+  const _selfLabel = BRIDGE_MODE === "predict" ? "Réel" : (isParentReturn ? (_pn || "Toi") : "Toi");
+  const PARENT_PREDICT = (isTeenBridge || isParentReturn) ? { n: _pn, a: bridge.parentAnswers, mode: BRIDGE_MODE, peerLabel: _peerLabel, selfLabel: _selfLabel } : null;
   const goPicker = () => { setMode("picker"); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const pickPersona = (p) => {
     // Pont ado · si le test a déjà été complété, proposer garder ou repasser
@@ -812,8 +827,8 @@ const TestApp = () => {
       <ProxxieNav />
       {mode === "bridge-loading" && <BridgeScreen title="Chargement…" sub="On récupère le test qu'on t'a partagé." />}
       {mode === "bridge-error" && <BridgeScreen title="Lien introuvable" sub="Ce lien de comparaison n'existe plus ou a expiré. Demande à la personne de t'en renvoyer un." />}
-      {mode === "bridge-waiting" && <BridgeScreen title="Ton ado n'a pas encore répondu" sub="Dès qu'il aura passé le test, la comparaison s'affichera ici. On t'envoie un email si tu as laissé ton adresse." />}
-      {mode === "compare-resume" && <CompareResumeScreen parentName={(PARENT_PREDICT && PARENT_PREDICT.n) || "Le parent"} onKeep={keepExisting} onRetake={retakeFresh} />}
+      {mode === "bridge-waiting" && <BridgeScreen title={BRIDGE_MODE === "predict" ? "Ton ado n'a pas encore répondu" : "L'autre personne n'a pas encore répondu"} sub={BRIDGE_MODE === "predict" ? "Dès qu'il aura passé le test, la comparaison s'affichera ici. On t'envoie un email si tu as laissé ton adresse." : "Dès qu'elle aura passé le test, la comparaison s'affichera ici. On t'envoie un email si tu as laissé ton adresse."} />}
+      {mode === "compare-resume" && <CompareResumeScreen parentName={(PARENT_PREDICT && PARENT_PREDICT.n) || (BRIDGE_MODE === "predict" ? "Le parent" : "L'autre")} isPredict={BRIDGE_MODE === "predict"} onKeep={keepExisting} onRetake={retakeFresh} />}
       {mode === "landing" && (<><TestHero onStart={goPicker} /><HowItWorks /></>)}
       {mode === "picker" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={null} onPick={pickPersona} />}
       {mode === "compare-intro" && <PersonaIntro testName="Future-Proof 2035" accent="#C2410C" comingFromPredict={PARENT_PREDICT} onPick={pickPersona} />}
@@ -825,8 +840,9 @@ const TestApp = () => {
       )}
       {mode === "results" && results && (
         <>
-          {effectivePersona === "self_compare" && PARENT_PREDICT && PARENT_PREDICT.a && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
-          {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ApiShareLinkPanel answers={answers} accent="#C2410C" /></div></section>)}
+          {effectivePersona === "self_compare" && PARENT_PREDICT && PARENT_PREDICT.a && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel mode={PARENT_PREDICT.mode} peerName={PARENT_PREDICT.n} peerLabel={PARENT_PREDICT.peerLabel} selfLabel={PARENT_PREDICT.selfLabel} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
+          {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ApiShareLinkPanel answers={answers} accent="#C2410C" mode="predict" /></div></section>)}
+          {!isTeenBridge && !isParentReturn && persona !== "predict" && answers && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ApiShareLinkPanel answers={answers} accent="#C2410C" mode="peer" /></div></section>)}
           <EmailResultsActions testCode="FuturProof" testName="Future-Proof 2035" accent="#C2410C" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
           <RichAnalysisSection pillars={results} families={results.topFamilies} topItems={results.topItems} lowItems={results.lowItems} level={results.level} />
@@ -869,7 +885,7 @@ def build(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     )
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[: boundary_match.start()] + FUTUREPROOF_BLOCK
+    new_src = _bridge_common.patch_persona_intro(src[: boundary_match.start()]) + FUTUREPROOF_BLOCK
 
     nd = new_src.encode("utf-8")
     if comp:

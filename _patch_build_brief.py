@@ -273,7 +273,7 @@ const Results = ({ results, onRestart }) => {
   );
 };
 
-const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
+const ComparePanel = ({ peerLabel, selfLabel, parentAnswers, teenAnswers }) => {
   const pR = computeResults(parentAnswers);
   const tR = computeResults(teenAnswers);
   const gap = Math.abs(pR.total - tR.total);
@@ -284,19 +284,19 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.85, marginBottom: 8 }}>Comparaison · Fonctions exécutives</div>
         <div style={{ display: "flex", justifyContent: "center", gap: 40, fontFamily: "var(--font-display)", fontSize: 56 }}>
           <div>
-            <div style={{ fontSize: 11, opacity: 0.8, fontFamily: "inherit", marginBottom: 4 }}>{parentName || "Parent"} pensait</div>
+            <div style={{ fontSize: 11, opacity: 0.8, fontFamily: "inherit", marginBottom: 4 }}>{peerLabel || "L'autre"}</div>
             <div>{pR.total} / 5</div>
             <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>{pR.level}</div>
           </div>
           <div style={{ opacity: 0.6, fontSize: 36 }}>→</div>
           <div>
-            <div style={{ fontSize: 11, opacity: 0.8, fontFamily: "inherit", marginBottom: 4 }}>Réel</div>
+            <div style={{ fontSize: 11, opacity: 0.8, fontFamily: "inherit", marginBottom: 4 }}>{selfLabel || "Toi"}</div>
             <div>{tR.total} / 5</div>
             <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>{tR.level}</div>
           </div>
         </div>
         <p style={{ marginTop: 16, opacity: 0.92, fontSize: 15, maxWidth: 520, marginInline: "auto" }}>
-          {gap >= 1.0 ? "Écart significatif. Vous lisez ses fonctions exécutives très différemment." : gap >= 0.5 ? "Écart modéré. À discuter ensemble." : "Perception alignée."}
+          {gap >= 1.0 ? "Écart significatif. Vos deux profils diffèrent nettement." : gap >= 0.5 ? "Écart modéré. À discuter ensemble." : "Profils alignés."}
         </p>
       </div>
     </div>
@@ -336,7 +336,7 @@ const TestApp = () => {
       )}
       {mode === "results" && results && (
         <>
-          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
+          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel peerLabel={PARENT_PREDICT.peerLabel} selfLabel={PARENT_PREDICT.selfLabel} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
           {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="BRIEF" accent="#0EA5E9" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
           <EmailResultsActions testCode="BRIEF" testName="Fonctions exécutives (BDEFS-CA)" accent="#0EA5E9" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
@@ -371,7 +371,7 @@ def build_brief(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     boundary_match = re.search(r'(/\*\s*Test Proxxie Anxi[^/]*\*/\s*\n)?const QUESTIONS\s*=', src)
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[:boundary_match.start()] + _bridge_common.wire_bridge(BRIEF_BLOCK, "brief", "Proxxie%20Test%20BRIEF.html")
+    new_src = _bridge_common.patch_persona_intro(src[:boundary_match.start()]) + _bridge_common.wire_bridge(BRIEF_BLOCK, "brief", "Proxxie%20Test%20BRIEF.html")
     nd = new_src.encode('utf-8')
     if comp:
         nd = gzip.compress(nd)

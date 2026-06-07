@@ -302,7 +302,7 @@ const Results = ({ results, onRestart }) => {
   );
 };
 
-const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
+const ComparePanel = ({ peerLabel, selfLabel, parentAnswers, teenAnswers }) => {
   const parentRes = computeResults(parentAnswers);
   const teenRes = computeResults(teenAnswers);
   const sharedTop = parentRes.top5.filter(s =>
@@ -310,7 +310,7 @@ const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
   );
   return (
     <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 30 }}>
-      <h2 style={{ fontSize: 20, marginBottom: 18 }}>Comparaison avec {parentName}</h2>
+      <h2 style={{ fontSize: 20, marginBottom: 18 }}>Comparaison de vos forces signatures</h2>
       <p style={{ fontSize: 14, color: "var(--c-muted)", marginBottom: 16 }}>
         Forces signatures partagées : <strong style={{ color: "#7C3AED" }}>{sharedTop.length}</strong> sur 5.
       </p>
@@ -419,7 +419,7 @@ const TestApp = () => {
       )}
       {mode === "results" && results && (
         <>
-          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
+          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel peerLabel={PARENT_PREDICT.peerLabel} selfLabel={PARENT_PREDICT.selfLabel} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
           {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="VIA" accent="#7C3AED" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
           <EmailResultsActions testCode="VIA" testName="VIA Strengths (forces de caractère)" accent="#7C3AED" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
@@ -462,7 +462,7 @@ def build(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     )
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[: boundary_match.start()] + _bridge_common.wire_bridge(VIA_BLOCK, "via", "Proxxie%20Test%20VIA.html")
+    new_src = _bridge_common.patch_persona_intro(src[: boundary_match.start()]) + _bridge_common.wire_bridge(VIA_BLOCK, "via", "Proxxie%20Test%20VIA.html")
 
     nd = new_src.encode("utf-8")
     if comp:

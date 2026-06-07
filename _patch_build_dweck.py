@@ -295,25 +295,25 @@ const Results = ({ results, onRestart }) => {
   );
 };
 
-const ComparePanel = ({ parentName, parentAnswers, teenAnswers }) => {
+const ComparePanel = ({ peerLabel, selfLabel, parentAnswers, teenAnswers }) => {
   const pR = computeResults(parentAnswers);
   const tR = computeResults(teenAnswers);
   const gap = Math.abs(pR.total - tR.total);
   return (
     <div style={{ background: "white", borderRadius: 20, padding: 28, border: "1px solid var(--c-line)", marginBottom: 30 }}>
-      <h2 style={{ fontSize: 20, marginBottom: 18 }}>Comparaison mindset avec {parentName}</h2>
+      <h2 style={{ fontSize: 20, marginBottom: 18 }}>Comparaison mindset</h2>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
         <div style={{ padding: 18, background: "var(--c-cream-light, #FAF6EE)", borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{parentName}</div>
+          <div style={{ fontSize: 12, color: "var(--c-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{peerLabel || "L'autre"}</div>
           <div style={{ fontSize: 32, fontWeight: 700, color: "var(--c-ink)", fontFamily: "var(--font-display)" }}>{pR.total}<span style={{ fontSize: 14 }}>%</span></div>
         </div>
         <div style={{ padding: 18, background: "rgba(14,165,233,.08)", borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: "#0EA5E9", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Tu réponds</div>
+          <div style={{ fontSize: 12, color: "#0EA5E9", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{selfLabel || "Toi"}</div>
           <div style={{ fontSize: 32, fontWeight: 700, color: "#0EA5E9", fontFamily: "var(--font-display)" }}>{tR.total}<span style={{ fontSize: 14 }}>%</span></div>
         </div>
       </div>
       <p style={{ marginTop: 18, fontSize: 14, color: "var(--c-muted)", lineHeight: 1.55 }}>
-        Écart de <strong>{gap} points</strong>. Le mindset se transmet beaucoup entre parents et enfants, par les phrases du quotidien (« t'es nul(le) en maths » vs « t'as pas encore trouvé le truc »).
+        Écart de <strong>{gap} points</strong>. Le mindset se transmet beaucoup par les phrases du quotidien (« t'es nul(le) en maths » vs « t'as pas encore trouvé le truc »).
       </p>
     </div>
   );
@@ -408,7 +408,7 @@ const TestApp = () => {
       )}
       {mode === "results" && results && (
         <>
-          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel parentName={PARENT_PREDICT.n} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
+          {effectivePersona === "self_compare" && PARENT_PREDICT && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ComparePanel peerLabel={PARENT_PREDICT.peerLabel} selfLabel={PARENT_PREDICT.selfLabel} parentAnswers={PARENT_PREDICT.a} teenAnswers={answers} /></div></section>)}
           {persona === "predict" && (<section style={{ paddingTop: 40, paddingBottom: 0 }}><div className="shell" style={{ maxWidth: 820 }}><ShareLinkPanel testCode="Dweck" accent="#0EA5E9" answers={answers} defaultName="" onSkip={() => {}} /></div></section>)}
           <EmailResultsActions testCode="Dweck" testName="Mindset Dweck (fixed vs growth)" accent="#0EA5E9" summary={buildEmailSummary(results)} answers={answers} />
           <Results results={results} onRestart={restart} />
@@ -451,7 +451,7 @@ def build(source_path: pathlib.Path, target_path: pathlib.Path) -> str:
     )
     if not boundary_match:
         return f"{target_path.name}: boundary introuvable"
-    new_src = src[: boundary_match.start()] + _bridge_common.wire_bridge(DWECK_BLOCK, "dweck", "Proxxie%20Test%20Dweck.html")
+    new_src = _bridge_common.patch_persona_intro(src[: boundary_match.start()]) + _bridge_common.wire_bridge(DWECK_BLOCK, "dweck", "Proxxie%20Test%20Dweck.html")
 
     nd = new_src.encode("utf-8")
     if comp:
