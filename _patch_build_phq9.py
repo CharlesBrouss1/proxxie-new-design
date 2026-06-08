@@ -596,9 +596,20 @@ const Results = ({ results, onRestart }) => {
           color: "white", borderRadius: 24, padding: "32px 28px", marginBottom: 24, textAlign: "center",
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.85, marginBottom: 8 }}>Score PHQ-9</div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 8 }}>{phqScore} / 27</div>
-          <div style={{ fontSize: 14, opacity: 0.92, marginBottom: 16 }}>
-            <strong>{levelLabel}</strong> · seuils : ≤4 minimal · 5-9 léger · 10-14 modéré · 15-19 modérément sévère · ≥20 sévère
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 12 }}>{phqScore} / 27</div>
+          <div style={{ maxWidth: 420, margin: "0 auto 10px" }}>
+            <div style={{ position: "relative", height: 8, borderRadius: 4, background: "linear-gradient(90deg,#22A06B,#8BC34A,#FFC107,#FB8C00,#C62828)" }}>
+              <div style={{ position: "absolute", top: "50%", left: `${Math.min(100, (phqScore/27)*100)}%`, width: 14, height: 14, borderRadius: "50%", background: "white", border: "2px solid #0A0E2C", transform: "translate(-50%,-50%)", boxShadow: "0 1px 4px rgba(0,0,0,.3)" }} />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, opacity: 0.92, marginTop: 6 }}>
+              <span>0 · aucun symptôme</span><span>27 · sévère</span>
+            </div>
+          </div>
+          <div style={{ fontSize: 13.5, opacity: 0.95, marginBottom: 12 }}>
+            Plus le score est bas, moins il y a de signaux dépressifs. Ici : <strong>{levelLabel.toLowerCase()}</strong>.
+          </div>
+          <div style={{ fontSize: 12.5, opacity: 0.82, marginBottom: 16 }}>
+            Seuils : ≤4 minimal · 5-9 léger · 10-14 modéré · 15-19 modérément sévère · ≥20 sévère
           </div>
           <p style={{ fontSize: 15, maxWidth: 540, margin: "0 auto", lineHeight: 1.55 }}>{copy.body}</p>
         </div>

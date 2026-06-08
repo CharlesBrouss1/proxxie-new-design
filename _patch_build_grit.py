@@ -513,9 +513,16 @@ const Results = ({ results, onRestart }) => {
           color: "white", borderRadius: 24, padding: "32px 28px", marginBottom: 24, textAlign: "center",
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.85, marginBottom: 8 }}>Score Grit</div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 8 }}>{total} / 5</div>
-          <div style={{ fontSize: 14, opacity: 0.92, marginBottom: 16 }}>
-            <strong>Profil : {profile}</strong> · CI {ciAvg} · PE {peAvg}
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 12 }}>{total} / 5</div>
+          <div style={{ maxWidth: 360, margin: "0 auto 10px" }}>
+            <div style={{ height: 6, borderRadius: 3, background: "linear-gradient(90deg,#C62828,#FD6936,#FFC107,#22A06B)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, opacity: 0.92, marginTop: 5 }}>
+              <span>1 · lâche vite</span><span>5 · très persévérant</span>
+            </div>
+          </div>
+          <div style={{ fontSize: 14, opacity: 0.95, marginBottom: 12 }}>Ici, <strong>plus le score est haut, mieux c'est</strong> : grit <strong>{level}</strong>.</div>
+          <div style={{ fontSize: 13, opacity: 0.88, marginBottom: 16 }}>
+            <strong>Profil : {profile}</strong> · constance des intérêts {ciAvg}/5 · persévérance dans l'effort {peAvg}/5
           </div>
           <p style={{ fontSize: 15, maxWidth: 540, margin: "0 auto", lineHeight: 1.55 }}>{copy.body}</p>
         </div>
@@ -672,7 +679,6 @@ const TestApp = () => {
           <RichAnalysisSection rich={RICH_RESULTS[results.level]} accent="#6B46C1" accentSoft="rgba(107,70,193,0.12)" />
         </>
       )}
-      {mode === "results" && results && <SaveResultsCallout />}
       <Footer />
     </>
   );

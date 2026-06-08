@@ -464,6 +464,13 @@ const Results = ({ results, onRestart }) => {
   const { avgs, total, level, weakest, strongest, archetype } = results;
   const copy = LEVEL_COPY[level];
   const dimColors = { CONCERN: "#00897B", CONTROL: "#00695C", CURIOSITY: "#00ACC1", CONFIDENCE: "#0097A7" };
+  // Échelle positive (haut = mieux) : on qualifie chaque dimension.
+  const DIM_VERDICT = (val) => {
+    if (val >= 4.0) return { label: "Point fort",  color: "#22A06B" };
+    if (val >= 3.0) return { label: "Solide",      color: "#0EA5E9" };
+    if (val >= 2.2) return { label: "À muscler",   color: "#FD6936" };
+    return            { label: "Point faible", color: "#C62828" };
+  };
   return (
     <section style={{ paddingTop: 60, paddingBottom: 100 }}>
       <div className="shell" style={{ maxWidth: 820 }}>
@@ -483,24 +490,40 @@ const Results = ({ results, onRestart }) => {
           color: "white", borderRadius: 24, padding: "32px 28px", marginBottom: 24, textAlign: "center",
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.85, marginBottom: 8 }}>Score CAAS global</div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 8 }}>{total} / 5</div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 12 }}>{total} / 5</div>
+          <div style={{ maxWidth: 360, margin: "0 auto 10px" }}>
+            <div style={{ height: 6, borderRadius: 3, background: "linear-gradient(90deg,#C62828,#FD6936,#FFC107,#22A06B)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, opacity: 0.92, marginTop: 5 }}>
+              <span>1 · à muscler</span><span>5 · très adaptable</span>
+            </div>
+          </div>
+          <div style={{ fontSize: 14, opacity: 0.95, marginBottom: 16 }}>Ici, <strong>plus le score est haut, mieux c'est</strong> : adaptabilité <strong>{level}</strong>.</div>
           <p style={{ fontSize: 15, maxWidth: 540, margin: "0 auto", lineHeight: 1.55 }}>{copy.body}</p>
         </div>
 
         <div style={{ background: "white", borderRadius: 20, padding: 24, border: "1px solid var(--c-line)", marginBottom: 24 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 16 }}>Détail par dimension</h2>
-          {Object.entries(avgs).map(([dim, val]) => (
-            <div key={dim} style={{ marginBottom: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13 }}>
+          <h2 style={{ fontSize: 18, marginBottom: 4 }}>Détail par dimension</h2>
+          <div style={{ fontSize: 12.5, color: "var(--c-muted)", marginBottom: 18, lineHeight: 1.5 }}>
+            Barre longue et verte = c'est un point fort. Barre courte et rouge = c'est à développer.
+          </div>
+          {Object.entries(avgs).map(([dim, val]) => {
+            const v = DIM_VERDICT(val);
+            return (
+            <div key={dim} style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, fontSize: 13, gap: 10, flexWrap: "wrap" }}>
                 <span style={{ fontWeight: 600 }}>{TYPE_META[dim].l}</span>
-                <span style={{ fontFamily: "var(--font-num)", fontWeight: 700, color: dimColors[dim] }}>{val} / 5</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: v.color, background: v.color + "1A", padding: "2px 9px", borderRadius: 99 }}>{v.label}</span>
+                  <span style={{ fontFamily: "var(--font-num)", fontWeight: 700, color: v.color }}>{val} / 5</span>
+                </span>
               </div>
               <div style={{ height: 8, background: "var(--c-cream)", borderRadius: 4, overflow: "hidden" }}>
-                <div style={{ width: `${(val/5)*100}%`, height: "100%", background: dimColors[dim] }} />
+                <div style={{ width: `${(val/5)*100}%`, height: "100%", background: v.color }} />
               </div>
               <div style={{ fontSize: 12, color: "var(--c-muted)", marginTop: 4 }}>{TYPE_META[dim].short}</div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <div style={{ background: "#0A0E2C", color: "white", borderRadius: 20, padding: "32px 28px", marginBottom: 24 }}>
@@ -652,7 +675,6 @@ const TestApp = () => {
           <RichAnalysisSection rich={RICH_RESULTS[results.level]} accent="#00897B" accentSoft="rgba(0,137,123,0.12)" />
         </>
       )}
-      {mode === "results" && results && <SaveResultsCallout />}
       <Footer />
     </>
   );

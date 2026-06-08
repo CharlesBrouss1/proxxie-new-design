@@ -193,6 +193,14 @@ const LEVEL_COPY = {
   "très difficile": { color: "#C62828", body: "Fonctions exécutives très en difficulté. Score qui justifie une évaluation neuropsy (bilan complet WISC + Stroop + Test Tour de Londres) pour identifier la cause et adapter l'orientation." },
 };
 
+// Verdict par dimension sur l'échelle inversée (bas = fluide, haut = en difficulté).
+const DIM_VERDICT = (val) => {
+  if (val < 2.0) return { label: "Point fort",      color: "#22A06B" };
+  if (val < 3.0) return { label: "Plutôt à l'aise", color: "#0EA5E9" };
+  if (val < 3.8) return { label: "À muscler",       color: "#FD6936" };
+  return            { label: "En difficulté",   color: "#C62828" };
+};
+
 const DIMENSION_TIPS = {
   ORG: ["Routine du dimanche soir : lister les 3 tâches majeures de la semaine sur un papier visible.", "Méthode Bullet Journal · 10 min/jour pour ranger ses idées.", "Règle des 2 min : si une tâche prend moins de 2 min, la faire immédiatement, pas la noter."],
   TIME: ["Estimer le temps de chaque devoir × 1,5 (les ados sous-estiment systématiquement).", "Time-blocking : bloquer dans Google Calendar les créneaux de travail comme des RDV.", "Technique Pomodoro : 25 min focus + 5 min break, max 4 cycles puis vraie pause."],
@@ -221,25 +229,40 @@ const Results = ({ results, onRestart }) => {
           color: "white", borderRadius: 24, padding: "32px 28px", marginBottom: 24, textAlign: "center",
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.85, marginBottom: 8 }}>Score moyen fonctions exécutives</div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 8 }}>{total} / 5</div>
-          <div style={{ fontSize: 14, opacity: 0.92, marginBottom: 16 }}>Score bas = fluide · score haut = en difficulté</div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 80, fontWeight: 700, lineHeight: 1, marginBottom: 12 }}>{total} / 5</div>
+          <div style={{ maxWidth: 360, margin: "0 auto 10px" }}>
+            <div style={{ height: 6, borderRadius: 3, background: "linear-gradient(90deg,#22A06B,#0EA5E9,#FD6936,#C62828)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, opacity: 0.9, marginTop: 5 }}>
+              <span>1 · tout fluide</span><span>5 · en difficulté</span>
+            </div>
+          </div>
+          <div style={{ fontSize: 14, opacity: 0.95, marginBottom: 16 }}>Échelle inversée : <strong>plus le score est bas, mieux c'est</strong>.</div>
           <p style={{ fontSize: 15, maxWidth: 540, margin: "0 auto", lineHeight: 1.55 }}>{copy.body}</p>
         </div>
 
         <div style={{ background: "white", borderRadius: 20, padding: 24, border: "1px solid var(--c-line)", marginBottom: 24 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 16 }}>Détail par dimension</h2>
-          {Object.entries(avgs).map(([dim, val]) => (
-            <div key={dim} style={{ marginBottom: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13 }}>
+          <h2 style={{ fontSize: 18, marginBottom: 4 }}>Détail par dimension</h2>
+          <div style={{ fontSize: 12.5, color: "var(--c-muted)", marginBottom: 18, lineHeight: 1.5 }}>
+            Barre courte et verte = tu es à l'aise. Barre longue et rouge = c'est un point à travailler.
+          </div>
+          {Object.entries(avgs).map(([dim, val]) => {
+            const v = DIM_VERDICT(val);
+            return (
+            <div key={dim} style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, fontSize: 13, gap: 10, flexWrap: "wrap" }}>
                 <span style={{ fontWeight: 600 }}>{TYPE_META[dim].l}</span>
-                <span style={{ fontFamily: "var(--font-num)", fontWeight: 700, color: TYPE_META[dim].c }}>{val} / 5</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: v.color, background: v.color + "1A", padding: "2px 9px", borderRadius: 99 }}>{v.label}</span>
+                  <span style={{ fontFamily: "var(--font-num)", fontWeight: 700, color: v.color }}>{val} / 5</span>
+                </span>
               </div>
               <div style={{ height: 8, background: "var(--c-cream)", borderRadius: 4, overflow: "hidden" }}>
-                <div style={{ width: `${(val/5)*100}%`, height: "100%", background: TYPE_META[dim].c }} />
+                <div style={{ width: `${(val/5)*100}%`, height: "100%", background: v.color }} />
               </div>
               <div style={{ fontSize: 12, color: "var(--c-muted)", marginTop: 4 }}>{TYPE_META[dim].short}</div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <div style={{ background: "#0A0E2C", color: "white", borderRadius: 20, padding: "32px 28px", marginBottom: 24 }}>

@@ -241,6 +241,9 @@ const Results = ({ results, onRestart }) => {
             Vertu dominante : <span style={{ color: VIRTUE_META[dominantVirtue].c }}>{dominantVirtue}</span>
           </h1>
           <p style={{ fontSize: 16, color: "var(--c-ink-2)", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>{VIRTUE_META[dominantVirtue].desc}</p>
+          <div style={{ fontSize: 13.5, color: "var(--c-muted)", maxWidth: 560, margin: "16px auto 0", lineHeight: 1.55, padding: "12px 16px", background: "var(--c-cream-light, #FAF6EE)", borderRadius: 12, border: "1px solid var(--c-line)" }}>
+            Ce test n'a <strong>ni bon ni mauvais score</strong>. Les 24 forces sont toutes positives, il classe simplement celles qui te ressemblent le plus à celles que tu mobilises moins. Pas de note de valeur, juste ton profil.
+          </div>
         </div>
 
         {/* Top 5 signature strengths */}
@@ -264,7 +267,8 @@ const Results = ({ results, onRestart }) => {
 
         {/* 6 vertus · radar */}
         <div style={{ background: "white", borderRadius: 20, padding: 32, border: "1px solid var(--c-line)", marginBottom: 24 }}>
-          <h2 style={{ fontSize: 22, marginBottom: 24, color: "var(--c-ink)" }}>Ta cartographie des 6 vertus</h2>
+          <h2 style={{ fontSize: 22, marginBottom: 4, color: "var(--c-ink)" }}>Ta cartographie des 6 vertus</h2>
+          <p style={{ fontSize: 13, color: "var(--c-muted)", marginBottom: 20, lineHeight: 1.5 }}>Une barre courte ne veut pas dire « faible ». Elle montre seulement quelles familles de forces tu mobilises le plus, et lesquelles le moins.</p>
           <div style={{ display: "grid", gap: 14 }}>
             {Object.keys(VIRTUE_META).map((v) => (
               <div key={v}>

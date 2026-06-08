@@ -310,12 +310,22 @@ const Results = ({ results, onRestart }) => {
             {total} <span style={{ fontSize: 24, color: "var(--c-muted)" }}>/ 100</span>
           </h1>
           <h2 style={{ fontSize: 26, color: "var(--c-ink)", marginBottom: 12, fontWeight: 600 }}>{levelCopy.title}</h2>
+          <div style={{ maxWidth: 380, margin: "0 auto 14px" }}>
+            <div style={{ position: "relative", height: 8, borderRadius: 4, background: "linear-gradient(90deg,#C62828,#FD6936,#FFC107,#22A06B)" }}>
+              <div style={{ position: "absolute", top: "50%", left: `${Math.min(100, total)}%`, width: 14, height: 14, borderRadius: "50%", background: "white", border: "2px solid var(--c-ink)", transform: "translate(-50%,-50%)", boxShadow: "0 1px 4px rgba(0,0,0,.25)" }} />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--c-muted)", marginTop: 6 }}>
+              <span>0 · à recadrer</span><span>100 · architecte de l'avenir</span>
+            </div>
+          </div>
+          <div style={{ fontSize: 14, color: "var(--c-ink-2)", marginBottom: 14 }}>Ici, <strong>plus le score est haut, mieux c'est</strong>.</div>
           <p style={{ fontSize: 16, color: "var(--c-ink-2)", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>{levelCopy.sub}</p>
         </div>
 
         {/* Radar 3 piliers */}
         <div style={{ background: "white", borderRadius: 20, padding: 32, border: "1px solid var(--c-line)", marginBottom: 30 }}>
-          <h2 style={{ fontSize: 22, marginBottom: 24, color: "var(--c-ink)" }}>Tes 3 piliers</h2>
+          <h2 style={{ fontSize: 22, marginBottom: 4, color: "var(--c-ink)" }}>Tes 3 piliers</h2>
+          <div style={{ fontSize: 12.5, color: "var(--c-muted)", marginBottom: 20, lineHeight: 1.5 }}>Chaque pilier va de 0 à 100. Plus la barre est longue, plus ce pilier est solide.</div>
           <div style={{ display: "grid", gap: 18 }}>
             {[
               { code: "A", score: a, meta: TYPE_META.A },
