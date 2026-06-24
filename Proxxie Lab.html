@@ -735,13 +735,8 @@
     <div id="homeCarteHead">
       <h1>Ta carte <span class="hl">intérieure</span>.</h1>
       <p class="gr-lead">Chaque partie de toi est un territoire. Touche un test pour le passer ou revoir ton résultat, et regarde ta carte s'allumer.</p>
-      <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 22 explorées</span></div>
+      <div class="gr-prog"><div class="gr-progbar"><div class="gr-progfill" id="grPf" style="width:0%"></div></div><span class="gr-progtxt" id="grPt">0 / 4 explorées</span></div>
       <div class="gr-modesrow">
-        <nav class="gr-modes" id="grModes" aria-label="Mode d'affichage">
-          <button type="button" class="gr-mode on" data-mode="map">Carte</button>
-          <button type="button" class="gr-mode" data-mode="radar">Radar</button>
-          <button type="button" class="gr-mode" data-mode="flow">Potentiel</button>
-        </nav>
         <button class="gr-listbtn" onclick="App.openList()">Voir en liste</button>
       </div>
     </div>
@@ -1476,10 +1471,10 @@
       meta:["Carrière","4 ressources","~9 min"],
       minutes:"~9 min",
       introTitle:"Es-tu prêt(e) pour les virages de ta vie ?",
-      introLead:"Quatre ressources qui aident à rebondir et à s'adapter dans son parcours, d'après le modèle CAAS de Mark Savickas. Réponds selon ce que tu sens développé en toi.",
+      introLead:"Quatre ressources qui aident à rebondir et à s'adapter dans son parcours, d'après le modèle CAAS de Mark Savickas. Réponds spontanément.",
       freeCount:12,
-      scale:["Pas du tout fort","Un peu fort","Moyennement fort","Très fort","Extrêmement fort"],
-      hint:["Peu développé","Très développé"],
+      scale:["Pas du tout","Plutôt non","Neutre","Plutôt oui","Tout à fait"],
+      hint:["Pas du tout","Tout à fait"],
       order:["CN","CT","CU","CF"],
       dims:{
         CN:{name:"Préoccupation", sub:"penser et préparer son avenir"},
@@ -1488,54 +1483,54 @@
         CF:{name:"Confiance", sub:"se sentir capable de réussir"}
       },
       items:[
-        {id:"CA_CN1",dim:"CN",key:+1,t:"Penser à ce à quoi ressemblera mon futur."},
-        {id:"CA_CT1",dim:"CT",key:+1,t:"Être responsable de mes propres choix."},
-        {id:"CA_CU1",dim:"CU",key:+1,t:"Explorer ce qui m'entoure."},
-        {id:"CA_CF1",dim:"CF",key:+1,t:"Accomplir des tâches efficacement."},
-        {id:"CA_CN2",dim:"CN",key:+1,t:"Réaliser que les choix d'aujourd'hui construisent mon avenir."},
-        {id:"CA_CT2",dim:"CT",key:+1,t:"Compter sur moi-même."},
-        {id:"CA_CU2",dim:"CU",key:+1,t:"Chercher des occasions de progresser."},
-        {id:"CA_CF2",dim:"CF",key:+1,t:"Prendre soin de bien faire les choses."},
-        {id:"CA_CN3",dim:"CN",key:+1,t:"Me préparer pour le futur."},
-        {id:"CA_CT3",dim:"CT",key:+1,t:"Décider par moi-même."},
-        {id:"CA_CU3",dim:"CU",key:+1,t:"Explorer différentes façons de faire les choses."},
-        {id:"CA_CF3",dim:"CF",key:+1,t:"Apprendre de nouvelles compétences."},
-        {id:"CA_CN4",dim:"CN",key:+1,t:"Prendre conscience des choix d'études et de métier à faire."},
-        {id:"CA_CT4",dim:"CT",key:+1,t:"Tenir mes engagements."},
-        {id:"CA_CU4",dim:"CU",key:+1,t:"Approfondir les questions qui me semblent importantes."},
-        {id:"CA_CF4",dim:"CF",key:+1,t:"Travailler à la hauteur de mes capacités."},
-        {id:"CA_CN5",dim:"CN",key:+1,t:"Planifier comment atteindre mes objectifs."},
-        {id:"CA_CT5",dim:"CT",key:+1,t:"Faire ce qui est juste pour moi."},
-        {id:"CA_CU5",dim:"CU",key:+1,t:"Rester curieux(se) des nouvelles occasions."},
-        {id:"CA_CF5",dim:"CF",key:+1,t:"Surmonter les obstacles."},
-        {id:"CA_CN6",dim:"CN",key:+1,t:"Me soucier de ma future carrière."},
-        {id:"CA_CT6",dim:"CT",key:+1,t:"Faire les choses par moi-même."},
-        {id:"CA_CU6",dim:"CU",key:+1,t:"Étudier les différents rôles que je pourrais jouer."},
-        {id:"CA_CF6",dim:"CF",key:+1,t:"Résoudre des problèmes."},
-        {id:"CA_CN7",dim:"CN",key:+1,t:"Anticiper les étapes de mon parcours."},
-        {id:"CA_CT7",dim:"CT",key:+1,t:"Assumer les conséquences de mes décisions."},
-        {id:"CA_CU7",dim:"CU",key:+1,t:"M'informer sur des métiers que je connais mal."},
-        {id:"CA_CF7",dim:"CF",key:+1,t:"Mener à bien une tâche difficile."},
-        {id:"CA_CN8",dim:"CN",key:+1,t:"Imaginer où je veux être dans quelques années."},
-        {id:"CA_CT8",dim:"CT",key:+1,t:"Rester maître de mon parcours."},
-        {id:"CA_CU8",dim:"CU",key:+1,t:"Tester de nouvelles expériences pour mieux me connaître."},
-        {id:"CA_CF8",dim:"CF",key:+1,t:"Faire face à l'imprévu sans me décourager."},
-        {id:"CA_CN9",dim:"CN",key:+1,t:"Réfléchir aujourd'hui à mon orientation de demain."},
-        {id:"CA_CT9",dim:"CT",key:+1,t:"Agir selon mes propres convictions."},
-        {id:"CA_CU9",dim:"CU",key:+1,t:"Observer comment d'autres réussissent leur parcours."},
-        {id:"CA_CF9",dim:"CF",key:+1,t:"Tenir bon malgré les difficultés."},
-        {id:"CA_CN10",dim:"CN",key:+1,t:"Garder mes objectifs de carrière en tête."},
-        {id:"CA_CT10",dim:"CT",key:+1,t:"Me discipliner pour avancer."},
-        {id:"CA_CU10",dim:"CU",key:+1,t:"Poser des questions sur ce qui m'intrigue."},
-        {id:"CA_CF10",dim:"CF",key:+1,t:"Compter sur mes compétences pour réussir."},
-        {id:"CA_CN11",dim:"CN",key:+1,t:"Préparer les transitions avant qu'elles n'arrivent."},
-        {id:"CA_CT11",dim:"CT",key:+1,t:"Prendre mes responsabilités sans me défausser."},
-        {id:"CA_CU11",dim:"CU",key:+1,t:"Sortir de ma zone de confort pour apprendre."},
-        {id:"CA_CF11",dim:"CF",key:+1,t:"Atteindre les buts que je me fixe."},
-        {id:"CA_CN12",dim:"CN",key:+1,t:"Me fixer un cap pour les années à venir."},
-        {id:"CA_CT12",dim:"CT",key:+1,t:"Décider ce qui est bon pour moi sans me laisser dicter."},
-        {id:"CA_CU12",dim:"CU",key:+1,t:"Explorer des chemins auxquels je n'avais pas pensé."},
-        {id:"CA_CF12",dim:"CF",key:+1,t:"Rebondir après un échec."}
+        {id:"CA_CN1",dim:"CN",key:+1,t:"Je pense souvent à ce à quoi ressemblera mon avenir."},
+        {id:"CA_CT1",dim:"CT",key:+1,t:"Je me sens responsable de mes propres choix."},
+        {id:"CA_CU1",dim:"CU",key:+1,t:"J'explore ce qui m'entoure."},
+        {id:"CA_CF1",dim:"CF",key:+1,t:"J'accomplis mes tâches efficacement."},
+        {id:"CA_CN2",dim:"CN",key:+1,t:"Je réalise que mes choix d'aujourd'hui construisent mon avenir."},
+        {id:"CA_CT2",dim:"CT",key:+1,t:"Je compte sur moi-même."},
+        {id:"CA_CU2",dim:"CU",key:+1,t:"Je cherche des occasions de progresser."},
+        {id:"CA_CF2",dim:"CF",key:+1,t:"Je prends soin de bien faire les choses."},
+        {id:"CA_CN3",dim:"CN",key:+1,t:"Je me prépare pour le futur."},
+        {id:"CA_CT3",dim:"CT",key:+1,t:"Je décide par moi-même."},
+        {id:"CA_CU3",dim:"CU",key:+1,t:"J'explore différentes façons de faire les choses."},
+        {id:"CA_CF3",dim:"CF",key:+1,t:"J'apprends de nouvelles compétences."},
+        {id:"CA_CN4",dim:"CN",key:+1,t:"J'ai conscience des choix d'études et de métier que j'aurai à faire."},
+        {id:"CA_CT4",dim:"CT",key:+1,t:"Je tiens mes engagements."},
+        {id:"CA_CU4",dim:"CU",key:+1,t:"J'approfondis les questions qui me semblent importantes."},
+        {id:"CA_CF4",dim:"CF",key:+1,t:"Je travaille à la hauteur de mes capacités."},
+        {id:"CA_CN5",dim:"CN",key:+1,t:"Je planifie comment atteindre mes objectifs."},
+        {id:"CA_CT5",dim:"CT",key:+1,t:"Je fais ce qui est juste pour moi."},
+        {id:"CA_CU5",dim:"CU",key:+1,t:"Je reste curieux(se) des nouvelles occasions."},
+        {id:"CA_CF5",dim:"CF",key:+1,t:"Je surmonte les obstacles."},
+        {id:"CA_CN6",dim:"CN",key:+1,t:"Je me soucie de ma future carrière."},
+        {id:"CA_CT6",dim:"CT",key:+1,t:"Je fais les choses par moi-même."},
+        {id:"CA_CU6",dim:"CU",key:+1,t:"J'explore les différents rôles que je pourrais jouer."},
+        {id:"CA_CF6",dim:"CF",key:+1,t:"Je résous les problèmes que je rencontre."},
+        {id:"CA_CN7",dim:"CN",key:+1,t:"J'anticipe les étapes de mon parcours."},
+        {id:"CA_CT7",dim:"CT",key:+1,t:"J'assume les conséquences de mes décisions."},
+        {id:"CA_CU7",dim:"CU",key:+1,t:"Je m'informe sur des métiers que je connais mal."},
+        {id:"CA_CF7",dim:"CF",key:+1,t:"Je mène à bien une tâche difficile."},
+        {id:"CA_CN8",dim:"CN",key:+1,t:"J'imagine où je veux être dans quelques années."},
+        {id:"CA_CT8",dim:"CT",key:+1,t:"Je reste maître de mon parcours."},
+        {id:"CA_CU8",dim:"CU",key:+1,t:"Je teste de nouvelles expériences pour mieux me connaître."},
+        {id:"CA_CF8",dim:"CF",key:+1,t:"Je fais face à l'imprévu sans me décourager."},
+        {id:"CA_CN9",dim:"CN",key:+1,t:"Je réfléchis dès aujourd'hui à mon orientation de demain."},
+        {id:"CA_CT9",dim:"CT",key:+1,t:"J'agis selon mes propres convictions."},
+        {id:"CA_CU9",dim:"CU",key:+1,t:"J'observe comment d'autres réussissent leur parcours."},
+        {id:"CA_CF9",dim:"CF",key:+1,t:"Je tiens bon malgré les difficultés."},
+        {id:"CA_CN10",dim:"CN",key:+1,t:"Je garde mes objectifs de carrière en tête."},
+        {id:"CA_CT10",dim:"CT",key:+1,t:"Je me discipline pour avancer."},
+        {id:"CA_CU10",dim:"CU",key:+1,t:"Je pose des questions sur ce qui m'intrigue."},
+        {id:"CA_CF10",dim:"CF",key:+1,t:"Je compte sur mes compétences pour réussir."},
+        {id:"CA_CN11",dim:"CN",key:+1,t:"Je prépare les transitions avant qu'elles n'arrivent."},
+        {id:"CA_CT11",dim:"CT",key:+1,t:"Je prends mes responsabilités sans me défausser."},
+        {id:"CA_CU11",dim:"CU",key:+1,t:"Je sors de ma zone de confort pour apprendre."},
+        {id:"CA_CF11",dim:"CF",key:+1,t:"J'atteins les buts que je me fixe."},
+        {id:"CA_CN12",dim:"CN",key:+1,t:"Je me fixe un cap pour les années à venir."},
+        {id:"CA_CT12",dim:"CT",key:+1,t:"Je décide ce qui est bon pour moi sans me laisser dicter."},
+        {id:"CA_CU12",dim:"CU",key:+1,t:"J'explore des chemins auxquels je n'avais pas pensé."},
+        {id:"CA_CF12",dim:"CF",key:+1,t:"Je rebondis après un échec."}
       ],
       portrait:{
         CN:{hi:"Tu te projettes naturellement dans l'avenir. Tu penses à demain, tu anticipes, tu prépares tes choix. Cette préoccupation te donne une longueur d'avance pour construire ton chemin.",
@@ -2766,7 +2761,7 @@
   };
 
   // ordre du catalogue + entrées « bientôt »
-  var CATALOG = ["bigfive","riasec","grit","caas","drivers","valeurs","besoins","mbti","pcm","hpi","schemas","qe","qi","brief","phq9","gad7","asrs","aq10","dys"];
+  var CATALOG = ["bigfive","valeurs","riasec","schemas"];
   var SOON = [];
 
   // Version gratuite normalisée : 15 questions pour tous les tests self.
@@ -2942,7 +2937,7 @@
   var state = load() || {email:"", current:null, tests:{}};
   if(!state.tests) state.tests={};
   if(!state.reflect) state.reflect={}; // réponses aux questions à se poser
-  if(state.synthesisPaid===undefined) state.synthesisPaid=false; // produit payant global : la Synthèse cross-tests
+  state.synthesisPaid=true; // épuré avant RDV : tout est gratuit, le seul CTA est « Prendre RDV avec Charles »
   if(state.synthNarrative===undefined) state.synthNarrative=""; // cache du fil rouge rédigé par le LLM
   if(state.synthNarrativeKey===undefined) state.synthNarrativeKey=""; // signature des tests passés (régénère si elle change)
   var curId = null;
@@ -3923,10 +3918,10 @@
 
   // ---------- CARTE INTÉRIEURE (graphe d'accueil) ----------
   var FACETS={
-    perso:{name:"Qui tu es",   hex:"#1320CE", tHex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive","mbti","hpi","pcm","qe","brief"]},
-    aspir:{name:"Ce qui te meut",hex:"#FD6936", tHex:"#B83E0C", pos:[280,135], kicker:"Aspirations", tests:["valeurs","besoins","drivers","via","dweck"]},
-    carr: {name:"Où tu vas",    hex:"#2E8B6E", tHex:"#1F6B53", pos:[120,405], kicker:"Carrière",    tests:["riasec","caas","grit","futureproof","qi"]},
-    equi: {name:"Ton équilibre",hex:"#C2892B", tHex:"#8A5E12", pos:[280,405], kicker:"Équilibre",   tests:["schemas","phq9","gad7","asrs","aq10","dys"]}
+    perso:{name:"Qui tu es",   hex:"#1320CE", tHex:"#1320CE", pos:[120,135], kicker:"Personnalité", tests:["bigfive"]},
+    aspir:{name:"Ce qui te meut",hex:"#FD6936", tHex:"#B83E0C", pos:[280,135], kicker:"Aspirations", tests:["valeurs"]},
+    carr: {name:"Où tu vas",    hex:"#2E8B6E", tHex:"#1F6B53", pos:[120,405], kicker:"Carrière",    tests:["riasec"]},
+    equi: {name:"Ton équilibre",hex:"#C2892B", tHex:"#8A5E12", pos:[280,405], kicker:"Équilibre",   tests:["schemas"]}
   };
   // libellés courts + nombre de dimensions pour la carte (les longs restent dans TESTS)
   var GMETA={

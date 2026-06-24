@@ -5,7 +5,7 @@ Pattern identique à _patch_build_phq9.py / _patch_build_grit.py.
 
 Source psychométrique : Career Adapt-Abilities Scale (Savickas & Porfeli, 2012).
 24 items, 4 sous-échelles de 6 items chacune (Concern, Control, Curiosity, Confidence).
-Likert 1-5 (pas du tout fort → extrêmement fort). Validé dans 18 pays.
+Likert 1-5 (pas du tout → tout à fait). Validé dans 18 pays.
 
 Pas un screening clinique, pas de disclaimer médical.
 """
@@ -24,33 +24,33 @@ CAAS_BLOCK = r'''/* Test Proxxie CAAS, adaptabilité carrière (Savickas & Porfe
 
 const QUESTIONS = [
   // CONCERN (6 items) · Préoccupation pour le futur
-  { type: "CONCERN", q: "Penser à ce à quoi ressemblera mon futur." },
-  { type: "CONCERN", q: "Réaliser que les choix d'aujourd'hui construisent mon avenir." },
-  { type: "CONCERN", q: "Me préparer pour le futur." },
-  { type: "CONCERN", q: "Prendre conscience des choix éducatifs et professionnels à faire." },
-  { type: "CONCERN", q: "Planifier comment atteindre mes objectifs." },
-  { type: "CONCERN", q: "Me soucier de ma future carrière." },
+  { type: "CONCERN", q: "Je pense souvent à ce à quoi ressemblera mon avenir." },
+  { type: "CONCERN", q: "Je réalise que mes choix d'aujourd'hui construisent mon avenir." },
+  { type: "CONCERN", q: "Je me prépare pour le futur." },
+  { type: "CONCERN", q: "J'ai conscience des choix d'études et de métier que j'aurai à faire." },
+  { type: "CONCERN", q: "Je planifie comment atteindre mes objectifs." },
+  { type: "CONCERN", q: "Je me soucie de ma future carrière." },
   // CONTROL (6 items) · Capacité de décision
-  { type: "CONTROL", q: "Être responsable de mes propres choix." },
-  { type: "CONTROL", q: "Compter sur moi-même." },
-  { type: "CONTROL", q: "Décider par moi-même." },
-  { type: "CONTROL", q: "Tenir mes engagements." },
-  { type: "CONTROL", q: "Faire ce qui est juste pour moi." },
-  { type: "CONTROL", q: "Faire les choses moi-même." },
+  { type: "CONTROL", q: "Je me sens responsable de mes propres choix." },
+  { type: "CONTROL", q: "Je compte sur moi-même." },
+  { type: "CONTROL", q: "Je décide par moi-même." },
+  { type: "CONTROL", q: "Je tiens mes engagements." },
+  { type: "CONTROL", q: "Je fais ce qui est juste pour moi." },
+  { type: "CONTROL", q: "Je fais les choses par moi-même." },
   // CURIOSITY (6 items) · Exploration
-  { type: "CURIOSITY", q: "Explorer ce qui m'entoure." },
-  { type: "CURIOSITY", q: "Chercher des opportunités de progression personnelle." },
-  { type: "CURIOSITY", q: "Explorer les différentes façons de faire les choses." },
-  { type: "CURIOSITY", q: "Approfondir les questions qui me semblent importantes." },
-  { type: "CURIOSITY", q: "Devenir curieux(se) de nouvelles opportunités." },
-  { type: "CURIOSITY", q: "Étudier les différents rôles que je pourrais jouer." },
+  { type: "CURIOSITY", q: "J'explore ce qui m'entoure." },
+  { type: "CURIOSITY", q: "Je cherche des occasions de progresser." },
+  { type: "CURIOSITY", q: "J'explore différentes façons de faire les choses." },
+  { type: "CURIOSITY", q: "J'approfondis les questions qui me semblent importantes." },
+  { type: "CURIOSITY", q: "Je suis curieux(se) des nouvelles opportunités." },
+  { type: "CURIOSITY", q: "J'explore les différents rôles que je pourrais jouer." },
   // CONFIDENCE (6 items) · Confiance
-  { type: "CONFIDENCE", q: "Accomplir des tâches efficacement." },
-  { type: "CONFIDENCE", q: "Prendre soin de bien faire les choses." },
-  { type: "CONFIDENCE", q: "Apprendre de nouvelles compétences." },
-  { type: "CONFIDENCE", q: "Travailler à la hauteur de mes capacités." },
-  { type: "CONFIDENCE", q: "Surmonter les obstacles." },
-  { type: "CONFIDENCE", q: "Résoudre des problèmes." },
+  { type: "CONFIDENCE", q: "J'accomplis mes tâches efficacement." },
+  { type: "CONFIDENCE", q: "Je prends soin de bien faire les choses." },
+  { type: "CONFIDENCE", q: "J'apprends de nouvelles compétences." },
+  { type: "CONFIDENCE", q: "Je travaille à la hauteur de mes capacités." },
+  { type: "CONFIDENCE", q: "Je surmonte les obstacles." },
+  { type: "CONFIDENCE", q: "Je résous les problèmes que je rencontre." },
 ];
 
 const TYPE_META = {
@@ -144,10 +144,10 @@ const TestHero = ({ onStart }) => (
             <div style={{ width: "37%", height: "100%", background: "#00897B" }} />
           </div>
           <h3 style={{ fontSize: 19, lineHeight: 1.35, fontWeight: 600, marginBottom: 22, fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}>
-            "Explorer ce qui m'entoure."
+            "J'explore ce qui m'entoure."
           </h3>
           <div style={{ display: "flex", gap: 8, justifyContent: "space-between" }}>
-            {["Pas du tout fort", "Un peu fort", "Moyennement", "Très fort", "Extrêmement fort"].map((label, n) => (
+            {["Pas du tout", "Plutôt non", "Neutre", "Plutôt oui", "Tout à fait"].map((label, n) => (
               <div key={n} style={{
                 flex: 1, padding: "10px 4px", borderRadius: 10, textAlign: "center",
                 background: n === 3 ? "linear-gradient(160deg, #00897B, #00695C)" : "var(--c-cream)",
@@ -178,7 +178,7 @@ const HowItWorks = () => (
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, maxWidth: 920, margin: "0 auto" }}>
         {[
-          { n: "1", t: "24 questions", d: "6 par dimension. Échelle 1 (pas du tout fort) à 5 (extrêmement fort). 7 minutes." },
+          { n: "1", t: "24 questions", d: "6 par dimension. Échelle 1 (pas du tout) à 5 (tout à fait). 7 minutes." },
           { n: "2", t: "Score par axe", d: "Moyenne par dimension. Profil archétype basé sur la dimension dominante." },
           { n: "3", t: "Dimension à muscler", d: "La plus basse est identifiée, avec 3 exercices concrets sur 30 jours pour la renforcer." },
         ].map((s) => (
