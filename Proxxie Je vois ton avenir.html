@@ -88,11 +88,7 @@
   .hero figcaption { margin-top: 10px; font-size: 0.82rem; color: var(--cream-dim); }
 
   /* Le tirage */
-  .tirage { border-top: 1px solid var(--night-line); }
-  .tirage .wrap { padding-block: 72px 84px; }
-  .tirage .intro { display: flex; flex-wrap: wrap; gap: 12px 40px; align-items: baseline; justify-content: space-between; }
-  .tirage .intro p { color: var(--cream-dim); max-width: 40ch; }
-  .plateau { margin-top: 36px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px 48px; align-items: start; }
+    .plateau { margin-top: 36px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px 48px; align-items: start; }
   .cartes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 1.8vw, 20px); }
   .carte {
     position: relative; aspect-ratio: 5 / 8; width: 100%;
@@ -144,20 +140,51 @@
   /* Le jour */
   .day { background: var(--cream); color: var(--ink); color-scheme: light; }
   .day p { color: var(--ink-dim); }
-  .truc .wrap { padding-block: 84px 72px; }
-  .truc .tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 56px; align-items: end; }
-  .truc .tete p { font-size: 1.08rem; }
-  .compare { margin-top: 44px; border-top: 2px solid var(--ink); }
-  .compare .ligne { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 8px 40px; padding-block: 20px; border-bottom: 1px solid var(--ink-line); align-items: baseline; }
-  .compare .entete { font: 700 0.8rem var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); padding-block: 12px; }
-  .compare .voyant { font: italic 500 1.2rem/1.3 var(--font-display); color: var(--ink-dim); text-decoration: line-through; text-decoration-thickness: 1.5px; text-decoration-color: var(--orange); }
-  .compare .reel { font-weight: 500; color: var(--ink); }
-  .compare .reel small { display: block; font-weight: 400; font-size: 0.94rem; color: var(--ink-dim); margin-top: 2px; }
+  .jeu { border-top: 1px solid var(--night-line); }
+  .jeu .wrap { padding-block: 72px 84px; }
+  .jeu .intro { display: flex; flex-wrap: wrap; gap: 12px 40px; align-items: baseline; justify-content: space-between; }
+  .jeu .intro p { color: var(--cream-dim); max-width: 40ch; }
+  .arc { display: inline-block; margin-right: 0.7em; font: 700 0.9rem var(--font-num); letter-spacing: 0.1em; color: var(--yellow); vertical-align: 0.5em; }
+  .resultat { padding: clamp(18px, 3vw, 28px); border: 1px solid var(--night-line); border-radius: 12px; background: var(--night-2); }
+  .resultat h3 { font-size: clamp(1.5rem, 3.4vw, 2rem); }
+  .resultat p { margin-top: 12px; }
+  .resultat .voie { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--night-line); font-size: 0.96rem; color: var(--cream-dim); }
+  .resultat .morale { font: italic 500 1.12rem/1.4 var(--font-display); color: var(--yellow); }
+  .vide { color: var(--cream-dim); }
 
-  .propheties .wrap { padding-block: 40px 84px; }
-  .propheties ol { list-style: none; margin-top: 36px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 56px; }
-  .propheties blockquote { font: italic 500 clamp(1.25rem, 2.8vw, 1.6rem)/1.25 var(--font-display); color: var(--ink); text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--orange); }
-  .propheties li p { margin-top: 12px; }
+  /* La roue */
+  .roue-zone { position: relative; width: min(100%, 440px); margin-inline: auto; }
+  .roue-zone svg { display: block; width: 100%; height: auto; }
+  #roue { transform-origin: 50% 50%; transform-box: fill-box; transition: transform 4.2s cubic-bezier(.12, .62, .12, 1); }
+  .aiguille { position: absolute; left: 50%; top: -6px; width: 0; height: 0; margin-left: -13px; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 26px solid var(--orange); }
+  .roue-actions { margin-top: 22px; display: flex; justify-content: center; }
+  .btn[disabled] { opacity: 0.55; cursor: default; transform: none; }
+
+  /* Le pendule */
+  .pendule-zone { height: 300px; display: flex; justify-content: center; overflow: hidden; }
+  .pendule { transform-origin: 50% 0; display: flex; flex-direction: column; align-items: center; }
+  .pendule .fil { width: 2px; height: 210px; background: var(--cream-dim); }
+  .pendule .poids { width: 34px; height: 52px; background: var(--yellow); clip-path: polygon(50% 100%, 0 28%, 22% 0, 78% 0, 100% 28%); }
+  .pendule.balance { animation: balance 2.6s ease-in-out; }
+  @keyframes balance { 0% { transform: rotate(0); } 12% { transform: rotate(24deg); } 30% { transform: rotate(-21deg); } 48% { transform: rotate(16deg); } 64% { transform: rotate(-11deg); } 80% { transform: rotate(6deg); } 92% { transform: rotate(-2deg); } 100% { transform: rotate(0); } }
+  .champ label { display: block; font-weight: 600; margin-bottom: 8px; }
+  .champ input { width: 100%; min-height: 52px; padding: 12px 16px; border: 1px solid var(--night-line); border-radius: 8px; background: var(--night-2); color: var(--cream); font: 500 1rem var(--font-body); caret-color: var(--yellow); }
+  .champ input::placeholder { color: rgba(247, 242, 233, 0.45); }
+  .idees { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .idee { min-height: 40px; padding: 8px 14px; border: 1px solid var(--night-line); border-radius: 999px; background: transparent; color: var(--cream-dim); font: 500 0.9rem var(--font-body); cursor: pointer; }
+  .idee:hover { color: var(--cream); border-color: var(--cream-dim); }
+  .pendule-form .btn { margin-top: 16px; }
+  #pendule-reponse { margin-top: 22px; }
+
+  /* Le plan */
+  .plan .wrap { padding-block: 84px; }
+  .plan .tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 56px; align-items: end; }
+  .plan .tete p { font-size: 1.08rem; }
+  .etapes { list-style: none; margin-top: 44px; border-top: 2px solid var(--ink); }
+  .etapes li { display: grid; grid-template-columns: 64px minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 6px 28px; padding-block: 22px; border-bottom: 1px solid var(--ink-line); align-items: baseline; }
+  .etapes .n { font: 700 0.9rem var(--font-num); color: var(--blue); }
+  .etapes h3 { font-size: 1.35rem; }
+  .plan .actions { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px; }
 
   .parents { background: var(--blue); color: #fff; }
   .parents .wrap { padding-block: 64px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: 28px 48px; align-items: center; }
@@ -189,15 +216,17 @@
     .hero figure { order: -1; }
     .plateau { grid-template-columns: minmax(0, 1fr); }
     .hero img { aspect-ratio: 16 / 10; border-radius: 4px 72px 4px 4px; }
-    .truc .tete, .parents .wrap, .propheties ol { grid-template-columns: minmax(0, 1fr); }
-    .compare .ligne { grid-template-columns: minmax(0, 1fr); }
-    .compare .entete { display: none; }
+    .plan .tete, .parents .wrap { grid-template-columns: minmax(0, 1fr); }
+    .etapes li { grid-template-columns: 44px minmax(0, 1fr); }
+    .etapes li p { grid-column: 2; }
+    .pendule-zone { order: -1; height: 250px; }
+    .pendule .fil { height: 170px; }
     .voyant-bio .wrap { grid-template-columns: minmax(0, 1fr); }
     .arcane { max-width: 180px; }
     .top-link span { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; scroll-behavior: auto !important; }
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   }
   html { scroll-behavior: smooth; }
 </style>
@@ -219,9 +248,9 @@
       <div>
         <h1>Je vois <em>ton avenir.</em></h1>
         <p class="aveu">Bon, pas vraiment. Je ne suis pas voyant.</p>
-        <p class="lead">J'aide les lycéens et les étudiants à choisir leur voie. Je n'ai besoin ni d'une boule de cristal ni de ta date de naissance. Tire trois cartes, et je te montre comment je m'y prends.</p>
+        <p class="lead">J'aide les lycéens et les étudiants à choisir leur voie. Je n'ai besoin ni d'une boule de cristal ni de ta date de naissance. Mais entre, le cabinet est ouvert : tire les cartes, lance la roue, interroge le pendule. On parlera sérieusement après.</p>
         <div class="actions">
-          <a class="btn" href="#tirage">Tirer mes trois cartes</a>
+          <a class="btn" href="#tirage">Entrer dans le cabinet</a>
           <a href="#parents">Vous êtes parent&nbsp;? C'est par ici</a>
         </div>
         <p class="signature"><strong>Charles Broussin</strong>, fondateur de Proxxie. Aucun don, une méthode.</p>
@@ -233,10 +262,10 @@
     </div>
   </section>
 
-  <section class="tirage" id="tirage">
+  <section class="jeu tirage" id="tirage">
     <div class="wrap">
       <div class="intro">
-        <h2>Le tirage</h2>
+        <h2><span class="arc">I</span>Le tirage des cartes</h2>
         <p>Trois cartes, trois questions. Deux minutes, sans inscription.</p>
       </div>
 
@@ -278,56 +307,83 @@
     </div>
   </section>
 
-  <div class="day">
-    <section class="truc">
-      <div class="wrap">
-        <div class="tete">
-          <h2>Il n'y a pas de truc.</h2>
-          <p>Un voyant devine. Moi, je demande. Tes trois réponses en disent plus sur ton avenir qu'une boule de cristal, parce qu'elles viennent de toi. La première carte reprend d'ailleurs une vraie question d'orientation, tirée du modèle RIASEC que les conseillers utilisent depuis plus de soixante ans.</p>
+  <section class="jeu" id="roue-section">
+    <div class="wrap">
+      <div class="intro">
+        <h2><span class="arc">II</span>La roue de la fortune</h2>
+        <p>Douze métiers, un seul lancer. La roue décide à ta place.</p>
+      </div>
+      <div class="plateau">
+        <div>
+          <div class="roue-zone">
+            <div class="aiguille" aria-hidden="true"></div>
+            <svg viewBox="0 0 400 400" role="img" aria-label="Roue de la fortune divisée en douze métiers"><g id="roue"></g><circle cx="200" cy="200" r="22" fill="#0A0E2C" stroke="#F5EB3F" stroke-width="3"/></svg>
+          </div>
+          <div class="roue-actions"><button class="btn" type="button" id="lancer">Lancer la roue</button></div>
         </div>
-        <div class="compare">
-          <div class="ligne entete"><span>Chez le voyant</span><span>Chez Proxxie</span></div>
-          <div class="ligne">
-            <span class="voyant">La boule de cristal</span>
-            <span class="reel">20 tests de personnalité et d'intérêts<small>En accès libre, sans créer de compte.</small></span>
-          </div>
-          <div class="ligne">
-            <span class="voyant">Les lignes de la main</span>
-            <span class="reel">Des séances en visio avec un coach d'orientation<small>Quelqu'un qui te parle autrement qu'un parent ou un prof.</small></span>
-          </div>
-          <div class="ligne">
-            <span class="voyant">La prédiction</span>
-            <span class="reel">Un plan écrit<small>Des pistes de métiers, des formations, une stratégie de vœux Parcoursup.</small></span>
-          </div>
-          <div class="ligne">
-            <span class="voyant">« Revenez me voir dans un an »</span>
-            <span class="reel">Un rapport que tu peux relire, discuter et contester<small>Tu repars avec, il est à toi.</small></span>
+        <div class="resultat" id="roue-resultat" aria-live="polite">
+          <p class="vide" id="roue-vide">Lance la roue. Le métier que le sort te réserve apparaîtra ici.</p>
+          <div id="roue-fiche" hidden>
+            <h3 id="r-nom"></h3>
+            <p id="r-quoi"></p>
+            <p class="voie" id="r-voie"></p>
+            <p class="morale">Ta première réaction, c'était «&nbsp;ah non&nbsp;» ou «&nbsp;tiens, pourquoi pas&nbsp;»&nbsp;? Retiens-la. Elle parle de toi, pas de la roue.</p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="propheties">
+  <section class="jeu" id="pendule-section">
+    <div class="wrap">
+      <div class="intro">
+        <h2><span class="arc">III</span>Le pendule</h2>
+        <p>Pose-lui une question à laquelle on répond par oui ou par non.</p>
+      </div>
+      <div class="plateau">
+        <form class="pendule-form" id="pendule-form" novalidate>
+          <div class="champ">
+            <label for="pendule-question">Ta question</label>
+            <input type="text" id="pendule-question" maxlength="140" autocomplete="off" placeholder="Est-ce que je dois faire une prépa ?">
+          </div>
+          <div class="idees" id="idees">
+            <button class="idee" type="button">Est-ce que je vais trouver ma voie&nbsp;?</button>
+            <button class="idee" type="button">Est-ce que mes notes suffisent&nbsp;?</button>
+            <button class="idee" type="button">Est-ce que je dois changer de filière&nbsp;?</button>
+          </div>
+          <button class="btn" type="submit" id="interroger">Interroger le pendule</button>
+          <div class="resultat" id="pendule-reponse" aria-live="polite">
+            <p class="vide" id="p-vide">Le pendule attend ta question.</p>
+            <div id="p-fiche" hidden>
+              <p class="vide" id="p-question"></p>
+              <h3 id="p-oui"></h3>
+              <p class="morale" id="p-morale"></p>
+            </div>
+          </div>
+        </form>
+        <div class="pendule-zone" aria-hidden="true"><div class="pendule" id="pendule"><span class="fil"></span><span class="poids"></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="day">
+    <section class="plan" id="plan">
       <div class="wrap">
-        <h2>Les prophéties qu'on t'a déjà faites</h2>
-        <ol>
-          <li>
-            <blockquote>«&nbsp;Avec tes notes, oublie.&nbsp;»</blockquote>
-            <p>Tes notes disent où tu en es aujourd'hui. Elles ne disent pas ce qui te va. On part de ta personnalité, et on regarde les notes ensuite.</p>
-          </li>
-          <li>
-            <blockquote>«&nbsp;Tu changes d'avis tous les mois, tu ne sauras jamais.&nbsp;»</blockquote>
-            <p>Changer d'avis à 16 ans, c'est explorer. Il manque juste une méthode pour trier ce qui revient à chaque fois.</p>
-          </li>
-          <li>
-            <blockquote>«&nbsp;Si tu te trompes de voie, c'est fichu.&nbsp;»</blockquote>
-            <p>Des passerelles existent, et beaucoup d'étudiants se réorientent. Un mauvais départ se corrige, surtout quand on s'en occupe tôt.</p>
-          </li>
-          <li>
-            <blockquote>«&nbsp;Ça, ce n'est pas un vrai métier.&nbsp;»</blockquote>
-            <p>Design, jeu vidéo, art, vidéo&nbsp;: il y a des formations et des débouchés. On les regarde en face, avec leurs exigences réelles.</p>
-          </li>
+        <div class="tete">
+          <h2>Pour jouer, le hasard suffit. Pour construire, il faut un plan.</h2>
+          <p>Les cartes, la roue et le pendule t'ont peut-être donné une idée, une envie ou un doute. C'est un bon début, et parfois une vraie réponse. Un projet d'orientation demande autre chose&nbsp;: une méthode, du temps, et quelqu'un en face. Voici comment se déroule l'accompagnement Proxxie.</p>
+        </div>
+        <ol class="etapes">
+          <li><span class="n">01</span><h3>Ton profil de base</h3><p>Un premier test de personnalité, qui sert de point de départ à tout le reste.</p></li>
+          <li><span class="n">02</span><h3>Les tests</h3><p>Intérêts, valeurs, motivations, façon d'apprendre&nbsp;: 20 tests pour te connaître avec autre chose que tes notes.</p></li>
+          <li><span class="n">03</span><h3>Les activités guidées</h3><p>Des réflexions, des quiz et des découvertes de métiers, pour confronter tes résultats au réel.</p></li>
+          <li><span class="n">04</span><h3>Le coaching</h3><p>Des séances en visio avec un coach d'orientation, qui te parle autrement qu'un parent ou un prof.</p></li>
+          <li><span class="n">05</span><h3>Le bilan</h3><p>Un rapport écrit&nbsp;: tes pistes de métiers, les formations qui y mènent et ta stratégie de vœux Parcoursup.</p></li>
         </ol>
+        <div class="actions">
+          <a class="btn" href="https://calendly.com/proxxie/proxxie-entretien-gratuit-guide-orientation?utm_source=je-vois-ton-avenir&utm_medium=landing">Réserver un échange gratuit</a>
+          <a class="btn ghost" href="Proxxie%20Test%20RIASEC.html">Commencer par un test gratuit</a>
+        </div>
       </div>
     </section>
 
@@ -467,6 +523,84 @@
     boutons.forEach(function (b, i) { b.classList.remove("tiree"); $("choix-" + i).textContent = ""; });
     $("lecture").hidden = true; $("question").hidden = true; $("attente").hidden = false;
     boutons[0].focus();
+  });
+  /* La roue de la fortune */
+  var METIERS = [
+    ["Infirmier", "Infirmier ou infirmière", "Tu soignes, tu surveilles, tu rassures. Tu es la personne que les patients voient le plus.", "La voie : trois ans en institut de formation en soins infirmiers (IFSI), accessible par Parcoursup."],
+    ["Charpentier", "Charpentier ou charpentière", "Tu conçois et tu montes des structures en bois, de la maison au monument historique.", "La voie : un CAP en deux ans, puis un brevet professionnel ou les Compagnons du Devoir."],
+    ["Data analyst", "Data analyst", "Tu fais parler les chiffres pour aider une entreprise à décider.", "La voie : un BUT Science des données en trois ans, ou un master en statistiques ou en informatique."],
+    ["Orthophoniste", "Orthophoniste", "Tu aides des enfants et des adultes à retrouver la parole, la lecture ou la voix.", "La voie : cinq ans d'études pour le certificat de capacité, avec une admission sur dossier via Parcoursup."],
+    ["Paysagiste", "Paysagiste", "Tu dessines et tu aménages des jardins, des parcs et des espaces publics.", "La voie : un BTSA Aménagements paysagers en deux ans, ou une école de paysage."],
+    ["Avocat", "Avocat ou avocate", "Tu conseilles et tu défends des personnes ou des entreprises.", "La voie : un master de droit, puis l'examen d'entrée et la formation en école d'avocats."],
+    ["UX designer", "UX designer", "Tu conçois des applications et des sites que les gens comprennent du premier coup.", "La voie : un BUT Métiers du multimédia et de l'internet, une école de design ou un master."],
+    ["Éducateur", "Éducateur ou éducatrice spécialisée", "Tu accompagnes des jeunes ou des adultes en difficulté vers plus d'autonomie.", "La voie : le diplôme d'État d'éducateur spécialisé, en trois ans."],
+    ["Ingénieur", "Ingénieur ou ingénieure en énergies renouvelables", "Tu conçois des installations solaires, éoliennes ou hydrauliques.", "La voie : une école d'ingénieurs ou un master, soit cinq ans d'études."],
+    ["Jeu vidéo", "Développeur ou développeuse de jeux vidéo", "Tu programmes ce que les joueurs ont entre les mains : mécaniques, moteurs, outils.", "La voie : un BUT Informatique ou une école spécialisée, en trois à cinq ans."],
+    ["Aéronautique", "Technicien ou technicienne aéronautique", "Tu entretiens et tu répares des avions. Rien ne décolle sans ta signature.", "La voie : un bac pro aéronautique, puis un BTS Aéronautique."],
+    ["Événementiel", "Chef ou cheffe de projet événementiel", "Tu organises des festivals, des salons ou des congrès, du premier devis au dernier camion.", "La voie : un BTS ou un bachelor en communication ou en tourisme, ou une école de commerce."]
+  ];
+  var NS = "http://www.w3.org/2000/svg", N = METIERS.length, PAS = 360 / N;
+  var roue = $("roue"), tours = 0, enCours = false;
+  var FONDS = ["#1320CE", "#F7F2E9", "#1320CE", "#F5EB3F", "#1320CE", "#F7F2E9", "#1320CE", "#FD6936"];
+  function pt(a, r) { var t = (a - 90) * Math.PI / 180; return (200 + r * Math.cos(t)).toFixed(2) + " " + (200 + r * Math.sin(t)).toFixed(2); }
+  METIERS.forEach(function (m, i) {
+    var a0 = i * PAS - PAS / 2, a1 = a0 + PAS, fond = FONDS[i % FONDS.length];
+    var p = document.createElementNS(NS, "path");
+    p.setAttribute("d", "M200 200 L" + pt(a0, 194) + " A194 194 0 0 1 " + pt(a1, 194) + " Z");
+    p.setAttribute("fill", fond); p.setAttribute("stroke", "#0A0E2C"); p.setAttribute("stroke-width", "2");
+    roue.appendChild(p);
+    var t = document.createElementNS(NS, "text");
+    t.setAttribute("x", "200"); t.setAttribute("y", "200");
+    t.setAttribute("transform", "rotate(" + (i * PAS - 90) + " 200 200) translate(182 5)");
+    t.setAttribute("text-anchor", "end");
+    t.setAttribute("fill", fond === "#1320CE" ? "#F7F2E9" : "#0A0E2C");
+    t.setAttribute("font-family", "Inter, Arial, sans-serif"); t.setAttribute("font-size", "15"); t.setAttribute("font-weight", "600");
+    t.textContent = m[0];
+    roue.appendChild(t);
+  });
+  function montrerMetier(i) {
+    var m = METIERS[i];
+    $("r-nom").textContent = m[1]; $("r-quoi").textContent = m[2]; $("r-voie").textContent = m[3];
+    $("roue-vide").hidden = true; $("roue-fiche").hidden = false;
+    $("lancer").disabled = false; $("lancer").textContent = "Relancer la roue"; enCours = false;
+  }
+  $("lancer").addEventListener("click", function () {
+    if (enCours) return;
+    enCours = true; $("lancer").disabled = true;
+    var i = Math.floor(Math.random() * N);
+    tours += 5;
+    roue.style.transform = "rotate(" + (tours * 360 - i * PAS) + "deg)";
+    var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(function () { montrerMetier(i); }, calme ? 0 : 4300);
+  });
+
+  /* Le pendule */
+  var REPONSES = [
+    ["Oui.", "Si ce « oui » t'a soulagé, tu connaissais déjà ta réponse. S'il t'a inquiété, aussi."],
+    ["Non.", "Si ce « non » t'a déçu, c'est que tu espérais un oui. C'est une information, garde-la."],
+    ["Le pendule hésite.", "Même lui ne sait pas. Les questions d'orientation tiennent rarement en oui ou en non."]
+  ];
+  var pendule = $("pendule"), champ = $("pendule-question"), occupe = false;
+  Array.prototype.forEach.call(document.querySelectorAll("#idees .idee"), function (b) {
+    b.addEventListener("click", function () { champ.value = b.textContent.replace(/ /g, " "); champ.focus(); });
+  });
+  $("pendule-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (occupe) return;
+    var q = champ.value.trim();
+    $("p-fiche").hidden = true; $("p-vide").hidden = false;
+    if (!q) { $("p-vide").textContent = "Écris d'abord ta question, le pendule ne lit pas dans les pensées."; champ.focus(); return; }
+    occupe = true; $("interroger").disabled = true;
+    $("p-vide").textContent = "Le pendule réfléchit…";
+    var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    pendule.classList.remove("balance"); void pendule.offsetWidth; pendule.classList.add("balance");
+    setTimeout(function () {
+      var r = REPONSES[Math.floor(Math.random() * REPONSES.length)];
+      $("p-question").textContent = "« " + q + " »";
+      $("p-oui").textContent = r[0]; $("p-morale").textContent = r[1];
+      $("p-vide").hidden = true; $("p-fiche").hidden = false;
+      occupe = false; $("interroger").disabled = false;
+    }, calme ? 0 : 2700);
   });
 })();
 </script>
